@@ -1,8 +1,8 @@
 {
-  "name": "chasdei-kaduri",
+  "name": "foodbank-template",
   "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
   "version": "0.0.1",
-  "author": "Harry Karapetyan and Maxim Orlov",
+  "author": "Peter Deal and Marco Früh",
   "engines": {
     "node": "0.10.x",
     "npm": "1.4.x"
