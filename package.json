@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "author": "Peter Deal and Marco Früh",
   "engines": {
-    "node": "0.10.x",
-    "npm": "1.4.x"
+    "node": "6.7.x",
+    "npm": "3.10.x"
   },
   "scripts": {
     "start": "grunt",
