@@ -23,6 +23,8 @@ var db = mongoose.connect(config.db, function(err) {
 		console.error(chalk.red('Could not connect to MongoDB!'));
 		console.log(chalk.red(err));
 	}
+
+	console.log("Connected to " + config.db);
 });
 
 // Init the mongoose auto-increment-plugin
