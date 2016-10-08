@@ -20,18 +20,18 @@ th[st-sort] {
 	cursor: pointer;
 }
 th[st-sort]:after {
-	font-family: FontAwesome;
-	content: '\f0dc';
 	color: #cccccc;
+	content: '\f0dc';
 	float: right;
+	font-family: FontAwesome;
 }
 .st-sort-ascent:after {
-	font-family: FontAwesome;
 	content: '\f0de' !important;
+	font-family: FontAwesome;
 }
 .st-sort-descent:after{
-	font-family: FontAwesome;
 	content: '\f0dd' !important;
+	font-family: FontAwesome;
 }
 
 /* ============== */
@@ -46,8 +46,8 @@ td .tools {
 td .tools > .fa,
 td .tools > .glyphicon,
 td .tools > .ion {
-	margin-right: 5px;
 	cursor: pointer;
+	margin-right: 5px;
 }
 td:hover .tools {
 	display: inline-block;
