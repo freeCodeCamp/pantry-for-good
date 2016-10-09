@@ -1,0 +1,7 @@
+{
+  "organisation": "Foodbank Template",
+  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
+  "mongodb_prod": "/fb-prod",
+  "mongodb_dev": "/fb-dev",
+  "mongodb_test": "/fb-test"
+}

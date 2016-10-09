@@ -1,8 +1,11 @@
 'use strict';
+// Get template configuration from file
+var tconfig = require('../../template-config.json');
+console.log('SECURE: tconfig: ', tconfig);
 
 module.exports = {
 	port: 443,
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/chasdei-kaduri',
+	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost' + tconfig.mongodb_dev,
 	assets: {
 		lib: {
 			css: [
@@ -62,3 +65,5 @@ module.exports = {
 		key: process.env.GOOGLE_MAPS || 'API_KEY'
 	}
 };
+
+console.log('TEMPLATE CONFIG: DB: ', module.exports.db);

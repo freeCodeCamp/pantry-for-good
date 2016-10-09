@@ -44,4 +44,3 @@ var db = mongoose.connect(config.db, function(err) {
 	// Logging initialization
 	console.log('MEAN.JS application started on port ' + config.port);
 });
-

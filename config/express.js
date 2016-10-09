@@ -38,7 +38,9 @@ module.exports = function(db) {
 	app.locals.keywords = config.app.keywords;
 	app.locals.jsFiles = config.getJavaScriptAssets();
 	app.locals.cssFiles = config.getCSSAssets();
-
+	// Get template config info from file
+	app.locals.tconfig = config.tconfig;
+	
 	// Passing the request url to environment locals
 	app.use(function(req, res, next) {
 		res.locals.url = req.protocol + '://' + req.headers.host + req.url;

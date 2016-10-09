@@ -1,10 +1,12 @@
 'use strict';
+// Get template configuration from file
+var tconfig = require('../../template-config.json');
 
 module.exports = {
-	db: 'mongodb://localhost/chasdei-kaduri-test',
+	db: 'mongodb://localhost' + tconfig.mongodb_test,
 	port: 3001,
 	app: {
-		title: 'Chasdei Kaduri - Test Environment'
+		title: tconfig.organisation + ' - Test Environment'
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',
@@ -17,3 +19,5 @@ module.exports = {
 		}
 	}
 };
+
+console.log('TEMPLATE CONFIG: DB: ', module.exports.db);
