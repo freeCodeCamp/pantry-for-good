@@ -1,7 +1,6 @@
 'use strict';
 // Get template configuration from file
 var tconfig = require('../../template-config.json');
-console.log('TEMPLATE CONFIG: Organisation: ', tconfig.organisation);
 
 module.exports = {
 	app: {

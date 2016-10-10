@@ -1,6 +1,8 @@
 {
-  "organisation": "Foodbank Template",
+  "organization": "Foodbank Template",
   "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
+  "mission": "Foodbank Template is a volunteer run organization based in <Location> with the mission of helping families who are in need. We provide weekly non-perishable and freshly baked goods, to ensure that every Jewish family has delicious meals. The organization was founded in <Year> in memory of <Founder>, who was very kind and sensitive to the needs of others.",
+  "url": "www.example.com",
   "mongodb_prod": "/fb-prod",
   "mongodb_dev": "/fb-dev",
   "mongodb_test": "/fb-test"

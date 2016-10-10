@@ -10,6 +10,22 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	}
 ]);
 
+// Get template config from server
+angular.module(ApplicationConfiguration.applicationModuleName).run(
+	function($http, $rootScope) {
+
+		$http.get('/template-config').then(
+			function successCallback(response){
+				$rootScope.tconfig = response.data;
+			},
+			function errorCallback(response){
+				console.log('GET TC: error');
+			}
+		);
+	}
+);
+
+
 //Then define the init function for starting up the application
 angular.element(document).ready(function() {
 	//Fixing facebook bug with redirect
