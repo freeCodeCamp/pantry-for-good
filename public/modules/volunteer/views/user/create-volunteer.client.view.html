@@ -5,7 +5,7 @@
   <br>
   <div class="alert alert-info text-left">
     <i class="icon fa fa-warning"></i>For assistance with this application, please contact our support line at
-    (647) 874-9946.
+    {{tconfig.support}}.
   </div>
 </section>
 <!-- Main content -->
@@ -28,9 +28,7 @@
           </div><!-- /.box-header-->
           <!-- Box body -->
           <div class="box-body">
-            <p>
-              {{tconfig.organization}} is a charitable, non-profit organization with a mission to alleviate hunger in the GTA Jewish community by providing nutritious food and nutrition education to people in need, educating the public, and promoting public policies that address hunger and its root causes. {{tconfig.organization}} regularly engages volunteers in its activities. In consideration for my ability to participate in {{tconfig.organization}}’s activities, by signing below, I, the Volunteer (or the Volunteer’s legal guardian, on the Volunteer’s behalf), agree that:
-            </p>
+            <span ng-bind-html="tconfig.mission"></span>
             <ol>
               <li>
                 Policies and Safety Rules. For my safety and that of others, I will comply with {{tconfig.organization}}’s volunteer policies and safety rules and its other directors for all volunteer activities.

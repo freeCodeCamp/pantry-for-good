@@ -3,7 +3,7 @@
 // Init the application configuration module for AngularJS application
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
-	var applicationModuleName = 'chasdei-kaduri';
+	var applicationModuleName = 'foodbank-template';
 	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',
 		'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'datatables', 'datatables.colvis',
 		'datatables.colreorder', 'AngularPrint', 'smart-table', 'angularMoment', 'uiGmapgoogle-maps'];

@@ -6,7 +6,7 @@ module.exports = {
 	db: 'mongodb://localhost' + tconfig.mongodb_test,
 	port: 3001,
 	app: {
-		title: tconfig.organisation + ' - Test Environment'
+		title: tconfig.organization + ' - Test Environment'
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',

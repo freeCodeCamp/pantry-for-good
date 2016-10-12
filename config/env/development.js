@@ -5,7 +5,7 @@ var tconfig = require('../../template-config.json');
 module.exports = {
 	db: 'mongodb://localhost' + tconfig.mongodb_dev,
 	app: {
-		title: tconfig.organisation + ' - Development Environment',
+		title: tconfig.organization + ' - Development Environment',
 		tconfig: tconfig
 	}
 };
