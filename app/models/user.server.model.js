@@ -74,7 +74,7 @@ var UserSchema = new Schema({
 			type: String,
 			enum: ['user', 'customer', 'volunteer', 'driver', 'donor', 'admin']
 		}],
-		default: ['user']
+		default: ['admin']
 	},
 	accountType: {
 		type: [{
