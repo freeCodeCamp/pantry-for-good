@@ -1,13 +1,13 @@
 'use strict';
 // Get template configuration from file
-var tconfig = require('../../template-config.json');
+var appconfig = require('../../app-config.json');
 
 module.exports = {
 	app: {
-		title: tconfig.title,
-		description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js',
-		keywords: 'MongoDB, Express, AngularJS, Node.js',
-		tconfig: tconfig
+		title: appconfig.title,
+		description: appconfig.description,
+		keywords: appconfig.keywords,
+		appconfig: appconfig
 	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',

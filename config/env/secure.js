@@ -1,11 +1,11 @@
 'use strict';
 // Get template configuration from file
-var tconfig = require('../../template-config.json');
-console.log('SECURE: tconfig: ', tconfig);
+var appconfig = require('../../app-config.json');
+console.log('SECURE: appconfig: ', appconfig);
 
 module.exports = {
 	port: 443,
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost' + tconfig.mongodb_dev,
+	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost' + appconfig.mongodb_dev,
 	assets: {
 		lib: {
 			css: [
@@ -66,4 +66,4 @@ module.exports = {
 	}
 };
 
-console.log('TEMPLATE CONFIG: DB: ', module.exports.db);
+console.log('APP CONFIG: DB: ', module.exports.db);

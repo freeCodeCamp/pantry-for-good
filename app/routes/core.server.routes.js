@@ -12,9 +12,9 @@ module.exports = function(app) {
 	app.route('/').get(core.index);
 
 	// Template config provider
-	app.route('/template-config').get(
+	app.route('/app-config').get(
 		function(req, res) {
-			res.send(require('../../template-config.json'));
+			res.send(require('../../app-config.json'));
 		}
 	);
 

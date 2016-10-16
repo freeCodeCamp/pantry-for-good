@@ -10,21 +10,21 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	}
 ]);
 
-// Get template config from server
 angular.module(ApplicationConfiguration.applicationModuleName).run(
 	function($http, $rootScope) {
 
-		$http.get('/template-config').then(
+		// Get template config from db
+		$http.get('api/settings/').then(
 			function successCallback(response){
 				$rootScope.tconfig = response.data;
 			},
 			function errorCallback(response){
-				console.log('GET TC: error');
+				console.log('Get Template Config: error');
 			}
 		);
 	}
-);
 
+);
 
 //Then define the init function for starting up the application
 angular.element(document).ready(function() {

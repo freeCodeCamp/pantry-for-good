@@ -1,13 +1,13 @@
 'use strict';
 // Get template configuration from file
-var tconfig = require('../../template-config.json');
+var appconfig = require('../../app-config.json');
 
 module.exports = {
-	db: tconfig.mongodb_dev,
+	db: appconfig.mongodb_dev,
 	app: {
-		title: tconfig.organization + ' - Development Environment',
-		tconfig: tconfig
+		title: 'Development Environment',
+		appconfig: appconfig
 	}
 };
 
-console.log('TEMPLATE CONFIG: DB: ', module.exports.db);
+console.log('APP CONFIG: DB: ', module.exports.db);
