@@ -68,7 +68,8 @@ module.exports = {
 				'public/lib/angular-moment/angular-moment.js',
 				'public/lib/moment-recur/moment-recur.js',
 				'public/lib/lodash/dist/lodash.js',
-				'public/lib/angular-google-maps/dist/angular-google-maps.js'
+				'public/lib/angular-google-maps/dist/angular-google-maps.js',
+				'public/lib/ng-file-upload/ng-file-upload.js'
 			]
 		},
 		css: [
