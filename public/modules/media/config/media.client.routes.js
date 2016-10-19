@@ -6,13 +6,13 @@ angular.module('media').config(['$stateProvider', '$urlRouterProvider',
 		// Routing for general settings page
 		$stateProvider.
 		state('root.changeMedia', {
-			url: 'settings',
+			url: 'media',
 			views: {
 				'content@': {
 					templateUrl: 'modules/media/views/change-media.client.view.html',
 					controller: 'ChangeMediaController as settingsCtrl'
 				},
-				'basic-media@root.changeMedia': {
+				'logo@root.changeMedia': {
 					templateUrl: 'modules/media/views/partials/basic-media.partial.html'
 				}
 			}

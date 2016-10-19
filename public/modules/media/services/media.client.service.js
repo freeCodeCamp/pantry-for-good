@@ -7,20 +7,20 @@
 	/* @ngInject */
 	function MediaObject($http, $stateParams) {
 		var service = {
-			saveSettings: saveSettings,
-			readSettings: readSettings
+			saveMedia: saveMedia,
+			readMedia: readMedia
 		};
 
 		return service;
 
-		function saveSettings(settings) {
+		function saveMedia(mediaData) {
 			console.log("saved the media.");
-			//return $http.post('api/settings/', settings);
+			return $http.post('api/media/', mediaData);
 		}
 
-		function readSettings() {
+		function readMedia() {
 			console.log("read the media.");
-			//return $http.get('api/settings/');
+			return $http.get('api/media/');
 		}
 	}
 })();
