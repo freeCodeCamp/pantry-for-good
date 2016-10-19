@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 		Settings = mongoose.model('Media');
 
 /**
- * Read settings
+ * Read media data
  */
 exports.read = function(req, res) {
 	Settings.findOne({}, function(err, media) {
@@ -19,7 +19,7 @@ exports.read = function(req, res) {
 };
 
 /**
- * Save settings
+ * Save media data
  */
 exports.save = function(req, res) {
 	Settings.findOneAndUpdate({}, req.body, function(err, media) {

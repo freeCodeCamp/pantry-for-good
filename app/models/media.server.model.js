@@ -9,11 +9,11 @@ var mongoose = require('mongoose'),
 /**
  * Settings Schema
  */
-var SettingsSchema = new Schema({
+var MediaSchema = new Schema({
 	logoPath: {
 		type: String,
 		default: 'public/media/logo.png'
 	}
 });
 
-mongoose.model('Media', SettingsSchema);
+mongoose.model('Media', MediaSchema);
