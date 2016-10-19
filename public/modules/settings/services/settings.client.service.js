@@ -18,7 +18,8 @@
 		}
 
 		function readSettings() {
-			return $http.get('api/settings/');
+			var settings = $http.get('api/settings/');
+			return settings;
 		}
 	}
 })();
