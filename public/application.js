@@ -22,6 +22,16 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(
 				console.log('Get Template Config: error');
 			}
 		);
+
+		// Get media config data from db
+		$http.get('api/media/').then(
+			function successCallback(response){
+				$rootScope.mediaData = response.data;
+			},
+			function errorCallback(response){
+				console.log('Get Media Data: error');
+			}
+		);
 	}
 
 );

@@ -14,12 +14,10 @@
 		return service;
 
 		function saveMedia(mediaData) {
-			console.log("saved the media.");
 			return $http.post('api/media/', mediaData);
 		}
 
 		function readMedia() {
-			console.log("read the media.");
 			return $http.get('api/media/');
 		}
 	}

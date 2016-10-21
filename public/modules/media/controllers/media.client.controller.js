@@ -16,7 +16,6 @@
 
 		MediaObject.readMedia().
 			then(function successCallback(response){
-				console.log("got response: ", response);
 				$rootScope.mediaData = response.data;
 			},
 			function errorCallback(response){
