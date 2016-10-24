@@ -5,6 +5,7 @@
 
 	/* @ngInject */
 	function dateField($filter, moment) {
+		console.log("loading up datefiled");
 		return {
       require: 'ngModel',
 			link: function (scope, element, attrs, ngModelController) {

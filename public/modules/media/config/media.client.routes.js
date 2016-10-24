@@ -11,9 +11,6 @@ angular.module('media').config(['$stateProvider', '$urlRouterProvider',
 				'content@': {
 					templateUrl: 'modules/media/views/change-media.client.view.html',
 					controller: 'ChangeMediaController as settingsCtrl'
-				},
-				'logo@root.changeMedia': {
-					templateUrl: 'modules/media/views/partials/basic-media.partial.html'
 				}
 			}
 		});

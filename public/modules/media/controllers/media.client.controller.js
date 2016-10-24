@@ -2,9 +2,11 @@
 	'use strict';
 
 	angular.module('settings').controller('ChangeMediaController', ChangeMediaController);
-
 	/* @ngInject */
-	function ChangeMediaController($scope, $rootScope, $stateParams, $state, Authentication, MediaObject) {
+	function ChangeMediaController($scope, $rootScope, $stateParams, $state, Authentication, MediaObject, FileUploader) {
+		$scope.uploader = new FileUploader({url: 'api/media/uploadLogo'});
+		$scope.uploader.queueLimit = 1;
+
 		var self = this,
 				user = Authentication.user;
 

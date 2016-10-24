@@ -69,7 +69,7 @@ module.exports = {
 				'public/lib/moment-recur/moment-recur.js',
 				'public/lib/lodash/dist/lodash.js',
 				'public/lib/angular-google-maps/dist/angular-google-maps.js',
-				'public/lib/ng-file-upload/ng-file-upload.js'
+				'public/lib/angular-file-upload/dist/angular-file-upload.js'
 			]
 		},
 		css: [

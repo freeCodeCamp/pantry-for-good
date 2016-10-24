@@ -12,7 +12,11 @@ var mongoose = require('mongoose'),
 var MediaSchema = new Schema({
 	logoPath: {
 		type: String,
-		default: 'media/logo.png'
+		default: 'media/'
+	},
+	logoFile: {
+		type: String,
+		default: 'logo.png'
 	}
 });
 

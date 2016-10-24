@@ -16,7 +16,6 @@
 
 		SettingsObject.readSettings().
 			then(function successCallback(response){
-				console.log("just read settings tconfig data.");
 				$rootScope.tconfig = response.data;
 			},
 			function errorCallback(response){
