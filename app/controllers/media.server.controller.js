@@ -63,5 +63,5 @@ exports.uploadLogo = function(req, res) {
 		media.save();
 		res.json(media);
 	});
-}	
+};	
 	

@@ -11,7 +11,7 @@
 				$rootScope.mediaData = media;
 			};
 			item.upload();
-		}
+		};
 
 		var self = this,
 				user = Authentication.user;
