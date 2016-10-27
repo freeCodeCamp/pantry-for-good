@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
-		Media = mongoose.model('Media');
+		Media = mongoose.model('Media'),
+		fs = require('fs');
 
 /**
  * Read media data
@@ -15,6 +16,15 @@ exports.read = function(req, res) {
 	  if (err) throw err;
 
 		if (media) {
+			const files = fs.readdirSync("public/" + media.logoPath);
+			if (files.indexOf(media.logoFile) === -1) {
+				const file = files.find( file => file.match(/.*\.gif|.*\.jpeg|.*\.png/) );
+				if (!file)
+					console.log(
+						"WARNING: Can't find logo " + media.logoPath + media.logoFile + ".");
+				else
+					media.logoFile = file;
+			}
 			res.json(media);
 		} else {
 			res.json(new Media());
@@ -51,6 +61,7 @@ exports.uploadLogo = function(req, res) {
 		media.logoFile = req.file.filename;
 		console.log("saving " + media);
 		media.save();
+		res.json(media);
 	});
 }	
 	

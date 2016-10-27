@@ -4,12 +4,21 @@
  * Module dependencies
  */
 var media = require('../controllers/media.server.controller'),
-		upload = require('multer')({ dest: "public/media" });
+    multer = require('multer');
 
 module.exports = function(app) {
 	// Media routes
 	app.route('/api/media/uploadLogo')
-		.post(upload.single('file'), media.uploadLogo);
+		.post(multer( {
+			dest: "public/media",
+			renameFile: (fieldname, filename) => {
+				console.log("fieldname is " + fieldname);
+				console.log("filename is " + filename);
+			},
+			onFileUploadComplete: () => {
+				console.log({ text: "hey, it's complete" });
+			}
+		}).single('file'), media.uploadLogo);
 
 	app.route('/api/media')
 		.post(media.save);

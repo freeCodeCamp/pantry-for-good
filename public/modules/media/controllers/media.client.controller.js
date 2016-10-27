@@ -5,7 +5,13 @@
 	/* @ngInject */
 	function ChangeMediaController($scope, $rootScope, $stateParams, $state, Authentication, MediaObject, FileUploader) {
 		$scope.uploader = new FileUploader({url: 'api/media/uploadLogo'});
-		$scope.uploader.queueLimit = 1;
+
+		$scope.upload = function(item) {
+			item.onSuccess = function(media) {
+				$rootScope.mediaData = media;
+			};
+			item.upload();
+		}
 
 		var self = this,
 				user = Authentication.user;
