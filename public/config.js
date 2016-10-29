@@ -5,8 +5,8 @@ var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'foodbank-template';
 	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',
-	'ngTouch', 'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'datatables',
-	'datatables.colvis', 'datatables.colreorder', 'AngularPrint', 'smart-table',
+	'ui.router', 'ui.bootstrap', 'ui.utils', 'datatables', 'datatables.colvis',
+	'datatables.colreorder', 'AngularPrint', 'smart-table',
 	'angularMoment', 'uiGmapgoogle-maps', 'angularFileUpload'];
 
 	// Add a new vertical module
