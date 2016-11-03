@@ -1,6 +1,5 @@
 'use strict';
 
-require('dotenv').load(); // Load environment variables from .env
 require('pmx').init(); // log uncaught exceptions
 
 /**

@@ -178,7 +178,4 @@ module.exports = function(grunt) {
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-
-	// Heroku task(s).
-	grunt.registerTask('heroku', ['env:development', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
 };
