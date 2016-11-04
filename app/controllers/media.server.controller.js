@@ -52,14 +52,12 @@ exports.save = function(req, res) {
 
 exports.uploadLogo = function(req, res) {
 	Media.findOne({}, function(err, media) {
-		console.log("found " + media);
 		if (err) throw err;
 
 		if (!media)
 			media = new Media();
 
 		media.logoFile = req.file.filename;
-		console.log("saving " + media);
 		media.save();
 		res.json(media);
 	});
