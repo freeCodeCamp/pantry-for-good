@@ -54,7 +54,6 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
  * Get the modules JavaScript files
  */
 module.exports.getJavaScriptAssets = function(includeTests) {
-	console.log(this.assets);
 	var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js), 'public/');
 
 	// To include tests

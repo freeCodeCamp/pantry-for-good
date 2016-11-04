@@ -1,6 +1,6 @@
 'use strict';
 
-require('dotenv').load(); // Load environment variables from .env
+require('dotenv').load({silent: true}); // Load environment variables from .env
 
 /**
  * Module dependencies.
