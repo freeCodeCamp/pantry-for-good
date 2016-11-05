@@ -10,7 +10,8 @@
   "scripts": {
     "start": "grunt",
     "test": "grunt test",
-    "postinstall": "bower install --config.interactive=false"
+    "postinstall": "bower install --config.interactive=false",
+  	"heroku-postbuild": "grunt build"
   },
   "dependencies": {
     "async": "~2.0.1",
@@ -29,8 +30,15 @@
     "forever": "~0.15.2",
     "geocoder": "^0.2.2",
     "glob": "^7.1.0",
+    "grunt": "^1.0.1",
     "grunt-cli": "~1.2.0",
+    "grunt-contrib-csslint": "^2.0.0",
+    "grunt-contrib-cssmin": "~1.0.2",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-uglify": "~2.0.0",
+    "grunt-ng-annotate": "^2.0.2",
     "helmet": "^2.3.0",
+    "load-grunt-tasks": "~3.5.2",
     "lodash": "~4.16.3",
     "method-override": "~2.3.0",
     "moment": "^2.10.2",
@@ -46,17 +54,11 @@
     "swig": "~1.4.1"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
     "grunt-concurrent": "~2.3.1",
-    "grunt-contrib-csslint": "^2.0.0",
-    "grunt-contrib-cssmin": "~1.0.2",
-    "grunt-contrib-jshint": "~1.0.0",
-    "grunt-contrib-uglify": "~2.0.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-env": "~0.4.1",
     "grunt-karma": "~2.0.0",
     "grunt-mocha-test": "~0.13.2",
-    "grunt-ng-annotate": "^2.0.2",
     "grunt-node-inspector": "~0.4.2",
     "grunt-nodemon": "~0.4.2",
     "jasmine-core": "^2.5.2",
@@ -66,7 +68,6 @@
     "karma-firefox-launcher": "~1.0.0",
     "karma-jasmine": "~1.0.2",
     "karma-phantomjs-launcher": "~1.0.2",
-    "load-grunt-tasks": "~3.5.2",
     "mocha": "^3.1.0",
     "should": "~11.1.0",
     "supertest": "~2.0.0"
