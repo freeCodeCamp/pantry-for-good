@@ -23,6 +23,9 @@ var db = mongoose.connect(config.db, function(err) {
 		console.log(chalk.red(err));
 	}
 
+	// Mongoose promises deprecated, using Bluebird instead
+	mongoose.Promise = require('bluebird');
+
 	console.log("Connected to " + config.db);
 
 	// Init the mongoose auto-increment-plugin
