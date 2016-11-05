@@ -36,14 +36,14 @@ module.exports = function(grunt) {
 			},
 			clientJS: {
 				files: watchFiles.clientJS,
-				tasks: ['jshint'],
+				tasks: ['jshint', 'build'],
 				options: {
 					livereload: true
 				}
 			},
 			clientCSS: {
 				files: watchFiles.clientCSS,
-				tasks: ['csslint'],
+				tasks: ['csslint', 'build'],
 				options: {
 					livereload: true
 				}
@@ -162,7 +162,7 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'concurrent:default']);
+	grunt.registerTask('default', ['lint', 'build', 'concurrent:default']);
 
 	// Debug task.
 	grunt.registerTask('debug', ['lint', 'concurrent:debug']);

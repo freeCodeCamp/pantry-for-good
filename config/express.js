@@ -36,8 +36,8 @@ module.exports = function(db) {
 	app.locals.title = config.app.title;
 	app.locals.description = config.app.description;
 	app.locals.keywords = config.app.keywords;
-	app.locals.jsFiles = config.getJavaScriptAssets();
-	app.locals.cssFiles = config.getCSSAssets();
+	app.locals.jsFiles = config.getGlobbedFiles(config.assets.lib.js, 'public/');
+	app.locals.cssFiles = config.getGlobbedFiles(config.assets.lib.css, 'public/');
 	// Get template config info from file
 	app.locals.appconfig = config.appconfig;
 
