@@ -24,7 +24,7 @@ angular.module('questionnaire').factory('Questionnaire', ['$resource',
 	}
 ]).factory('Field', ['$resource',
 	function($resource) {
-		return $resource('admin/fields/:fieldId', {
+		return $resource('api/fields/:fieldId', {
 			sectionId: '@sectionId',
 			fieldId: '@_id'
 		}, {

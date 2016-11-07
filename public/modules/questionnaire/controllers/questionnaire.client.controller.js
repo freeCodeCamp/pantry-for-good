@@ -7,10 +7,10 @@
 	function QuestionnaireController(Questionnaire, Section, Field) {
 		var self = this;
 
-		// Copy questionnaire sections and fields for smart table
+		// Copy section sections and fields for smart table
 		self.questionnairesCopy = [].concat(self.questionnaires);
-		// self.sectionsCopy = [].concat(self.sections);
-		// self.sectionsFieldsCopy = [].concat(self.sectionsCopy);
+		self.sectionsCopy = [].concat(self.sections);
+		self.fieldsCopy = [].concat(self.fields);
 
 		/**** Dealing with QUESTIONNAIRES ****/
 		// Create questionnaire
@@ -19,7 +19,7 @@
 
 			questionnaire.$save(function() {
 				// If successful refresh the table
-				self.findQuestionnaire();
+				self.findQuestionnaires();
 				// Clear input fields
 				delete self.questionnaire;
 			}, function(errorResponse) {
@@ -34,7 +34,6 @@
 
 			Questionnaire.query({}, function (questionnaires) {
 				self.questionnaires = questionnaires;
-				console.log('Questionnaires: ', questionnaires);
 				// Remove loading state after callback from the server
 				self.isLoading = false;
 			});
@@ -44,101 +43,133 @@
 		};
 
 		// Update current questionnaire
-		self.update = function(questionnaire) {
+		self.updateQuestionnaire = function(questionnaire) {
 			questionnaire.$update(function() {
 				// If successful refresh the table
-				self.findQuestionnaire();
+				self.findQuestionnaires();
 			}, function(errorResponse) {
 				self.error = errorResponse.data.message;
 			});
 		};
 
-		// Remove current questionnaire
-		self.remove = function(questionnaire) {
+		// Remove current section
+		self.removeQuestionnaire = function(questionnaire) {
 			questionnaire.$remove(function() {
 				// If successful refresh the table
-				self.findQuestionnaire();
+				self.findQuestionnaires();
 			}, function (errorResponse) {
 				self.error = errorResponse.data.message;
 			});
 		};
 
-		/**** Dealing with QUESTIONNAIRE SECTION FIELDS ****/
-		// Create questionnaire section field
-	// 	self.createField = function() {
-	// 		var field = new QuestionnaireSectionField(self.field);
-	//
-	// 		section.$save(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 			// Clear input fields
-	// 			delete self.field;
-	// 		}, function(errorResponse) {
-	// 			self.errorField = errorResponse.data.message;
-	// 		});
-	// 	};
-	//
-	// 	// Update current questionnaire section field
-	// 	self.updateField = function(selectedField) {
-	// 		var field = new QuestionnaireSectionField(selectedField);
-	//
-	// 		field.$update(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 		}, function(errorResponse) {
-	// 			self.errorField = errorResponse.data.message;
-	// 		});
-	// 	};
-	//
-	// 	// Remove current questionnaire section field
-	// 	self.removeField = function(selectedField) {
-	// 		var field = new QuestionnaireItem(selectedField);
-	//
-	// 		field.$remove(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 		}, function (errorResponse) {
-	// 			self.errorField = errorResponse.data.message;
-	// 		});
-	// 	};
-	//
-	// 	/**** Dealing with QUESTIONNAIRE SECTIONS ****/
-	// 	// Create questionnaire section
-	// 	self.createSection = function() {
-	// 		var section = new QuestionnaireSection(self.section);
-	//
-	// 		section.$save(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 			// Clear input fields
-	// 			delete self.section;
-	// 		}, function(errorResponse) {
-	// 			self.errorSection = errorResponse.data.message;
-	// 		});
-	// 	};
-	//
-	// 	// Update current questionnaire section
-	// 	self.updateSection = function(selectedSection) {
-	// 		var section = new QuestionnaireSection(selectedSection);
-	//
-	// 		section.$update(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 		}, function(errorResponse) {
-	// 			self.errorSection = errorResponse.data.message;
-	// 		});
-	// 	};
-	//
-	// 	// Remove current questionnaire section
-	// 	self.removeSection = function(selectedSection) {
-	// 		var section = new QuestionnaireItem(selectedSection);
-	//
-	// 		section.$remove(function() {
-	// 			// If successful refresh the table
-	// 			self.find();
-	// 		}, function (errorResponse) {
-	// 			self.errorItem = errorResponse.data.message;
-	// 		});
-	// 	};
+		/**** Dealing with SECTIONS ****/
+		// Create section
+			self.createSection = function() {
+				var section = new Section(self.section);
+
+				section.$save(function() {
+					// If successful refresh the table
+					self.findSections();
+					// Clear input fields
+					delete self.section;
+				}, function(errorResponse) {
+					self.errorSection = errorResponse.data.message;
+				});
+			};
+
+			// Find list of sections
+			self.findSections = function() {
+				// Set loading state
+				self.isLoading = true;
+
+				Section.query({}, function (sections) {
+					self.sections = sections;
+					// Remove loading state after callback from the server
+					self.isLoading = false;
+				});
+				// Remove error messages
+				delete self.error;
+				delete self.errorItem;
+			};
+
+			// Update current section
+			self.updateSection = function(selectedSection) {
+				var section = new Section(selectedSection);
+
+				section.$update(function() {
+					// If successful refresh the table
+					self.findSections();
+				}, function(errorResponse) {
+					self.errorSection = errorResponse.data.message;
+				});
+			};
+
+			// Remove current section section
+			self.removeSection = function(selectedSection) {
+				var section = new Section(selectedSection);
+
+				section.$remove(function() {
+					// If successful refresh the table
+					self.findSections();
+				}, function (errorResponse) {
+					self.errorItem = errorResponse.data.message;
+				});
+			};
+
+	/**** Dealing with FIELDS ****/
+	// Create field
+		self.createField = function() {
+			var field = new Field(self.field);
+
+			field.$save(function() {
+				// If successful refresh the table
+				self.findFields();
+				// Clear input fields
+				delete self.field;
+			}, function(errorResponse) {
+				self.errorField = errorResponse.data.message;
+			});
+		};
+
+		// Update current field
+		self.updateField = function(selectedField) {
+			var field = new Field(selectedField);
+
+			field.$update(function() {
+				// If successful refresh the table
+				self.findFields();
+			}, function(errorResponse) {
+				self.errorField = errorResponse.data.message;
+			});
+		};
+
+		// Find list of fields
+		self.findFields = function() {
+			// Set loading state
+			self.isLoading = true;
+
+			Field.query({}, function (fields) {
+				self.fields = fields;
+				// Remove loading state after callback from the server
+				self.isLoading = false;
+			});
+			// Remove error messages
+			delete self.error;
+			delete self.errorItem;
+		};
+
+		// Remove current section section field
+		self.removeField = function(selectedField) {
+			var field = new Field(selectedField);
+
+			field.$remove(function() {
+				// If successful refresh the table
+				self.findFields();
+			}, function (errorResponse) {
+				self.errorField = errorResponse.data.message;
+			});
+		};
+
+
 	}
 })();

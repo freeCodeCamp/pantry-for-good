@@ -68,8 +68,8 @@
 									</td>
 									<td>
 										<a data-ng-hide="questionnaire.showEdit" data-ng-click="questionnaire.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.updateQuestionnaire(questionnaire)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.removeQuestionnaire(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.updateItem(questionnaire)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.removeItem(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaire.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>
@@ -109,9 +109,10 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-sort="section.name">Section Name</th>
-									<th st-sort="section.questionnaireId.name">Questionnaire</th>
-									<th st-sort="section.position">Position</th>
+									<th st-sort="name">Section Name</th>
+									<th st-sort="description">Questionnaire</th>
+									<th st-sort="type">Type</th>
+									<th st-sort="choices">Choices</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -122,13 +123,13 @@
 										<input class="form-control"
 										       type="text"
 										       data-ng-model="questionnaireCtrl.section.name"
-										       placeholder="Section Name">
+										       placeholder="Questionnaire Name">
 										       <!-- required> -->
 									</td>
 									<td>
 										<select class="form-control"
-														ng-options="questionnaire.name for questionnaire in questionnaireCtrl.questionnaires"
-										        data-ng-model="questionnaireCtrl.section.questionnaireId">
+										        ng-options="_id as questionnaireId for questionnaire in questionnaireCtrl.questionnaires"
+										        data-ng-model="questionnaireCtrl.item.questionnaireId">
 										        <!-- required> -->
 											<option value="">Select questionnaire</option>
 										</select>
@@ -136,8 +137,14 @@
 									<td>
 										<input class="form-control"
 										       type="text"
-										       data-ng-model="questionnaireCtrl.section.position"
-										       placeholder="Position">
+										       data-ng-model="questionnaireCtrl.section.type"
+										       placeholder="Type">
+									</td>
+									<td>
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaireCtrl.section.choices"
+										       placeholder="Choices">
 									</td>
 									<td>
 										<button class="btn btn-success btn-flat" type="submit" data-ng-disabled="sectionForm.$invalid">
@@ -147,29 +154,26 @@
 								</tr>
 								<tr data-ng-repeat="section in questionnaireCtrl.sectionsCopy">
 									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.name"></span></td>
-									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.questionnaireId.name"></span></td>
-									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.position"></span></td>
+									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.description"></span></td>
 									<td data-ng-show="section.showEdit">
 										<input class="form-control"
 										       type="text"
 										       data-ng-model="section.name">
 									</td>
 									<td data-ng-show="section.showEdit">
-										<select class="form-control"
-										        ng-options="questionnaire.name for questionnaire in questionnaireCtrl.questionnaires"
-										        data-ng-model="questionnaireCtrl.section.questionnaireId">
-											<option value="">Select questionnaire</option>
-										</select>
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="section.type">
 									</td>
 									<td data-ng-show="section.showEdit">
 										<input class="form-control"
 										       type="text"
-										       data-ng-model="section.position">
+										       data-ng-model="section.choices">
 									</td>
 									<td>
 										<a data-ng-hide="section.showEdit" data-ng-click="section.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.updateSection(section)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.removeSection(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.updateItem(section)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.removeItem(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="section.showEdit" data-ng-click="section.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>
@@ -188,7 +192,7 @@
 	</div><!-- /.row -->
 
 	<!-- FIELDS TABLE -->
-	<div class="row" data-ng-init="questionnaireCtrl.findFields()">
+	<div class="row">
 		<div class="col-xs-12">
 			<div class="box" st-table="questionnaireCtrl.fieldsCopy" st-safe-src="questionnaireCtrl.fields">
 				<!-- Box header -->
@@ -209,12 +213,12 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-sort="field.name">Field Name</th>
-									<th st-sort="field.sectionId.name">Section</th>
-									<th st-sort="field.type">Type</th>
-									<th st-sort="field.choices">Choices</th>
-									<th st-sort="field.rol">Row</th>
-									<th st-sort="field.col">Column</th>
+									<th st-sort="name">Field Name</th>
+									<th st-sort="section">Section</th>
+									<th st-sort="type">Type</th>
+									<th st-sort="choices">Choices</th>
+									<th st-sort="rol">Row</th>
+									<th st-sort="col">Column</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -229,7 +233,7 @@
 									</td>
 									<td>
 										<select class="form-control"
-										        ng-options="section.name for section in questionnaireCtrl.sections"
+										        ng-options="_id as sectionId for section in questionnaireCtrl.sections"
 										        data-ng-model="questionnaireCtrl.field.sectionId">
 											<option value="">Select section</option>
 										</select>
@@ -266,21 +270,19 @@
 									</td>
 								</tr>
 								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy">
-									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
-									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.sectionId.name"></span></td>
+									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.title"></span></td>
+									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.sectionName"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.type"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.choices"></span></td>
-									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.row"></span></td>
-									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.col"></span></td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
 										       type="text"
-										       data-ng-model="field.name">
+										       data-ng-model="field.title">
 									</td>
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
-										        ng-options="section.name for section in questionnaireCtrl.sections"
-										        data-ng-model="questionnaireCtrl.field.sectionId">
+														ng-options="_id as sectionId for section in questionnaireCtrl.sections"
+										        data-ng-model="field.sectionId">
 										</select>
 									</td>
 									<td data-ng-show="field.showEdit">
@@ -293,20 +295,10 @@
 										       type="text"
 										       data-ng-model="field.choices">
 									</td>
-									<td data-ng-show="field.showEdit">
-										<input class="form-control"
-										       type="text"
-										       data-ng-model="field.row">
-									</td>
-									<td data-ng-show="field.showEdit">
-										<input class="form-control"
-										       type="text"
-										       data-ng-model="field.col">
-									</td>
 									<td>
 										<a data-ng-hide="field.showEdit" data-ng-click="field.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.updateField(field)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.removeField(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.updateItem(field)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.removeItem(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="field.showEdit" data-ng-click="field.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>

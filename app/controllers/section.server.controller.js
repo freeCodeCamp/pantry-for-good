@@ -63,7 +63,7 @@ exports.delete = function(req, res) {
 
 // Query sections
 exports.query = function(req, res) {
-	Section.find({}).populate('sectionId').exec()
+	Section.find({}).populate('questionnaireId').exec()
 		.then(function (sections) {
 			return res.json(sections);
 		})
