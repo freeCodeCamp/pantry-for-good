@@ -17,15 +17,22 @@ var init = require('./config/init')(),
  */
 
 // Bootstrap db connection
-var db = mongoose.connect(config.db, function(err) {
-	if (err) {
+ mongoose.connect(config.db);
+
+var db = mongoose.connection;
+
+db.on('error', function(err) {
 		console.error(chalk.red('Could not connect to MongoDB!'));
 		console.log(chalk.red(err));
-	}
+});
 
+<<<<<<< aac8d4e2c8cd57017b3e5bafa3bc09b528eafb62
 	// Mongoose promises deprecated, using Bluebird instead
 	mongoose.Promise = require('bluebird');
 
+=======
+db.once('open', function() {
+>>>>>>> fixed error in mongoose connection
 	console.log("Connected to " + config.db);
 
 	// Init the mongoose auto-increment-plugin
