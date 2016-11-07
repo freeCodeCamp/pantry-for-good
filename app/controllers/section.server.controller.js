@@ -101,12 +101,13 @@ exports.sectionById = function(req, res, next, id) {
 				});
 			}
 			req.section = section;
-			return next();
+			return section;
 		})
 		.catch(function(err) {
 			res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-			return next(err);
-	});
+			return err;
+	})
+	.asCallback(next);
 };

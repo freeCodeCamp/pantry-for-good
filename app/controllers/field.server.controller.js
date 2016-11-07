@@ -92,17 +92,18 @@ exports.fieldById = function(req, res, next, id) {
 		.exec()
 		.then(function(field) {
 			if (!field) {
-				return res.status(404).send({
+				res.status(404).send({
 					message: 'Field not found'
 				});
 			}
 			req.field = field;
-			return next();
+			return field;
 		})
 		.catch(function(err) {
 			res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-			return next(err);
-	});
+			return err;
+		})
+		.asCallback(next);
 };

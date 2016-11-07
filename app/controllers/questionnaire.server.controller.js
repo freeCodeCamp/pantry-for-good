@@ -101,12 +101,13 @@ exports.questionnaireById = function(req, res, next, id) {
 				});
 			}
 			req.questionnaire = questionnaire;
-			return next();
+			return questionnaire;
 		})
 		.catch(function(err) {
 			res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-			return next(err);
-	});
+			return err;
+	})
+	.asCallback(next);
 };
