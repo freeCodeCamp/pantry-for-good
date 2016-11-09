@@ -53,7 +53,6 @@ module.exports = {
 				'public/lib/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js',
 				'public/lib/angular-datatables/dist/angular-datatables.min.js',
 				'public/lib/datatables-tabletools/js/dataTables.tableTools.js',
-				'public/lib/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.min.js',
 				'public/lib/angular-print/angularPrint.js',
 				'public/lib/angular-smart-table/dist/smart-table.min.js',
 				'public/lib/moment/moment.js',
