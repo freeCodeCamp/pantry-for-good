@@ -7,7 +7,6 @@
     "angular": "~1.2",
     "angular-resource": "~1.2",
     "angular-mocks": "~1.2",
-    "angular-cookies": "~1.2",
     "angular-bootstrap": "~0.11.2",
     "angular-ui-utils": "~0.1.1",
     "angular-ui-router": "~0.2.11",
@@ -16,8 +15,6 @@
     "admin-lte": "~2.0.5",
     "datatables": "~1.10.5",
     "angular-datatables": "~0.4.2",
-    "datatables-colvis": "~1.1.1",
-    "datatables-colreorder": "~1.1.2",
     "angular-print": "~0.3.6",
     "angular-smart-table": "~2.0.1",
     "angular-moment": "~0.9.2",
@@ -27,6 +24,7 @@
     "angular-file-upload": "^2.3.4"
   },
   "resolutions": {
-    "angular": "~1.2"
+    "angular": "~1.2",
+    "lodash": ">=2.4.1"
   }
 }
