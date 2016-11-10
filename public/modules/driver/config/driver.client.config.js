@@ -19,7 +19,6 @@ angular.module('driver').config(['uiGmapGoogleMapApiProvider',
 	function(uiGmapGoogleMapApiProvider) {
 		uiGmapGoogleMapApiProvider.configure({
 			//key: 'insert key',
-			v: '3.19',
 			libraries: 'geometry, visualization'
 		});
 	}

@@ -5,6 +5,7 @@
 
 	/* @ngInject */
 	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi) {
+		console.log("booting up the controller");
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -16,11 +17,33 @@
 		self.error = {};
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
-		self.map = {};
+		self.models = [];
+
+		var geoToronto = {
+			latitude: 43.8108899,
+			longitude: -79.449906
+		};
+
+		self.map = {
+			center: geoToronto,
+			zoom: 12,
+			window: {
+				marker: {},
+				show: false,
+				options: {
+					content: '',
+					pixelOffset: {
+						height: -40,
+						width: 0
+					}
+				}
+			}
+		};
 
 		//=== Private variables ===//
 		var markers = []; // Store google markers
 
+		console.log("ready to find drivers");
 		findDrivers(); // Start the chain
 
 		//=== START Function chain ===//
@@ -28,14 +51,18 @@
 		function findDrivers() {
 			// Set loading state
 			self.isLoading = true;
+			console.log("just set isLoading");
 
 			VolunteerAdmin.query({}, function(volunteers) {
+				console.log("got driver results");
 				self.drivers = volunteers.filter(function(volunteer) {
 					return volunteer.driver;
 				});
 				// Trigger next function in the chain
+				console.log("finished finding drivers");
 				findCustomers();
 			});
+			console.log("made driver query");
 		}
 
 		// 2. Find a list of customers
@@ -45,6 +72,7 @@
 					return customer.status === 'Accepted';
 				});
 				// Trigger next function in the chain
+				console.log("finished finding customers");
 				createMarkers();
 			});
 		}
@@ -90,28 +118,10 @@
 
 		// 4. Render and configure google maps
 		function renderMap() {
+			console.log("assigning map data");
+			self.map.markers = markers;
 			uiGmapGoogleMapApi.then(function () {
-				var geoToronto = {
-					latitude: 43.8108899,
-					longitude: -79.449906
-				};
-
-				self.map = {
-					center: geoToronto,
-					zoom: 12,
-					markers: markers,
-					window: {
-						marker: {},
-						show: false,
-						options: {
-							content: '',
-							pixelOffset: {
-								height: -40,
-								width: 0
-							}
-						}
-					}
-				};
+				console.log("map is done loading");
 				// Remove loading state
 				self.isLoading = false;
 			});
