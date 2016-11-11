@@ -128,9 +128,9 @@
 									<td>
 										<select class="form-control"
 														ng-options="questionnaire.name for questionnaire in questionnaireCtrl.questionnaires"
-										        data-ng-model="questionnaireCtrl.section.questionnaireId">
-										        <!-- required> -->
-											<option value="">Select questionnaire</option>
+										        data-ng-model="questionnaireCtrl.section.questionnaireId"
+										         required>
+											<option value="">Select Questionnaire</option>
 										</select>
 									</td>
 									<td>
@@ -157,8 +157,8 @@
 									<td data-ng-show="section.showEdit">
 										<select class="form-control"
 										        ng-options="questionnaire.name for questionnaire in questionnaireCtrl.questionnaires"
-										        data-ng-model="questionnaireCtrl.section.questionnaireId">
-											<option value="">Select questionnaire</option>
+										        data-ng-model="section.questionnaireId">
+											<option value="">Select Questionnaire</option>
 										</select>
 									</td>
 									<td data-ng-show="section.showEdit">
@@ -230,15 +230,17 @@
 									<td>
 										<select class="form-control"
 										        ng-options="section.name for section in questionnaireCtrl.sections"
-										        data-ng-model="questionnaireCtrl.field.sectionId">
+										        data-ng-model="questionnaireCtrl.field.sectionId"
+												required>
 											<option value="">Select section</option>
 										</select>
 									</td>
 									<td>
 										<select class="form-control"
-										       data-ng-model="questionnaireCtrl.field.type">
-													 <option value="text" ng-selected="true">Text</option>
-													 <option value="radio">Radio Buttons</option>
+										       data-ng-model="questionnaireCtrl.field.type" ng-init="questionnaireCtrl.field.type='Text'"
+											   required>
+													 <option value="Text">Text</option>
+													 <option value="Radio Buttons">Radio Buttons</option>
 												 </select>
 									</td>
 									<td>
@@ -280,13 +282,15 @@
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
 										        ng-options="section.name for section in questionnaireCtrl.sections"
-										        data-ng-model="questionnaireCtrl.field.sectionId">
+										        data-ng-model="field.sectionId">
 										</select>
 									</td>
 									<td data-ng-show="field.showEdit">
-										<input class="form-control"
-										       type="text"
+										<select class="form-control"
 										       data-ng-model="field.type">
+											<option value="Text" ng-selected="true">Text</option>
+											<option value="Radio Buttons">Radio Buttons</option>
+										</select>
 									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"

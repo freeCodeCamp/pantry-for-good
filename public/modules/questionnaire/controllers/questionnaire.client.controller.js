@@ -8,9 +8,9 @@
 		var self = this;
 
 		// Copy section sections and fields for smart table
-		self.questionnairesCopy = [].concat(self.questionnaires);
-		self.sectionsCopy = [].concat(self.sections);
-		self.fieldsCopy = [].concat(self.fields);
+		self.questionnairesCopy = [];
+		self.sectionsCopy = [];
+		self.fieldsCopy = [];
 
 		/**** Dealing with QUESTIONNAIRES ****/
 		// Create questionnaire
@@ -94,6 +94,7 @@
 
 			// Update current section
 			self.updateSection = function(selectedSection) {
+				console.log(selectedSection);
 				var section = new Section(selectedSection);
 
 				section.$update(function() {
