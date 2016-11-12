@@ -45,7 +45,7 @@ exports.delete = function(req, res) {
 	var questionnaire = req.questionnaire;
 
 	// Prevent remove if there are sections for the questionnaire
-	Section.count({ questionnaireId: questionnaire._id }, function (err, count) {
+	Section.count({ questionnaire: questionnaire._id }, function (err, count) {
 		if (count > 0) {
 			return res.status(400).send({
 				message: 'Questionnaire must not contain any sections before deleting'

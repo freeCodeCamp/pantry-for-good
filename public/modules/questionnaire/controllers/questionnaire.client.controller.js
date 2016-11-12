@@ -23,7 +23,7 @@
 				// Clear input fields
 				delete self.questionnaire;
 			}, function(errorResponse) {
-				self.error = errorResponse.data.message;
+				self.questionnaireError = errorResponse.data.message;
 			});
 		};
 
@@ -38,8 +38,7 @@
 				self.isLoading = false;
 			});
 			// Remove error messages
-			delete self.error;
-			delete self.errorItem;
+			delete self.questionnaireError;
 		};
 
 		// Update current questionnaire
@@ -48,7 +47,7 @@
 				// If successful refresh the table
 				self.findQuestionnaires();
 			}, function(errorResponse) {
-				self.error = errorResponse.data.message;
+				self.questionnaireError = errorResponse.data.message;
 			});
 		};
 
@@ -58,7 +57,7 @@
 				// If successful refresh the table
 				self.findQuestionnaires();
 			}, function (errorResponse) {
-				self.error = errorResponse.data.message;
+				self.questionnaireError = errorResponse.data.message;
 			});
 		};
 
@@ -73,7 +72,7 @@
 					// Clear input fields
 					delete self.section;
 				}, function(errorResponse) {
-					self.errorSection = errorResponse.data.message;
+					self.sectionError = errorResponse.data.message;
 				});
 			};
 
@@ -88,8 +87,7 @@
 					self.isLoading = false;
 				});
 				// Remove error messages
-				delete self.error;
-				delete self.errorItem;
+				delete self.sectionError;
 			};
 
 			// Update current section
@@ -101,7 +99,7 @@
 					// If successful refresh the table
 					self.findSections();
 				}, function(errorResponse) {
-					self.errorSection = errorResponse.data.message;
+					self.sectionError = errorResponse.data.message;
 				});
 			};
 
@@ -113,7 +111,7 @@
 					// If successful refresh the table
 					self.findSections();
 				}, function (errorResponse) {
-					self.errorItem = errorResponse.data.message;
+					self.sectionError = errorResponse.data.message;
 				});
 			};
 
@@ -128,7 +126,7 @@
 				// Clear input fields
 				delete self.field;
 			}, function(errorResponse) {
-				self.errorField = errorResponse.data.message;
+				self.fieldError = errorResponse.data.message;
 			});
 		};
 
@@ -140,7 +138,7 @@
 				// If successful refresh the table
 				self.findFields();
 			}, function(errorResponse) {
-				self.errorField = errorResponse.data.message;
+				self.fieldError = errorResponse.data.message;
 			});
 		};
 
@@ -155,8 +153,7 @@
 				self.isLoading = false;
 			});
 			// Remove error messages
-			delete self.error;
-			delete self.errorItem;
+			delete self.fieldError;
 		};
 
 		// Remove current section section field
@@ -167,10 +164,8 @@
 				// If successful refresh the table
 				self.findFields();
 			}, function (errorResponse) {
-				self.errorField = errorResponse.data.message;
+				self.fieldError = errorResponse.data.message;
 			});
 		};
-
-
 	}
 })();

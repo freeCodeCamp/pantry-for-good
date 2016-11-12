@@ -42,7 +42,7 @@ exports.delete = function(req, res) {
 	var section = req.section;
 
 	// Prevent remove if section contains fields
-	Field.count({ sectionId: section._id }, function (err, count) {
+	Field.count({ section: section._id }, function (err, count) {
 		if (count > 0) {
 			return res.status(400).send({
 				message: 'Section must not contain any fields before deleting'

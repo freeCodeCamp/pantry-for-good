@@ -17,6 +17,10 @@
 							<span class="glyphicon glyphicon-search form-control-feedback"></span>
 						</div>
 					</div>
+					<!-- Error display for questionnaires -->
+					<div data-ng-show="questionnaireCtrl.questionnaireError" class="text-danger">
+						<strong data-ng-bind="questionnaireCtrl.questionnaireError"></strong>
+					</div>
 				</div><!-- /.box-header -->
 				<!-- Box body -->
 				<div class="box-body table-responsive no-padding top-buffer">
@@ -99,6 +103,10 @@
 							<input class="form-control" type="search" st-search="name" placeholder="Search">
 							<span class="glyphicon glyphicon-search form-control-feedback"></span>
 						</div>
+					</div>
+					<!-- Error display for sections -->
+					<div data-ng-show="questionnaireCtrl.sectionError" class="text-danger">
+						<strong data-ng-bind="questionnaireCtrl.sectionError"></strong>
 					</div>
 				</div><!-- /.box-header -->
 				<!-- Box body -->
@@ -206,6 +214,10 @@
 							<input class="form-control" type="search" st-search="name" placeholder="Search">
 							<span class="glyphicon glyphicon-search form-control-feedback"></span>
 						</div>
+					</div>
+					<!-- Error display for fields -->
+					<div data-ng-show="questionnaireCtrl.fieldError" class="text-danger">
+						<strong data-ng-bind="questionnaireCtrl.fieldError"></strong>
 					</div>
 				</div><!-- /.box-header -->
 				<!-- Box body -->
