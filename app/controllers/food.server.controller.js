@@ -74,15 +74,17 @@ exports.delete = function(req, res) {
  * List of Food categories
  */
 exports.list = function(req, res) {
-	Food.find().sort('category').exec(function(err, foods) {
-		if (err) {
+	return Food.find()
+		.sort('category')
+		.exec()
+		.then(function(foods) {
+			return res.json(foods);
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.json(foods);
-		}
-	});
+		});
 };
 
 /**
@@ -91,7 +93,7 @@ exports.list = function(req, res) {
 exports.createItem = function(req, res) {
 	var id = req.food._id;
 	var item = req.body;
-	
+
 	item._id = mongoose.Types.ObjectId(item._id);
 
 	Food.findByIdAndUpdate(id, {$addToSet: {items: item}}, function(err, food) {
@@ -177,16 +179,20 @@ exports.deleteItem = function(req, res) {
  * Food middleware
  */
 exports.foodById = function(req, res, next, id) {
-	Food.findById(id).exec(function(err, food) {
-		if (err) return next(err);
-		if (!food) {
-			return res.status(404).send({
-				message: 'Food category not found'
-			});
-		}
-		req.food = food;
-		next();
-	});
+	return Food.findById(id)
+		.exec()
+		.then(function(food) {
+			if (!food) {
+				return res.status(404).send({
+					message: 'Food category not found'
+				});
+			}
+			req.food = food;
+		})
+		.catch(function (err) {
+			return err;
+		})
+		.asCallback(next);
 };
 
 exports.itemById = function(req, res, next, id) {
