@@ -55,8 +55,8 @@ exports.delete = function(req, res) {
 exports.query = function(req, res) {
 	Field.find({})
 		.populate({
-	    path: 'sectionId',
-	    populate: { path: 'questionnaireId' }
+	    path: 'section',
+	    populate: { path: 'questionnaire' }
 	  })
 		.exec()
 		.then(function (fields) {
@@ -86,8 +86,8 @@ exports.fieldById = function(req, res, next, id) {
 
 	Field.findById(id)
 		.populate({
-			path: 'sectionId',
-			populate: { path: 'questionnaireId' }
+			path: 'section',
+			populate: { path: 'questionnaire' }
 		})
 		.exec()
 		.then(function(field) {

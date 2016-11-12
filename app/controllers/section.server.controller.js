@@ -63,7 +63,8 @@ exports.delete = function(req, res) {
 
 // Query sections
 exports.query = function(req, res) {
-	Section.find({}).populate('questionnaireId').exec()
+	Section.find({}).populate('questionnaire')
+		.exec()
 		.then(function (sections) {
 			return res.json(sections);
 		})
@@ -91,7 +92,7 @@ exports.sectionById = function(req, res, next, id) {
 
 	Section.findById(id)
 		.populate({
-			path: 'questionnaireId'
+			path: 'questionnaire'
 		})
 		.exec()
 		.then(function(section) {

@@ -18,6 +18,7 @@ var mongoose = require('mongoose'),
 	    type: {
 	      type: String,
 				required: 'Please select a field type',
+				enum: ['text', 'radio'],
 	      trim: true
 	    },
 	    choices: [{
@@ -25,12 +26,14 @@ var mongoose = require('mongoose'),
 	        trim: true
 	    }],
 	    row: {
-	      type: Number
+	      type: Number,
+				required: 'Row is required'
 	    },
-	    col: {
-	      type: Number
+	    column: {
+	      type: Number,
+				required: 'Column is required'
 	    },
-	    sectionId: {
+	    section: {
 	      type: Schema.Types.ObjectId,
 	      ref: 'Section'
 	    }
@@ -44,9 +47,10 @@ var mongoose = require('mongoose'),
 	    trim: true
 	  },
 	  position: {
-	    type: Number
+	    type: Number,
+			required: 'Position is required'
 	  },
-	  questionnaireId: {
+	  questionnaire: {
 	    type: Schema.Types.ObjectId,
 	    ref: 'Questionnaire'
 	  }

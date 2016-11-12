@@ -8,9 +8,9 @@
 		var self = this;
 
 		// Copy section sections and fields for smart table
-		self.questionnairesCopy = [];
-		self.sectionsCopy = [];
-		self.fieldsCopy = [];
+		self.questionnairesCopy = [].concat(self.questionnaires);
+		self.sectionsCopy = [].concat(self.sections);
+		self.fieldsCopy = [].concat(self.fields);
 
 		/**** Dealing with QUESTIONNAIRES ****/
 		// Create questionnaire
@@ -52,7 +52,7 @@
 			});
 		};
 
-		// Remove current section
+		// Remove current questionnaire
 		self.removeQuestionnaire = function(questionnaire) {
 			questionnaire.$remove(function() {
 				// If successful refresh the table
