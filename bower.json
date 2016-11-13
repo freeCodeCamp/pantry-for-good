@@ -1,5 +1,5 @@
 {
-  "name": "Foodbank Template",
+  "name": "foodbank-template",
   "version": "0.0.1",
   "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
   "dependencies": {
@@ -20,9 +20,7 @@
     "datatables-tabletools": "^2.2.4",
     "angular-google-maps": "^2.4.0",
     "AdminLTE": "admin-lte#^2.3.8",
-    "font-awesome": "fontawesome#^4.7.0"
-  },
-  "resolutions": {
-    "angular-smart-table": "^2.1.8"
+    "font-awesome": "fontawesome#^4.7.0",
+    "angularPrint": "angular-print#^0.3.8"
   }
 }
