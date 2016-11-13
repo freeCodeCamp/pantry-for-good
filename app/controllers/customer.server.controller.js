@@ -16,7 +16,7 @@ var mongoose = require('mongoose'),
 /**
  * Private helper function for email notification
  */
-var sendEmailStatus = function(req, res, customer, next) {
+var sendEmailStatus = function(req, res, customer) {
 	if (req.body.status === 'Accepted') {
 		var mailOptionsAccept = {
 			to: customer.email,
@@ -30,8 +30,9 @@ var sendEmailStatus = function(req, res, customer, next) {
 		};
 
 		smtpTransport.sendMail(mailOptionsAccept, function(err) {
-			if (err) return next(err);
+			if (err) return err;
 		});
+
 	} else if (req.body.status === 'Rejected') {
 		var mailOptionsReject = {
 			to: customer.email,
@@ -45,12 +46,12 @@ var sendEmailStatus = function(req, res, customer, next) {
 		};
 
 		smtpTransport.sendMail(mailOptionsReject, function(err) {
-			if (err) return next(err);
+			if (err) return err;
 		});
 	}
 };
 
-var sendEmailUpdate = function(req, res, customer, next) {
+var sendEmailUpdate = function(req, res, customer) {
 	var mailOptionsUpdate = {
 		to: config.mailer.to,
 		headers: {
@@ -64,7 +65,7 @@ var sendEmailUpdate = function(req, res, customer, next) {
 	};
 
 	smtpTransport.sendMail(mailOptionsUpdate, function(err) {
-		if (err) return next(err);
+		if (err) return err;
 	});
 };
 
@@ -76,48 +77,49 @@ exports.create = function(req, res, next) {
 	customer._id = req.user.id;
 
 	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}}, function(err) {
-		if (err) {
+	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
+		.then(function(user) {
+			async.waterfall([
+				function(done) {
+					customer.save(function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							res.json(customer);
+
+							done(err, customer);
+						}
+					});
+				},
+				function(customer, done) {
+					var mailOptionsCreate = {
+						to: config.mailer.to,
+						headers: {
+							'X-MC-Template': 'new-client',
+							'X-MC-MergeVars': JSON.stringify({
+								id: customer._id,
+								fullName: customer.fullName,
+								date: customer.dateReceived.toDateString()
+							})
+						}
+					};
+
+					smtpTransport.sendMail(mailOptionsCreate, function(err) {
+						done(err, 'done');
+					});
+				}
+			], function(err) {
+				if (err) return err;
+			});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
+		});
 
-	async.waterfall([
-		function(done) {
-			customer.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					res.json(customer);
-
-					done(err, customer);
-				}
-			});
-		},
-		function(customer, done) {
-			var mailOptionsCreate = {
-				to: config.mailer.to,
-				headers: {
-					'X-MC-Template': 'new-client',
-					'X-MC-MergeVars': JSON.stringify({
-						id: customer._id,
-						fullName: customer.fullName,
-						date: customer.dateReceived.toDateString()
-					})
-				}
-			};
-
-			smtpTransport.sendMail(mailOptionsCreate, function(err) {
-				done(err, 'done');
-			});
-		}
-	], function(err) {
-		if (err) return next(err);
-	});
 };
 
 /**
@@ -135,56 +137,61 @@ exports.update = function(req, res) {
 
 	customer = _.extend(customer, req.body);
 
-	Customer.findOne({'_id': customer._id}).exec(function(err, customerOld) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} 
+	Customer.findOne({'_id': customer._id})
+		.exec()
+		.then(function(customerOld) {
+			// Send email notification when there is a status change
+			if (customerOld.status !== customer.status) {
+				sendEmailStatus(req, res, customer);
 
-		// Send email notification when there is a status change
-		if (customerOld.status !== customer.status) {
-			sendEmailStatus(req, res, customer);
-
-			// Assign the customer user role to the user in the case of application approval
-			if (customer.status === 'Accepted') {
-				User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					}
-				});
+				// Assign the customer user role to the user in the case of application approval
+				if (customer.status === 'Accepted') {
+					User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						}
+					});
+				}
+			} else {
+				sendEmailUpdate(req, res, customer);
 			}
-		} else {
-			sendEmailUpdate(req, res, customer);
-		}
-	});
+		});
 
-	customer.save(function(err) {
-		if (err) {
+		customer.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.json(customer);
+			}
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.json(customer);
-		}
-	});
+		});
 };
 
 /**
  * List of customers
  */
 exports.list = function(req, res) {
-	Customer.find().sort('-dateReceived').populate('user', 'displayName').populate('assignedTo', 'firstName lastName').exec(function(err, customers) {
-		if (err) {
+	return Customer.find()
+		.sort('-dateReceived')
+		.populate('user', 'displayName')
+		.populate('assignedTo', 'firstName lastName')
+		.exec()
+		.then(function(customers) {
+			return res.json(customers);
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.json(customers);
-		}
-	});
+		});
 };
 
 /**
@@ -192,23 +199,27 @@ exports.list = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var id = req.customer._id;
-	 
-	User.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
+
+	User.findByIdAndRemove(id)
+		.exec()
+		.then(function(user) {
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
-	 
-	Customer.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
+		});
+
+	Customer.findByIdAndRemove(id)
+		.exec()
+		.then(function(customer) {
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}		
-	});
-	
+		});
+
 	res.end();
 };
 
@@ -216,12 +227,16 @@ exports.delete = function(req, res) {
  * Customer middleware
  */
 exports.customerById = function(req, res, next, id) {
-	Customer.findById(id).exec(function(err, customer) {
-		if (err) return next(err);
-		if (!customer) return next(new Error('Failed to load customer #' + id));
-		req.customer = customer;
-		next();
-	});
+	Customer.findById(id)
+		.exec()
+		.then(function(customer) {
+			if (!customer) return new Error('Failed to load customer #' + id);
+			req.customer = customer;
+		})
+		.catch(function (err) {
+			return err;
+		})
+		.asCallback(next);
 };
 
 /**
@@ -235,4 +250,3 @@ exports.hasAuthorization = function(req, res, next) {
 	}
 	next();
 };
-

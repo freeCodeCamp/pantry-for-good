@@ -76,7 +76,7 @@
 		/**
 		 *	Dependants Section
 		 */
-		 
+
 		// Store dependants in the household
 		self.customer.household = [{
 			name: self.customer.firstName + ' ' + self.customer.lastName,
@@ -89,14 +89,14 @@
 			var temp = angular.copy(self.customer.household);
 			self.customer.household = [];
 			for (var i = numberOfDependants - 1; i >= 0; i--) {
-				self.customer.household[i] = temp[i] || {};	
+				self.customer.household[i] = temp[i] || {};
 			}
 		};
 
 		/**
 		 * Helper Functions
 		 */
-		 
+
 		// Refactor food item objects into a list of names separated by comma's
 		self.splitByComma = function(foodItems) {
 			if (foodItems) {
@@ -122,7 +122,7 @@
 		/**
 		 * CRUD Functions
 		 */
-		 
+
 		// Find a list of customers
 		self.find = function() {
 			self.customers = CustomerAdmin.query();
@@ -144,14 +144,18 @@
 
 			if (status) customer.status = status;
 
-			customer.$update(function() {
+			customer.$update()
+				.then(function() {
 				// Redirect after update
 				$state.go('root.listCustomers');
-			}, function(errorResponse) {
-				self.error = errorResponse.data.message;
+			})
+			.catch(function(err) {
+				if (err) {
+					self.error = err.data.message;
+				}
 			});
 		};
-		
+
 		// Delete existing customer
 		self.delete = function(customer) {
 			if ($window.confirm('Are you sure?')) {
@@ -161,6 +165,6 @@
 					self.error = errorResponse.data.message;
 				});
 			}
-		};		
+		};
 	}
 })();

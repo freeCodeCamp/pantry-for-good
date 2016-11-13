@@ -39,7 +39,7 @@
 				});
 			});
 		};
-		
+
 		// Toggle selection of all food items
 		self.selectAll = function(checked) {
 			if (!checked) {
@@ -72,7 +72,7 @@
 		/**
 		 *	 Financial Assessment
 		 */
-		 
+
 		self.customer.employment = self.customer.employment || {};
 		self.customer.financialAssessment = self.customer.financialAssessment || {};
 		self.customer.financialAssessment.income = self.customer.financialAssessment.income || Data.getIncomeList();
@@ -94,17 +94,17 @@
 			var temp = angular.copy(self.customer.household);
 			self.customer.household = [];
 			for (var i = numberOfDependants - 1; i >= 0; i--) {
-				self.customer.household[i] = temp[i] || {};	
+				self.customer.household[i] = temp[i] || {};
 			}
 		};
-		
+
 		/**
 		 *	Helper Functions
 		 */
-		 
+
 		// Refactor food item objects into a list of names separated by comma's
 		self.splitByComma = function(foodItems) {
-			if (foodItems) { 
+			if (foodItems) {
 				var temp = [];
 				foodItems.forEach(function(itemId) {
 					self.foodList.forEach(function(food) {
@@ -123,11 +123,11 @@
 				}, 0);
 			}
 		};
-		
+
 		/**
 		 * CRUD Functions
 		 */
-		
+
 		// Create a new customer
 		self.create = function() {
 			var customer = new CustomerUser(self.customer);
@@ -159,8 +159,11 @@
 			customer.$update(function() {
 				// Redirect after update
 				$state.go('root');
-			}, function(errorResponse) {
-				self.error = errorResponse.data.message;
+			})
+			.catch(function(err) {
+				if (err) {
+					self.error = err.data.message;
+				}
 			});
 		};
 	}
