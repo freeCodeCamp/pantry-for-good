@@ -17,23 +17,23 @@ exports.create = function(req, res) {
 	donor._id = req.user.id;
 
 	// Update user's role to donor and mark as this user as having applied
-	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}}, function(err) {
-		if (err) {
+	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
+		.then(function(user) {
+			return donor.save(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					return res.json(donor);
+				}
+			});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
-
-	donor.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(donor);
-		}
-	});
+		});
 };
 
 /**
@@ -66,15 +66,18 @@ exports.update = function(req, res) {
  * List of donors
  */
 exports.list = function(req, res) {
-	Donor.find().sort('-dateReceived').populate('donations', 'eligibleForTax').exec(function(err, donors) {
-		if (err) {
+	return Donor.find()
+		.sort('-dateReceived')
+		.populate('donations', 'eligibleForTax')
+		.exec()
+		.then(function(donors) {
+			return res.json(donors);
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.json(donors);
-		}
-	});
+		});
 };
 
 /**
@@ -82,36 +85,38 @@ exports.list = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var id = req.donor._id;
-	 
-	User.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
+
+	return User.findByIdAndRemove(id)
+		.exec()
+		.then(function(user) {
+			return Donor.findByIdAndRemove(id)
+				.exec()
+				.then(function(donor) {
+					return res.end();
+				});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
-	 
-	Donor.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		}		
-	});
-	
-	res.end();
+		});
 };
 
 /**
  * Donor middleware
  */
 exports.donorById = function(req, res, next, id) {
-	Donor.findById(id).populate('donations').exec(function(err, donor) {
-		if (err) return next(err);
-		if (!donor) return next(new Error('Failed to load donor #' + id));
-		req.donor = donor;
-		next();
-	});
+	Donor.findById(id)
+		.populate('donations')
+		.exec()
+		.then(function(donor) {
+			if (!donor) return new Error('Failed to load donor #' + id);
+			req.donor = donor;
+		})
+		.catch(function (err) {
+			return err;
+		})
+		.asCallback(next);
 };
 
 /**

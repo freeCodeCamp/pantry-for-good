@@ -4,7 +4,7 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-	function DonorAdminController($window, $modal, $state, $stateParams, Authentication, DonorAdmin) {
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin) {
 		var self = this;
 
 		self.donor = {};
@@ -18,7 +18,7 @@
 		self.newDonation = newDonation;
 		self.viewDonation = viewDonation;
 		self.remove = remove;
-		
+
 		// Verify is user has admin role, redirect to home otherwise
 		if (Authentication.user.roles.indexOf('admin') < 0) $state.go('root');
 
@@ -68,7 +68,7 @@
 				self.error = errorResponse.data.message;
 			});
 		}
-		
+
 		// Delete donor
 		function remove(donor) {
 			if ($window.confirm('Are you sure?')) {
@@ -82,7 +82,7 @@
 
 		// Open donation form in a modal window
 		function newDonation() {
-			var modalInstance = $modal.open({
+			var modalInstance = $uibModal.open({
 				templateUrl: 'modules/donor/views/admin/create-donation.client.view.html',
 				controller: 'DonationController as donationCtrl',
 				resolve: {
@@ -102,7 +102,7 @@
 
 		// View donation in a modal window
 		function viewDonation(donation) {
-			$modal.open({
+			$uibModal.open({
 				templateUrl: 'modules/donor/views/admin/view-donation.client.view.html',
 				controller: 'DonationController as donationCtrl',
 				resolve: {
