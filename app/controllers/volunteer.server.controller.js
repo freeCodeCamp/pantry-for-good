@@ -17,23 +17,23 @@ exports.create = function(req, res) {
 	volunteer._id = req.user.id;
 
 	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}}, function(err) {
-		if (err) {
+	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
+		.then(function(user) {
+			return volunteer.save(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					return res.json(volunteer);
+				}
+			});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
-	
-	volunteer.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(volunteer);
-		}
-	});
+		});
 };
 
 /**
@@ -50,72 +50,80 @@ exports.update = function(req, res) {
 	var volunteer = req.volunteer;
 	volunteer = _.extend(volunteer, req.body);
 
-	Volunteer.findOne({'_id': volunteer._id}).exec(function(err, volunteerOld) {
-		if (err) {
+	Volunteer.findOne({'_id': volunteer._id})
+		.exec()
+		.then(function(volunteerOld) {
+			// If there's a change in driver status assign the driver role to the user
+			if (volunteerOld.driver !== volunteer.driver) {
+				if (volunteer.driver) {
+					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['driver']}})
+						.then(function(user) {
+						})
+						.catch(function (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						});
+				}
+			}
+
+			if (volunteerOld.status !== volunteer.status) {
+				// Assign the volunteer role if volunteer is activated
+				if (volunteer.status === 'Active') {
+					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['volunteer']}})
+						.then(function(user) {
+						})
+						.catch(function (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						});
+				// Revoke volunteer role if the volunteer is inactive
+				} else {
+					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['user']}})
+						.then(function(user) {
+						})
+						.catch(function (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						});
+				}
+			}
+
+			return volunteer.save(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					return res.json(volunteer);
+				}
+			});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-		// If there's a change in driver status assign the driver role to the user
-		if (volunteerOld.driver !== volunteer.driver) {
-			if (volunteer.driver) {
-				User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['driver']}}, function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					}
-				});
-			}
-		}
-
-		if (volunteerOld.status !== volunteer.status) {
-			// Assign the volunteer role if volunteer is activated
-			if (volunteer.status === 'Active') {
-				User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['volunteer']}}, function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					}
-				});
-			// Revoke volunteer role if the volunteer is inactive
-			} else {
-				User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['user']}}, function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					}
-				});
-			}
-		}
-	});
-
-	volunteer.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(volunteer);
-		}
-	});
+		});
 };
 
 /**
  * List of volunteers
  */
 exports.list = function(req, res) {
-	Volunteer.find().sort('-dateReceived').populate('user', 'displayName').exec(function(err, volunteers) {
-		if (err) {
+	return Volunteer.find()
+		.sort('-dateReceived')
+		.populate('user', 'displayName')
+		.exec()
+		.then(function(volunteers) {
+			return res.json(volunteers);
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		} else {
-			res.json(volunteers);
-		}
-	});
+		});
 };
 
 /**
@@ -123,36 +131,38 @@ exports.list = function(req, res) {
  */
 exports.delete = function(req, res) {
 	var id = req.volunteer._id;
-	 
-	User.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
+
+	return User.findByIdAndRemove(id)
+		.exec()
+		.then(function(user) {
+			return Volunteer.findByIdAndRemove(id)
+			.exec()
+			.then(function(volunteer) {
+				return res.end();
+			});
+		})
+		.catch(function (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		}
-	});
-	 
-	Volunteer.findByIdAndRemove(id).exec(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		}		
-	});
-	
-	res.end();
+		});
 };
 
 /**
  * Volunteer middleware
  */
 exports.volunteerById = function(req, res, next, id) {
-	Volunteer.findById(id).populate('customers').exec(function(err, volunteer) {
-		if (err) return next(err);
-		if (!volunteer) return next(new Error('Failed to load volunteer #' + id));
-		req.volunteer = volunteer;
-		next();
-	});
+	Volunteer.findById(id)
+		.populate('customers')
+		.exec()
+		.then(function(volunteer) {
+			if (!volunteer) return new Error('Failed to load volunteer #' + id);
+			req.volunteer = volunteer;
+		})
+		.catch(function (err) {
+			return err;
+		})
+		.asCallback(next);
 };
 
 /**
