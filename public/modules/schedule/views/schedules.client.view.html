@@ -34,7 +34,7 @@
 						<tbody>
 							<tr data-ng-repeat="item in scheduleCtrl.itemsCopy">
 								<td><span data-ng-bind="item.name"></span></td>
-								<td data-ng-hide="item.showEdit"><span data-ng-bind="item.startDate"></span></td>
+								<td data-ng-hide="item.showEdit"><span data-ng-bind="item.startDate | date : 'yyyy-Www'"></span></td>
 								<td data-ng-hide="item.showEdit"><span data-ng-bind="item.frequency"></span></td>
 								<td data-ng-show="item.showEdit">
 									<input class="form-control"
