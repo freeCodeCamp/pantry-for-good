@@ -4,13 +4,13 @@
 	angular.module('donor').controller('DonationController', DonationController);
 
 	/* @ngInject */
-	function DonationController($modalInstance, $stateParams, Donation, donationItem) {
+	function DonationController($uibModalInstance, $stateParams, Donation, donationItem) {
 		var self = this;
 
-		self.close = $modalInstance.close;
+		self.close = $uibModalInstance.close;
 		self.create = create;
 		self.sendEmail = sendEmail;
-		self.dismiss = $modalInstance.dismiss;
+		self.dismiss = $uibModalInstance.dismiss;
 		self.donation = donationItem;
 		self.error = '';
 

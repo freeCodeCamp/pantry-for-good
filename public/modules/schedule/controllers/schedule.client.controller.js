@@ -28,12 +28,11 @@
 							item = food.items[item];
 							item.categoryName = food.category;
 							item.categoryId = food._id;
-							// Format date object into string
-							// item.startDate = moment(item.startDate).format('YYYY-[W]W');
-							if (!item.startDate)
-								item.startDate = new Date();
-							else
+
+							if (item.startDate)
 								item.startDate = new Date(item.startDate);
+							else
+								item.startDate = new Date();
 							self.items.push(item);
 						}
 					}
@@ -47,8 +46,6 @@
 
 		// Update current food item
 		self.update = function(selectedItem) {
-			// Parse string back into date object
-			//selectedItem.startDate = moment(selectedItem.startDate);
 			var item = new FoodItem(selectedItem);
 
 			item.$update(function() {
