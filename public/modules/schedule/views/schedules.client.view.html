@@ -56,7 +56,7 @@
 									<a data-ng-show="item.showEdit" data-ng-click="scheduleCtrl.update(item)" class="btn btn-success btn-flat btn-xs">
 										<i class="fa fa-download"></i> Save
 									</a>
-									<a data-ng-show="item.showEdit" data-ng-click="item.showEdit = false" class="btn btn-primary btn-flat btn-xs">
+									<a data-ng-show="item.showEdit" data-ng-click="scheduleCtrl.find(); item.showEdit = false" class="btn btn-primary btn-flat btn-xs">
 										<i class="fa fa-times"></i> Cancel
 									</a>
 								</td>

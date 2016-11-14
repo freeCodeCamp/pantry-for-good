@@ -155,7 +155,7 @@
 										<a data-ng-hide="item.showEdit" data-ng-click="item.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
 										<a data-ng-show="item.showEdit" data-ng-click="foodCtrl.updateItem(item)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
 										<a data-ng-show="item.showEdit" data-ng-click="foodCtrl.removeItem(item)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
-										<a data-ng-show="item.showEdit" data-ng-click="item.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
+										<a data-ng-show="item.showEdit" data-ng-click="foodCtrl.find(); item.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>
 								<tr data-ng-if="!foodCtrl.items.length">
