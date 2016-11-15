@@ -73,13 +73,12 @@ var UserSchema = new Schema({
 		type: [{
 			type: String,
 			enum: ['user', 'customer', 'volunteer', 'driver', 'donor', 'admin']
-		}],
-		default: ['admin']
+		}]
 	},
 	accountType: {
 		type: [{
 			type: String,
-			enum: ['volunteer', 'donor', 'customer']
+			enum: ['volunteer', 'donor', 'customer', 'admin']
 		}],
 		required: 'Please select account type'
 	},

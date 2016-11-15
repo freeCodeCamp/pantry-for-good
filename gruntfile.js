@@ -161,6 +161,11 @@ module.exports = function(grunt) {
 		grunt.config.set('applicationCSSFiles', config.assets.css);
 	});
 
+	grunt.registerTask('create-admin-user', 'Task that creates an admin user from admin-config.json', function() {
+		this.async();
+		require("./createAdminUser.js");
+	});
+
 	// Default task(s).
 	grunt.registerTask('default', ['lint', 'build', 'concurrent:default']);
 
