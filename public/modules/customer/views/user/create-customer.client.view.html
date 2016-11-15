@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-xs-12">
       <!-- Form -->
-      <form name="customerForm" data-ng-submit="customerForm.$valid && customerCtrl.create()">
+      <form name="customerForm" data-ng-submit="customerForm.$valid && customerCtrl.create()" novalidate>
         <!-- Section A - Identification and General Information -->
         <div data-ui-view="general-info"></div>
         <!-- Section B - Employment -->
@@ -40,9 +40,6 @@
         <div data-ng-show="customerCtrl.error" class="text-danger">
           <strong data-ng-bind="customerCtrl.error"></strong>
         </div>
-				<div data-ng-show="customerForm.dateOfBirth.$dirty && customerForm.dateOfBirth.$invalid" class="text-danger">
-					<strong>Date of Birth is invalid</strong>
-				</div><!-- /.error -->
       </form><!-- form -->
     </div><!-- /.col -->
   </div><!-- /.row -->
