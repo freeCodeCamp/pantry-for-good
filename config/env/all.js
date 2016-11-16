@@ -35,8 +35,6 @@ module.exports = {
 				'public/lib/AdminLTE/dist/css/AdminLTE.min.css',
 				'public/lib/AdminLTE/dist/css/skins/skin-blue.min.css',
 				'public/lib/AdminLTE/plugins/datatables/dataTables.bootstrap.css',
-				'public/lib/datatables-colvis/css/dataTables.colVis.css',
-				'public/lib/datatables-colreorder/css/dataTables.colReorder.css',
 				'public/lib/datatables-tabletools/css/dataTables.tableTools.css',
 				'public/lib/angular-print/angularPrint.css'
 			],
