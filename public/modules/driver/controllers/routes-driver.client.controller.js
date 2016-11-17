@@ -5,19 +5,17 @@
 
 	/* @ngInject */
 	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi) {
-		console.log("booting up the controller");
 		var self = this;
 
 		//=== Bindable variables ===//
 		self.assign = assign;
-		self.customers = {};
-		self.customersCopy = [].concat(self.customers); // Copy data for smart table
+		self.customers = [];
+		self.customersCopy = [];
 		self.driver = null;
-		self.drivers = {};
+		self.drivers = [];
 		self.error = {};
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
-		self.models = [];
 
 		var geoToronto = {
 			latitude: 43.8108899,
@@ -27,6 +25,7 @@
 		self.map = {
 			center: geoToronto,
 			zoom: 12,
+			markers: [],
 			window: {
 				marker: {},
 				show: false,
@@ -43,7 +42,6 @@
 		//=== Private variables ===//
 		var markers = []; // Store google markers
 
-		console.log("ready to find drivers");
 		findDrivers(); // Start the chain
 
 		//=== START Function chain ===//
@@ -51,18 +49,14 @@
 		function findDrivers() {
 			// Set loading state
 			self.isLoading = true;
-			console.log("just set isLoading");
 
 			VolunteerAdmin.query({}, function(volunteers) {
-				console.log("got driver results");
 				self.drivers = volunteers.filter(function(volunteer) {
 					return volunteer.driver;
 				});
 				// Trigger next function in the chain
-				console.log("finished finding drivers");
 				findCustomers();
 			});
-			console.log("made driver query");
 		}
 
 		// 2. Find a list of customers
@@ -72,7 +66,6 @@
 					return customer.status === 'Accepted';
 				});
 				// Trigger next function in the chain
-				console.log("finished finding customers");
 				createMarkers();
 			});
 		}
@@ -118,10 +111,8 @@
 
 		// 4. Render and configure google maps
 		function renderMap() {
-			console.log("assigning map data");
 			self.map.markers = markers;
 			uiGmapGoogleMapApi.then(function () {
-				console.log("map is done loading");
 				// Remove loading state
 				self.isLoading = false;
 			});
@@ -220,7 +211,7 @@
 		//=== Helper functions ===//
 		// Enable assign button if any of the checkboxes are checked
 		function isDisabled(assignForm) {
-			if (self.customers) {
+			if (self.customers.length > 0) {
 				return !$filter('filter')(self.customers, {isChecked: true}).length || assignForm.$invalid;
 			}
 		}
