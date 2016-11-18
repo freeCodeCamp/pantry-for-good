@@ -88,7 +88,7 @@ module.exports = function(db) {
 
 	// Express MongoDB session storage
 	app.use(session({
-		saveUninitialized: true,
+		saveUninitialized: false,
 		resave: true,
 		secret: config.sessionSecret,
 		store: new mongoStore({
