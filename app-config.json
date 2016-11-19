@@ -1,7 +1,5 @@
 {
   "title": "FTApp",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
-  "keywords": "MongoDB, Express, AngularJS, Node.js",
   "mongodb_prod": "mongodb://localhost:27017/fb-prod",
   "mongodb_dev": "mongodb://food-bank-app:freecodecamp1@ds025379.mlab.com:25379/heroku_5svv90mx",
   "mongodb_test": "/fb-test"

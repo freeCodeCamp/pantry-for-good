@@ -5,8 +5,6 @@ var appconfig = require('../../app-config.json');
 module.exports = {
 	app: {
 		title: appconfig.title,
-		description: appconfig.description,
-		keywords: appconfig.keywords,
 		appconfig: appconfig
 	},
 	port: process.env.PORT || 3000,
