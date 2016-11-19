@@ -1,0 +1,71 @@
+.undecorated-link:hover {
+	text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
+.ng-invalid.ng-dirty {
+	border-color: #FA787E;
+}
+.ng-valid.ng-dirty {
+	border-color: #78FA89;
+}
+
+/* ============ */
+/* Smart tables */
+/* ============ */
+
+/* Table columns */
+th[st-sort] {
+	cursor: pointer;
+}
+th[st-sort]:after {
+	font-family: FontAwesome;
+	content: '\f0dc';
+	color: #cccccc;
+	float: right;
+}
+.st-sort-ascent:after {
+	font-family: FontAwesome;
+	content: '\f0de' !important;
+}
+.st-sort-descent:after{
+	font-family: FontAwesome;
+	content: '\f0dd' !important;
+}
+
+/* ============== */
+/* /.smart-tables */
+/* ============== */
+
+/* Edit tools */
+td .tools {
+	display: none;
+	float: right;
+}
+td .tools > .fa,
+td .tools > .glyphicon,
+td .tools > .ion {
+	margin-right: 5px;
+	cursor: pointer;
+}
+td:hover .tools {
+	display: inline-block;
+}
+
+/* Margin buffer */
+.top-buffer {
+	margin-top: 10px;
+}
+
+/* Error pages */
+.headline {
+	margin-top: -20px;
+}
+
+/* Print */
+@media print {
+	.table-responsive {
+		overflow: visible;
+	}
+}

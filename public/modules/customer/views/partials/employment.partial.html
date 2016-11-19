@@ -1,0 +1,78 @@
+<!-- Box -->
+<div class="box box-solid box-primary">
+  <!-- Box header -->
+  <div class="box-header">
+    <h3 class="box-title">SECTION B - EMPLOYMENT</h3>
+  </div><!-- /.box-header-->
+  <!-- Box body -->
+  <div class="box-body">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>Current work status</label>
+          <div>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Employed">Employed
+            </label>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Unemployed">Unemployed
+            </label>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Laid-off">Laid-off
+            </label>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Retired">Retired
+            </label>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Disabled">Disabled
+            </label>
+            <label class="radio-inline">
+              <input name="employmentStatus"
+                     type="radio"
+                     data-ng-model="customerCtrl.customer.employment.workStatus"
+                     value="Student">Student
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix visible-sm-block visible-md-block"></div>
+      <div class="col-xs-6 col-lg-3">
+        <div class="form-group">
+          <label>Hours per week</label>
+          <input type="number"
+                 min="1"
+                 max="80"
+                 data-ng-model="customerCtrl.customer.employment.hoursPerWeek"
+                 data-ng-disabled="customerCtrl.customer.employment.workStatus !== 'Employed'"
+                 id="hoursPerWeek"
+                 class="form-control">
+        </div>
+      </div>
+      <div class="col-xs-6 col-lg-3">
+        <div class="form-group">
+          <label>Job Title</label>
+          <input type="text"
+                 data-ng-model="customerCtrl.customer.employment.jobTitle"
+                 data-ng-disabled="customerCtrl.customer.employment.workStatus !== 'Employed'"
+                 id="jobTitle"
+                 class="form-control">
+        </div>
+      </div>
+    </div>
+  </div><!-- /.box-body -->
+</div><!-- /.box -->

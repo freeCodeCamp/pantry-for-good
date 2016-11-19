@@ -1,0 +1,5 @@
+/* Tax receipt */
+.modal-content > .invoice-header {
+	border-bottom: none;
+	padding-bottom: 0;
+}

@@ -1,0 +1,49 @@
+<!-- Box -->
+<div class="box box-solid box-primary">
+	<!-- Box header -->
+	<div class="box-header">
+		<h3 class="box-title">SECTION D - FINANCIAL ASSESSMENT</h3>
+	</div><!-- /.box-header-->
+	<!-- Box body -->
+	<div class="box-body">
+		<table class="table table-condensed table-hover">
+			<tr class="info">
+				<th>PART 1 - MONTHLY GROSS INCOME</th>
+				<th>Self($)</th>
+				<th>Other($)</th>
+			</tr>
+			<tr ng-repeat="income in customerCtrl.customer.financialAssessment.income">
+				<td>{{income.name}}</td>
+				<td>
+					<input type="number"
+					       min="0"
+					       data-ng-model="income.self"
+					       class="form-control">
+				</td>
+				<td>
+					<input type="number"
+					       min="0"
+					       data-ng-model="income.other"
+					       class="form-control">
+				</td>
+			</tr>
+			<table class="table table-condensed table-hover">
+				<tr class="info">
+					<th>PART 2 - MONTHLY LIVING EXPENSES</th>
+					<th class="col-xs-3 col-xs-offset-3">HOUSEHOLD($)</th>
+				</tr>
+				<tr ng-repeat="expense in customerCtrl.customer.financialAssessment.expenses">
+					<div class="form-group">
+						<td>{{expense.name}}</td>
+						<td>
+							<input type="number"
+							       min="0"
+							       data-ng-model="expense.value"
+							       class="form-control">
+						</td>
+					</div>
+				</tr>
+			</table>
+		</table>
+	</div><!-- /.box-body -->
+</div><!-- /.box -->

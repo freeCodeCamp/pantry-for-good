@@ -1,0 +1,41 @@
+<!-- Content header (Page header) -->
+<section class="content-header" data-ng-init="customerCtrl.findOne()">
+  <h1><span data-ng-bind="customerCtrl.customer.fullName"></span></h1>
+</section>
+<!-- Main content -->
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <!-- Form -->
+      <form name="customerForm" data-ng-submit="customerForm.$valid && customerCtrl.update()">
+        <!-- Section A - Identification and general information -->
+        <div ui-view="general-info"></div>
+        <!-- Section B - Employment -->
+        <div ui-view="employment"></div>
+        <!-- Section C - Food preferences -->
+        <div ui-view="food-preferences"></div>
+        <!-- Section D - Financial assessment -->
+        <div ui-view="financial"></div>
+        <!-- Section E - Dependants and people in household -->
+        <div ui-view="household"></div>
+        <!-- Buttons -->
+        <div class="row">
+          <div class="col-sm-6 col-md-4 col-lg-2">
+            <button type="submit" class="btn btn-success btn-block top-buffer">Update</button>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-2">
+            <a class="btn btn-primary btn-block top-buffer" data-ng-if="customerCtrl.authentication.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/customers">Cancel</a>
+            <a class="btn btn-primary btn-block top-buffer" data-ng-if="customerCtrl.authentication.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
+          </div>
+        </div><!-- /.buttons -->
+	      <!-- Error -->
+	      <div data-ng-show="customerCtrl.error" class="text-danger">
+		      <strong data-ng-bind="customerCtrl.error"></strong>
+	      </div>
+				<div data-ng-show="customerForm.dateOfBirth.$dirty && customerForm.dateOfBirth.$invalid" class="text-danger">
+					<strong>Date of Birth is invalid</strong>
+				</div><!-- /.error -->
+      </form><!-- /.form -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+</section><!-- /.content -->

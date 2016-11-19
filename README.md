@@ -1,0 +1,1 @@
+This repository is for the Food Bank application designed by Open Source for Good Contributors at Free Code Camp
