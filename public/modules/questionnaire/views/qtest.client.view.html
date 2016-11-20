@@ -1,0 +1,33 @@
+<!-- Content header (Page header) -->
+<section class="content-header">
+	<h1>QTEST</h1>
+</section>
+
+<section class="content">
+	<select class="form-control"
+					ng-options="questionnaire._id as questionnaire.name for questionnaire in questionnaires"
+					ng-model="selectedQuestionnaire"
+					ng-change="handleSelection()">
+		<option value="">Select Questionnaire</option>
+	</select>
+	<br>
+	<div ng-repeat="q in questionnaires | filter: { _id: selectedQuestionnaire }">
+		<div>
+			<p>Questionnaire: {{q.name}}</p>
+
+			<div class="row">
+		    <div class="col-xs-3">First Column</div>
+		    <div class="col-xs-3">Second Column</div>
+		    <div class="col-xs-3">Third Column</div>
+		    <div class="col-xs-3">Fourth Column</div>
+		  </div>
+
+		  <div ng-repeat="r in rows" class="row">
+		  	<div ng-repeat="c in r[1]" class="col-xs-3">
+					<span>{{c[0].name}}</span>
+				</div>
+		  </div>
+		</div>
+
+	</div>
+</section>
