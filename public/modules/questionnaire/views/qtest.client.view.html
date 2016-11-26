@@ -15,19 +15,38 @@
 		<div>
 			<p>Questionnaire: {{q.name}}</p>
 
-			<div class="row">
+			<!-- <div class="row">
 		    <div class="col-xs-3">First Column</div>
 		    <div class="col-xs-3">Second Column</div>
 		    <div class="col-xs-3">Third Column</div>
 		    <div class="col-xs-3">Fourth Column</div>
-		  </div>
+		  </div> -->
 
 		  <div ng-repeat="r in rows" class="row">
 		  	<div ng-repeat="c in r[1]" class="col-xs-3">
-					<span>{{c[0].name}}</span>
-				</div>
+
+					<!-- If normal text input -->
+					<input ng-show="c[0].type == 'text'" class="form-control"
+						type="{{c[0].type}}"
+						ng-model="form[c[0].name]"
+						placeholder="{{c[0].name}}">
+
+					<!-- If radio buttons -->
+					<div ng-show="c[0].type == 'radio'" ng-repeat="choice in c[0].choices.split(',')"
+						{{c[0].choices}}
+						<label class="radio-inline">
+							<input name="{{c[0].name}}"
+										 type="radio"
+										 ng-model="form[c[0].name]"
+										 value="{{choice}}">
+										 {{choice}}
+						</label>
+					</div> <!-- Repeat choices -->
+				</div> <!-- Repeat fields -->
 		  </div>
 		</div>
 
 	</div>
+	<p style="margin-top: 15px;">Form Data:</p>
+	<pre>{{form | json}}</pre>
 </section>

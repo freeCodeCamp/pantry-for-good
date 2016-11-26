@@ -8,6 +8,9 @@
 	/* @ngInject */
 	function qTestController(Questionnaire, Section, Field, $scope) {
 
+
+		$scope.form = {}; // Object to put input field on
+
 		$scope.nest = function (seq, keys) {
 			if (!keys.length)
 					return seq;

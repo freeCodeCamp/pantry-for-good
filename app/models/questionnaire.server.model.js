@@ -21,10 +21,10 @@ var mongoose = require('mongoose'),
 				enum: ['text', 'radio'],
 	      trim: true
 	    },
-	    choices: [{
+	    choices: {
 	        type: String,
 	        trim: true
-	    }],
+	    },
 	    row: {
 	      type: Number,
 				required: 'Row is required'
