@@ -11,42 +11,45 @@
 		<option value="">Select Questionnaire</option>
 	</select>
 	<br>
-	<div ng-repeat="q in questionnaires | filter: { _id: selectedQuestionnaire }">
-		<div>
-			<p>Questionnaire: {{q.name}}</p>
 
-			<!-- <div class="row">
-		    <div class="col-xs-3">First Column</div>
-		    <div class="col-xs-3">Second Column</div>
-		    <div class="col-xs-3">Third Column</div>
-		    <div class="col-xs-3">Fourth Column</div>
-		  </div> -->
+	<!-- Sections -->
+	<div ng-repeat="section in dynForm track by $index" class="clearfix">
+		<!-- Box -->
+		<div class="box box-solid box-primary">
+		  <!-- Box header -->
+		  <div class="box-header">
+				<h3 class="box-title">{{filteredSections[$index].name}}</h3>
+		  </div> <!-- box-header-->
+		  <!-- Box body -->
+		  <div class="box-body">
+				<!-- Rows -->
+				<div ng-repeat="row in section track by $index" class="row">
+					<div ng-show="cell.status == 'invalid' || cell.span > 0" ng-repeat="cell in row track by $index" class="col-xs-{{3*cell.span || 3}}">
+						<div ng-hide="cell.status == 'invalid'">
 
-		  <div ng-repeat="r in rows" class="row">
-		  	<div ng-repeat="c in r[1]" class="col-xs-3">
+							<div class="form-group">
+			          <label>{{cell.name}}</label>
 
-					<!-- If normal text input -->
-					<input ng-show="c[0].type == 'text'" class="form-control"
-						type="{{c[0].type}}"
-						ng-model="form[c[0].name]"
-						placeholder="{{c[0].name}}">
+								<!-- Normal text input -->
+								<input ng-show="cell.type == 'text'" class="form-control" type="{{cell.type}}" ng-model="form[cell.name]" placeholder="{{cell.name}}">
 
-					<!-- If radio buttons -->
-					<div ng-show="c[0].type == 'radio'" ng-repeat="choice in c[0].choices.split(',')"
-						{{c[0].choices}}
-						<label class="radio-inline">
-							<input name="{{c[0].name}}"
-										 type="radio"
-										 ng-model="form[c[0].name]"
-										 value="{{choice}}">
-										 {{choice}}
-						</label>
-					</div> <!-- Repeat choices -->
-				</div> <!-- Repeat fields -->
-		  </div>
-		</div>
+								<!-- If radio buttons -->
+								<div ng-show="cell.type == 'radio'">
+									<div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
+										<input name="{{cell.name}}" type="radio" ng-model="form[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
+										</label>
+									</div> <!-- Repeat choices -->
+								</div> <!-- Radio buttons -->
+							</div> <!-- form group -->
+						</div>
+					</div>
+				</div>
+			</div> <!-- box-body -->
+		</div> <!-- box -->
+	</div> <!-- Sections -->
 
-	</div>
+	<!-- DEBUG: Live view of form data to be saved -->
 	<p style="margin-top: 15px;">Form Data:</p>
 	<pre>{{form | json}}</pre>
+
 </section>

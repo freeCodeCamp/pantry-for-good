@@ -8,37 +8,65 @@
 	/* @ngInject */
 	function qTestController(Questionnaire, Section, Field, $scope) {
 
+		$scope.generateForm = function(qId) {
+			var cRows = _.maxBy($scope.fields, 'row').row, cCols = 4;
+			var r, cVoid = 0;
+			var invalidCell = { status: 'invalid' };
+			var voidCell = { status: 'valid', span: 0 };
 
-		$scope.form = {}; // Object to put input field on
+			var dynamicForm = [];
+			// Using Client Questionnaire only for testing
+			$scope.filteredSections = _.sortBy(_.filter($scope.sections, {'questionnaire': { '_id': qId }}), 'position');
 
-		$scope.nest = function (seq, keys) {
-			if (!keys.length)
-					return seq;
-			var first = keys[0];
-			var rest = keys.slice(1);
-			return _.mapValues(_.groupBy(seq, first), function (value) {
-					return $scope.nest(value, rest);
-			});
-		};
+			for (var s = 0; s < $scope.filteredSections.length; s++) {
+				var tmpRow = [];
+				for (var i = 0; i < cRows; i++) {
+					var tmpArr = [];
+					for (var j = 0; j < cCols; j++) {
+						if (cVoid > 0) {
+							tmpArr.push(voidCell);
+							cVoid--;
+						} else {
+							r = _.find($scope.fields, {
+								'row': i + 1,
+								'column': j + 1,
+								'section': $scope.filteredSections[s]
+							});
 
-		$scope.selectedQuestionnaire = '58274c48d3a1ae2d27071be3';
+							if (r === undefined) {
+								tmpArr.push(invalidCell);
+							} else {
+								r.status = 'valid';
+								tmpArr.push(r);
+								cVoid = r.span - 1;
+							} // if r is undefined
+						} // if void cells left
+
+					} // for j, cells
+					tmpRow.push(tmpArr);
+				} // for i, rows
+				dynamicForm.push(tmpRow);
+			} // for s, sections
+
+			$scope.dynForm = dynamicForm;
+		}; // Function generate Form
+
 		$scope.handleSelection = function () {
-		  $scope.rows = _.toPairs($scope.nest(_.filter($scope.fields,
-				{ section: { questionnaire: { _id: $scope.selectedQuestionnaire }}}),
-				['row', 'column']));
+			$scope.form = {}; // Object to put input field on
+			$scope.generateForm($scope.selectedQuestionnaire);
 		};
 
-	// Load all questionnaires
+		// Load all questionnaires
 		Questionnaire.query({}, function (questionnaires) {
 			$scope.questionnaires = questionnaires;
 		});
 
-	// Load all sections
+		// Load all sections
 		Section.query({}, function (sections) {
 			$scope.sections = sections;
 		});
 
-	// Load all fields
+		// Load all fields
 		Field.query({}, function (fields) {
 			$scope.fields = fields;
 		});

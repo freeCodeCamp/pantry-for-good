@@ -33,6 +33,11 @@ var mongoose = require('mongoose'),
 	      type: Number,
 				required: 'Column is required'
 	    },
+	    span: {
+	      type: Number,
+				default: 1,
+				required: 'Span is required'
+	    },
 	    section: {
 	      type: Schema.Types.ObjectId,
 	      ref: 'Section'

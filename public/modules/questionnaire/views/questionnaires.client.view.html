@@ -234,6 +234,7 @@
 									<th st-sort="questionnaireCtrl.field.choices">Choices</th>
 									<th st-sort="questionnaireCtrl.field.row">Row</th>
 									<th st-sort="questionnaireCtrl.field.column">Column</th>
+									<th st-sort="questionnaireCtrl.field.span">Span</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -282,6 +283,12 @@
 										       placeholder="Column">
 									</td>
 									<td>
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaireCtrl.field.span"
+										       placeholder="Span">
+									</td>
+									<td>
 										<button class="btn btn-success btn-flat" type="submit" data-ng-disabled="fieldForm.$invalid">
 											<i class="fa fa-plus"></i> Add Item
 										</button>
@@ -295,6 +302,7 @@
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.choices"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.row"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.column"></span></td>
+									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.span"></span></td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
 										       type="text"
@@ -328,6 +336,11 @@
 										<input class="form-control"
 										       type="text"
 										       data-ng-model="field.column">
+									</td>
+									<td data-ng-show="field.showEdit">
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="field.span">
 									</td>
 									<td>
 										<a data-ng-hide="field.showEdit" data-ng-click="field.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
