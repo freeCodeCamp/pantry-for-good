@@ -1,12 +1,6 @@
 'use strict';
-// Get template configuration from file
-var appconfig = require('../../app-config.json');
 
 module.exports = {
-	app: {
-		title: appconfig.title,
-		appconfig: appconfig
-	},
 	port: process.env.PORT || 3000,
 	templateEngine: 'swig',
 	sessionSecret: 'MEAN',

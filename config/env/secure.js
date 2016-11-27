@@ -1,11 +1,8 @@
 'use strict';
-// Get template configuration from file
-var appconfig = require('../../app-config.json');
-console.log('SECURE: appconfig: ', appconfig);
 
 module.exports = {
 	port: 443,
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost' + appconfig.mongodb_dev,
+	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost:27017/fb-prod',
 	assets: {
 		lib: {
 			css: [
@@ -65,5 +62,3 @@ module.exports = {
 		key: process.env.GOOGLE_MAPS || 'API_KEY'
 	}
 };
-
-console.log('APP CONFIG: DB: ', module.exports.db);
