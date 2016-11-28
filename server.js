@@ -1,7 +1,5 @@
 'use strict';
 
-require('pmx').init(); // log uncaught exceptions
-
 /**
  * Module dependencies.
  */
@@ -17,7 +15,7 @@ var init = require('./config/init')(),
  */
 
 // Bootstrap db connection
- mongoose.connect(config.db);
+mongoose.connect(config.db);
 
 var db = mongoose.connection;
 
