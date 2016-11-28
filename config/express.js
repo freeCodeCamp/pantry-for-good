@@ -33,11 +33,8 @@ module.exports = function(db) {
 	});
 
 	// Setting application local variables
-	app.locals.title = config.app.title;
 	app.locals.jsFiles = config.getGlobbedFiles(config.assets.lib.js, 'public/');
 	app.locals.cssFiles = config.getGlobbedFiles(config.assets.lib.css, 'public/');
-	// Get template config info from file
-	app.locals.appconfig = config.appconfig;
 
 	// Passing the request url to environment locals
 	app.use(function(req, res, next) {
