@@ -1,11 +1,12 @@
 {
   "name": "foodbank-template",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
+  "description": "A customizable food bank webapp",
   "version": "0.0.1",
   "author": "Peter Deal and Marco Früh",
-  "engines": {
-    "node": "6.7.x",
-    "npm": "3.10.x"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FreeCodeCamp/food-bank-app.git"
   },
   "scripts": {
     "start": "grunt",
@@ -14,7 +15,7 @@
     "heroku-postbuild": "grunt build"
   },
   "dependencies": {
-    "async": "~2.0.1",
+    "async": "~2.1.4",
     "bluebird": "^3.4.6",
     "body-parser": "~1.15.2",
     "bower": "^1.8.0",
@@ -34,15 +35,15 @@
     "grunt-cli": "~1.2.0",
     "grunt-contrib-csslint": "^2.0.0",
     "grunt-contrib-cssmin": "~1.0.2",
-    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-jshint": "~1.1.0",
     "grunt-contrib-uglify": "~2.0.0",
-    "grunt-ng-annotate": "^2.0.2",
-    "helmet": "^2.3.0",
+    "grunt-ng-annotate": "^3.0.0",
+    "helmet": "^3.1.0",
     "load-grunt-tasks": "~3.5.2",
-    "lodash": "~4.16.3",
+    "lodash": "~4.17.2",
     "method-override": "~2.3.0",
     "moment": "^2.10.2",
-    "mongoose": "~4.6.2",
+    "mongoose": "~4.7.1",
     "mongoose-auto-increment": "^5.0.1",
     "morgan": "~1.7.0",
     "multer": "^1.2.0",
@@ -57,7 +58,6 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-env": "~0.4.1",
     "grunt-karma": "~2.0.0",
-    "grunt-mocha-test": "~0.13.2",
     "grunt-nodemon": "~0.4.2",
     "jasmine-core": "^2.5.2",
     "karma": "~1.3.0",
@@ -66,7 +66,6 @@
     "karma-firefox-launcher": "~1.0.0",
     "karma-jasmine": "~1.0.2",
     "karma-phantomjs-launcher": "~1.0.2",
-    "mocha": "^3.1.0",
     "should": "~11.1.0",
     "supertest": "~2.0.0"
   }

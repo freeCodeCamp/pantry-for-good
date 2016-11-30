@@ -11,5 +11,6 @@ app/tests/coverage/
 .idea/
 .c9/
 .env
+*.swp
 .settings/
 typings/

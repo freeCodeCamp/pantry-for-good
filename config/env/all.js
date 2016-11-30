@@ -65,6 +65,7 @@ module.exports = {
 		],
 		tests: [
 			'public/lib/angular-mocks/angular-mocks.js',
+			'public/testInitialization.js',
 			'public/modules/*/tests/*.js'
 		]
 	}
