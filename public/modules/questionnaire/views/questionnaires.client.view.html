@@ -257,12 +257,12 @@
 									</td>
 									<td>
 										<select class="form-control"
-										       data-ng-model="questionnaireCtrl.field.type" ng-init="questionnaireCtrl.field.type='text'"
-											   required>
-													 <option value="text">Text</option>
-													 <option value="radio">Radio Buttons</option>
-													 <option value="">Select Type</option>
-												 </select>
+										       	data-ng-model="questionnaireCtrl.field.type">
+														<option value="Text">Text</option>
+														<option value="Textarea">Textarea</option>
+														<option value="Radio Buttons">Radio Buttons</option>
+														<option value="">Select Type</option>
+							 		 	</select>
 									</td>
 									<td>
 										<input class="form-control"
@@ -318,8 +318,8 @@
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
 										       data-ng-model="field.type">
-											<option value="text" ng-selected="true">Text</option>
-											<option value="radio">Radio Buttons</option>
+											<option value="Text">Text</option>
+											<option value="Radio Buttons">Radio Buttons</option>
 										</select>
 									</td>
 									<td data-ng-show="field.showEdit">

@@ -18,7 +18,7 @@ var mongoose = require('mongoose'),
 	    type: {
 	      type: String,
 				required: 'Please select a field type',
-				enum: ['text', 'radio'],
+				enum: ['Text', 'Textarea', 'Radio Buttons'],
 	      trim: true
 	    },
 	    choices: {

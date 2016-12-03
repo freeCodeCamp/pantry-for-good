@@ -31,10 +31,13 @@
 			          <label>{{cell.name}}</label>
 
 								<!-- Normal text input -->
-								<input ng-show="cell.type == 'text'" class="form-control" type="{{cell.type}}" ng-model="form[cell.name]" placeholder="{{cell.name}}">
+								<input ng-show="cell.type == 'Text'" class="form-control" type="text" ng-model="form[cell.name]" placeholder="{{cell.name}}">
 
-								<!-- If radio buttons -->
-								<div ng-show="cell.type == 'radio'">
+								<!-- Textarea input -->
+								<textarea ng-show="cell.type == 'Textarea'" class="form-control" ng-model="form[cell.name]" placeholder="{{cell.name}}"></textarea>
+
+								<!-- Radio buttons -->
+								<div ng-show="cell.type == 'Radio Buttons'">
 									<div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
 										<input name="{{cell.name}}" type="radio" ng-model="form[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
 										</label>
