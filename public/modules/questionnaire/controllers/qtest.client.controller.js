@@ -6,7 +6,7 @@
 	angular.module('questionnaire').controller('qTestController', qTestController);
 
 	/* @ngInject */
-	function qTestController(Questionnaire, Section, Field, $scope) {
+	function qTestController(Questionnaire, Section, Field, $scope, $q) {
 
 		$scope.generateForm = function(qId) {
 			var cRows = _.maxBy($scope.fields, 'row').row, cCols = 4;
@@ -56,20 +56,21 @@
 			$scope.generateForm($scope.selectedQuestionnaire);
 		};
 
-		// Load all questionnaires
-		Questionnaire.query({}, function (questionnaires) {
-			$scope.questionnaires = questionnaires;
-		});
+		var promiseHash = {};
+    promiseHash.questionnaires = Questionnaire.query().$promise;
+    promiseHash.sections = Section.query().$promise;
+    promiseHash.fields = Field.query().$promise;
 
-		// Load all sections
-		Section.query({}, function (sections) {
-			$scope.sections = sections;
-		});
+    $q.all(promiseHash)
+			.then(function(results) {
+				$scope.questionnaires = results.questionnaires;
+				$scope.sections = results.sections;
+				$scope.fields = results.fields;
 
-		// Load all fields
-		Field.query({}, function (fields) {
-			$scope.fields = fields;
-		});
+				// Default: Client Questionnaire selected
+				$scope.selectedQuestionnaire = '581da83d367d0b1eef2e8d9e';
+				$scope.handleSelection();
 
+		});
 	}
 })();
