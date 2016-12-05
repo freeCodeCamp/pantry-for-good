@@ -48,16 +48,6 @@ module.exports = {
 		css: 'public/dist/application.min.css',
 		js: 'public/dist/application.min.js'
 	},
-	mailer: {
-		from: process.env.MAILER_FROM || 'MAILER_FROM',
-		options: {
-			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
-			auth: {
-				user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
-			}
-		}
-	},
 	googleMaps: {
 		key: process.env.GOOGLE_MAPS || 'API_KEY'
 	}

@@ -6,11 +6,7 @@ module.exports = {
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
 	mailer: {
-		from: {
-			first: process.env.MAILER_FROM_FIRST || 'MAILER_FROM_FIRST',
-			second: process.env.MAILER_FROM_SECOND || 'MAILER_FROM_SECOND'
-		},
-		to: process.env.MAILER_FROM_FIRST || 'MAILER_TO',
+		from: process.env.MAILER_FROM || 'MAILER_FROM',
 		options: {
 			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
 			auth: {
