@@ -30,8 +30,8 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-sort="name">Questionnaire Name</th>
-									<th st-sort="description">Description</th>
+									<th>Questionnaire Name</th>
+									<th>Description</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -57,7 +57,7 @@
 										</button>
 									</td>
 								</tr>
-								<tr data-ng-repeat="questionnaire in questionnaireCtrl.questionnairesCopy">
+								<tr data-ng-repeat="questionnaire in questionnaireCtrl.questionnairesCopy | orderBy: 'name' ">
 									<td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.name"></span></td>
 									<td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.description"></span></td>
 									<td data-ng-show="questionnaire.showEdit">
@@ -118,9 +118,9 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-sort="questionnaireCtrl.section.name">Section Name</th>
-									<th st-sort="questionnaireCtrl.section.questionnaire.name">Questionnaire</th>
-									<th st-sort="questionnaireCtrl.section.position">Position</th>
+									<th>Section Name</th>
+									<th>Questionnaire</th>
+									<th>Position</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -158,7 +158,7 @@
 								</tr>
 
 								<!-- Rows displaying existing questionnaires, if not in edit mode  -->
-								<tr data-ng-repeat="section in questionnaireCtrl.sectionsCopy">
+								<tr data-ng-repeat="section in questionnaireCtrl.sectionsCopy | orderBy: ['questionnaire.name', 'position']">
 									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.name"></span></td>
 									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.questionnaire.name"></span></td>
 									<td data-ng-hide="section.showEdit"><span data-ng-bind="section.position"></span></td>
@@ -228,12 +228,13 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-sort="questionnaireCtrl.field.name">Field Name</th>
-									<th st-sort="questionnaireCtrl.field.section.name">Section</th>
-									<th st-sort="questionnaireCtrl.field.type">Type</th>
-									<th st-sort="questionnaireCtrl.field.choices">Choices</th>
-									<th st-sort="questionnaireCtrl.field.row">Row</th>
-									<th st-sort="questionnaireCtrl.field.column">Column</th>
+									<th>Field Name</th>
+									<th>Section</th>
+									<th>Type</th>
+									<th>Choices</th>
+									<th>Row</th>
+									<th>Column</th>
+									<th>Span</th>
 									<th>Actions</th>
 								</tr>
 							</thead><!-- /.table-columns -->
@@ -256,12 +257,12 @@
 									</td>
 									<td>
 										<select class="form-control"
-										       data-ng-model="questionnaireCtrl.field.type" ng-init="questionnaireCtrl.field.type='text'"
-											   required>
-													 <option value="text">Text</option>
-													 <option value="radio">Radio Buttons</option>
-													 <option value="">Select Type</option>
-												 </select>
+										       	data-ng-model="questionnaireCtrl.field.type">
+														<option value="Text">Text</option>
+														<option value="Textarea">Textarea</option>
+														<option value="Radio Buttons">Radio Buttons</option>
+														<option value="">Select Type</option>
+							 		 	</select>
 									</td>
 									<td>
 										<input class="form-control"
@@ -282,19 +283,26 @@
 										       placeholder="Column">
 									</td>
 									<td>
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaireCtrl.field.span"
+										       placeholder="Span">
+									</td>
+									<td>
 										<button class="btn btn-success btn-flat" type="submit" data-ng-disabled="fieldForm.$invalid">
 											<i class="fa fa-plus"></i> Add Item
 										</button>
 									</td>
 								</tr>
 								<!-- Rows displaying existing sections, if not in edit mode  -->
-								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy">
+								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy | orderBy: ['section.name', 'row', 'column'] ">
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.section.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.type"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.choices"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.row"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.column"></span></td>
+									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.span"></span></td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
 										       type="text"
@@ -310,8 +318,8 @@
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
 										       data-ng-model="field.type">
-											<option value="text" ng-selected="true">Text</option>
-											<option value="radio">Radio Buttons</option>
+											<option value="Text">Text</option>
+											<option value="Radio Buttons">Radio Buttons</option>
 										</select>
 									</td>
 									<td data-ng-show="field.showEdit">
@@ -328,6 +336,11 @@
 										<input class="form-control"
 										       type="text"
 										       data-ng-model="field.column">
+									</td>
+									<td data-ng-show="field.showEdit">
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="field.span">
 									</td>
 									<td>
 										<a data-ng-hide="field.showEdit" data-ng-click="field.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>

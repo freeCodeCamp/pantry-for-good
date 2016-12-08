@@ -18,13 +18,13 @@ var mongoose = require('mongoose'),
 	    type: {
 	      type: String,
 				required: 'Please select a field type',
-				enum: ['text', 'radio'],
+				enum: ['Text', 'Textarea', 'Radio Buttons'],
 	      trim: true
 	    },
-	    choices: [{
+	    choices: {
 	        type: String,
 	        trim: true
-	    }],
+	    },
 	    row: {
 	      type: Number,
 				required: 'Row is required'
@@ -32,6 +32,11 @@ var mongoose = require('mongoose'),
 	    column: {
 	      type: Number,
 				required: 'Column is required'
+	    },
+	    span: {
+	      type: Number,
+				default: 1,
+				required: 'Span is required'
 	    },
 	    section: {
 	      type: Schema.Types.ObjectId,

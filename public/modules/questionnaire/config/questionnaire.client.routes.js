@@ -13,6 +13,15 @@ angular.module('questionnaire').config(['$stateProvider',
 					controller: 'QuestionnaireController as questionnaireCtrl'
 				}
 			}
+		}).
+		state('root.qtest', {
+			url: 'admin/qtest',
+			views: {
+				'content@': {
+					templateUrl: 'modules/questionnaire/views/qtest.client.view.html',
+					controller: 'qTestController as qtCtrl'
+				}
+			}
 		});
 	}
 ]);
