@@ -92,7 +92,6 @@
 
 			// Update current section
 			self.updateSection = function(selectedSection) {
-				console.log(selectedSection);
 				var section = new Section(selectedSection);
 
 				section.$update(function() {

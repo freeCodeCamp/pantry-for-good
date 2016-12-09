@@ -40,7 +40,8 @@
   "node": true,
 
   "globals": {
-    "angular": true,
+    "angular": false,
+    "_": false,
     "define": true,
     "require": true,
     "exports": true,
