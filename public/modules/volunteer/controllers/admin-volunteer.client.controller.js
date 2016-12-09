@@ -31,6 +31,8 @@
 		self.findOne = function() {
 			self.volunteer = VolunteerAdmin.get({
 				volunteerId: $stateParams.volunteerId
+			}, function(volunteer) {
+				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
 			});
 		};
 

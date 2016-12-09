@@ -1,6 +1,4 @@
-(function() {
-	'use strict';
-
+(function() { 'use strict'; 
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
@@ -90,6 +88,8 @@
 			self.customer.household = [];
 			for (var i = numberOfDependants - 1; i >= 0; i--) {
 				self.customer.household[i] = temp[i] || {};
+				self.customer.household[i].dateOfBirth = 
+					new Date(self.customer.household[i].dateOfBirth);
 			}
 		};
 
@@ -133,6 +133,7 @@
 			self.customer = CustomerAdmin.get({
 				customerId: $stateParams.customerId
 			}, function(customer){
+				self.customer.dateOfBirth = new Date(customer.dateOfBirth);
 				self.numberOfDependants = customer.household.length;
 				self.setDependantList(self.numberOfDependants);
 			});
