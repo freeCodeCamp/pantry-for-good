@@ -10,55 +10,55 @@ var mongoose = require('mongoose'),
 	 * Questionnaire Schema with references to section and field
 	 */
 	var FieldSchema = new Schema({
-	    name: {
-	      type: String,
+			name: {
+				type: String,
 				required: 'Please fill in a field name',
-	      trim: true
-	    },
-	    type: {
-	      type: String,
+				trim: true
+			},
+			type: {
+				type: String,
 				required: 'Please select a field type',
-				enum: ['Text', 'Textarea', 'Radio Buttons'],
-	      trim: true
-	    },
-	    choices: {
-	        type: String,
-	        trim: true
-	    },
-	    row: {
-	      type: Number,
+				enum: ['Text', 'Textarea', 'Radio Buttons', 'Checkboxes'],
+				trim: true
+			},
+			choices: {
+					type: String,
+					trim: true
+			},
+			row: {
+				type: Number,
 				required: 'Row is required'
-	    },
-	    column: {
-	      type: Number,
+			},
+			column: {
+				type: Number,
 				required: 'Column is required'
-	    },
-	    span: {
-	      type: Number,
+			},
+			span: {
+				type: Number,
 				default: 1,
 				required: 'Span is required'
-	    },
-	    section: {
-	      type: Schema.Types.ObjectId,
-	      ref: 'Section'
-	    }
-	  }
+			},
+			section: {
+				type: Schema.Types.ObjectId,
+				ref: 'Section'
+			}
+		}
 	);
 
 	var SectionSchema = new Schema({
-	  name: {
-	    type: String,
-	    required: 'Please fill in a section name',
-	    trim: true
-	  },
-	  position: {
-	    type: Number,
+		name: {
+			type: String,
+			required: 'Please fill in a section name',
+			trim: true
+		},
+		position: {
+			type: Number,
 			required: 'Position is required'
-	  },
-	  questionnaire: {
-	    type: Schema.Types.ObjectId,
-	    ref: 'Questionnaire'
-	  }
+		},
+		questionnaire: {
+			type: Schema.Types.ObjectId,
+			ref: 'Questionnaire'
+		}
 	});
 
 	var QuestionnaireSchema = new Schema({

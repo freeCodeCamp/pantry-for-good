@@ -6,6 +6,23 @@
 	/* @ngInject */
 	function qTestController(Questionnaire, Section, Field, $scope, $q) {
 
+		$scope.handleCheckboxClick = function (name, element) {
+
+			// Initialise as array if undefined
+			if (typeof $scope.form[name] !== 'object') {
+				$scope.form[name] = [element];
+				return;
+			}
+
+			// If element is not yet in array, push it, otherwise delete it from array
+			var i = $scope.form[name].indexOf(element);
+			if (i === -1) {
+				$scope.form[name].push(element);
+			} else {
+				$scope.form[name].splice(i, 1);
+			}
+		};
+
 		$scope.generateForm = function(qId) {
 			var cRows = _.maxBy($scope.fields, 'row').row, cCols = 4;
 			var r, cVoid = 0;

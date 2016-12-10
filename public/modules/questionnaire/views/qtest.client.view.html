@@ -43,6 +43,18 @@
 										</label>
 									</div> <!-- Repeat choices -->
 								</div> <!-- Radio buttons -->
+
+								<!-- Checkboxes -->
+								<div ng-show="cell.type == 'Checkboxes'">
+									<div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="checkbox-inline">
+										<input name="{{cell.name}}" type="checkbox" value="{{choice.trim()}}"
+											ng-click="handleCheckboxClick(cell.name, choice.trim())"
+										>
+											<{{cell.name}}> {{choice.trim()}}
+										</label>
+									</div> <!-- Repeat choices -->
+								</div> <!-- Checkboxes -->
+
 							</div> <!-- form group -->
 						</div>
 					</div>
