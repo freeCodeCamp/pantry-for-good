@@ -213,7 +213,6 @@
 				customerId: $stateParams.customerId
 			}, function(customer){
 				self.customer.dateOfBirth = new Date(customer.dateOfBirth);
-				console.log('DoB: ', self.customer.dateOfBirth);
 				self.numberOfDependants = customer.household.length;
 				self.setDependantList(self.numberOfDependants);
 			});
@@ -224,7 +223,6 @@
 			var customer = self.customer;
 
 			if (status) customer.status = status;
-			console.log('UPDATING, DoB: ', self.customer.dateOfBirth);
 
 			customer.$update()
 				.then(function() {

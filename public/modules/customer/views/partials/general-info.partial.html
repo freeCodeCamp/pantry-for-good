@@ -24,16 +24,16 @@
               <label>{{cell.label}}</label>
 
               <!-- Normal text input -->
-              <input ng-show="cell.type == 'Text'" class="form-control" type="text" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}">
+              <input ng-if="cell.type == 'Text'" class="form-control" type="text" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}">
 
               <!-- Textarea input -->
-              <textarea ng-show="cell.type == 'Textarea'" class="form-control" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}"></textarea>
+              <textarea ng-if="cell.type == 'Textarea'" class="form-control" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}"></textarea>
 
               <!-- Date input -->
-              <input ng-show="cell.type == 'Date'" class="form-control" type="date" ng-model="customerCtrl.customer[cell.name]">
+              <input ng-if="cell.type == 'Date'" class="form-control" type="date" ng-model="customerCtrl.customer[cell.name]">
 
               <!-- Radio buttons -->
-              <div ng-show="cell.type == 'Radio Buttons'">
+              <div ng-if="cell.type == 'Radio Buttons'">
                 <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
                   <input name="{{cell.name}}" type="radio" ng-model="customerCtrl.customer[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
                   </label>
@@ -41,7 +41,7 @@
               </div> <!-- Radio buttons -->
 
               <!-- Checkboxes -->
-              <div ng-show="cell.type == 'Checkboxes'">
+              <div ng-if="cell.type == 'Checkboxes'">
                 <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="checkbox-inline">
                   <input name="{{cell.name}}" type="checkbox" value="{{choice.trim()}}"
                     ng-click="handleCheckboxClick(cell.name, choice.trim())"
