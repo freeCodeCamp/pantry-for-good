@@ -228,7 +228,8 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th>Field Name</th>
+									<th st-ratio="20">Label</th>
+									<th>Name</th>
 									<th>Section</th>
 									<th>Type</th>
 									<th>Choices</th>
@@ -241,6 +242,12 @@
 							<!-- Table body -->
 							<tbody>
 								<tr>
+									<td st-ratio="20" >
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaireCtrl.field.label"
+										       placeholder="Field Label">
+									</td>
 									<td>
 										<input class="form-control"
 										       type="text"
@@ -297,6 +304,7 @@
 								</tr>
 								<!-- Rows displaying existing sections, if not in edit mode  -->
 								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy | orderBy: ['section.name', 'row', 'column'] ">
+									<td st-ratio="20" data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.section.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.type"></span></td>
@@ -304,6 +312,12 @@
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.row"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.column"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.span"></span></td>
+
+									<td st-ratio="20" data-ng-show="field.showEdit">
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="field.label">
+									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
 										       type="text"

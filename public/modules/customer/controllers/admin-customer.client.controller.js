@@ -1,8 +1,8 @@
-(function() { 'use strict'; 
+(function() { 'use strict';
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food) {
+	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Section, Field, $q) {
 		var self = this,
 				user = Authentication.user;
 
@@ -10,7 +10,10 @@
 		self.authentication = Authentication;
 
 		// Verify is user has admin role, redirect to home otherwise
-		if (user && user.roles.indexOf('admin') < 0) $state.go('root');
+		if (user && user.roles.indexOf('admin') < 0) {
+			$state.go('root');
+			return;
+		}
 
 		self.customer = self.customer || {};
 
@@ -22,6 +25,83 @@
 				aButtons: ['copy', 'xls']
 			}
 		};
+
+		// ======================QTEST==========QTEST============QTEST===================
+		// ======================QTEST==========QTEST============QTEST===================
+		self.handleCheckboxClick = function (name, element) {
+
+			// Initialise as array if undefined
+			if (typeof self.form[name] !== 'object') {
+				self.form[name] = [element];
+				return;
+			}
+
+			// If element is not yet in array, push it, otherwise delete it from array
+			var i = self.form[name].indexOf(element);
+			if (i === -1) {
+				self.form[name].push(element);
+			} else {
+				self.form[name].splice(i, 1);
+			}
+		};
+
+		self.generateForm = function() {
+			var cRows = _.maxBy(self.fields, 'row').row, cCols = 4;
+			var r, cSkip = 0;
+			var emptyCell = { status: 'empty' };
+			var skipCell = { status: 'skip' };
+
+			var dynamicForm = [];
+			// HARDWIRED FOR DEV: Limit to Section A of Client Questionnaire
+			self.section = _.filter(self.sections, {'_id': '58274c48d3a1ae2d27071be3' })[0];
+
+			for (var i = 0; i < cRows; i++) {
+				var tmpArr = [];
+				for (var j = 0; j < cCols; j++) {
+					if (cSkip > 0) {
+						tmpArr.push(skipCell);
+						cSkip--;
+					} else {
+						r = _.find(self.fields, {
+							'row': i + 1,
+							'column': j + 1,
+							'section': self.section
+						});
+
+						if (r === undefined) {
+							tmpArr.push(emptyCell);
+						} else {
+							r.status = 'valid';
+							tmpArr.push(r);
+							cSkip = r.span - 1;
+						} // if r is undefined
+					} // if skip cells left
+
+				} // for j, cells
+				dynamicForm.push(tmpArr);
+			} // for i, rows
+
+			self.dynForm = dynamicForm;
+			console.log('self.dynForm: ', dynamicForm);
+		}; // Function generate Form
+
+		var promiseHash = {};
+    // promiseHash.questionnaires = Questionnaire.query().$promise;
+    promiseHash.sections = Section.query().$promise;
+    promiseHash.fields = Field.query().$promise;
+
+    $q.all(promiseHash)
+			.then(function(results) {
+				self.questionnaires = results.questionnaires;
+				self.sections = results.sections;
+				self.fields = results.fields;
+
+				self.generateForm();
+		});
+// ======================QTEST==========QTEST============QTEST===================
+// ======================QTEST==========QTEST============QTEST===================
+
+
 
 		/**
 		 *	Food Preferences
@@ -88,7 +168,7 @@
 			self.customer.household = [];
 			for (var i = numberOfDependants - 1; i >= 0; i--) {
 				self.customer.household[i] = temp[i] || {};
-				self.customer.household[i].dateOfBirth = 
+				self.customer.household[i].dateOfBirth =
 					new Date(self.customer.household[i].dateOfBirth);
 			}
 		};

@@ -10,6 +10,11 @@ var mongoose = require('mongoose'),
 	 * Questionnaire Schema with references to section and field
 	 */
 	var FieldSchema = new Schema({
+			label: {
+				type: String,
+				required: 'Please fill in a field label',
+				trim: true
+			},
 			name: {
 				type: String,
 				required: 'Please fill in a field name',
