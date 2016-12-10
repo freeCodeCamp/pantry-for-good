@@ -31,17 +31,17 @@
 		self.handleCheckboxClick = function (name, element) {
 
 			// Initialise as array if undefined
-			if (typeof self.form[name] !== 'object') {
-				self.form[name] = [element];
+			if (typeof self.customer[name] !== 'object') {
+				self.customer[name] = [element];
 				return;
 			}
 
 			// If element is not yet in array, push it, otherwise delete it from array
-			var i = self.form[name].indexOf(element);
+			var i = self.customer[name].indexOf(element);
 			if (i === -1) {
-				self.form[name].push(element);
+				self.customer[name].push(element);
 			} else {
-				self.form[name].splice(i, 1);
+				self.customer[name].splice(i, 1);
 			}
 		};
 
@@ -82,7 +82,6 @@
 			} // for i, rows
 
 			self.dynForm = dynamicForm;
-			console.log('self.dynForm: ', dynamicForm);
 		}; // Function generate Form
 
 		var promiseHash = {};
@@ -159,7 +158,7 @@
 		self.customer.household = [{
 			name: self.customer.firstName + ' ' + self.customer.lastName,
 			relationship: 'Applicant',
-			dateOfBirth: self.customer.dateOfBirth
+			dateOfBirth: new Date(self.customer.dateOfBirth)
 		}];
 
 		// Set an array of dependants based on input value
@@ -214,6 +213,7 @@
 				customerId: $stateParams.customerId
 			}, function(customer){
 				self.customer.dateOfBirth = new Date(customer.dateOfBirth);
+				console.log('DoB: ', self.customer.dateOfBirth);
 				self.numberOfDependants = customer.household.length;
 				self.setDependantList(self.numberOfDependants);
 			});
@@ -224,6 +224,7 @@
 			var customer = self.customer;
 
 			if (status) customer.status = status;
+			console.log('UPDATING, DoB: ', self.customer.dateOfBirth);
 
 			customer.$update()
 				.then(function() {

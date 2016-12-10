@@ -267,6 +267,7 @@
 										       	data-ng-model="questionnaireCtrl.field.type">
 														<option value="Text">Text</option>
 														<option value="Textarea">Textarea</option>
+														<option value="Date">Date</option>
 														<option value="Radio Buttons">Radio Buttons</option>
 														<option value="Checkboxes">Checkboxes</option>
 														<option value="">Select Type</option>
@@ -333,9 +334,11 @@
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
 										       data-ng-model="field.type">
-											<option value="Text">Text</option>
-											<option value="Radio Buttons">Radio Buttons</option>
-											<option value="Checkboxes">Checkboxes</option>
+													 <option value="Text">Text</option>
+													 <option value="Textarea">Textarea</option>
+													 <option value="Date">Date</option>
+													 <option value="Radio Buttons">Radio Buttons</option>
+													 <option value="Checkboxes">Checkboxes</option>
 										</select>
 									</td>
 									<td data-ng-show="field.showEdit">

@@ -29,6 +29,9 @@
               <!-- Textarea input -->
               <textarea ng-show="cell.type == 'Textarea'" class="form-control" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}"></textarea>
 
+              <!-- Date input -->
+              <input ng-show="cell.type == 'Date'" class="form-control" type="date" ng-model="customerCtrl.customer[cell.name]">
+
               <!-- Radio buttons -->
               <div ng-show="cell.type == 'Radio Buttons'">
                 <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
