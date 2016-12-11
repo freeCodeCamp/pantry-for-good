@@ -15,6 +15,9 @@ module.exports = {
 			}
 		}
 	},
+	googleMaps: {
+		key: process.env.GOOGLE_MAPS_API_KEY || 'API_KEY'
+	},
 	assets: {
 		lib: {
 			css: [

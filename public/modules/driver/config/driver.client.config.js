@@ -18,7 +18,7 @@ angular.module('driver').run(['Menus',
 angular.module('driver').config(['uiGmapGoogleMapApiProvider',
 	function(uiGmapGoogleMapApiProvider) {
 		uiGmapGoogleMapApiProvider.configure({
-			//key: 'insert key',
+			key: document.googleKey,
 			libraries: 'geometry, visualization'
 		});
 	}

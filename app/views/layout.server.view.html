@@ -38,9 +38,9 @@
     <footer class="main-footer" data-ui-view="footer"></footer>
   </div>
 
-	<!--Embedding The User Object-->
+	<!--Embed Google Maps API key-->
 	<script type="text/javascript">
-		var user = {{ user | json | safe }};
+		document.googleKey = "{{ googleKey }}";
 	</script>
 
 	<!--Application JavaScript Files-->
