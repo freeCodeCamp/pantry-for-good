@@ -72,16 +72,16 @@ var sendEmailUpdate = function(req, res, customer) {
 /**
  * Create a customer
  */
-exports.create = function(req, res, next) {
+exports.create = function(req, res) {
 	var customer = new Customer(req.body);
 	customer._id = req.user.id;
 
 	// Update user's hasApplied property to restrict them from applying again
 	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
-		.then(function(user) {
+		.then(function() {
 			async.waterfall([
 				function(done) {
-					customer.save(function(err) {
+					customer.save({ strict: false }, function(err) {
 						if (err) {
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
@@ -146,7 +146,7 @@ exports.update = function(req, res) {
 
 				// Assign the customer user role to the user in the case of application approval
 				if (customer.status === 'Accepted') {
-					User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, function(err) {
+					User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, { strict: false }, function(err) {
 						if (err) {
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
@@ -159,7 +159,7 @@ exports.update = function(req, res) {
 			}
 		});
 
-		customer.save(function(err) {
+		customer.save({ strict: false }, function(err) {
 			if (err) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
@@ -202,7 +202,7 @@ exports.delete = function(req, res) {
 
 	User.findByIdAndRemove(id)
 		.exec()
-		.then(function(user) {
+		.then(function() {
 		})
 		.catch(function (err) {
 			return res.status(400).send({
@@ -212,7 +212,7 @@ exports.delete = function(req, res) {
 
 	Customer.findByIdAndRemove(id)
 		.exec()
-		.then(function(customer) {
+		.then(function() {
 		})
 		.catch(function (err) {
 			return res.status(400).send({

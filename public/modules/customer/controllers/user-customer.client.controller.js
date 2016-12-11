@@ -4,7 +4,7 @@
 	angular.module('customer').controller('CustomerUserController', CustomerUserController);
 
 	/* @ngInject */
-	function CustomerUserController($stateParams, $state, Authentication, CustomerUser, moment, Data) {
+	function CustomerUserController($stateParams, $state, Authentication, CustomerUser, moment, Data, Section, Field, $q) {
 		var self = this,
 				user = Authentication.user;
 
@@ -20,6 +20,86 @@
 		// Populate customer object if the user has filled an application
 		self.customer = self.customer || {};
 		angular.extend(self.customer, user);
+
+
+		// ======================QTEST==========QTEST============QTEST===================
+		// ======================QTEST==========QTEST============QTEST===================
+
+		self.handleCheckboxClick = function (name, element) {
+
+			// Initialise as array if undefined
+			if (typeof self.customer[name] !== 'object') {
+				self.customer[name] = [element];
+				return;
+			}
+
+			// If element is not yet in array, push it, otherwise delete it from array
+			var i = self.customer[name].indexOf(element);
+			if (i === -1) {
+				self.customer[name].push(element);
+			} else {
+				self.customer[name].splice(i, 1);
+			}
+		};
+
+		self.generateForm = function() {
+			var cRows = _.maxBy(self.fields, 'row').row, cCols = 4;
+			var r, cSkip = 0;
+			var emptyCell = { status: 'empty' };
+			var skipCell = { status: 'skip' };
+
+			var dynamicForm = [];
+			// HARDWIRED FOR DEV: Limit to available sections of Client Questionnaire
+			self.filteredSections = _.sortBy(_.filter(self.sections, {'questionnaire': { '_id': '581da83d367d0b1eef2e8d9e' }}), 'position');
+
+			for (var s = 0; s < self.filteredSections.length; s++) {
+				var tmpRow = [];
+				for (var i = 0; i < cRows; i++) {
+					var tmpArr = [];
+					for (var j = 0; j < cCols; j++) {
+						if (cSkip > 0) {
+							tmpArr.push(skipCell);
+							cSkip--;
+						} else {
+							r = _.find(self.fields, {
+								'row': i + 1,
+								'column': j + 1,
+								'section': self.filteredSections[s]
+							});
+
+							if (r === undefined) {
+								tmpArr.push(emptyCell);
+							} else {
+								r.status = 'valid';
+								tmpArr.push(r);
+								cSkip = r.span - 1;
+							} // if r is undefined
+						} // if skip cells left
+
+					} // for j, cells
+					tmpRow.push(tmpArr);
+				} // for i, rows
+				dynamicForm.push(tmpRow);
+			} // for s, sections
+
+			self.dynForm = dynamicForm;
+		}; // Function generate Form
+
+		var promiseHash = {};
+    // promiseHash.questionnaires = Questionnaire.query().$promise;
+    promiseHash.sections = Section.query().$promise;
+    promiseHash.fields = Field.query().$promise;
+
+    $q.all(promiseHash)
+			.then(function(results) {
+				self.questionnaires = results.questionnaires;
+				self.sections = results.sections;
+				self.fields = results.fields;
+
+				self.generateForm();
+		});
+// ======================QTEST==========QTEST============QTEST===================
+// ======================QTEST==========QTEST============QTEST===================
 
 		/**
 		 *	Food Preferences
@@ -134,7 +214,7 @@
 			delete customer._id;
 			user.hasApplied = true;
 
-			customer.$save(function(response) {
+			customer.$save(function() {
 				// Redirect after save
 				$state.go('root.createCustomerUser-success', null, { reload: true });
 			}, function(errorResponse) {
