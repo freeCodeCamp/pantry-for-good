@@ -198,8 +198,14 @@ var CustomerSchema = new Schema({
 	dateReceived: {
 		type: Date,
 		default: Date.now
+	},
+	empWorkStatus: {
+		type: String
 	}
-});
+},
+	// Mongoose options
+	{ strict: false }
+);
 
 /**
  * Hook a pre save method to construct the geolocation of the address
@@ -260,5 +266,3 @@ CustomerSchema.virtual('householdSummary').get(function() {
 CustomerSchema.set('toJSON', {virtuals: true});
 
 mongoose.model('Customer', CustomerSchema);
-
-

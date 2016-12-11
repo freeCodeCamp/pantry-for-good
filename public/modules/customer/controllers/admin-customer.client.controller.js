@@ -28,6 +28,10 @@
 
 		// ======================QTEST==========QTEST============QTEST===================
 		// ======================QTEST==========QTEST============QTEST===================
+		self.DEBUG = function () {
+			console.log('Customer: ', self.customer);
+		};
+
 		self.handleCheckboxClick = function (name, element) {
 
 			// Initialise as array if undefined
@@ -52,34 +56,38 @@
 			var skipCell = { status: 'skip' };
 
 			var dynamicForm = [];
-			// HARDWIRED FOR DEV: Limit to Section A of Client Questionnaire
-			self.section = _.filter(self.sections, {'_id': '58274c48d3a1ae2d27071be3' })[0];
+			// HARDWIRED FOR DEV: Limit to available sections of Client Questionnaire
+			self.filteredSections = _.sortBy(_.filter(self.sections, {'questionnaire': { '_id': '581da83d367d0b1eef2e8d9e' }}), 'position');
 
-			for (var i = 0; i < cRows; i++) {
-				var tmpArr = [];
-				for (var j = 0; j < cCols; j++) {
-					if (cSkip > 0) {
-						tmpArr.push(skipCell);
-						cSkip--;
-					} else {
-						r = _.find(self.fields, {
-							'row': i + 1,
-							'column': j + 1,
-							'section': self.section
-						});
-
-						if (r === undefined) {
-							tmpArr.push(emptyCell);
+			for (var s = 0; s < self.filteredSections.length; s++) {
+				var tmpRow = [];
+				for (var i = 0; i < cRows; i++) {
+					var tmpArr = [];
+					for (var j = 0; j < cCols; j++) {
+						if (cSkip > 0) {
+							tmpArr.push(skipCell);
+							cSkip--;
 						} else {
-							r.status = 'valid';
-							tmpArr.push(r);
-							cSkip = r.span - 1;
-						} // if r is undefined
-					} // if skip cells left
+							r = _.find(self.fields, {
+								'row': i + 1,
+								'column': j + 1,
+								'section': self.filteredSections[s]
+							});
 
-				} // for j, cells
-				dynamicForm.push(tmpArr);
-			} // for i, rows
+							if (r === undefined) {
+								tmpArr.push(emptyCell);
+							} else {
+								r.status = 'valid';
+								tmpArr.push(r);
+								cSkip = r.span - 1;
+							} // if r is undefined
+						} // if skip cells left
+
+					} // for j, cells
+					tmpRow.push(tmpArr);
+				} // for i, rows
+				dynamicForm.push(tmpRow);
+			} // for s, sections
 
 			self.dynForm = dynamicForm;
 		}; // Function generate Form
@@ -220,11 +228,11 @@
 
 		// Update existing customer
 		self.update = function(status) {
-			var customer = self.customer;
+			console.log('Client side: customer, updated: ', self.customer);
 
-			if (status) customer.status = status;
+			if (status) self.customer.status = status;
 
-			customer.$update()
+			self.customer.$update()
 				.then(function() {
 				// Redirect after update
 				$state.go('root.listCustomers');
