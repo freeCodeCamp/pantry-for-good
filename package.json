@@ -51,6 +51,7 @@
     "nodemailer": "~2.6.4",
     "passport": "~0.3.2",
     "passport-local": "~1.0.0",
+    "sendgrid": "^4.7.1",
     "swig": "~1.4.1"
   },
   "devDependencies": {
