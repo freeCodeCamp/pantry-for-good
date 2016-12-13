@@ -26,8 +26,6 @@
 			}
 		};
 
-		// ======================QTEST==========QTEST============QTEST===================
-		// ======================QTEST==========QTEST============QTEST===================
 		self.DEBUG = function () {
 			console.log('Customer: ', self.customer);
 		};
@@ -56,8 +54,9 @@
 			var skipCell = { status: 'skip' };
 
 			var dynamicForm = [];
-			// HARDWIRED FOR DEV: Limit to available sections of Client Questionnaire
-			self.filteredSections = _.sortBy(_.filter(self.sections, {'questionnaire': { '_id': '581da83d367d0b1eef2e8d9e' }}), 'position');
+
+			// Limit to available sections of Client Questionnaire
+			self.filteredSections = _.sortBy(_.filter(self.sections, {'questionnaire': { 'identifier': 'qClients' }}), 'position');
 
 			for (var s = 0; s < self.filteredSections.length; s++) {
 				var tmpRow = [];
@@ -105,10 +104,6 @@
 
 				self.generateForm();
 		});
-// ======================QTEST==========QTEST============QTEST===================
-// ======================QTEST==========QTEST============QTEST===================
-
-
 
 		/**
 		 *	Food Preferences

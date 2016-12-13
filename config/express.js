@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 var fs = require('fs'),
-	http = require('http'),
 	https = require('https'),
 	express = require('express'),
 	morgan = require('morgan'),

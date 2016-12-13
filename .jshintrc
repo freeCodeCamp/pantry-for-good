@@ -41,7 +41,7 @@
 
   "globals": {
     "angular": false,
-    "_": false,
+    "_": true,
     "define": true,
     "require": true,
     "exports": true,

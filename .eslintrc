@@ -5,7 +5,10 @@
       "angular": true,
       "_": true,
       "exports": true,
-      "require": true
+      "require": true,
+      "module": true,
+      "process": true,
+      "console": true
     },
     "rules": {
         "no-alert": "off",
@@ -17,7 +20,7 @@
         "no-class-assign": "error",
         "no-cond-assign": "error",
         "no-confusing-arrow": "off",
-        "no-console": "off",
+        "no-console": "warn",
         "no-const-assign": "error",
         "no-constant-condition": "error",
         "no-continue": "off",

@@ -2,8 +2,19 @@
 
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
+	seed = require('../models/seed'),
 	Field = mongoose.model('Field'),
 	_ = require('lodash');
+
+
+	Field.count({}, function (err, count) {
+		if (count < 1) {
+			Field.insertMany(seed.fields, function (err) {
+				if (err) throw err;
+			});
+		}
+	});
+
 
 // Create a field
 exports.create = function(req, res) {
@@ -55,9 +66,9 @@ exports.delete = function(req, res) {
 exports.query = function(req, res) {
 	Field.find({})
 		.populate({
-	    path: 'section',
-	    populate: { path: 'questionnaire' }
-	  })
+			path: 'section',
+			populate: { path: 'questionnaire' }
+		})
 		.exec()
 		.then(function (fields) {
 			return res.json(fields);

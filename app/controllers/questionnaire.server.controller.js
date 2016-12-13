@@ -5,9 +5,27 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
+	seed = require('../models/seed'),
 	Questionnaire = mongoose.model('Questionnaire'),
 	Section = mongoose.model('Section'),
 	_ = require('lodash');
+
+	// Seed questionnaire fields
+	Questionnaire.count({}, function (err, count) {
+		if (count < 1) {
+			Questionnaire.insertMany(seed.questionnaires, function (err) {
+				if (err) throw err;
+			});
+		}
+	});
+
+	Section.count({}, function (err, count) {
+		if (count < 1) {
+			Section.insertMany(seed.sections, function (err) {
+				if (err) throw err;
+			});
+		}
+	});
 
 // Create questionnaire
 exports.create = function(req, res) {

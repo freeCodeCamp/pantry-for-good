@@ -46,6 +46,10 @@ var mongoose = require('mongoose'),
 			section: {
 				type: Schema.Types.ObjectId,
 				ref: 'Section'
+			},
+			logicReq: {
+				type: Boolean,
+				default: false
 			}
 		}
 	);
