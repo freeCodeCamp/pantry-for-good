@@ -3,9 +3,10 @@
 	<h1>Questionnaire Editor</h1>
 </section>
 <!-- Main content -->
-<section class="content">
+<section class="content" data-ng-init="questionnaireCtrl.findQuestionnaires()">
 	<!-- QUESTIONNAIRES TABLE -->
-	<div class="row" data-ng-init="questionnaireCtrl.findQuestionnaires()">
+	<!-- Only shown for superadmin, to be implemented -->
+	<div ng-if="false" class="row">
 		<div class="col-xs-12">
 			<div class="box" st-table="questionnaireCtrl.questionnairesCopy" st-safe-src="questionnaireCtrl.questionnaires">
 				<!-- Box header -->
@@ -30,7 +31,8 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th>Questionnaire Name</th>
+									<th>Name</th>
+									<th>Identifier</th>
 									<th>Description</th>
 									<th>Actions</th>
 								</tr>
@@ -43,7 +45,12 @@
 										       type="text"
 										       data-ng-model="questionnaireCtrl.questionnaire.name"
 										       placeholder="Questionnaire Name">
-										       <!-- required> -->
+									</td>
+									<td>
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaireCtrl.questionnaire.identifier"
+										       placeholder="Short identifier">
 									</td>
 									<td>
 										<input class="form-control"
@@ -59,11 +66,17 @@
 								</tr>
 								<tr data-ng-repeat="questionnaire in questionnaireCtrl.questionnairesCopy | orderBy: 'name' ">
 									<td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.name"></span></td>
+									<td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.identifier"></span></td>
 									<td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.description"></span></td>
 									<td data-ng-show="questionnaire.showEdit">
 										<input class="form-control"
 										       type="text"
 										       data-ng-model="questionnaire.name">
+									</td>
+									<td data-ng-show="questionnaire.showEdit">
+										<input class="form-control"
+										       type="text"
+										       data-ng-model="questionnaire.identifier">
 									</td>
 									<td data-ng-show="questionnaire.showEdit">
 										<input class="form-control"
@@ -99,10 +112,6 @@
 				<div class="box-header">
 					<h3 class="box-title">Sections</h3>
 					<div class="box-tools">
-						<div class="form-group has-feedback">
-							<input class="form-control" type="search" st-search="name" placeholder="Search">
-							<span class="glyphicon glyphicon-search form-control-feedback"></span>
-						</div>
 					</div>
 					<!-- Error display for sections -->
 					<div data-ng-show="questionnaireCtrl.sectionError" class="text-danger">

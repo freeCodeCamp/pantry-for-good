@@ -73,6 +73,12 @@ var mongoose = require('mongoose'),
 			required: 'Please fill in a questionnaire name',
 			trim: true
 		},
+		identifier: {
+			type: String,
+			unique: true,
+			required: 'Please fill in a short identifier',
+			trim: true
+		},
 		description: {
 			type: String,
 			trim: true
