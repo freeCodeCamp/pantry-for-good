@@ -199,9 +199,6 @@ var CustomerSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	empWorkStatus: {
-		type: String
-	}
 },
 	// Mongoose options
 	{ strict: false }

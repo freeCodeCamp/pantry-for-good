@@ -221,7 +221,7 @@
         "require-jsdoc": "off",
         "require-yield": "error",
         "rest-spread-spacing": "off",
-        "semi": ["error", "always"],
+        "semi": ["warn", "always"],
         "semi-spacing": "off",
         "sort-keys": "off",
         "sort-imports": "off",

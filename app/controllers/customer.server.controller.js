@@ -38,8 +38,8 @@ var sendEmail = function(to, subject, content, callback) {
  * Private helper function for email notification
  */
 var sendEmailStatus = function(req, res, customer) {
-	if (req.body.status === 'Accepted') {	
-		sendEmail(customer.email, 'Food bank templete acceptance letter', 
+	if (req.body.status === 'Accepted') {
+		sendEmail(customer.email, 'Food bank templete acceptance letter',
 			'Congratulations! You have been accepted as a client.');
 /*		var mailOptionsAccept = {
 			to: customer.email,
@@ -57,7 +57,7 @@ var sendEmailStatus = function(req, res, customer) {
 		});*/
 
 	} else if (req.body.status === 'Rejected') {
-		sendEmail(customer.email, 'Food bank templete rejection letter', 
+		sendEmail(customer.email, 'Food bank templete rejection letter',
 			'Sorry! You have been rejected as a client.');
 		/*var mailOptionsReject = {
 			to: customer.email,
@@ -77,7 +77,7 @@ var sendEmailStatus = function(req, res, customer) {
 };
 
 var sendEmailUpdate = function(req, res, customer) {
-	sendEmail(customer.email, 'Food bank templete account update', 
+	sendEmail(customer.email, 'Food bank templete account update',
 		'FYI, your account has been updated.');
 /*
 	var mailOptionsUpdate = {
@@ -109,7 +109,7 @@ exports.create = function(req, res) {
 		.then(function() {
 			async.waterfall([
 				function(done) {
-					customer.save({ strict: false }, function(err) {
+					customer.save(function(err) {
 						if (err) {
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
@@ -121,8 +121,8 @@ exports.create = function(req, res) {
 						}
 					});
 				},
-				function(customer, done) {
-					sendEmail(customer.email, 'Food bank templete account creation', 
+				function(customer) {
+					sendEmail(customer.email, 'Food bank templete account creation',
 						'Thank you for creating an account.');
 					/*var mailOptionsCreate = {
 						to: config.mailer.to,
@@ -167,6 +167,14 @@ exports.update = function(req, res) {
 
 	customer = _.extend(customer, req.body);
 
+	// Trying Maxim's solution for fields not in the schema
+	var schemaFields = Object.getOwnPropertyNames(Customer.schema.paths);
+	for (var field in req.body) {
+		if (customer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
+			customer.set(field, req.body[field]);
+		}
+	}
+
 	Customer.findOne({'_id': customer._id})
 		.exec()
 		.then(function(customerOld) {
@@ -176,7 +184,7 @@ exports.update = function(req, res) {
 
 				// Assign the customer user role to the user in the case of application approval
 				if (customer.status === 'Accepted') {
-					User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, { strict: false }, function(err) {
+					User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}}, function(err) {
 						if (err) {
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
@@ -189,7 +197,7 @@ exports.update = function(req, res) {
 			}
 		});
 
-		customer.save({ strict: false }, function(err) {
+		customer.save(function(err) {
 			if (err) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)

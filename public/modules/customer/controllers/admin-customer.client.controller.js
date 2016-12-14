@@ -26,10 +26,6 @@
 			}
 		};
 
-		self.DEBUG = function () {
-			console.log('Customer: ', self.customer);
-		};
-
 		self.handleCheckboxClick = function (name, element) {
 
 			// Initialise as array if undefined
@@ -223,8 +219,6 @@
 
 		// Update existing customer
 		self.update = function(status) {
-			console.log('Client side: customer, updated: ', self.customer);
-
 			if (status) self.customer.status = status;
 
 			self.customer.$update()

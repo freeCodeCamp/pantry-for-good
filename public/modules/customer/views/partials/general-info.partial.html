@@ -24,7 +24,7 @@
                 <label>{{cell.label}}</label>
 
                 <!-- Normal text input -->
-                <input ng-if="cell.type == 'Text'" ng-change="customerCtrl.DEBUG()" class="form-control" type="text" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}">
+                <input ng-if="cell.type == 'Text'" class="form-control" type="text" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}">
 
                 <!-- Textarea input -->
                 <textarea ng-if="cell.type == 'Textarea'" class="form-control" ng-model="customerCtrl.customer[cell.name]" placeholder="{{cell.label}}"></textarea>
