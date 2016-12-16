@@ -29,7 +29,7 @@ Now use a text editor to create a file named `.env`. Foodbank Template loads thi
 
 to indicate that you are running the app in development mode.
 
-This app uses MongoDB as its database engine. Follow [the instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-linux/) to install it locally. By default, it attaches to `localhost:27017/fb-dev`. If you want to use a differently named database, or connect to a remote MongoDB instance, add the address to the `MONGODB_URI` variable in your `.env` file.
+This app uses MongoDB as its database engine. Follow [the instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-linux/) to install it locally. By default, it attaches to `mongodb://localhost:27017/fb-dev`. If you want to use a differently named database, or connect to a remote MongoDB instance, add the address to the `MONGODB_URI` variable in your `.env` file.
 
 Once MongoDB is set up, you should create an admin account. Edit the admin-config.json file to create a custom user, then run
 

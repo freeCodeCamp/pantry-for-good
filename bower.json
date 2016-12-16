@@ -4,7 +4,7 @@
   "description": "A customizable food bank webapp.",
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "angular": "~1.5.8",
+    "angular": "^1.5.9",
     "angular-resource": "~1.5.8",
     "angular-mocks": "~1.5.8",
     "angular-bootstrap": "^2.2.0",
