@@ -1,7 +1,7 @@
 {
   "name": "foodbank-template",
   "version": "0.0.1",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js",
+  "description": "A customizable food bank webapp.",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "angular": "~1.5.8",
