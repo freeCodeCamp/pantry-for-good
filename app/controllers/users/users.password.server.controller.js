@@ -9,8 +9,8 @@ var _ = require('lodash'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
 	config = require('../../../config/config'),
-	nodemailer = require('nodemailer'),
 	async = require('async'),
+	mailHelper = require('sendgrid').mail,
 	crypto = require('crypto');
 
 /**
@@ -65,7 +65,29 @@ exports.forgot = function(req, res, next) {
 		},
 		// If valid email, send reset email using service
 		function(emailHTML, user, done) {
-			var smtpTransport = nodemailer.createTransport(config.mailer.options);
+			var from_email = new mailHelper.Email(config.mailer.from);
+			var to_email = new mailHelper.Email(user.email);
+			var sg = require('sendgrid')(config.mailer.sendgridKey);
+			var sgContent = new mailHelper.Content('text/html', emailHTML);
+			var mail = new mailHelper.Mail(from_email, "Password Reset", to_email, sgContent);
+			var request = sg.emptyRequest({
+				method: 'POST',
+				path: '/v3/mail/send',
+				body: mail.toJSON()
+			});
+
+			sg.API(request, function(error, response) {
+				if (error) {
+					console.log(error);
+					console.log(response.body.errors);
+				} else {
+					res.send({
+						message: 'An email has been sent to ' + user.email + ' with further instructions.'
+					});
+				}
+			});
+
+			/*var smtpTransport = nodemailer.createTransport(config.mailer.options);
 			var mailOptions = {
 				to: user.email,
 				from: config.mailer.from.first,
@@ -80,7 +102,7 @@ exports.forgot = function(req, res, next) {
 				}
 
 				done(err);
-			});
+			});*/
 		}
 	], function(err) {
 		if (err) return next(err);
@@ -167,7 +189,26 @@ exports.reset = function(req, res, next) {
 		},
 		// If valid email, send reset email using service
 		function(emailHTML, user, done) {
-			var smtpTransport = nodemailer.createTransport(config.mailer.options);
+			var from_email = new mailHelper.Email(config.mailer.from);
+			var to_email = new mailHelper.Email(user.email);
+			var sg = require('sendgrid')(config.mailer.sendgridKey);
+			var sgContent = new mailHelper.Content('text/html', emailHTML);
+			var mail = new mailHelper.Mail(from_email, 'Your password has been changed.', to_email, sgContent);
+			var request = sg.emptyRequest({
+				method: 'POST',
+				path: '/v3/mail/send',
+				body: mail.toJSON()
+			});
+
+			sg.API(request, function(error, response) {
+				if (error) {
+					console.log(error);
+					console.log(response.body.errors);
+				} else {
+					done(error, 'done');
+				}
+			});
+			/*var smtpTransport = nodemailer.createTransport(config.mailer.options);
 			var mailOptions = {
 				to: user.email,
 				from: config.mailer.from.first,
@@ -177,7 +218,7 @@ exports.reset = function(req, res, next) {
 
 			smtpTransport.sendMail(mailOptions, function(err) {
 				done(err, 'done');
-			});
+			});*/
 		}
 	], function(err) {
 		if (err) return next(err);

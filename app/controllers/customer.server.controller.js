@@ -12,11 +12,11 @@ var mongoose = require('mongoose'),
 		mailHelper = require('sendgrid').mail,
 		config = require('../../config/config');
 
-var sendEmail = function(to, subject, content, callback) {
+var sendEmail = function(to, subject, content) {
 	var from_email = new mailHelper.Email(config.mailer.from);
 	var to_email = new mailHelper.Email(to);
 	var sg = require('sendgrid')(config.mailer.sendgridKey);
-	var sgContent = new mailHelper.Content('text/plain', content);
+	var sgContent = new mailHelper.Content('text/html', content);
 	var mail = new mailHelper.Mail(from_email, subject, to_email, sgContent);
 	var request = sg.emptyRequest({
 		method: 'POST',
@@ -29,8 +29,6 @@ var sendEmail = function(to, subject, content, callback) {
 			console.log(error);
 			console.log(response.body.errors);
 		}
-		if (callback)
-			callback(error, response);
 	});
 };
 
@@ -39,8 +37,13 @@ var sendEmail = function(to, subject, content, callback) {
  */
 var sendEmailStatus = function(req, res, customer) {
 	if (req.body.status === 'Accepted') {
-		sendEmail(customer.email, 'Food bank templete acceptance letter',
-			'Congratulations! You have been accepted as a client.');
+		res.render('templates/accept-customer-email', {
+			fullName: customer.fullName,
+			date: customer.dateReceived.toDateString()
+		}, function (err, email) {
+			sendEmail(customer.email, 'Foodbank App acceptance letter',
+				email);
+		});
 /*		var mailOptionsAccept = {
 			to: customer.email,
 			headers: {
@@ -57,8 +60,13 @@ var sendEmailStatus = function(req, res, customer) {
 		});*/
 
 	} else if (req.body.status === 'Rejected') {
-		sendEmail(customer.email, 'Food bank templete rejection letter',
-			'Sorry! You have been rejected as a client.');
+		res.render('templates/reject-customer-email', {
+			fullName: customer.fullName,
+			date: customer.dateReceived.toDateString()
+		}, function (err, email) {
+			sendEmail(customer.email, 'Foodbank App rejection letter',
+				email);
+		});
 		/*var mailOptionsReject = {
 			to: customer.email,
 			headers: {
@@ -122,8 +130,14 @@ exports.create = function(req, res) {
 					});
 				},
 				function(customer) {
-					sendEmail(customer.email, 'Food bank templete account creation',
-						'Thank you for creating an account.');
+					res.render('templates/accept-customer-email', {
+						fullName: customer.fullName,
+						date: customer.dateReceived.toDateString()
+					}, function (err, email) {
+						sendEmail(customer.email, 'Thank you for applying.',
+							email);
+					});
+
 					/*var mailOptionsCreate = {
 						to: config.mailer.to,
 						headers: {
