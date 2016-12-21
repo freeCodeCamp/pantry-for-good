@@ -74,7 +74,11 @@ var DonorSchema = new Schema({
 		type: Number,
 		ref: 'Donation'
 	}]
-});
+},
+	// Mongoose options
+	{ strict: false }
+);
+
 
 /**
  * Virtual getters & setters

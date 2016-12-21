@@ -93,7 +93,6 @@
 		}; // Function generate Form
 
 		var promiseHash = {};
-		// promiseHash.questionnaires = Questionnaire.query().$promise;
 		promiseHash.sections = Section.query().$promise;
 		promiseHash.fields = Field.query().$promise;
 
