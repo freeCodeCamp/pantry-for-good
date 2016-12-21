@@ -55,6 +55,7 @@ var mongoose = require('mongoose'),
 	);
 
 	var SectionSchema = new Schema({
+		_id: String,
 		name: {
 			type: String,
 			required: 'Please fill in a section name',
@@ -71,6 +72,7 @@ var mongoose = require('mongoose'),
 	});
 
 	var QuestionnaireSchema = new Schema({
+		_id: String,
 		name: {
 			type: String,
 			unique: true,
