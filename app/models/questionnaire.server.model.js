@@ -23,7 +23,7 @@ var mongoose = require('mongoose'),
 			type: {
 				type: String,
 				required: 'Please select a field type',
-				enum: ['Text', 'Textarea', 'Date', 'Radio Buttons', 'Checkboxes'],
+				enum: ['Text', 'Textarea', 'Date', 'Radio Buttons', 'Checkboxes', 'Table'],
 				trim: true
 			},
 			choices: {
@@ -55,7 +55,6 @@ var mongoose = require('mongoose'),
 	);
 
 	var SectionSchema = new Schema({
-		_id: String,
 		name: {
 			type: String,
 			required: 'Please fill in a section name',
@@ -76,7 +75,6 @@ var mongoose = require('mongoose'),
 	});
 
 	var QuestionnaireSchema = new Schema({
-		_id: String,
 		name: {
 			type: String,
 			unique: true,

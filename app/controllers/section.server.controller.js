@@ -9,9 +9,11 @@ var mongoose = require('mongoose'),
 // Create a section
 exports.create = function(req, res) {
 	var section = new Section(req.body);
+	console.log('CREATE A SECTION: ', section);
 
 	section.save(function(err){
 		if (err) {
+			console.log('ERROR: ', err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});

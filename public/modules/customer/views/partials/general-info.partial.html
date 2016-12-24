@@ -8,11 +8,13 @@
   <div class="box box-solid box-primary">
     <!-- Box header -->
     <div class="box-header">
-      <h3 class="box-title">SECTION {{customerCtrl.filteredSections[$index].name | uppercase}}</h3>
+      <h3 class="box-title">SECTION {{section[0][0].section.name | uppercase}}</h3>
     </div> <!-- box-header-->
     <!-- Box body -->
     <div class="box-body">
-      <!-- Rows -->
+
+
+      <!-- For anything other than tables: Rows -->
       <div ng-repeat="row in section track by $index" class="row">
         <!-- <div ng-repeat="cell in row track by $index" class="col-xs-{{3*cell.span || 3}}"> -->
         <div ng-repeat="cell in row track by $index">
@@ -50,6 +52,11 @@
                     </label>
                   </div> <!-- Repeat choices -->
                 </div> <!-- Checkboxes -->
+
+                <!-- Table -->
+                <div ng-if="cell.type == 'Table'">
+                  Table, juhui
+                </div> <!-- Table -->
 
               </div> <!-- form group -->
             </div>
