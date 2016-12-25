@@ -4,7 +4,6 @@ angular.module('customer').factory('Form', Form);
 
 /* @ngInject */
 function Form() {
-	var filteredSections;
 	var service = {
 		generate: generate,
 		handleCheckboxClick: handleCheckboxClick,
@@ -13,49 +12,84 @@ function Form() {
 	return service;
 
 	// Factory Implementation
-	function generate(sectionsAndFields) {
-		var cRows = _.maxBy(sectionsAndFields.fields, 'row').row, cCols = 4, cSkip = 0;
-		var emptyCell = { status: 'empty' }, skipCell = { status: 'skip' };
-		var dynamicForm = [];
-		var r;
 
-		// Limit to available sections of Client Questionnaire
-		// TODO: Allow choice of questionnaire by passing identifier
+	// Dynamically generates a questionnaire form based on the sections and fields
+	// created in the questionnaire editor
+	function generate(formObject, sectionsAndFields, qIdentifier) {
+		var relevantSections = _.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position');
+		var maxColumns = 4, dynForm = [];
 
-		filteredSections = _.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': 'qClients' }}), 'position');
+			// Loop through sections for given questionnaire
+			for (var iSect = 0; iSect < relevantSections.length; iSect++) {
+				var dynSection = [];
+				var fieldsInSection = _.filter(sectionsAndFields.fields, { section: relevantSections[iSect] });
+				var rowMaxInSection = _.maxBy(fieldsInSection, 'row') ? _.maxBy(fieldsInSection, 'row').row : 0;
 
-		for (var s = 0; s < filteredSections.length; s++) {
-			var tmpRow = [];
-			for (var i = 0; i < cRows; i++) {
-				var tmpArr = [];
-				for (var j = 0; j < cCols; j++) {
-					if (cSkip > 0) {
-						tmpArr.push(skipCell);
-						cSkip--;
+				// Loop through rows for given section
+				for (var iRow = 0; iRow < rowMaxInSection; iRow++) {
+					var firstCell = _.find(fieldsInSection, { row: iRow + 1, column: 1 });
+
+					// If the field at column 1 is a table, insert table row into dynamic form
+					if (firstCell && firstCell.type === 'Table') {
+						dynSection.push(generateTableRow(formObject, firstCell.label, firstCell.name));
 					} else {
-						r = _.find(sectionsAndFields.fields, {
-							'row': i + 1,
-							'column': j + 1,
-							'section': filteredSections[s]
-						});
 
-						if (r === undefined) {
-							tmpArr.push(emptyCell);
-						} else {
-							r.status = 'valid';
-							tmpArr.push(r);
-							cSkip = r.span - 1;
-						} // if r is undefined
-					} // if skip cells left
-
-				} // for j, cells
-				tmpRow.push(tmpArr);
-			} // for i, rows
-			dynamicForm.push(tmpRow);
-		} // for s, sections
-
-		return dynamicForm;
+					// Otherwise, if the field at column 1 is not a table, insert standard row into dynamic form
+						dynSection.push(generateStandardRow(iRow, fieldsInSection, maxColumns));
+					}
+				} // Next row
+				dynForm.push(dynSection);
+			} // Next section
+			return dynForm;
 	} // Function generate
+
+	// Helper function: generate table
+	function generateTableRow(formObject, tableDescription, tableName) {
+		var tableRow = {
+			rows: /(ROWS:\s*)(.*)(COLUMNS)/.exec(tableDescription)[2].split(/;\s*/),
+			cols: /(COLUMNS:\s*)(.*)/.exec(tableDescription)[2].split(/;\s*/),
+		};
+		tableRow.inputFields = tableRow.cols.slice(1, 99);
+
+		// If table does not exist on form object yet, add it
+		if (!formObject[tableName]) {
+			formObject[tableName] = [];
+			tableRow.rows.forEach(function (item) {
+				var cell = { name: item };
+				for (var i = 0; i < tableRow.inputFields.length; i++) {
+					cell[tableRow.inputFields[i]] = 0;
+				}
+				formObject[tableName].push(cell);
+			});
+		}
+
+		return { tableHeaders: tableRow.cols, tableName: tableName };
+	}
+
+	// Helper function: generate standard row
+	function generateStandardRow(iRow, fieldsInSection, maxColumns) {
+		var cSkip = 0, standardRow = [];
+		var emptyCell = { status: 'empty' }, skipCell = { status: 'skip' };
+
+		// Loop through cells for given row
+		for (var iColumn = 0; iColumn < maxColumns; iColumn++) {
+
+			// If previous cell spans over current, skip
+			if (cSkip > 0) {
+				standardRow.push(skipCell);
+				cSkip--;
+
+			// Otherwise find field for given row and column
+			} else {
+				var field = _.find(fieldsInSection, { row: iRow + 1, column: iColumn + 1 });
+
+				// If the field exists, insert it into row, otherwise insert empty placeholder cell into row
+				standardRow.push(field ? field : emptyCell);
+				cSkip = field ? field.span - 1 : 0;
+			}
+		} // Next column
+		return standardRow;
+	} // Helper function generate standard row
 
 	function handleCheckboxClick(obj, name, element) {
 		// Initialise as array if undefined

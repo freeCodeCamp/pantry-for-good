@@ -27,10 +27,9 @@
 		};
 
 		// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
-		// TODO: Allow choice of questionnaire by passing identifier
 		// TODO: Enable use of Form by customer, donor and volunteer modules
-		SectionsAndFields.get().then(function (res) {
-			self.dynForm = Form.generate(res);
+		SectionsAndFields.get().then(function(res) {
+			self.dynForm = Form.generate(self.customer, res, 'qClients');
 		});
 
 		/**
