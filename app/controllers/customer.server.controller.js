@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
 		Customer = mongoose.model('Customer'),
 		User = mongoose.model('User'),
+		Settings = mongoose.model('Settings'),
 		_ = require('lodash'),
 		async = require('async'),
 		mailHelper = require('sendgrid').mail,
@@ -37,12 +38,17 @@ var sendEmail = function(to, subject, content) {
  */
 var sendEmailStatus = function(req, res, customer) {
 	if (req.body.status === 'Accepted') {
-		res.render('templates/accept-customer-email', {
-			fullName: customer.fullName,
-			date: customer.dateReceived.toDateString()
-		}, function (err, email) {
-			sendEmail(customer.email, 'Foodbank App acceptance letter',
-				email);
+		Settings.findOne({}, function(err, settings) {
+			if (err)
+				console.log(err);
+			res.render('templates/accept-customer-email', {
+				fullName: customer.fullName,
+				date: customer.dateReceived.toDateString(),
+				tconfig: settings
+			}, function (err, email) {
+				sendEmail(customer.email, 'Foodbank App acceptance letter',
+					email);
+			});
 		});
 /*		var mailOptionsAccept = {
 			to: customer.email,
@@ -60,12 +66,17 @@ var sendEmailStatus = function(req, res, customer) {
 		});*/
 
 	} else if (req.body.status === 'Rejected') {
-		res.render('templates/reject-customer-email', {
-			fullName: customer.fullName,
-			date: customer.dateReceived.toDateString()
-		}, function (err, email) {
-			sendEmail(customer.email, 'Foodbank App rejection letter',
-				email);
+		Settings.findOne({}, function(err, settings) {
+			if (err)
+				console.log(err);
+			res.render('templates/reject-customer-email', {
+				fullName: customer.fullName,
+				date: customer.dateReceived.toDateString(),
+				tconfig: settings
+			}, function (err, email) {
+				sendEmail(customer.email, 'Foodbank App rejection letter',
+					email);
+			});
 		});
 		/*var mailOptionsReject = {
 			to: customer.email,
@@ -85,8 +96,18 @@ var sendEmailStatus = function(req, res, customer) {
 };
 
 var sendEmailUpdate = function(req, res, customer) {
-	sendEmail(customer.email, 'Food bank templete account update',
-		'FYI, your account has been updated.');
+	Settings.findOne({}, function(err, settings) {
+		if (err)
+			console.log(err);
+		res.render('templates/update-customer-email', {
+			id: customer._id,
+			fullName: customer.fullName,
+			tconfig: settings
+		}, function (err, email) {
+			sendEmail(customer.email, 'Food bank templete account update.',
+				email);
+		});
+	});
 /*
 	var mailOptionsUpdate = {
 		to: config.mailer.to,
@@ -130,12 +151,17 @@ exports.create = function(req, res) {
 					});
 				},
 				function(customer) {
-					res.render('templates/accept-customer-email', {
-						fullName: customer.fullName,
-						date: customer.dateReceived.toDateString()
-					}, function (err, email) {
-						sendEmail(customer.email, 'Thank you for applying.',
-							email);
+					Settings.findOne({}, function(err, settings) {
+						if (err)
+							console.log(err);
+						res.render('templates/accept-customer-email', {
+							fullName: customer.fullName,
+							date: customer.dateReceived.toDateString(),
+							tconfig: settings
+						}, function (err, email) {
+							sendEmail(customer.email, 'Thank you for applying.',
+								email);
+						});
 					});
 
 					/*var mailOptionsCreate = {
@@ -181,7 +207,7 @@ exports.update = function(req, res) {
 
 	customer = _.extend(customer, req.body);
 
-	// Adding fields not defined in the schema
+	// Trying Maxim's solution for fields not in the schema
 	var schemaFields = Object.getOwnPropertyNames(Customer.schema.paths);
 	for (var field in req.body) {
 		if (customer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
