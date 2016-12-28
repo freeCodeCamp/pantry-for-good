@@ -45,25 +45,36 @@ function Form() {
 
 	// Helper function: generate table
 	function generateTableRow(formObject, tableDescription, tableName) {
-		var tableRow = {
+		var parsedTableDescription = {
 			rows: /(ROWS:\s*)(.*)(COLUMNS)/.exec(tableDescription)[2].split(/;\s*/),
 			cols: /(COLUMNS:\s*)(.*)/.exec(tableDescription)[2].split(/;\s*/),
 		};
-		tableRow.inputFields = tableRow.cols.slice(1, 99);
+		parsedTableDescription.columnNames = parsedTableDescription.cols.slice(1, 99);
 
-		// If table does not exist on form object yet, add it
-		if (!formObject[tableName]) {
-			formObject[tableName] = [];
-			tableRow.rows.forEach(function (item) {
-				var cell = { name: item };
-				for (var i = 0; i < tableRow.inputFields.length; i++) {
-					cell[tableRow.inputFields[i]] = 0;
+		// Initialize table array to be used for initialization
+		var tmpTable = [];
+
+		// Go through each table row and initialize keys that don't exist yet
+		for (var iTableRow = 0; iTableRow < parsedTableDescription.rows.length; iTableRow++) {
+			// Create row object with name from description
+			tmpTable.push({ name: parsedTableDescription.rows[iTableRow] });
+
+			// Initialize values in table row that don't exist yet
+			for (var iCell = 0; iCell < parsedTableDescription.columnNames.length; iCell++) {
+				var iTableColumn = parsedTableDescription.columnNames[iCell];
+
+				// Take value from table on form object, if they exist
+				try {
+					tmpTable[iTableRow][iTableColumn] = formObject[tableName][iTableRow][iTableColumn] || 0;
+				} catch (e) {
+					tmpTable[iTableRow][iTableColumn] = 0;
 				}
-				formObject[tableName].push(cell);
-			});
-		}
 
-		return { tableHeaders: tableRow.cols, tableName: tableName };
+			} // next value
+		} // next table row
+
+		formObject[tableName] = tmpTable;
+		return { tableHeaders: parsedTableDescription.cols, tableName: tableName };
 	}
 
 	// Helper function: generate standard row

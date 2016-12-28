@@ -237,7 +237,7 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-ratio="20">Label</th>
+									<th st-ratio="15">Label</th>
 									<th>Name</th>
 									<th>Section</th>
 									<th>Type</th>
@@ -251,11 +251,11 @@
 							<!-- Table body -->
 							<tbody>
 								<tr>
-									<td st-ratio="20" >
-										<input class="form-control"
-										       type="text"
+									<td st-ratio="15" >
+										<textarea class="form-control"
 										       data-ng-model="questionnaireCtrl.field.label"
 										       placeholder="Field Label">
+										</textarea>
 									</td>
 									<td>
 										<input class="form-control"
@@ -315,7 +315,7 @@
 								</tr>
 								<!-- Rows displaying existing sections, if not in edit mode  -->
 								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy | orderBy: ['section.name', 'row', 'column'] ">
-									<td st-ratio="20" data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
+									<td st-ratio="15" data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.section.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.type"></span></td>
@@ -324,10 +324,11 @@
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.column"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.span"></span></td>
 
-									<td st-ratio="20" data-ng-show="field.showEdit">
-										<input class="form-control"
+									<td st-ratio="15" data-ng-show="field.showEdit">
+										<textarea class="form-control"
 										       type="text"
-										       data-ng-model="field.label">
+													 rows=3
+										       data-ng-model="field.label"></textarea>
 									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
@@ -344,7 +345,8 @@
 									</td>
 									<td data-ng-show="field.showEdit">
 										<select class="form-control"
-										       data-ng-model="field.type">
+										       data-ng-model="field.type"
+													 data-ng-disabled="field.logicReq">
 													 <option value="Text">Text</option>
 													 <option value="Textarea">Textarea</option>
 													 <option value="Date">Date</option>
