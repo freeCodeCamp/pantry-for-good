@@ -237,7 +237,7 @@
 							<!-- Table columns -->
 							<thead>
 								<tr>
-									<th st-ratio="15">Label</th>
+									<th>Label</th>
 									<th>Name</th>
 									<th>Section</th>
 									<th>Type</th>
@@ -251,7 +251,7 @@
 							<!-- Table body -->
 							<tbody>
 								<tr>
-									<td st-ratio="15" >
+									<td>
 										<textarea class="form-control"
 										       data-ng-model="questionnaireCtrl.field.label"
 										       placeholder="Field Label">
@@ -291,19 +291,19 @@
 									</td>
 									<td>
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="20"
 										       data-ng-model="questionnaireCtrl.field.row"
 										       placeholder="Row">
 									</td>
 									<td>
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="4"
 										       data-ng-model="questionnaireCtrl.field.column"
 										       placeholder="Column">
 									</td>
 									<td>
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="4" value="1"
 										       data-ng-model="questionnaireCtrl.field.span"
 										       placeholder="Span">
 									</td>
@@ -315,7 +315,7 @@
 								</tr>
 								<!-- Rows displaying existing sections, if not in edit mode  -->
 								<tr data-ng-repeat="field in questionnaireCtrl.fieldsCopy | orderBy: ['section.name', 'row', 'column'] ">
-									<td st-ratio="15" data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
+									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.section.name"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.type"></span></td>
@@ -324,7 +324,7 @@
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.column"></span></td>
 									<td data-ng-hide="field.showEdit"><span data-ng-bind="field.span"></span></td>
 
-									<td st-ratio="15" data-ng-show="field.showEdit">
+									<td data-ng-show="field.showEdit">
 										<textarea class="form-control"
 										       type="text"
 													 rows=3
@@ -362,17 +362,17 @@
 									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="20"
 										       data-ng-model="field.row">
 									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="4"
 										       data-ng-model="field.column">
 									</td>
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
-										       type="text"
+										       type="number" min="1" max="4" value="1"
 										       data-ng-model="field.span">
 									</td>
 									<td>
