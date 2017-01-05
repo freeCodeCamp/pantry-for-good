@@ -60,6 +60,7 @@ module.exports = {
 		tests: [
 			'public/lib/angular-mocks/angular-mocks.js',
 			'public/testInitialization.js',
+			'public/modules/customer/tests/admin-customer.client.controller.test.js',
 			'public/modules/*/tests/*.js'
 		]
 	}
