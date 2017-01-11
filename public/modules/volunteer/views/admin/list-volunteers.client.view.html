@@ -37,8 +37,8 @@
               <td><span data-ng-bind="volunteer.fullAddress"></span></td>
               <td><span data-ng-bind="volunteer.telephoneNumber"></span></td>
               <td><span data-ng-bind="volunteer.email"></span></td>
-							<td><span data-ng-bind="volunteer.status" class="label" 
-												data-ng-class="{ 'label-success': volunteer.status === 'Active', 
+							<td><span data-ng-bind="volunteer.status" class="label"
+												data-ng-class="{ 'label-success': volunteer.status === 'Active',
 																				 'label-danger': volunteer.status === 'Inactive' }"></span>
 							</td>
               <td>
@@ -48,6 +48,7 @@
             </tr>
             </tbody><!-- /.table content -->
           </table><!-- /.data table -->
+          <button class="btn btn-default pull-right">Add New User</button>
         </div><!-- /.box-body -->
       </div><!-- /.box -->
     </div><!-- /.col -->
