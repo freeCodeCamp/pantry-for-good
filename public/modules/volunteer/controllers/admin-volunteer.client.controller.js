@@ -4,7 +4,7 @@
 	angular.module('volunteer').controller('VolunteerAdminController', VolunteerAdminController);
 
 	/* @ngInject */
-	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin) {
+	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, VolunteerUser) {
 		var self = this;
 
 		// This provides Authentication context
@@ -24,7 +24,7 @@
 
 		// Find a list of volunteers
 		self.find = function() {
-			self.volunteers = VolunteerAdmin.query();
+			self.volunteer = VolunteerAdmin.query();
 		};
 
 		// Find existing volunteer
@@ -33,6 +33,25 @@
 				volunteerId: $stateParams.volunteerId
 			}, function(volunteer) {
 				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
+			});
+		};
+
+		// Create a new volunteer
+		self.createNewVolunteer = function() {
+			console.log('new volunteer')
+			var volunteer = new VolunteerUser({
+				lastName: "test",
+				firstName: "testing",
+				email: 'test@test.com',
+				manualAdd: true
+			});
+
+			volunteer.$save(function(u, putResponseHeaders) {
+			console.log('returned data',u._id);
+			alert('pause')
+			console.log(putResponseHeaders);
+			}, function(errorResponse) {
+				self.errorItem = errorResponse.data.message;
 			});
 		};
 
@@ -56,7 +75,7 @@
 				self.error = errorResponse.data.message;
 			});
 		};
-		
+
 		// Delete volunteer
 		self.delete = function(volunteer) {
 			if ($window.confirm('Are you sure?')) {
@@ -64,7 +83,7 @@
 					$state.go('root.listVolunteers', null, { reload: true });
 				}, function(errorResponse) {
 					self.error = errorResponse.data.message;
-				});	
+				});
 			}
 		};
 	}

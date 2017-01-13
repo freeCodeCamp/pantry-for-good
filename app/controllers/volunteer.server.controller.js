@@ -14,27 +14,38 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var volunteer = new Volunteer(req.body);
-	volunteer._id = req.user.id;
-
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
-		.then(function(user) {
-			return volunteer.save(function(err) {
-				if (err) {
+	volunteer.save(function(err){
+		if (!req.body.manualAdd){
+			// Update user's hasApplied property to restrict them from applying again
+			User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
+				.then(function(user) {
+					return volunteer.save(function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							return res.json(volunteer);
+						}
+					});
+				})
+				.catch(function (err) {
 					return res.status(400).send({
 						message: errorHandler.getErrorMessage(err)
 					});
-				} else {
-					return res.json(volunteer);
-				}
-			});
-		})
-		.catch(function (err) {
+				});
+		}else {
+		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
-		});
-};
+			} else {
+				return res.json(volunteer);
+			}
+		}
+	});
+
+	};
 
 /**
  * Show the current volunteer
