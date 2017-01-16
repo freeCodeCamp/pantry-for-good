@@ -14,27 +14,38 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var donor = new Donor(req.body);
-	donor._id = req.user.id;
-
-	// Update user's role to donor and mark as this user as having applied
-	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
-		.then(function(user) {
-			return donor.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
+	if (!req.body.manualAdd){
+		donor._id = req.user.id;
+		// Update user's hasApplied property to restrict them from applying again
+		User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
+			.then(function(user) {
+				return donor.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.json(donor);
+					}
+				});
+			})
+			.catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			});
+		}else{
+		donor.save(function(err){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 				} else {
 					return res.json(donor);
 				}
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
 		});
-};
+	}
+	};
 
 /**
  * Show the current donor
