@@ -71,6 +71,9 @@ var DonorSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	manualAdd: {
+		type: Boolean,
+	},
 	donations: [{
 		type: Number,
 		ref: 'Donation'

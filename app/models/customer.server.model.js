@@ -200,6 +200,9 @@ var CustomerSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	manualAdd: {
+		type: Boolean,
+	},
 },
 	// Mongoose options
 	{ strict: false }
