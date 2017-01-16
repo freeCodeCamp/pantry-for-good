@@ -204,9 +204,9 @@
     // Create a new donor
     self.createNewCustomer = function() {
     var customer = new CustomerUser({
-        lastName: "test",
-        firstName: "testing",
-        email: 'test@test.com',
+        lastName: "User",
+        firstName: "New",
+        email: 'user@test.com',
         manualAdd: true
       });
       customer.$save(function(response) {
