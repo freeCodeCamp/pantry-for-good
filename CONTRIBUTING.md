@@ -22,12 +22,10 @@ If you find a bug that is not listed as an issue, feel free to add a new issue.
 - [Setup Linting](#setup-linting)
 - [Setup Foodbank App](#setup-foodbank-app)
 - [Make Changes](#make-changes)
-- [Run the Test Suite](#run-the-test-suite)
 - [Squash Your Commits](#squash-your-commits)
 - [Creating a Pull Request](#creating-a-pull-request)
 - [Submitting a Pull Request](#submitting-a-pull-request)
 - [Next Steps](#next-steps)
-- [Other resources](#other-resources)
 
 ### Prerequisites
 
@@ -152,7 +150,7 @@ $ git push origin [name_of_your_new_branch]
 
 ### Setup Linting
 
-You should have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html), and it will highlight anything doesn't conform to our Foodbank App's coding conventions. (you can find a summary of those rules [here](https://github.com/FreeCodeCamp/food-bank-app/blob/staging/.eslintrc)).
+You should have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html), and it will highlight anything doesn't conform to our Foodbank App's coding style conventions. (you can find a summary of those rules [here](https://github.com/FreeCodeCamp/food-bank-app/blob/staging/.eslintrc)).
 
 > Please do not ignore any linting errors, as they are meant to **help** you and to ensure a clean and simple code base.
 
@@ -187,8 +185,7 @@ The best way to find out any code you wish to change/add or remove is using
 the GitHub search bar at the top of the repository page. For example, you could
 search for a challenge name and the results will display all the files along
 with line numbers. Then you can proceed to the files and verify this is the area
-that you were looking forward to edit. Always feel free to reach out to the chat
-room when you are not certain of any thing specific in the code.
+that you were looking forward to edit.
 
 ### Squash Your Commits
 When you make a pull request, all of your changes need to be in one commit.
