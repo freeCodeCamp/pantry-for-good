@@ -191,10 +191,11 @@ var CustomerSchema = new Schema({
 	},
 
 	// Application specific information
-	_id: {
+	/*_id: {
 		type: Number,
 		ref: 'User'
 	},
+	*/
 	dateReceived: {
 		type: Date,
 		default: Date.now

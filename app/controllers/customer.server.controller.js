@@ -110,62 +110,71 @@ var sendEmailUpdate = function(req, res, customer) {
  */
 exports.create = function(req, res) {
 	var customer = new Customer(req.body);
-	customer._id = req.user.id;
+	if (!req.body.manualAdd){
+		customer._id = req.user.id;
+		// Update user's hasApplied property to restrict them from applying again
+		User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
+			.then(function() {
+				async.waterfall([
+					function(done) {
+						customer.save(function(err) {
+							if (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
+							} else {
+								res.json(customer);
 
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
-		.then(function() {
-			async.waterfall([
-				function(done) {
-					customer.save(function(err) {
-						if (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							res.json(customer);
+								done(err, customer);
+							}
+						});
+					},
+					function(customer) {
+						res.render('templates/accept-customer-email', {
+							fullName: customer.fullName,
+							date: customer.dateReceived.toDateString()
+						}, function (err, email) {
+							sendEmail(customer.email, 'Thank you for applying.',
+								email);
+						});
 
-							done(err, customer);
-						}
-					});
-				},
-				function(customer) {
-					res.render('templates/accept-customer-email', {
-						fullName: customer.fullName,
-						date: customer.dateReceived.toDateString()
-					}, function (err, email) {
-						sendEmail(customer.email, 'Thank you for applying.',
-							email);
-					});
+						/*var mailOptionsCreate = {
+							to: config.mailer.to,
+							headers: {
+								'X-MC-Template': 'new-client',
+								'X-MC-MergeVars': JSON.stringify({
+									id: customer._id,
+									fullName: customer.fullName,
+									date: customer.dateReceived.toDateString()
+								})
+							}
+						};
 
-					/*var mailOptionsCreate = {
-						to: config.mailer.to,
-						headers: {
-							'X-MC-Template': 'new-client',
-							'X-MC-MergeVars': JSON.stringify({
-								id: customer._id,
-								fullName: customer.fullName,
-								date: customer.dateReceived.toDateString()
-							})
-						}
-					};
-
-					smtpTransport.sendMail(mailOptionsCreate, function(err) {
-						done(err, 'done');
-					});*/
+						smtpTransport.sendMail(mailOptionsCreate, function(err) {
+							done(err, 'done');
+						});*/
+					}
+				], function(err) {
+					if (err) return err;
+				});
+			})
+			.catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			});
+		}else{
+		customer.save(function(err){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+				} else {
+					return res.json(customer);
 				}
-			], function(err) {
-				if (err) return err;
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
 		});
-
-};
-
+	}
+	};
 /**
  * Show the current customer
  */
