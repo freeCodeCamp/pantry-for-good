@@ -16,6 +16,7 @@ exports.create = function(req, res) {
 	var volunteer = new Volunteer(req.body);
 	volunteer.save(function(err){
 		if (!req.body.manualAdd){
+			volunteer._id = req.user.id;
 			// Update user's hasApplied property to restrict them from applying again
 			User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
 				.then(function(user) {

@@ -11,10 +11,11 @@ var mongoose = require('mongoose'),
  */
 
 var DonorSchema = new Schema({
-	_id: {
+	/*_id: {
 		type: Number,
 		ref: 'User'
 	},
+	*/
 	lastName: {
 		type: String,
 		trim: true
