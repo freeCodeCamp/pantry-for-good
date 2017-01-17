@@ -44,10 +44,10 @@
                 <td><span data-ng-bind="customer.householdSummary"></span></td>
 								<td><span data-ng-bind="customer.assignedTo.fullName"></span></td>
                 <td print-remove>
-                  <span data-ng-bind="customer.status" class="label"
-												data-ng-class="{ 'label-success': customer.status === 'Accepted',
-																				 'label-danger': customer.status === 'Rejected',
-																				 'label-info': customer.status === 'Pending',
+                  <span data-ng-bind="customer.status" class="label" 
+												data-ng-class="{ 'label-success': customer.status === 'Accepted', 
+																				 'label-danger': customer.status === 'Rejected', 
+																				 'label-info': customer.status === 'Pending', 
 																				 'label-warning': customer.status === 'Inactive' }">
 									</span>
                 </td>
@@ -58,9 +58,7 @@
               </tr>
             </tbody><!-- /.table content -->
           </table><!-- /.data table -->
-					<!-- New User Button -->
-          <button class="btn btn-default pull-right" ng-click="customerCtrl.createNewCustomer()">Add New Client</button>
-          <!-- /.New User Button -->
+	        <br>
 	        <button class="btn btn-default" print-btn print-landscape><i class="fa fa-print"></i> Print</button>
         </div><!-- /.box-body -->
       </div><!-- /.box -->

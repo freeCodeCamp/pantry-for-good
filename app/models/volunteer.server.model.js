@@ -101,18 +101,13 @@ var VolunteerSchema = new Schema({
 		trim: true
 	},
 	// Application specific information
-	/*Commented out to allow admin creation
 	_id: {
 		type: Number,
 		ref: 'User'
 	},
-	*/
 	dateReceived: {
 		type: Date,
 		default: Date.now
-	},
-	manualAdd: {
-		type: Boolean,
 	},
 	status: {
 		type: String,

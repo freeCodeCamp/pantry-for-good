@@ -11,11 +11,10 @@ var mongoose = require('mongoose'),
  */
 
 var DonorSchema = new Schema({
-	/*_id: {
+	_id: {
 		type: Number,
 		ref: 'User'
 	},
-	*/
 	lastName: {
 		type: String,
 		trim: true
@@ -70,9 +69,6 @@ var DonorSchema = new Schema({
 	dateReceived: {
 		type: Date,
 		default: Date.now
-	},
-	manualAdd: {
-		type: Boolean,
 	},
 	donations: [{
 		type: Number,

@@ -12,9 +12,7 @@
     "start": "grunt",
     "test": "grunt test",
     "postinstall": "bower install --config.interactive=false",
-    "heroku-postbuild": "grunt build",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "heroku-postbuild": "grunt build"
   },
   "dependencies": {
     "async": "~2.1.4",
@@ -54,8 +52,7 @@
     "passport": "~0.3.2",
     "passport-local": "~1.0.0",
     "sendgrid": "^4.7.1",
-    "swig": "~1.4.1",
-    "snyk": "^1.22.1"
+    "swig": "~1.4.1"
   },
   "devDependencies": {
     "grunt-concurrent": "~2.3.1",
@@ -72,6 +69,5 @@
     "karma-phantomjs-launcher": "~1.0.2",
     "should": "~11.1.0",
     "supertest": "~2.0.0"
-  },
-  "snyk": true
+  }
 }
