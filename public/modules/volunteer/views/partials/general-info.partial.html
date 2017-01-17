@@ -1,57 +1,192 @@
-<!-- Sections -->
-<div ng-repeat="section in volunteerCtrl.dynForm track by $index" class="clearfix">
-  <!-- Box -->
-  <div class="box box-solid box-primary">
-    <!-- Box header -->
-    <div class="box-header">
-      <h3 class="box-title">SECTION {{volunteerCtrl.filteredSections[$index].name | uppercase}}</h3>
-    </div> <!-- box-header-->
-    <!-- Box body -->
-    <div class="box-body">
-      <!-- Rows -->
-      <div ng-repeat="row in section track by $index" class="row">
-        <!-- <div ng-repeat="cell in row track by $index" class="col-xs-{{3*cell.span || 3}}"> -->
-        <div ng-repeat="cell in row track by $index">
-          <!-- Make room for cell if empty or span ??? -->
-          <div ng-show="cell.status == 'invalid' || cell.span > 0" class="col-xs-{{3*cell.span || 3}}">
-            <div ng-hide="cell.status == 'invalid'">
-
-              <div class="form-group">
-                <label>{{cell.label}}</label>
-
-                <!-- Normal text input -->
-                <input ng-if="cell.type == 'Text'" class="form-control" type="text" ng-model="volunteerCtrl.volunteer[cell.name]" placeholder="{{cell.label}}">
-
-                <!-- Textarea input -->
-                <textarea ng-if="cell.type == 'Textarea'" class="form-control" ng-model="volunteerCtrl.volunteer[cell.name]" placeholder="{{cell.label}}"></textarea>
-
-                <!-- Date input -->
-                <input ng-if="cell.type == 'Date'" class="form-control" type="date" ng-model="volunteerCtrl.volunteer[cell.name]">
-
-                <!-- Radio buttons -->
-                <div ng-if="cell.type == 'Radio Buttons'">
-                  <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
-                    <input name="{{cell.name}}" type="radio" ng-model="volunteerCtrl.volunteer[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
-                    </label>
-                  </div> <!-- Repeat choices -->
-                </div> <!-- Radio buttons -->
-
-                <!-- Checkboxes -->
-                <div ng-if="cell.type == 'Checkboxes'">
-                  <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="checkbox-inline">
-                    <input name="{{cell.name}}" type="checkbox" value="{{choice.trim()}}"
-                      ng-click="handleCheckboxClick(cell.name, choice.trim())"
-                    >
-                      <{{cell.name}}> {{choice.trim()}}
-                    </label>
-                  </div> <!-- Repeat choices -->
-                </div> <!-- Checkboxes -->
-
-              </div> <!-- form group -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> <!-- box-body -->
-  </div> <!-- box -->
-</div> <!-- section -->
+<!-- Box -->
+<div class="box box-solid box-primary">
+	<!-- Box header -->
+	<div class="box-header">
+		<h3 class="box-title">IDENTIFICATION AND GENERAL INFORMATION</h3>
+	</div><!-- /.box-header-->
+	<!-- Box body -->
+	<div class="box-body">
+		<div class="row">
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="last-name">Last Name</label>
+					<input type="text"
+					       data-ng-model="volunteerCtrl.volunteer.lastName"
+					       id="last-name"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="first-name">First Name</label>
+					<input type="text"
+					       data-ng-model="volunteerCtrl.volunteer.firstName"
+					       id="first-name"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="clearfix visible-sm-block visible-md-block"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="address">Primary Mailing Address</label>
+					<input name="address"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.address"
+					       id="address"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="apartmentNumber">Apartment Number</label>
+					<input name="apartmentNumber"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.apartmentNumber"
+					       id="apartmentNumber"
+					       class="form-control">
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="buzzNumber">Buzz Number</label>
+					<input name="buzzNumber"
+					       type="number"
+					       data-ng-model="volunteerCtrl.volunteer.buzzNumber"
+					       id="buzzNumber"
+					       class="form-control">
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="city">City</label>
+					<input name="city"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.city"
+					       id="city"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="clearfix visible-sm-block visible-md-block"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="province">Province</label>
+					<input name="province"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.province"
+					       id="province"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="postalCode">Postal Code</label>
+					<input name="postalCode"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.postalCode"
+					       id="postalCode"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="telephoneNumber">Telephone Number</label>
+					<input name="telephoneNumber"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.telephoneNumber"
+					       id="telephoneNumber"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="mobileNumber">Mobile Number</label>
+					<input name="mobileNumber"
+					       type="text"
+					       data-ng-model="volunteerCtrl.volunteer.mobileNumber"
+					       id="mobileNumber"
+					       class="form-control">
+				</div>
+			</div>
+			<div class="clearfix visible-sm-block visible-md-block"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="email">E-mail address</label>
+					<input name="email"
+					       type="email"
+					       data-ng-model="volunteerCtrl.volunteer.email"
+					       id="email"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label for="date-of-birth">Date of Birth</label>
+					<input name="date-of-birth"
+					       type="date"
+					       data-ng-model="volunteerCtrl.volunteer.dateOfBirth"
+					       id="date-of-birth"
+					       class="form-control"
+					       required>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="col-sm-6 col-lg-3">
+				<div class="form-group">
+					<label>Best way to contact</label>
+					<div>
+						<label class="radio-inline">
+							<input type="radio"
+							       data-ng-model="volunteerCtrl.volunteer.contactPreference"
+							       data-ng-required="!volunteerCtrl.volunteer.contactPreference"
+							       value="phone">Phone
+						</label>
+						<label class="radio-inline">
+							<input type="radio"
+							       data-ng-model="volunteerCtrl.volunteer.contactPreference"
+							       data-ng-required="!volunteerCtrl.volunteer.contactPreference"
+							       value="email">Email
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="referred-by">How did you hear about us?</label>
+          <textarea name="referred-by"
+                    id="referred-by"
+                    data-ng-model="volunteerCtrl.volunteer.referredBy"
+                    cols="40"
+                    rows="2"
+                    class="form-control"
+                    required>
+          </textarea>
+				</div>
+			</div>
+			<div class="clearfix visible-sm-block"></div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="volunteer-reason">Why do you want to volunteer with us?</label>
+          <textarea name="volunteer-reason"
+                    id="volunteer-reason"
+                    data-ng-model="volunteerCtrl.volunteer.volunteerReason"
+                    cols="40"
+                    rows="2"
+                    class="form-control"
+                    required>
+          </textarea>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.box-body -->
+</div><!-- /.box -->

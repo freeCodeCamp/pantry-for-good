@@ -4,7 +4,7 @@
 	angular.module('volunteer').controller('VolunteerAdminController', VolunteerAdminController);
 
 	/* @ngInject */
-	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, Section, Field, $q) {
+	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, VolunteerUser, Section, Field, $q) {
 		var self = this;
 
 		// This provides Authentication context
@@ -108,6 +108,22 @@
 				volunteerId: $stateParams.volunteerId
 			}, function(volunteer) {
 				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
+			});
+		};
+
+		// Create a new volunteer
+		self.createNewVolunteer = function() {
+			var volunteer = new VolunteerUser({
+				lastName: "User",
+				firstName: "New",
+				email: 'user@test.com',
+				manualAdd: true
+			});
+			volunteer.$save(function(response) {
+				// Redirect after save
+				$state.go('root.editVolunteerAdmin', { volunteerId: response._id });
+			}, function(errorResponse) {
+				self.error = errorResponse.data.message;
 			});
 		};
 

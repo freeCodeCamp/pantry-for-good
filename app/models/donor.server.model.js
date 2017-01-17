@@ -11,10 +11,11 @@ var mongoose = require('mongoose'),
  */
 
 var DonorSchema = new Schema({
-	_id: {
+	/*_id: {
 		type: Number,
 		ref: 'User'
 	},
+	*/
 	lastName: {
 		type: String,
 		trim: true
@@ -70,15 +71,14 @@ var DonorSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	manualAdd: {
+		type: Boolean,
+	},
 	donations: [{
 		type: Number,
 		ref: 'Donation'
 	}]
-},
-	// Mongoose options
-	{ strict: false }
-);
-
+});
 
 /**
  * Virtual getters & setters

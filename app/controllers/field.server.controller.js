@@ -9,7 +9,6 @@ var mongoose = require('mongoose'),
 
 	Field.count({}, function (err, count) {
 		if (count < 1) {
-			console.log('Seeding Fields');
 			Field.insertMany(seed.fields, function (err) {
 				if (err) throw err;
 			});
