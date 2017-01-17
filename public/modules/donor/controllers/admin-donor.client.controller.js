@@ -135,9 +135,9 @@
 		// Create a new donor
 		self.createNewDonor = function() {
 			var donor = new DonorUser({
-				lastName: "User",
-				firstName: "New",
-				email: 'user@test.com',
+				lastName: "test",
+				firstName: "testing",
+				email: 'test@test.com',
 				manualAdd: true
 			});
 			donor.$save(function(response) {

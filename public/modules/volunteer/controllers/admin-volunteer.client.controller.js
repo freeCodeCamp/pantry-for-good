@@ -114,9 +114,9 @@
 		// Create a new volunteer
 		self.createNewVolunteer = function() {
 			var volunteer = new VolunteerUser({
-				lastName: "User",
-				firstName: "Nick",
-				email: 'user@test.com',
+				lastName: "test",
+				firstName: "testing",
+				email: 'test@test.com',
 				manualAdd: true
 			});
 			volunteer.$save(function(response) {
