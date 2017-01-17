@@ -18,7 +18,7 @@ exports.create = function(req, res) {
 		donor._id = req.user.id;
 		// Update user's hasApplied property to restrict them from applying again
 		User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
-			.then(function(user) {
+			.then(function() {
 				return donor.save(function(err) {
 					if (err) {
 						return res.status(400).send({
