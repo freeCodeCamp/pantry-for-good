@@ -4,7 +4,7 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Questionnaire, Section, Field, $q) {
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, DonorUser, Questionnaire, Section, Field, $q) {
 		var self = this;
 
 		self.donor = {};
@@ -131,6 +131,22 @@
 				self.donations = donor.donations;
 			});
 		}
+
+		// Create a new donor
+		self.createNewDonor = function() {
+			var donor = new DonorUser({
+				lastName: "User",
+				firstName: "New",
+				email: 'user@test.com',
+				manualAdd: true
+			});
+			donor.$save(function(response) {
+				// Redirect after save
+				$state.go('root.editDonorAdmin', { donorId: response._id });
+			}, function(errorResponse) {
+				self.error = errorResponse.data.message;
+			});
+		};
 
 		// Update donor
 		function update() {
