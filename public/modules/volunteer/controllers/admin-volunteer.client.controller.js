@@ -115,7 +115,7 @@
 		self.createNewVolunteer = function() {
 			var volunteer = new VolunteerUser({
 				lastName: "User",
-				firstName: "Nick",
+				firstName: "New",
 				email: 'user@test.com',
 				manualAdd: true
 			});
