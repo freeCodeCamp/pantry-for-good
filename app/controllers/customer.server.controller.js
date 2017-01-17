@@ -190,7 +190,7 @@ exports.update = function(req, res) {
 
 	customer = _.extend(customer, req.body);
 
-	// Adding fields not defined in the schema
+	// Trying Maxim's solution for fields not in the schema
 	var schemaFields = Object.getOwnPropertyNames(Customer.schema.paths);
 	for (var field in req.body) {
 		if (customer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {

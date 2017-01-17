@@ -14,7 +14,6 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var volunteer = new Volunteer(req.body);
-<<<<<<< HEAD
 	if (!req.body.manualAdd){
 		volunteer._id = req.user.id;
 		// Update user's hasApplied property to restrict them from applying again
@@ -41,18 +40,6 @@ exports.create = function(req, res) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
-=======
-	volunteer._id = req.user.id;
-
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
-		.then(function() {
-			return volunteer.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
->>>>>>> origin/staging
 				} else {
 					return res.json(volunteer);
 				}
@@ -74,14 +61,6 @@ exports.update = function(req, res) {
 	var volunteer = req.volunteer;
 	volunteer = _.extend(volunteer, req.body);
 
-	// Adding fields not defined in the schema
-	var schemaFields = Object.getOwnPropertyNames(Volunteer.schema.paths);
-	for (var field in req.body) {
-		if (volunteer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
-			volunteer.set(field, req.body[field]);
-		}
-	}
-
 	Volunteer.findOne({'_id': volunteer._id})
 		.exec()
 		.then(function(volunteerOld) {
@@ -89,7 +68,7 @@ exports.update = function(req, res) {
 			if (volunteerOld.driver !== volunteer.driver) {
 				if (volunteer.driver) {
 					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['driver']}})
-						.then(function() {
+						.then(function(user) {
 						})
 						.catch(function (err) {
 							return res.status(400).send({
@@ -103,7 +82,7 @@ exports.update = function(req, res) {
 				// Assign the volunteer role if volunteer is activated
 				if (volunteer.status === 'Active') {
 					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['volunteer']}})
-						.then(function() {
+						.then(function(user) {
 						})
 						.catch(function (err) {
 							return res.status(400).send({
@@ -113,7 +92,7 @@ exports.update = function(req, res) {
 				// Revoke volunteer role if the volunteer is inactive
 				} else {
 					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['user']}})
-						.then(function() {
+						.then(function(user) {
 						})
 						.catch(function (err) {
 							return res.status(400).send({
@@ -166,10 +145,10 @@ exports.delete = function(req, res) {
 
 	return User.findByIdAndRemove(id)
 		.exec()
-		.then(function() {
+		.then(function(user) {
 			return Volunteer.findByIdAndRemove(id)
 			.exec()
-			.then(function() {
+			.then(function(volunteer) {
 				return res.end();
 			});
 		})

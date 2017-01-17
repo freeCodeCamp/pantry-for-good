@@ -13,7 +13,6 @@ var mongoose = require('mongoose'),
 	// Seed questionnaire fields
 	Questionnaire.count({}, function (err, count) {
 		if (count < 1) {
-			console.log('Seeding Questionnaires');
 			Questionnaire.insertMany(seed.questionnaires, function (err) {
 				if (err) throw err;
 			});
@@ -22,7 +21,6 @@ var mongoose = require('mongoose'),
 
 	Section.count({}, function (err, count) {
 		if (count < 1) {
-			console.log('Seeding Sections');
 			Section.insertMany(seed.sections, function (err) {
 				if (err) throw err;
 			});

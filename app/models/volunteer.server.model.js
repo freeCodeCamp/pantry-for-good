@@ -119,11 +119,7 @@ var VolunteerSchema = new Schema({
 		enum: ['Active', 'Inactive'],
 		default: 'Inactive'
 	}
-},
-	// Mongoose options
-	{ strict: false }
-);
-
+});
 
 /**
  * Virtual getters & setters
