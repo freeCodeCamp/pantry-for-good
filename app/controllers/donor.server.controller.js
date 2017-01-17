@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var donor = new Donor(req.body);
+<<<<<<< HEAD
 	if (!req.body.manualAdd){
 		donor._id = req.user.id;
 		// Update user's hasApplied property to restrict them from applying again
@@ -40,6 +41,18 @@ exports.create = function(req, res) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
+=======
+	donor._id = req.user.id;
+
+	// Update user's role to donor and mark as this user as having applied
+	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
+		.then(function() {
+			return donor.save(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+>>>>>>> origin/staging
 				} else {
 					return res.json(donor);
 				}
@@ -61,6 +74,14 @@ exports.update = function(req, res) {
 	var donor = req.donor;
 
 	donor = _.extend(donor, req.body);
+
+	// Adding fields not defined in the schema
+	var schemaFields = Object.getOwnPropertyNames(Donor.schema.paths);
+	for (var field in req.body) {
+		if (donor.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
+			donor.set(field, req.body[field]);
+		}
+	}
 
 	donor.save(function(err) {
 		if (err) {
@@ -99,10 +120,10 @@ exports.delete = function(req, res) {
 
 	return User.findByIdAndRemove(id)
 		.exec()
-		.then(function(user) {
+		.then(function() {
 			return Donor.findByIdAndRemove(id)
 				.exec()
-				.then(function(donor) {
+				.then(function() {
 					return res.end();
 				});
 		})

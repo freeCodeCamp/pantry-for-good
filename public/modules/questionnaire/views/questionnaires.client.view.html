@@ -86,7 +86,7 @@
 									<td>
 										<a data-ng-hide="questionnaire.showEdit" data-ng-click="questionnaire.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
 										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.updateQuestionnaire(questionnaire)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.removeQuestionnaire(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="questionnaire.showEdit && !questionnaire.logicReq" data-ng-click="questionnaireCtrl.removeQuestionnaire(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="questionnaire.showEdit" data-ng-click="questionnaireCtrl.findQuestionnaires(); questionnaire.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>
@@ -193,7 +193,7 @@
 									<td>
 										<a data-ng-hide="section.showEdit" data-ng-click="section.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
 										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.updateSection(section)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.removeSection(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="section.showEdit  && !section.logicReq" data-ng-click="questionnaireCtrl.removeSection(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="section.showEdit" data-ng-click="questionnaireCtrl.findSections(); section.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>
@@ -331,7 +331,8 @@
 									<td data-ng-show="field.showEdit">
 										<input class="form-control"
 										       type="text"
-										       data-ng-model="field.name">
+										       data-ng-model="field.name"
+													 data-ng-disabled="field.logicReq">
 									</td>
 									<!-- Section data is populated by now, add ._id -->
 									<td data-ng-show="field.showEdit">
@@ -373,7 +374,7 @@
 									<td>
 										<a data-ng-hide="field.showEdit" data-ng-click="field.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
 										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.updateField(field)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.removeField(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+										<a data-ng-show="field.showEdit && !field.logicReq" data-ng-click="questionnaireCtrl.removeField(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
 										<a data-ng-show="field.showEdit" data-ng-click="questionnaireCtrl.findFields(); field.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
 									</td>
 								</tr>

@@ -4,7 +4,11 @@
 	angular.module('volunteer').controller('VolunteerAdminController', VolunteerAdminController);
 
 	/* @ngInject */
+<<<<<<< HEAD
 	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, VolunteerUser, Section, Field, $q) {
+=======
+	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, Section, Field, $q) {
+>>>>>>> origin/staging
 		var self = this;
 
 		// This provides Authentication context
