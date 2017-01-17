@@ -4,11 +4,7 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-<<<<<<< HEAD
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, DonorUser) {
-=======
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Questionnaire, Section, Field, $q) {
->>>>>>> origin/staging
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, DonorUser, Questionnaire, Section, Field, $q) {
 		var self = this;
 
 		self.donor = {};

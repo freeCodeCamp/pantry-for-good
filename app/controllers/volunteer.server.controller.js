@@ -14,12 +14,11 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var volunteer = new Volunteer(req.body);
-<<<<<<< HEAD
 	if (!req.body.manualAdd){
 		volunteer._id = req.user.id;
 		// Update user's hasApplied property to restrict them from applying again
 		User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
-			.then(function(user) {
+			.then(function() {
 				return volunteer.save(function(err) {
 					if (err) {
 						return res.status(400).send({
@@ -41,18 +40,6 @@ exports.create = function(req, res) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
-=======
-	volunteer._id = req.user.id;
-
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true}})
-		.then(function() {
-			return volunteer.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
->>>>>>> origin/staging
 				} else {
 					return res.json(volunteer);
 				}
