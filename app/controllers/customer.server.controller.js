@@ -145,51 +145,21 @@ exports.create = function(req, res) {
 								});
 							} else {
 								res.json(customer);
-
-<<<<<<< HEAD
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
-		.then(function() {
-			async.waterfall([
-				function(done) {
-					customer.save(function(err) {
-						if (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							res.json(customer);
-
-							done(err, customer);
-						}
-					});
-				},
-				function(customer) {
-					Settings.findOne({}, function(err, settings) {
-						if (err)
-							console.log(err);
-						res.render('templates/create-customer-email', {
-							tconfig: settings
-						}, function (err, email) {
-							sendEmail(config.mailer.to, 'A new client has applied.',
-								email);
-						});
-					});
-=======
 								done(err, customer);
 							}
-						});
-					},
+					});
+				},
 					function(customer) {
-						res.render('templates/accept-customer-email', {
-							fullName: customer.fullName,
-							date: customer.dateReceived.toDateString()
-						}, function (err, email) {
-							sendEmail(customer.email, 'Thank you for applying.',
-								email);
+						Settings.findOne({}, function(err, settings) {
+							if (err)
+								console.log(err);
+							res.render('templates/create-customer-email', {
+								tconfig: settings
+							}, function (err, email) {
+								sendEmail(config.mailer.to, 'A new client has applied.',
+									email);
+							});
 						});
->>>>>>> issue-16
-
 						/*var mailOptionsCreate = {
 							to: config.mailer.to,
 							headers: {

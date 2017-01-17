@@ -2,11 +2,8 @@
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
-<<<<<<< HEAD
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Form, SectionsAndFields) {
-=======
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, CustomerUser, Food, Section, Field, $q) {
->>>>>>> issue-16
+	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin,CustomerUser, Food, Form, SectionsAndFields) {
+
 		var self = this,
 				user = Authentication.user;
 
