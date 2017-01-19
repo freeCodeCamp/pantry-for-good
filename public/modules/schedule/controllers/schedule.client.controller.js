@@ -46,7 +46,7 @@
 
 		// Update current food item
 		self.update = function(selectedItem) {
-			var item = new FoodItem(selectedItem);
+			var item = new FoodItem(selectedItem);console.log('this is the entire meat category', item);
 
 			item.$update(function() {
 				// If successful refresh the table

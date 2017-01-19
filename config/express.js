@@ -85,7 +85,6 @@ module.exports = function(db) {
 		saveUninitialized: false,
 		resave: true,
 		secret: config.sessionSecret,
-		cookie:{_expires : 6000},
 		store: new mongoStore({
 			mongooseConnection: db,
 			collection: config.sessionCollection
