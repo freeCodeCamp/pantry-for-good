@@ -4,7 +4,7 @@
 	angular.module('users').controller('AuthenticationController', AuthenticationController);
 
 	/* @ngInject */
-	function AuthenticationController($http, Authentication, $state, $timeout, $window) {
+	function AuthenticationController($http, Authentication, $state, $timeout) {
 		var self = this;
 
 		  function inactivityTimer () {//function for determining the user's inactivity
@@ -15,17 +15,17 @@
 		    document.onkeypress = loggedIn;
 
 		    function logout() {
-
-					 if(flag){//if flag is true, then the user is still active and the timeout function runs again
+//if flag is true, then the user is still active and the timeout function runs again
+					 if(flag){
 		          flag = false;
 		          $timeout(logout, 5000);
 		       }
 		       else{
 						 $http.get('/auth/signout').success(function(response) {
-							  //the below didn't work, so I used the $window service
-								//$state.go('root.signin', null, { reload: true});
-									$window.location.href = '/';
-
+							 //deauthenticated the user
+							 	Authentication.user = null;
+								//changed route to 'signin'
+								$state.go('root.signin', null, { reload: true});
 
     }).error(function(response) {
 			self.error = response.message;
