@@ -1,4 +1,11 @@
-'use strict';
+import createDonationTemplate from '../views/admin/create-donation.client.view.html';
+import listDonorsTemplate from '../views/admin/list-donors.client.view.html';
+import viewDonationTemplate from '../views/admin/view-donation.client.view.html';
+import createDonorTemplate from '../views/user/create-donor.client.view.html';
+import createDonorSuccessTemplate from '../views/user/create-donor-success.client.view.html';
+import editDonorTemplate from '../views/edit-donor.client.view.html';
+import viewDonorTemplate from '../views/view-donor.client.view.html';
+import dynamicFormTemplate from '../../core/views/partials/dynamic-form.partial.html';
 
 // Setting up route
 angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,11 +16,11 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'donor/create',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/user/create-donor.client.view.html',
+					template: createDonorTemplate,
 					controller: 'DonorUserController as dynCtrl'
 				},
 				'dynamic-form@root.createDonorUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				}
 			},
 			resolve: {
@@ -24,7 +31,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'donor/create/success',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/user/create-donor-success.client.view.html'
+					template: createDonorSuccessTemplate
 				}
 			},
 			resolve: {
@@ -35,7 +42,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'donor/:donorId',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/view-donor.client.view.html',
+					template: viewDonorTemplate,
 					controller: 'DonorUserController as dynCtrl'
 				}
 			},
@@ -47,11 +54,11 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'donor/:donorId/edit',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
+					template: editDonorTemplate,
 					controller: 'DonorUserController as dynCtrl'
 				},
 				'dynamic-form@root.editDonorUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				}
 			},
 			resolve: {
@@ -65,7 +72,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/donors',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/admin/list-donors.client.view.html',
+					template: listDonorsTemplate,
 					controller: 'DonorAdminController as dynCtrl'
 				}
 			},
@@ -77,7 +84,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/donors/:donorId',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/view-donor.client.view.html',
+					template: viewDonorTemplate,
 					controller: 'DonorAdminController as dynCtrl'
 				}
 			},
@@ -89,11 +96,11 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/donors/:donorId/edit',
 			views: {
 				'content@': {
-					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
+					template: editDonorTemplate,
 					controller: 'DonorAdminController as dynCtrl'
 				},
 				'dynamic-form@root.editDonorAdmin': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				}
 			},
 			resolve: {

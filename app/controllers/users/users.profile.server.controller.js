@@ -52,5 +52,11 @@ exports.update = function(req, res) {
  * Send User
  */
 exports.me = function(req, res) {
-	res.json(req.user || null);
+	//res.json(req.user || null);
+	// not bootstrapping client with user data now, use this endpoint for client to request user data
+	if (!req.session.passport) return res.json(null);
+	User.findById(req.session.passport.user, '-password -salt', function(err, response) {
+		if (err) return res.json(null);
+		return res.json(response);
+	});
 };

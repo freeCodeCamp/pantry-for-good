@@ -1,7 +1,7 @@
-'use strict';
+import angular from 'angular';
 
 //Menu service used for managing  menus
-angular.module('core').service('Menus', [
+export default angular.module('core').service('Menus', [
 
 	function() {
 		// Define a set of default roles
@@ -10,7 +10,7 @@ angular.module('core').service('Menus', [
 		// Define the menus object
 		this.menus = {};
 
-		// A private function for rendering decision 
+		// A private function for rendering decision
 		var shouldRender = function(user) {
 			if (user) {
 				if (this.roles.indexOf('*') !== -1) {
@@ -168,4 +168,5 @@ angular.module('core').service('Menus', [
 		this.addMenu('driver');
 		this.addMenu('donor');
 	}
-]);
+])
+.name;

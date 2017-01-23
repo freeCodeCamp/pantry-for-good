@@ -33,11 +33,12 @@
 		self.changeUserPassword = function() {
 			self.success = self.error = null;
 
-			$http.post('/users/password', self.passwordDetails).success(function(response) {
+			$http.post('/users/password', self.passwordDetails).then(function(response) {
+				//.success(function(response) {
 				// If successful show success message and clear form
 				self.success = true;
 				self.passwordDetails = null;
-			}).error(function(response) {
+			}).catch(function(response) {
 				self.error = response.message;
 			});
 		};

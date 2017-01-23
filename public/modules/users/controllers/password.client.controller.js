@@ -16,12 +16,13 @@
 		self.askForPasswordReset = function() {
 			self.success = self.error = null;
 
-			$http.post('/auth/forgot', self.credentials).success(function(response) {
+			$http.post('/auth/forgot', self.credentials).then(function(response) {
+				response = response.data;
 				// Show user success message and clear form
 				self.credentials = null;
 				self.success = response.message;
 
-			}).error(function(response) {
+			}).catch(function(response) {
 				// Show user error message and clear form
 				self.credentials = null;
 				self.error = response.message;
@@ -32,7 +33,8 @@
 		self.resetUserPassword = function() {
 			self.success = self.error = null;
 
-			$http.post('/auth/reset/' + $stateParams.token, self.passwordDetails).success(function(response) {
+			$http.post('/auth/reset/' + $stateParams.token, self.passwordDetails).then(function(response) {
+				response = response.data;
 				// If successful show success message and clear form
 				self.passwordDetails = null;
 
@@ -41,7 +43,7 @@
 
 				// And redirect to the index page
 				$state.go('root.reset-success', null, { reload: true });
-			}).error(function(response) {
+			}).catch(function(response) {
 				self.error = response.message;
 			});
 		};

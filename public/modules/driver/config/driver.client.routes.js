@@ -1,4 +1,6 @@
-'use strict';
+import driverAdminTemplate from '../views/admin-driver.client.view.html';
+import driverUserTemplate from '../views/user-driver.client.view.html';
+import driverRoutesTemplate from '../views/routes-driver.client.view.html';
 
 // Setting up routes
 angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
@@ -12,7 +14,7 @@ angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'driver/routes',
 			views: {
 				'content@': {
-					templateUrl: 'modules/driver/views/user-driver.client.view.html',
+					template: driverUserTemplate,
 					controller: 'DriverUserController as driverCtrl'
 				}
 			},
@@ -25,7 +27,7 @@ angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/drivers',
 			views: {
 				'content@': {
-					templateUrl: 'modules/driver/views/admin-driver.client.view.html',
+					template: driverAdminTemplate,
 					controller: 'DriverAdminController as driverCtrl'
 				}
 			},
@@ -37,7 +39,7 @@ angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/drivers/routes',
 			views: {
 				'content@': {
-					templateUrl: 'modules/driver/views/routes-driver.client.view.html',
+					template: driverRoutesTemplate,
 					controller: 'DriverRouteController as driverCtrl'
 				}
 			},

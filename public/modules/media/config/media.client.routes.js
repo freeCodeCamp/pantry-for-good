@@ -1,4 +1,4 @@
-'use strict';
+import changeMediaTemplate from '../views/change-media.client.view.html';
 
 // Setting up routes
 angular.module('media').config(['$stateProvider', '$urlRouterProvider', 'AuthenticationProvider',
@@ -9,7 +9,7 @@ angular.module('media').config(['$stateProvider', '$urlRouterProvider', 'Authent
 			url: 'media',
 			views: {
 				'content@': {
-					templateUrl: 'modules/media/views/change-media.client.view.html',
+					template: changeMediaTemplate,
 					controller: 'ChangeMediaController as mediaCtrl'
 				}
 			},

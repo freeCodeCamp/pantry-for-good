@@ -1,13 +1,11 @@
-(function() {
-	'use strict';
+import angular from 'angular';
 
-	angular.module('core').controller('HomeController', HomeController);
+angular.module('core').controller('HomeController', HomeController);
 
-	/* @ngInject */
-	function HomeController(Authentication) {
-		var self = this;
+/* @ngInject */
+function HomeController(Authentication) {
+	var self = this;
 
-		// This provides Authentication context.
-		self.authentication = Authentication;
-	}
-})();
+	// This provides Authentication context.
+	self.authentication = Authentication;
+}

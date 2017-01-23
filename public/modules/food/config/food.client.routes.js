@@ -1,4 +1,4 @@
-'use strict';
+import foodTemplate from '../views/foods.client.view.html';
 
 // Setting up routes
 angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,7 +9,7 @@ angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/foods',
 			views: {
 				'content@': {
-					templateUrl: 'modules/food/views/foods.client.view.html',
+					template: foodTemplate,
 					controller: 'FoodController as foodCtrl'
 				},
 				resolve: {

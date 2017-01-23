@@ -1,4 +1,12 @@
-'use strict';
+import changePasswordTemplate from '../views/settings/change-password.client.view.html';
+import editProfileTemplate from '../views/settings/edit-profile.client.view.html';
+import signinTemplate from '../views/authentication/signin.client.view.html';
+import signupTemplate from '../views/authentication/signup.client.view.html';
+import forgotPasswordTemplate from '../views/password/forgot-password.client.view.html';
+import resetPasswordTemplate from '../views/password/reset-password.client.view.html';
+import resetPasswordSuccessTemplate from '../views/password/reset-password-success.client.view.html';
+import resetPasswordInvalidTemplate from '../views/password/reset-password-invalid.client.view.html';
+import socialAccountsTemplate from '../../'
 
 // Setting up route
 angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,7 +17,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'settings/profile',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/settings/edit-profile.client.view.html',
+					template: editProfileTemplate,
 					controller: 'SettingsController as settingsCtrl'
 				}
 			},
@@ -21,7 +29,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'settings/password',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/settings/change-password.client.view.html',
+					template: changePasswordTemplate,
 					controller: 'SettingsController as settingsCtrl'
 				}
 			},
@@ -44,7 +52,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'signup',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/authentication/signup.client.view.html',
+					template: signupTemplate,
 					controller: 'AuthenticationController as authenticationCtrl'
 				}
 			}
@@ -53,7 +61,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'signin',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/authentication/signin.client.view.html',
+					template: signinTemplate,
 					controller: 'AuthenticationController as authenticationCtrl'
 				}
 			}
@@ -62,7 +70,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/forgot',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/password/forgot-password.client.view.html',
+					template: forgotPasswordTemplate,
 					controller: 'PasswordController as passwordCtrl'
 				}
 			}
@@ -71,7 +79,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/invalid',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/password/reset-password-invalid.client.view.html'
+					template: resetPasswordInvalidTemplate
 				}
 			}
 		}).
@@ -79,7 +87,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/success',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
+					template: resetPasswordSuccessTemplate
 				}
 			}
 		}).
@@ -87,7 +95,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/:token',
 			views: {
 				'content@': {
-					templateUrl: 'modules/users/views/password/reset-password.client.view.html',
+					template: resetPasswordTemplate,
 					controller: 'PasswordController as passwordCtrl'
 				}
 			}

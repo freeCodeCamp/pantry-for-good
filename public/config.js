@@ -1,7 +1,26 @@
-'use strict';
+import 'angular';
+import 'angular-resource';
+import 'angular-file-upload';
+import 'angular-simple-logger';
+import 'angular-google-maps';
+import 'angular-moment';
+import 'angular-smart-table';
+import 'angular-ui-bootstrap';
+import 'angular-ui-router';
+import './lib/angularPrint/angularPrint';
+import 'angular-datatables';
+import 'datatables.net';
+import 'datatables.net-bs';
+import 'datatables.net-buttons';
+import 'datatables.net-buttons-bs';
+import 'datatables.net-buttons/js/buttons.colVis';
+import 'datatables.net-buttons/js/buttons.flash';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
+import 'angular-datatables/dist/plugins/buttons/angular-datatables.buttons';
 
 // Init the application configuration module for AngularJS application
-var ApplicationConfiguration = (function() {
+export default (function() {
 	// Init module configuration options
 	var applicationModuleName = 'foodbank-template';
 	var applicationModuleVendorDependencies = ['ngResource',

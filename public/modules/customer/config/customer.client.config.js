@@ -1,4 +1,4 @@
-'use strict';
+import '../../core/services/menus.client.service';
 
 // Configuring the Customer module
 angular.module('customer').run(['Menus',

@@ -1,14 +1,12 @@
-(function() {
-	'use strict';
+import angular from 'angular';
 
-	angular.module('core').directive('onLastRepeat', onLastRepeat);
+angular.module('core').directive('onLastRepeat', onLastRepeat);
 
-	/* @ngInject */
-	function onLastRepeat () {
-		return function(scope) {
-			if (scope.$last) {
-				scope.$emit('repeatLastDone');
-			}
-		};
-	}
-})();
+/* @ngInject */
+function onLastRepeat () {
+	return function(scope) {
+		if (scope.$last) {
+			scope.$emit('repeatLastDone');
+		}
+	};
+}

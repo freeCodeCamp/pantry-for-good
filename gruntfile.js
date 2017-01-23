@@ -27,26 +27,26 @@ module.exports = function(grunt) {
 					livereload: true
 				}
 			},
-			clientViews: {
-				files: watchFiles.clientViews,
-				options: {
-					livereload: true
-				}
-			},
-			clientJS: {
-				files: watchFiles.clientJS,
+			// clientViews: {
+			// 	files: watchFiles.clientViews,
+			// 	options: {
+			// 		livereload: true
+			// 	}
+			// },
+			// clientJS: {
+			// 	files: watchFiles.clientJS,
 				tasks: ['jshint', 'build:dev'],
-				options: {
-					livereload: true
-				}
-			},
-			clientCSS: {
-				files: watchFiles.clientCSS,
+			// 	options: {
+			// 		livereload: true
+			// 	}
+			// },
+			// clientCSS: {
+			// 	files: watchFiles.clientCSS,
 				tasks: ['csslint', 'build:dev'],
-				options: {
-					livereload: true
-				}
-			}
+			// 	options: {
+			// 		livereload: true
+			// 	}
+			// }
 		},
 		jshint: {
 			all: {

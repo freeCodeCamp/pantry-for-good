@@ -1,4 +1,11 @@
-'use strict';
+import angular from 'angular';
+import footerTemplate from '../views/footer.client.view.html';
+import headerTemplate from '../views/header.client.view.html';
+import homeTemplate from '../views/home.client.view.html';
+import sidebarTemplate from '../views/sidebar.client.view.html';
+import unauthorizedTemplate from '../views/errors/403.client.view.html';
+import notFoundTemplate from '../views/errors/404.client.view.html';
+import errorTemplate from '../views/errors/500.client.view.html';
 
 // Setting up routes
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
@@ -9,19 +16,19 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '/',
 			views: {
 				'header': {
-					templateUrl: 'modules/core/views/header.client.view.html',
+					template: headerTemplate,
 					controller: 'HeaderController as headerCtrl'
 				},
 				'sidebar': {
-					templateUrl: 'modules/core/views/sidebar.client.view.html',
+					template: sidebarTemplate,
 					controller: 'SidebarController as sidebarCtrl'
 				},
 				'content': {
-					templateUrl: 'modules/core/views/home.client.view.html',
+					template: homeTemplate,
 					controller: 'HomeController as homeCtrl'
 				},
 				'footer': {
-					templateUrl: 'modules/core/views/footer.client.view.html'
+					template: footerTemplate
 				}
 			}
 		}).
@@ -31,7 +38,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '403',
 			views: {
 				'content@': {
-					templateUrl: 'modules/core/views/errors/403.client.view.html'
+					template: unauthorizedTemplate
 				}
 			}
 		}).
@@ -40,7 +47,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '404',
 			views: {
 				'content@': {
-					templateUrl: 'modules/core/views/errors/404.client.view.html'
+					template: notFoundTemplate
 				}
 			}
 		}).
@@ -49,7 +56,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '500',
 			views: {
 				'content@': {
-					templateUrl: 'modules/core/views/errors/500.client.view.html'
+					template: errorTemplate
 				}
 			}
 		});

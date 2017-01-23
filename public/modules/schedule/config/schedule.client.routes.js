@@ -1,4 +1,4 @@
-'use strict';
+import scheduleTemplate from '../views/schedules.client.view.html';
 
 // Setting up routes
 angular.module('schedule').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,7 +9,7 @@ angular.module('schedule').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/schedules',
 			views: {
 				'content@': {
-					templateUrl: 'modules/schedule/views/schedules.client.view.html',
+					template: scheduleTemplate,
 					controller: 'ScheduleController as scheduleCtrl'
 				}
 			},

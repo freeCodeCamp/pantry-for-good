@@ -1,7 +1,7 @@
 'use strict';
 
 // Setting up route
-angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
+angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider){
 		// Customer state routing for user
 		$stateProvider.
@@ -71,4 +71,5 @@ angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 			}
 		});
 	}
-]);
+//]
+);

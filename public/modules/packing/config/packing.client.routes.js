@@ -1,4 +1,4 @@
-'use strict';
+import packingTemplate from '../views/packing.client.view.html';
 
 // Setting up routes
 angular.module('packing').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,7 +9,7 @@ angular.module('packing').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/packing',
 			views: {
 				'content@': {
-					templateUrl: 'modules/packing/views/packing.client.view.html',
+					template: packingTemplate,
 					controller: 'PackingController as packingCtrl'
 				}
 			},

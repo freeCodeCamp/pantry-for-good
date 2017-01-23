@@ -1,6 +1,6 @@
-'use strict';
+import angular from 'angular';
 
-angular.module('core').factory('Form', Form);
+export default angular.module('core').factory('Form', Form).name;
 
 /* @ngInject */
 function Form() {
@@ -112,7 +112,7 @@ function Form() {
 		return standardRow;
 	} // Helper function generate standard row
 
-	
+
 	function isChecked(obj, name, element) {
 		return (typeof(obj[name]) === 'object' && obj[name].indexOf(element) > -1);
 	}

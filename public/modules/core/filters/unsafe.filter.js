@@ -1,10 +1,7 @@
+import angular from 'angular';
 
-(function() {
-	'use strict';
-
-	angular.module('core').filter('unsafe', unsafe);
+export default angular.module('core').filter('unsafe', unsafe).name;
 
 	function unsafe($sce) {
 		return $sce.trustAsHtml;
 	}
-})();

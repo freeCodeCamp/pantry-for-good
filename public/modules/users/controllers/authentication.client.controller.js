@@ -7,40 +7,39 @@
 	function AuthenticationController($http, Authentication, $state, $timeout) {
 		var self = this;
 
-		  function inactivityTimer () {//function for determining the user's inactivity
-		    var flag;
+			function inactivityTimer () {//function for determining the user's inactivity
+				var flag;
 
-		    // DOM Events
-		    document.onmousemove = loggedIn;
-		    document.onkeypress = loggedIn;
+				// DOM Events
+				document.onmousemove = loggedIn;
+				document.onkeypress = loggedIn;
 
-		    function logout() {
-//if flag is true, then the user is still active and the timeout function runs again
-					 if(flag){
-		          flag = false;
-		          $timeout(logout, 900000);
-		       }
-		       else{
-						 $http.get('/auth/signout').success(function(response) {
-							 //deauthenticated the user
-							 	Authentication.user = null;
-								//changed route to 'signin'
-								$state.go('root.signin', null, { reload: true});
+				function logout() {
+					//if flag is true, then the user is still active and the timeout function runs again
+					if(flag) {
+						flag = false;
+						$timeout(logout, 900000);
+					} else {
+						$http.get('/auth/signout').success(function(response) {
+							//deauthenticated the user
+							Authentication.user = null;
+							//changed route to 'signin'
+							$state.go('root.signin', null, { reload: true});
 
-    }).error(function(response) {
-			self.error = response.message;
-		});
-		       }
-		    }
+						}).error(function(response) {
+							self.error = response.message;
+						});
+					}
+				}
 
-		   function loggedIn(){
-		      flag = true;//mouse moves or keydown, the flag is true and the timeout function will fire again
-		   }
+				function loggedIn(){
+					flag = true;//mouse moves or keydown, the flag is true and the timeout function will fire again
+				}
 
-		    function initialiseTimer() {
-		      $timeout(logout, 900000);//angular's own timeout function.
-		       flag = false;
-		    }
+				function initialiseTimer() {
+					$timeout(logout, 900000);//angular's own timeout function.
+						flag = false;
+				}
 				initialiseTimer();//initialises timer
 		}
 
@@ -50,7 +49,11 @@
 		if (self.authentication.user) $state.go('root');
 
 		self.signup = function() {
-			$http.post('/auth/signup', self.credentials).success(function(response) {
+			$http.post('/auth/signup', self.credentials).then(function(response) {
+				// deprecated since ~1.4.4!?
+				// .success(function(response) {
+				response = response.data;
+
 				// If successful we assign the response to the global user model
 				self.authentication.user = response;
 
@@ -61,13 +64,16 @@
 
 				// And redirect to create application state
 				$state.go('root.create' + accountType + 'User', null, { reload: true });
-			}).error(function(response) {
+			}).catch(function(response) {
+				response = response.data;
 				self.error = response.message;
 			});
 		};
 
 		self.signin = function() {
-			$http.post('/auth/signin', self.credentials).success(function(response) {
+			$http.post('/auth/signin', self.credentials).then(function(response) {
+				response = response.data;
+
 				// If successful we assign the response to the global user model
 				self.authentication.user = response;
 				//function listens for 15 mins inactivity and logs the user out
@@ -81,7 +87,8 @@
 				} else {
 					$state.go('root.create' + accountType + 'User', null, { reload: true });
 				}
-			}).error(function(response) {
+			}).catch(function(response) {
+				response = response.data;
 				self.error = response.message;
 			});
 		};

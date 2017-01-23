@@ -1,6 +1,6 @@
-'use strict';
+import angular from 'angular';
 
-angular.module('core').factory('View', View);
+export default angular.module('core').factory('View', View);
 
 /* @ngInject */
 function View() {
@@ -74,7 +74,7 @@ function View() {
 				} // next field
 
 				// Flush row if necessary
-				if (dynRow.length > 0) dynSection.push(dynRow); 
+				if (dynRow.length > 0) dynSection.push(dynRow);
 				dynView.push(dynSection);
 
 			} // Next section
@@ -91,7 +91,7 @@ function View() {
 	function generateTableRow(viewObject, tableDescription, tableName) {
 			var rows = /(ROWS:\s*)(.*)(COLUMNS)/.exec(tableDescription)[2].split(/;\s*/),
 					cols = /(COLUMNS:\s*)(.*)/.exec(tableDescription)[2].split(/;\s*/);
-		
+
 		var tmpTable = [cols];
 
 		// Mark first table row as a header

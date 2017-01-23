@@ -1,12 +1,10 @@
-(function() {
-	'use strict';
+import angular from 'angular';
 
-	angular.module('core').controller('HeaderController', HeaderController);
+angular.module('core').controller('HeaderController', HeaderController);
 
-	/* @ngInject */
-	function HeaderController(Authentication) {
-		var self = this;
+/* @ngInject */
+function HeaderController(Authentication) {
+	var self = this;
 
-		self.authentication = Authentication;
-	}
-})();
+	self.authentication = Authentication;
+}

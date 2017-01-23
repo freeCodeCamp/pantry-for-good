@@ -1,3 +1,6 @@
+import moment from 'moment';
+import 'moment-recur';
+
 (function() {
 	'use strict';
 

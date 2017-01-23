@@ -1,6 +1,6 @@
-'use strict';
+import angular from 'angular';
 
-angular.module('core').factory('formInit', formInit);
+export default angular.module('core').factory('formInit', formInit).name;
 
 /* @ngInject */
 function formInit(Section, Field, FoodUser, $q) {
