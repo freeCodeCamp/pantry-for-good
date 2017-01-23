@@ -18,8 +18,8 @@
 		self.isLoading = null;
 
 		var geoToronto = {
-			latitude: 43.8108899,
-			longitude: -79.449906
+			latitude: 53.4084,
+			longitude: -2.9916
 		};
 
 		self.map = {
@@ -91,7 +91,7 @@
 							customer.isChecked = !customer.isChecked;
 							marker.icon = customer.isChecked ? iconUrlBlue : iconUrlPink;
 						},
-						mouseover: function(marker, eventName, model) {
+						mouseover: function(marker, eventName, model) {console.log('check out', model);
 							var content = '<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>';
 
 							self.map.window.marker = model;

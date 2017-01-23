@@ -18,7 +18,7 @@
 //if flag is true, then the user is still active and the timeout function runs again
 					 if(flag){
 		          flag = false;
-		          $timeout(logout, 5000);
+		          $timeout(logout, 600000);
 		       }
 		       else{
 						 $http.get('/auth/signout').success(function(response) {
@@ -38,7 +38,7 @@
 		   }
 
 		    function initialiseTimer() {
-		      $timeout(logout, 5000);//angular's own timeout function. Set to 5 secs for demonstration
+		      $timeout(logout, 600000);//angular's own timeout function. Set to 5 secs for demonstration
 		       flag = false;
 		    }
 				initialiseTimer();//initialises timer
