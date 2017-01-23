@@ -18,8 +18,8 @@
 		self.isLoading = null;
 
 		var geoToronto = {
-			latitude: 53.4084,
-			longitude: -2.9916
+			latitude: 43.8108899,
+			longitude: -79.449906
 		};
 
 		self.map = {
