@@ -91,7 +91,7 @@
 							customer.isChecked = !customer.isChecked;
 							marker.icon = customer.isChecked ? iconUrlBlue : iconUrlPink;
 						},
-						mouseover: function(marker, eventName, model) {console.log('check out', model);
+						mouseover: function(marker, eventName, model) {
 							var content = '<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>';
 
 							self.map.window.marker = model;

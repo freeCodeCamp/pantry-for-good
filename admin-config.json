@@ -1,7 +1,7 @@
 {
-	"username": "rusticman",
-	"password": "foodbank90",
-	"email": "russellwheatley85@gmail.com",
-	"lastName": "Wheatley",
-	"firstName": "Russell"
+	"username": "admin",
+	"password": "password",
+	"email": "john@email-provider.com",
+	"lastName": "Admin",
+	"firstName": "Johnny"
 }
