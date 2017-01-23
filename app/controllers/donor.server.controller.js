@@ -14,27 +14,38 @@ var mongoose = require('mongoose'),
  */
 exports.create = function(req, res) {
 	var donor = new Donor(req.body);
-	donor._id = req.user.id;
-
-	// Update user's role to donor and mark as this user as having applied
-	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
-		.then(function() {
-			return donor.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
+	if (!req.body.manualAdd){
+		donor._id = req.user.id;
+		// Update user's hasApplied property to restrict them from applying again
+		User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
+			.then(function() {
+				return donor.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.json(donor);
+					}
+				});
+			})
+			.catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			});
+		}else{
+		donor.save(function(err){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 				} else {
 					return res.json(donor);
 				}
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
 		});
-};
+	}
+	};
 
 /**
  * Show the current donor
@@ -50,14 +61,6 @@ exports.update = function(req, res) {
 	var donor = req.donor;
 
 	donor = _.extend(donor, req.body);
-
-	// Adding fields not defined in the schema
-	var schemaFields = Object.getOwnPropertyNames(Donor.schema.paths);
-	for (var field in req.body) {
-		if (donor.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
-			donor.set(field, req.body[field]);
-		}
-	}
 
 	donor.save(function(err) {
 		if (err) {
@@ -96,10 +99,10 @@ exports.delete = function(req, res) {
 
 	return User.findByIdAndRemove(id)
 		.exec()
-		.then(function() {
+		.then(function(user) {
 			return Donor.findByIdAndRemove(id)
 				.exec()
-				.then(function() {
+				.then(function(donor) {
 					return res.end();
 				});
 		})

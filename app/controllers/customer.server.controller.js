@@ -131,65 +131,72 @@ var sendEmailUpdate = function(req, res, customer) {
  */
 exports.create = function(req, res) {
 	var customer = new Customer(req.body);
-	customer._id = req.user.id;
-
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
-		.then(function() {
-			async.waterfall([
-				function(done) {
-					customer.save(function(err) {
-						if (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							res.json(customer);
-
-							done(err, customer);
-						}
+	if (!req.body.manualAdd){
+		customer._id = req.user.id;
+		// Update user's hasApplied property to restrict them from applying again
+		User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
+			.then(function() {
+				async.waterfall([
+					function(done) {
+						customer.save(function(err) {
+							if (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
+							} else {
+								res.json(customer);
+								done(err, customer);
+							}
 					});
 				},
-				function(customer) {
-					Settings.findOne({}, function(err, settings) {
-						if (err)
-							console.log(err);
-						res.render('templates/create-customer-email', {
-							tconfig: settings
-						}, function (err, email) {
-							sendEmail(config.mailer.to, 'A new client has applied.',
-								email);
+					function(customer) {
+						Settings.findOne({}, function(err, settings) {
+							if (err)
+								console.log(err);
+							res.render('templates/create-customer-email', {
+								tconfig: settings
+							}, function (err, email) {
+								sendEmail(config.mailer.to, 'A new client has applied.',
+									email);
+							});
 						});
-					});
+						/*var mailOptionsCreate = {
+							to: config.mailer.to,
+							headers: {
+								'X-MC-Template': 'new-client',
+								'X-MC-MergeVars': JSON.stringify({
+									id: customer._id,
+									fullName: customer.fullName,
+									date: customer.dateReceived.toDateString()
+								})
+							}
+						};
 
-					/*var mailOptionsCreate = {
-						to: config.mailer.to,
-						headers: {
-							'X-MC-Template': 'new-client',
-							'X-MC-MergeVars': JSON.stringify({
-								id: customer._id,
-								fullName: customer.fullName,
-								date: customer.dateReceived.toDateString()
-							})
-						}
-					};
-
-					smtpTransport.sendMail(mailOptionsCreate, function(err) {
-						done(err, 'done');
-					});*/
+						smtpTransport.sendMail(mailOptionsCreate, function(err) {
+							done(err, 'done');
+						});*/
+					}
+				], function(err) {
+					if (err) return err;
+				});
+			})
+			.catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			});
+		}else{
+		customer.save(function(err){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+				} else {
+					return res.json(customer);
 				}
-			], function(err) {
-				if (err) return err;
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
 		});
-
-};
-
+	}
+	};
 /**
  * Show the current customer
  */

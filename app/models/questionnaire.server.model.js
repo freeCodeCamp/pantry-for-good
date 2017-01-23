@@ -67,10 +67,6 @@ var mongoose = require('mongoose'),
 		questionnaire: {
 			type: Schema.Types.ObjectId,
 			ref: 'Questionnaire'
-		},
-		logicReq: {
-			type: Boolean,
-			default: false
 		}
 	});
 
@@ -90,10 +86,6 @@ var mongoose = require('mongoose'),
 		description: {
 			type: String,
 			trim: true
-		},
-		logicReq: {
-			type: Boolean,
-			default: false
 		}
 	});
 

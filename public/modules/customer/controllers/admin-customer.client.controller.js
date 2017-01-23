@@ -2,7 +2,8 @@
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Form, SectionsAndFields) {
+	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin,CustomerUser, Food, Form, SectionsAndFields) {
+
 		var self = this,
 				user = Authentication.user;
 
@@ -133,6 +134,22 @@
 		/**
 		 * CRUD Functions
 		 */
+
+    // Create a new donor
+    self.createNewCustomer = function() {
+    var customer = new CustomerUser({
+        lastName: "User",
+        firstName: "New",
+        email: 'user@test.com',
+        manualAdd: true
+      });
+      customer.$save(function(response) {
+    // Redirect after save
+        $state.go('root.editCustomerAdmin', { customerId: response._id });
+       }, function(errorResponse) {
+          self.error = errorResponse.data.message;
+       });
+    };
 
 		// Find a list of customers
 		self.find = function() {
