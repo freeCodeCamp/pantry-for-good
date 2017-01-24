@@ -1,4 +1,10 @@
-'use strict';
+import createVolunteerTemplate from '../views/user/create-volunteer.client.view.html';
+import createVolunteerSuccessTemplate from '../views/user/create-volunteer-success.client.view.html';
+import listVolunteersTemplate from '../views/admin/list-volunteers.client.view.html';
+import editVolunteerTemplate from '../views/edit-volunteer.client.view.html';
+import viewVolunteerTemplate from '../views/view-volunteer.client.view.html';
+import dynamicFormTemplate from '../../core/views/partials/dynamic-form.partial.html';
+import dynamicViewTemplate from '../../core/views/partials/dynamic-view.partial.html';
 
 // Setting up route
 angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
@@ -9,11 +15,11 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'volunteer/create',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/user/create-volunteer.client.view.html',
+					template: createVolunteerTemplate,
 					controller: 'VolunteerUserController as dynCtrl'
 				},
 				'dynamic-form@root.createVolunteerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				}
 			},
 			resolve: {
@@ -24,7 +30,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'volunteer/create/success',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/user/create-volunteer-success.client.view.html'
+					template: createVolunteerSuccessTemplate
 				}
 			},
 			resolve: {
@@ -35,7 +41,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'volunteer/:volunteerId',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/view-volunteer.client.view.html',
+					template: viewVolunteerTemplate,
 					controller: 'VolunteerUserController as dynCtrl'
 				},
 				'dynamic-view@root.viewVolunteerUser': {
@@ -50,11 +56,11 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'volunteer/:volunteerId/edit',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/edit-volunteer.client.view.html',
+					template: editVolunteerTemplate,
 					controller: 'VolunteerUserController as dynCtrl'
 				},
 				'dynamic-form@root.editVolunteerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicViewTemplate
 				}
 			},
 			resolve: {
@@ -68,7 +74,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/admin/list-volunteers.client.view.html',
+					template: listVolunteersTemplate,
 					controller: 'VolunteerAdminController as dynCtrl'
 				}
 			},
@@ -80,11 +86,11 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers/:volunteerId',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/view-volunteer.client.view.html',
+					template: viewVolunteerTemplate,
 					controller: 'VolunteerAdminController as dynCtrl'
 				},
 				'dynamic-view@root.viewVolunteerAdmin': {
-					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
+					template: dynamicViewTemplate
 				}
 			},
 			resolve: {
@@ -95,11 +101,11 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers/:volunteerId/edit',
 			views: {
 				'content@': {
-					templateUrl: 'modules/volunteer/views/edit-volunteer.client.view.html',
+					template: editVolunteerTemplate,
 					controller: 'VolunteerAdminController as dynCtrl'
 				},
 				'dynamic-form@root.editVolunteerAdmin': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				}
 			},
 			resolve: {
