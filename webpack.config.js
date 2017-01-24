@@ -4,7 +4,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'public', 'application.js'),
+  entry: {
+    app: path.resolve(__dirname, 'public', 'application.js'),
+    vendor: ['jquery', 'lodash', 'angular', 'angular-resource', 'angular-file-upload',
+            'angular-simple-logger', 'angular-google-maps', 'angular-moment', 'angular-smart-table',
+            'angular-ui-bootstrap', 'angular-ui-router', 'angular-datatables', 'datatables.net',
+            'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
+            'bootstrap']
+  },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),
     filename: 'bundle.js',
@@ -54,7 +61,8 @@ module.exports = {
     }, {
       from: path.resolve(__dirname, 'public', 'modules', 'core', 'img'),
       to: path.resolve(__dirname, 'public', 'dist', 'media')
-    }])
+    }]),
+    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")
   ],
   devtool: 'source-map'
 };
