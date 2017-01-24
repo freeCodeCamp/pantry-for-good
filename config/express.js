@@ -35,9 +35,10 @@ module.exports = function(db) {
 	app.locals.jsFiles = config.getGlobbedFiles(config.assets.lib.js, 'public/');
 	app.locals.cssFiles = config.getGlobbedFiles(config.assets.lib.css, 'public/');
 
-	// Passing the request url to environment locals
+	// Passing the request url and title to environment locals
 	app.use(function(req, res, next) {
 		res.locals.url = req.protocol + '://' + req.headers.host + req.url;
+		res.locals.title = config.app.title;
 		next();
 	});
 
