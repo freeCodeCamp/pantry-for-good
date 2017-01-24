@@ -9,11 +9,10 @@
     "url": "git@github.com:FreeCodeCamp/food-bank-app.git"
   },
   "scripts": {
-    "start": "grunt",
-    "test": "grunt test",
-    "postinstall": "bower install --config.interactive=false",
+    "postinstall": "bower install --config.interactive=false && gulp build",
     "heroku-postbuild": "grunt build",
-    "webpack": "webpack --watch"
+    "dev": "gulp watch",
+    "start": "node server.js"
   },
   "dependencies": {
     "admin-lte": "^2.3.8",
@@ -67,6 +66,9 @@
     "grunt-contrib-jshint": "~1.1.0",
     "grunt-contrib-uglify": "~2.0.0",
     "grunt-ng-annotate": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-uglify": "^2.0.1",
     "helmet": "^3.1.0",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.26.0",
@@ -90,7 +92,8 @@
     "style-loader": "^0.13.1",
     "sendgrid": "^4.7.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
   },
   "devDependencies": {
     "eslint": "^3.14.1",

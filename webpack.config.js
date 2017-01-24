@@ -5,18 +5,21 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, 'public', 'application.js'),
-    vendor: ['jquery', 'lodash', 'angular', 'angular-resource', 'angular-file-upload',
-            'angular-simple-logger', 'angular-google-maps', 'angular-moment', 'angular-smart-table',
-            'angular-ui-bootstrap', 'angular-ui-router', 'angular-datatables', 'datatables.net',
-            'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
-            'bootstrap']
+    app: [
+      'webpack-dev-server/client?http://localhost:8080',
+      path.resolve(__dirname, 'public', 'application.js')
+    ],
+    vendor: ['webpack-dev-server/client?http://localhost:8080', 'jquery', 'lodash', 'angular',
+            'angular-resource', 'angular-file-upload', 'angular-simple-logger', 'angular-google-maps',
+            'angular-moment', 'angular-smart-table', 'angular-ui-bootstrap', 'angular-ui-router',
+            'angular-datatables', 'datatables.net', 'datatables.net-bs', 'datatables.net-buttons',
+            'datatables.net-buttons-bs', 'admin-lte', 'bootstrap', 'moment', 'moment-recur']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),
     filename: 'bundle.js',
     // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
-    publicPath: 'http://localhost:3000/'
+    publicPath: 'http://localhost:8080/'
   },
   module: {
     loaders: [
@@ -64,5 +67,19 @@ module.exports = {
     }]),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")
   ],
+  devServer: {
+		hot: true,
+		stats: {
+			colors: true,
+			chunks: false
+		},
+		proxy: {
+			'/api/*': 'http://localhost:3000',
+			'/users/*': 'http://localhost:3000',
+			'/admin/*': 'http://localhost:3000'
+		},
+		contentBase: '/dist',
+    port: 8080
+	},
   devtool: 'source-map'
 };
