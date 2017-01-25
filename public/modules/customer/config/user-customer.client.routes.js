@@ -1,4 +1,11 @@
-'use strict';
+import createCustomerTemplate from '../views/user/create-customer.client.view.html';
+import createCustomerSuccessTemplate from '../views/user/create-customer-success.client.view.html';
+import viewCustomerTemplate from '../views/view-customer.client.view.html';
+import editCustomerTemplate from '../views/edit-customer.client.view.html';
+import householdTemplate from '../views/partials/household.partial.html';
+import waiverTemplate from '../views/partials/waiver.partial.html';
+import dynamicFormTemplate from '../../core/views/partials/dynamic-form.partial.html';
+import dynamicViewTemplate from '../../core/views/partials/dynamic-view.partial.html';
 
 // Setting up route
 angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
@@ -9,17 +16,17 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			url: 'customer/create',
 			views: {
 				'content@': {
-					templateUrl: 'modules/customer/views/user/create-customer.client.view.html',
+					template: createCustomerTemplate,
 					controller: 'CustomerUserController as dynCtrl'
 				},
 				'dynamic-form@root.createCustomerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				},
 				'household@root.createCustomerUser': {
-					templateUrl: 'modules/customer/views/partials/household.partial.html'
+					template: householdTemplate
 				},
 				'waiver@root.createCustomerUser': {
-					templateUrl: 'modules/customer/views/partials/waiver.partial.html'
+					template: waiverTemplate
 				}
 			},
 			resolve: {
@@ -30,7 +37,7 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			url: 'customer/create/success',
 			views: {
 				'content@': {
-					templateUrl: 'modules/customer/views/user/create-customer-success.client.view.html'
+					template: createCustomerSuccessTemplate
 				}
 			},
 			resolve: {
@@ -41,11 +48,11 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			url: 'customer/:customerId',
 			views: {
 				'content@': {
-					templateUrl: 'modules/customer/views/view-customer.client.view.html',
+					template: viewCustomerTemplate,
 					controller: 'CustomerUserController as dynCtrl'
 				},
 				'dynamic-view@root.viewCustomerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
+					template: dynamicViewTemplate
 				}
 			},
 			resolve: {
@@ -56,14 +63,14 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			url: 'customer/:customerId/edit',
 			views: {
 				'content@': {
-					templateUrl: 'modules/customer/views/edit-customer.client.view.html',
+					template: editCustomerTemplate,
 					controller: 'CustomerUserController as dynCtrl'
 				},
 				'dynamic-form@root.editCustomerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
+					template: dynamicFormTemplate
 				},
 				'household@root.editCustomerUser': {
-					templateUrl: 'modules/customer/views/partials/household.partial.html'
+					template: householdTemplate
 				}
 			},
 			resolve: {
