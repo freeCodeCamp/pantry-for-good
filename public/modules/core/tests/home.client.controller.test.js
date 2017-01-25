@@ -1,4 +1,4 @@
-'use strict';
+import ApplicationConfiguration from '../../../config';
 
 (function() {
 	describe('Controller: HomeController', function() {
@@ -6,9 +6,9 @@
 		var homeCtrl;
 
 		// Load the main application module
-		beforeEach(module(ApplicationConfiguration.applicationModuleName));
+		beforeEach(angular.mock.module(ApplicationConfiguration.applicationModuleName));
 
-		beforeEach(inject(function($controller) {
+		beforeEach(angular.mock.inject(function($controller) {
 			homeCtrl = $controller('HomeController');
 		}));
 

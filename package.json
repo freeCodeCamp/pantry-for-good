@@ -12,7 +12,8 @@
     "postinstall": "bower install --config.interactive=false && gulp build",
     "heroku-postbuild": "grunt build",
     "dev": "gulp watch",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "NODE_ENV=test karma start karma.conf.js"
   },
   "dependencies": {
     "admin-lte": "^2.3.8",
@@ -111,6 +112,8 @@
     "karma-firefox-launcher": "~1.0.0",
     "karma-jasmine": "~1.0.2",
     "karma-phantomjs-launcher": "~1.0.2",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^2.0.1",
     "should": "~11.1.0",
     "supertest": "~2.0.0"
   }

@@ -1,4 +1,4 @@
-'use strict';
+import ApplicationConfiguration from '../../../config';
 
 (function() {
 	describe('Controller: SidebarController', function() {
@@ -8,9 +8,9 @@
 				Menus;
 
 		// Load the main application module
-		beforeEach(module(ApplicationConfiguration.applicationModuleName));
+		beforeEach(angular.mock.module(ApplicationConfiguration.applicationModuleName));
 
-		beforeEach(inject(function($controller, $rootScope, _Menus_) {
+		beforeEach(angular.mock.inject(function($controller, $rootScope, _Menus_) {
 			scope = $rootScope.$new();
 
 			Menus = _Menus_;

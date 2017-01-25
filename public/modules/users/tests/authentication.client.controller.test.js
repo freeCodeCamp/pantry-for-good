@@ -1,4 +1,4 @@
-'use strict';
+import ApplicationConfiguration from '../../../config';
 
 (function() {
 	// Authentication controller Spec
@@ -9,15 +9,15 @@
 				location;
 
 		// Load the main application module
-		beforeEach(module(ApplicationConfiguration.applicationModuleName));
+		beforeEach(angular.mock.module(ApplicationConfiguration.applicationModuleName));
 
-		beforeEach(inject(function($controller, $location, $httpBackend) {
+		beforeEach(angular.mock.inject(function($controller, $location, $httpBackend) {
 			httpBackend = $httpBackend;
 			location = $location;
-			
+
 			// A hack to resolve errors during state transitions
 			httpBackend.whenGET(/views.*/).respond(200, '');
-			
+
 			httpBackend.expectGET('api/settings/').respond('');
 			httpBackend.expectGET('api/media/').respond('');
 

@@ -1,19 +1,17 @@
-'use strict';
+import ApplicationConfiguration from '../../../config';
 
-(function() {
-	describe('Controller: HeaderController', function() {
-		//Initialize global variables
-		var headerCtrl;
+describe('Controller: HeaderController', function() {
+	//Initialize global variables
+	var headerCtrl;
 
-		// Load the main application module
-		beforeEach(module(ApplicationConfiguration.applicationModuleName));
+	// Load the main application module
+	beforeEach(angular.mock.module(ApplicationConfiguration.applicationModuleName));
 
-		beforeEach(inject(function($controller) {
-			headerCtrl = $controller('HeaderController');
-		}));
+	beforeEach(angular.mock.inject(function($controller) {
+		headerCtrl = $controller('HeaderController');
+	}));
 
-		it('should expose the authentication service', function() {
-			expect(headerCtrl.authentication).toBeTruthy();
-		});
+	it('should expose the authentication service', function() {
+		expect(headerCtrl.authentication).toBeTruthy();
 	});
-})();
+});
