@@ -52,7 +52,7 @@
 		self.dtOptions = {
 			dom: 'TCRlfrtip',
 			tableTools: {
-        sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
+				sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
 				aButtons: ['copy', 'xls']
 			}
 		};

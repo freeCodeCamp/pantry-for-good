@@ -74,6 +74,7 @@
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.26.0",
     "jquery": "^3.1.1",
+    "karma-spec-reporter": "0.0.26",
     "load-grunt-tasks": "~3.5.2",
     "lodash": "~4.17.2",
     "method-override": "~2.3.0",

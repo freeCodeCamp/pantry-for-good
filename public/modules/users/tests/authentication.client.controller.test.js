@@ -8,6 +8,10 @@ import ApplicationConfiguration from '../../../config';
 				httpBackend,
 				location;
 
+		var user = {
+			accountType: ['customer']
+		}
+
 		// Load the main application module
 		beforeEach(angular.mock.module(ApplicationConfiguration.applicationModuleName));
 
@@ -16,7 +20,7 @@ import ApplicationConfiguration from '../../../config';
 			location = $location;
 
 			// A hack to resolve errors during state transitions
-			httpBackend.whenGET(/views.*/).respond(200, '');
+			// httpBackend.whenGET(/views.*/).respond(200, '');
 
 			httpBackend.expectGET('api/settings/').respond('');
 			httpBackend.expectGET('api/media/').respond('');
@@ -27,13 +31,15 @@ import ApplicationConfiguration from '../../../config';
 
 
 		it('self.signin() should login with a correct user and password', function() {
+			authenticationCtrl.authentication.credentials = user;
+
 			// Test expected GET request
-			httpBackend.expectPOST('/auth/signin').respond(200, 'Fred');
+			httpBackend.expectPOST('/auth/signin').respond(200, user);
 
 			authenticationCtrl.signin();
 			httpBackend.flush();
 
-			expect(authenticationCtrl.authentication.user).toEqual('Fred');
+			expect(authenticationCtrl.authentication.user).toEqual(user);
 			expect(location.url()).toEqual('/');
 		});
 

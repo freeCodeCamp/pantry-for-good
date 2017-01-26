@@ -65,6 +65,7 @@
 				// And redirect to create application state
 				$state.go('root.create' + accountType + 'User', null, { reload: true });
 			}).catch(function(response) {
+				if (!response || ! response.data || !response.data.message) return;
 				response = response.data;
 				self.error = response.message;
 			});
@@ -88,6 +89,7 @@
 					$state.go('root.create' + accountType + 'User', null, { reload: true });
 				}
 			}).catch(function(response) {
+				if (!response || ! response.data || !response.data.message) return;
 				response = response.data;
 				self.error = response.message;
 			});

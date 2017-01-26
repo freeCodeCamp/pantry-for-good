@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+require('karma-spec-reporter');
 
 module.exports = function(config) {
 	config.set({
@@ -42,11 +43,15 @@ module.exports = function(config) {
 					_: 'lodash'
 				})
 			],
-			devtool: 'source-map'
+			devtool: 'inline-source-map'
 		},
-		reporters: ['progress'],
+		webpackMiddleware: {
+      stats: 'errors-only'
+    },
+		reporters: ['spec'],
 		port: 9876,
 		colors: true,
+		logLevel: config.LOG_INFO,
 		browsers: ['PhantomJS'],
 		captureTimeout: 60000,
 	});
