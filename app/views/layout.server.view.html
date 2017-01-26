@@ -38,6 +38,9 @@
     <footer class="main-footer" data-ui-view="footer"></footer>
   </div>
 
+
+
+
 	<!--Embed Google Maps API key-->
 	<script type="text/javascript">
 		document.googleKey = "{{ googleKey }}";
@@ -49,13 +52,15 @@
 	</script>
 
 	<!--Application JavaScript Files-->
-	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>{% endfor %} 
+	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>{% endfor %}
 	<script type="text/javascript" src="dist/application.min.js"></script>
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->
 	<script type="text/javascript" src="http://{{request.hostname}}:35729/livereload.js"></script>
 	{% endif %}
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6awUvdgnh3i0qhVR0RKrFTQntNUIyd_o"></script>
 </body>
 
 </html>

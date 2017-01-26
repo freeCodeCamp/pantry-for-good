@@ -71,13 +71,14 @@
 				</div><!-- /.box-header -->
 				<!-- Box body -->
 				<div class="box-body no-padding">
-					<ui-gmap-google-map center="driverCtrl.map.center" zoom="driverCtrl.map.zoom">
-						<ui-gmap-markers models="driverCtrl.map.markers" doCluster="true" coords="'self'" icon="'icon'"></ui-gmap-markers>
-						<ui-gmap-window show="driverCtrl.map.window.show"
-						                coords="driverCtrl.map.window.marker"
-						                options="driverCtrl.map.window.options">
-						</ui-gmap-window>
-					</ui-gmap-google-map>
+					<ng-map>
+						<marker ng-repeat="customer in driverCtrl.map.markers"
+										position="{{customer.position}}"
+										on-mouseover="customer.showWindow(customer)"
+										on-mouseout="customer.hideWindow()"
+										on-click="customer.click(customer)">
+									</marker>
+					</ng-map>
 				</div><!-- /.box-body -->
 				<div class="overlay" ng-show="driverCtrl.isLoading">
 					<i class="fa fa-refresh fa-spin"></i>

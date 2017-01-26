@@ -4,8 +4,11 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi, NgMap) {
 		var self = this;
+		var map;
+
+
 
 		//=== Bindable variables ===//
 		self.assign = assign;
@@ -16,11 +19,9 @@
 		self.error = {};
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
+		self.customer = null; //pass info window data
 
-		var geoToronto = {
-			latitude: 43.8108899,
-			longitude: -79.449906
-		};
+		var geoToronto = [ 43.8108899, -79.449906];
 
 		self.map = {
 			center: geoToronto,
@@ -38,6 +39,22 @@
 				}
 			}
 		};
+
+
+
+			NgMap.getMap().then(function(map) {
+				self.mapObject = map;
+
+				//Toronto geolocation
+				var options = {
+					zoom:12,
+					center:{lat:53.4084, lng:-2.9916}
+				};
+
+				//options passed to map
+				self.mapObject.setOptions(options);
+
+			});
 
 		//=== Private variables ===//
 		var markers = []; // Store google markers
@@ -81,26 +98,29 @@
 			var max = 1.000001;
 
 			self.customers.forEach(function(customer) {
+				var infoWindow = new google.maps.InfoWindow();
 				var marker = {
-					latitude: customer.location[1] * (Math.random() * (max - min) + min),
-					longitude: customer.location[0] * (Math.random() * (max - min) + min),
+					position:[ customer.location[1] * (Math.random() * (max - min) + min),
+				 						 customer.location[0] * (Math.random() * (max - min) + min)],
 					id: customer._id,
 					icon: iconUrlPink,
-					events: {
-						click: function() {
+					content:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>',
+					click: function() {
 							customer.isChecked = !customer.isChecked;
 							marker.icon = customer.isChecked ? iconUrlBlue : iconUrlPink;
-						},
-						mouseover: function(marker, eventName, model) {
-							var content = '<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>';
+					},
+					showWindow: function(e, customer){
+						//self.customer = customer;
 
-							self.map.window.marker = model;
-							self.map.window.options.content = content;
-							self.map.window.show = true;
-						},
-						mouseout: function() {
-							self.map.window.show = false;
-						}
+						infoWindow.setOptions({
+							content:customer.content,
+							position:{lat:customer.position[0] + 0.009, lng: customer.position[1]}
+						});
+						infoWindow.open(self.mapObject);
+					},
+					hideWindow: function(){
+						infoWindow.close();
+
 					}
 				};
 				markers.push(marker);
