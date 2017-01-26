@@ -8,3 +8,7 @@
 .gm-style-iw + div {
 	display: none;
 }
+
+.googleMap{
+  height:285px;
+}
