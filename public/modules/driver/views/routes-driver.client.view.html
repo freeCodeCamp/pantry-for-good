@@ -74,6 +74,7 @@
 					<ng-map>
 						<marker ng-repeat="customer in driverCtrl.map.markers"
 										position="{{customer.position}}"
+										icon="{{customer.icon}}"
 										on-mouseover="customer.showWindow(customer)"
 										on-mouseout="customer.hideWindow()"
 										on-click="customer.click(customer)">
