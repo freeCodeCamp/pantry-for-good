@@ -7,7 +7,7 @@
 	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi, NgMap) {
 		var self = this;
 		var map;
-
+console.log('working here')
 
 
 		//=== Bindable variables ===//
@@ -98,31 +98,34 @@
 			var max = 1.000001;
 
 			self.customers.forEach(function(customer) {
-				var infoWindow = new google.maps.InfoWindow();
-				var marker = {
-					position:[ customer.location[1] * (Math.random() * (max - min) + min),
-				 						 customer.location[0] * (Math.random() * (max - min) + min)],
+				var infoWindow = new google.maps.InfoWindow();console.log('what are you',customer.location[0] * (Math.random() * (max - min) + min));
+				var marker = new google.maps.Marker({
+					position: {lat:customer.location[1] * (Math.random() * (max - min) + min),
+				 						 lng:customer.location[0] * (Math.random() * (max - min) + min)},
 					id: customer._id,
+					map:self.mapObject,
 					icon: iconUrlPink,
-					content:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>',
-					click: function() {
+					title:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>'
+					});
+					 function clickMarker() {
 							customer.isChecked = !customer.isChecked;
 							marker.icon = customer.isChecked ? iconUrlBlue : iconUrlPink;
-					},
-					showWindow: function(e, customer){
-						//self.customer = customer;
-
+					};
+					function showWindow(e){
 						infoWindow.setOptions({
-							content:customer.content,
-							position:{lat:customer.position[0] + 0.009, lng: customer.position[1]}
+							content:customer.content
+						//	position:{lat:customer.position.lat + 0.009, lng: customer.position.lng}
 						});
 						infoWindow.open(self.mapObject);
 					},
-					hideWindow: function(){
+				function hideWindow(){
 						infoWindow.close();
-
 					}
-				};
+
+					marker.addListener('click',clickMarker);
+					marker.addListener('mouseover', showWindow);
+					marker.addListener('mouseout', hideWindow);
+						console.log('marker',marker);
 				markers.push(marker);
 			});
 			// Trigger next function in the chain
