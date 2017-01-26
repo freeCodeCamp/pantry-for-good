@@ -38,9 +38,6 @@
     <footer class="main-footer" data-ui-view="footer"></footer>
   </div>
 
-
-
-
 	<!--Embed Google Maps API key-->
 	<script type="text/javascript">
 		document.googleKey = "{{ googleKey }}";
@@ -59,8 +56,10 @@
 	<!--Livereload script rendered -->
 	<script type="text/javascript" src="http://{{request.hostname}}:35729/livereload.js"></script>
 	{% endif %}
+	<!-- map cluster script -->
 	<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
   </script>
+  <!-- google API script -->
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6awUvdgnh3i0qhVR0RKrFTQntNUIyd_o"></script>
 </body>
 

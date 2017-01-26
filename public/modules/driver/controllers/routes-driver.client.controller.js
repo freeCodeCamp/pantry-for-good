@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi, NgMap, $scope) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope) {
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -19,6 +19,7 @@
 		self.mapObject = null;
 
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
+		var lpool= {lat: 53.4084, lng: -2.9916};
 
 			//retrieve map object
 			NgMap.getMap().then(function(map) {
@@ -27,7 +28,7 @@
 				//Toronto geolocation
 				var options = {
 					zoom:12,
-					center:{lat:53.4084, lng:-2.9916}
+					center:lpool
 				};
 
 				//options passed to map
@@ -80,7 +81,7 @@
 				 		latitude = customer.location[1] * (Math.random() * (max - min) + min),
 				    longitude = customer.location[0] * (Math.random() * (max - min) + min);
 
-					//create marker instance
+				//create marker instance
 				var googleMarker = new google.maps.Marker({
 				position:{
 					lat:latitude,
@@ -91,6 +92,7 @@
 			  });
 
 				function clickMarker() {
+					//wrapped in apply function so Angular makes list changes
 					$scope.$apply(function(){
 					customer.isChecked = !customer.isChecked;
 					googleMarker.setIcon( customer.isChecked ? iconUrlBlue : iconUrlPink);
