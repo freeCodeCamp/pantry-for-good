@@ -18,10 +18,7 @@
 		self.newDonation = newDonation;
 		self.viewDonation = viewDonation;
 		self.remove = remove;
-
-		// Verify is user has admin role, redirect to home otherwise
-		if (Authentication.user.roles.indexOf('admin') < 0) $state.go('root');
-
+		
 		// Add plugins into datatable
 		self.dtOptions = {
 			dom: 'Tlfrtip',

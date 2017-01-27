@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up route
-angular.module('donor').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Donor state routing for user
 		$stateProvider.
 		state('root.createDonorUser', {
@@ -56,6 +56,9 @@ angular.module('donor').config(['$stateProvider',
 					templateUrl: 'modules/donor/views/admin/list-donors.client.view.html',
 					controller: 'DonorAdminController as donorCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.viewDonorAdmin', {
@@ -65,6 +68,9 @@ angular.module('donor').config(['$stateProvider',
 					templateUrl: 'modules/donor/views/view-donor.client.view.html',
 					controller: 'DonorAdminController as donorCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.editDonorAdmin', {
@@ -77,6 +83,9 @@ angular.module('donor').config(['$stateProvider',
 				'general-info@root.editDonorAdmin': {
 					templateUrl: 'modules/donor/views/partials/general-info.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}
