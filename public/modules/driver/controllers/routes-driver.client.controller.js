@@ -127,6 +127,21 @@
 	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 		self.isLoading = false;
+
+var flag = false;
+
+		$on("$stateChangeStart", event, to, toParams) {
+  if (flag) {
+    flag = false;
+    return;
+  }
+	markers.forEach(function(marker){
+  marker.setMap(null);
+})
+  event.preventDefault();
+  flag = true;
+  $state.go(to, toParams);
+}
 		}
 		//=== END Function chain ===//
 
