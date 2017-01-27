@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope, Markers) {
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -21,9 +21,17 @@
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 		var lpool= {lat: 53.4084, lng: -2.9916};
 
+
+
 			//retrieve map object
 			NgMap.getMap().then(function(map) {
 				self.mapObject = map;
+				//remove previous marker to stop duplicates
+				if(Markers.markers.length > 0){
+					Markers.markers.forEach(function(marker){console.log("markers:", marker);
+						marker.setMap(null);
+					})
+				}
 
 				//Toronto geolocation
 				var options = {
@@ -119,7 +127,9 @@
 
 				markers.push(googleMarker);
 			});
-				//create marker cluster instance
+			//store markers so they cannot be duplicated on map
+			Markers.markers = markers;
+			//create marker cluster instance
 		 var markerCluster = new MarkerClusterer(self.mapObject, markers,
 	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
