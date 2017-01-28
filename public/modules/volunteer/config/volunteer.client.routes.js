@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up route
-angular.module('volunteer').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Volunteer state routing for user
 		$stateProvider.
 		state('root.createVolunteerUser', {
@@ -56,6 +56,9 @@ angular.module('volunteer').config(['$stateProvider',
 					templateUrl: 'modules/volunteer/views/admin/list-volunteers.client.view.html',
 					controller: 'VolunteerAdminController as volunteerCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.viewVolunteerAdmin', {
@@ -65,6 +68,9 @@ angular.module('volunteer').config(['$stateProvider',
 					templateUrl: 'modules/volunteer/views/view-volunteer.client.view.html',
 					controller: 'VolunteerAdminController as volunteerCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.editVolunteerAdmin', {
@@ -77,6 +83,9 @@ angular.module('volunteer').config(['$stateProvider',
 				'general-info@root.editVolunteerAdmin': {
 					templateUrl: 'modules/volunteer/views/partials/general-info.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}

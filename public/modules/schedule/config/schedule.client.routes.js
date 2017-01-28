@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up routes
-angular.module('schedule').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('schedule').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Schedule state routing
 		$stateProvider.
 		state('root.schedules', {
@@ -12,6 +12,9 @@ angular.module('schedule').config(['$stateProvider',
 					templateUrl: 'modules/schedule/views/schedules.client.view.html',
 					controller: 'ScheduleController as scheduleCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}

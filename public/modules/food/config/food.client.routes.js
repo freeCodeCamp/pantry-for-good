@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up routes
-angular.module('food').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Food state routing
 		$stateProvider.
 		state('root.foods', {
@@ -12,6 +12,9 @@ angular.module('food').config(['$stateProvider',
 					templateUrl: 'modules/food/views/foods.client.view.html',
 					controller: 'FoodController as foodCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}
