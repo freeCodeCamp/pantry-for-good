@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope, $state, $timeout) {
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -24,7 +24,7 @@
 
 
 			//retrieve map object
-			NgMap.getMap().then(function(map) {
+			NgMap.getMap('googleMap').then(function(map) {
 				self.mapObject = map;
 
 				//Toronto geolocation
@@ -120,6 +120,7 @@
 				googleMarker.addListener('mouseout', hideWindow);
 
 				markers.push(googleMarker);
+
 			});
 
 			//create marker cluster instance
@@ -130,18 +131,21 @@
 
 var flag = false;
 
-		$on("$stateChangeStart", event, to, toParams) {
-  if (flag) {
-    flag = false;
-    return;
-  }
-	markers.forEach(function(marker){
-  marker.setMap(null);
-})
-  event.preventDefault();
-  flag = true;
-  $state.go(to, toParams);
+$scope.$on("$stateChangeStart", function(event, to, toParams) {
+if (flag) {
+flag = false;
+return;
 }
+markers.forEach(function(marker){
+marker.setMap(null);console.log('stuff');
+});
+markers = [];
+event.preventDefault();
+flag = true;
+
+$timeout(function(){$state.go(to, toParams)},4000);
+});
+
 		}
 		//=== END Function chain ===//
 
