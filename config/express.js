@@ -55,7 +55,7 @@ module.exports = function(db) {
 	app.set('showStackError', true);
 
 	// Set nunjucks as the template engine
-	// app.engine('server.view.html', consolidate[config.templateEngine]);
+	app.engine('server.view.html', consolidate[config.templateEngine]);
 
   // add filter from swig for backwards compatibility
   var env = nunjucks.configure('./app/views', {
@@ -67,8 +67,8 @@ module.exports = function(db) {
   });
 
 	// // // Set views path and view engine
-	// app.set('view engine', 'server.view.html');
-	// app.set('views', './app/views');
+	app.set('view engine', 'server.view.html');
+	app.set('views', './app/views');
 
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {
