@@ -4,6 +4,7 @@ heroku_5svv90mx
 .sass-cache/
 npm-debug.log
 node_modules/
+.vscode
 public/lib
 public/dist
 app/tests/coverage/

@@ -65,13 +65,13 @@ module.exports = function(grunt) {
 			}
 		},
 		uglify: {
-			production: {
+			prod: {
 				options: {
-					mangle: false,
-					sourceMap: true
+					mangle: true,
+					sourceMap: false
 				},
 				files: {
-					'public/dist/application.min.js': 'public/dist/application.js'
+					'public/dist/application.min.js': 'public/dist/application.min.js'
 				}
 			}
 		},
@@ -93,10 +93,38 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		concat: {
+			dev: {
+				options: {
+					sourceMap: true,
+					sourceMapStyle: 'inline'
+				},
+				src: '<%= applicationJavaScriptFiles %>', 
+				dest: 'public/dist/application.js'
+			},
+			prod: {
+				options: {
+					sourceMap: false
+				},
+				src: '<%= applicationJavaScriptFiles %>', 
+				dest: 'public/dist/application.js'
+			}
+		},
 		ngAnnotate: {
-			production: {
+			dev: {
+				options: {
+					sourceMap: true
+				},
 				files: {
-					'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
+					'public/dist/application.min.js': 'public/dist/application.js'
+				}
+			},
+			prod: {
+				options: {
+					sourceMap: false
+				},
+				files: {
+					'public/dist/application.min.js': 'public/dist/application.js'
 				}
 			}
 		},
@@ -143,13 +171,19 @@ module.exports = function(grunt) {
 	});
 
 	// Default task(s).
-	grunt.registerTask('default', ['lint', 'build', 'concurrent:default']);
+	grunt.registerTask('default', ['lint', 'build:dev', 'concurrent:default']);
+
+	// Production task(s).
+	grunt.registerTask('production', ['lint', 'build:prod', 'concurrent:default']);
 
 	// Lint task(s).
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
-	// Build task(s).
-	grunt.registerTask('build', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+	// Build task(s): Dev
+	grunt.registerTask('build:dev', ['loadConfig', 'concat:dev', 'ngAnnotate:dev', 'cssmin']);
+
+	// Build task(s): Prod
+	grunt.registerTask('build:prod', ['loadConfig', 'concat:prod', 'ngAnnotate:prod', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'karma:unit']);
