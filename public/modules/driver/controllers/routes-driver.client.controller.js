@@ -19,14 +19,14 @@
 		self.mapObject = null;
 
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
-		var lpool= {lat: 53.4084, lng: -2.9916};
+
 
     google.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
 		function initMap() {
 
 	         self.mapObject = new google.maps.Map(document.querySelector(".googleMap"), {
-	           center: lpool,
+	           center: geoToronto,
 	           zoom: 12
 	         });
 
