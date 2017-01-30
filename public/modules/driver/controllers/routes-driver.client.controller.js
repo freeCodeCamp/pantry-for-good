@@ -21,8 +21,18 @@
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 		var lpool= {lat: 53.4084, lng: -2.9916};
 
+google.maps.event.addDomListener(document.getElementById("googleMap"), 'load', initMap());
 
+		function initMap() {
 
+	         self.mapObject = new google.maps.Map(document.getElementById('googleMap'), {
+	           center: {lat: -34.397, lng: 150.644},
+	           zoom: 8
+	         });
+				 console.log('mapObject',self.mapObject);
+					 findDrivers();
+	       }
+/*
 			//retrieve map object
 			NgMap.getMap('googleMap').then(function(map) {
 				self.mapObject = map;
@@ -38,7 +48,7 @@
 
 					findDrivers(); // Start the chain
 
-			});
+			});*/
 
 		//=== START Function chain ===//
 		// 1. Find a list of drivers
