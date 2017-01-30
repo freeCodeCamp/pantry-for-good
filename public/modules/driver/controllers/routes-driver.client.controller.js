@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope, $state, $timeout) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout) {
 		var self = this;
 
 		//=== Bindable variables ===//

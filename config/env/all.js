@@ -45,8 +45,7 @@ module.exports = {
 				'public/lib/lodash/dist/lodash.min.js',
 				'public/lib/angular-simple-logger/dist/angular-simple-logger.min.js',
 				'public/lib/angular-google-maps/dist/angular-google-maps.min.js',
-				'public/lib/angular-file-upload/dist/angular-file-upload.js',
-				'public/lib/ngmap/build/scripts/ng-map.min.js'
+				'public/lib/angular-file-upload/dist/angular-file-upload.js'
 			]
 		},
 		css: [
