@@ -1,3 +1,27 @@
+Conversion to react
+---
+Plan:
+
+* <s>build with webpack</s>
+* refactor to angular components
+* migrate business logic to redux
+* convert angular components to react
+* finish webpack setup for production
+
+Usage:
+
+```
+git clone git@github.com:jspaine/food-bank-app.git
+cd food-bank-app
+git checkout reactify/angular-components
+npm install
+npm run dev
+npm test
+```
+Open the webpack dev server at <http://localhost:8080>
+
+---
+
 This repository is for the Food Bank application designed by Open Source for Good Contributors at [Free Code Camp](http://www.freecodecamp.com).
 
 We have a [live demo](https://food-bank-app-demo.herokuapp.com). Login with username `admin` and password `password`.
