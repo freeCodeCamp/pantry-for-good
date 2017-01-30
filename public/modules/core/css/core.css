@@ -69,3 +69,78 @@ td:hover .tools {
 		overflow: visible;
 	}
 }
+
+/* AdminLTE fixes */
+.sidebar-menu > li .main-menuitem {
+	padding: 12px 5px 12px 15px;
+	display: block;
+}
+
+.sidebar-menu > li .main-menuitem > .fa,
+.sidebar-menu > li .main-menuitem > .glyphicon,
+.sidebar-menu > li .main-menuitem > .ion {
+  width: 20px;
+}
+
+.sidebar-menu .treeview-menu > li .sub-menuitem {
+  padding: 5px 5px 5px 15px;
+  display: block;
+  font-size: 14px;
+}
+.sidebar-menu .treeview-menu > li .sub-menuitem > .fa,
+.sidebar-menu .treeview-menu > li .sub-menuitem > .glyphicon,
+.sidebar-menu .treeview-menu > li .sub-menuitem > .ion {
+  width: 20px;
+}
+.sidebar-menu .treeview-menu > li .sub-menuitem > .pull-right-container > .fa-angle-left,
+.sidebar-menu .treeview-menu > li .sub-menuitem > .pull-right-container > .fa-angle-down,
+.sidebar-menu .treeview-menu > li .sub-menuitem > .fa-angle-left,
+.sidebar-menu .treeview-menu > li .sub-menuitem > .fa-angle-down {
+  width: auto;
+}
+
+.navbar-custom-menu .navbar-nav > li {
+  position: relative;
+}
+.navbar-custom-menu .navbar-nav > li > .dropdown-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+}
+@media (max-width: 991px) {
+  .navbar-custom-menu .navbar-nav {
+    float: right;
+  }
+  .navbar-custom-menu .navbar-nav > li {
+    position: static;
+  }
+  .navbar-custom-menu .navbar-nav > li > .dropdown-menu {
+    position: absolute;
+    right: 5%;
+    left: auto;
+    border: 1px solid #ddd;
+    background: #fff;
+  }
+}
+
+.skin-blue .sidebar-menu > li .main-menuitem {
+  border-left: 3px solid transparent;
+}
+.skin-blue .sidebar-menu > li:hover .main-menuitem,
+.skin-blue .sidebar-menu > li.active .main-menuitem {
+  color: #ffffff;
+  background: #1e282c;
+  border-left-color: #3c8dbc;
+}
+.skin-blue .sidebar-menu > li .treeview-menu {
+  margin: 0 1px;
+  background: #2c3b41;
+}
+.skin-blue .treeview-menu > li .sub-menuitem {
+  color: #8aa4af;
+}
+.skin-blue .treeview-menu > li.active .sub-menuitem,
+.skin-blue .treeview-menu > li .sub-menuitem:hover {
+  color: #ffffff;
+}
+

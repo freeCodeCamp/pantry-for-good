@@ -18,7 +18,7 @@ describe('Controller: CustomerAdminController', function() {
 		var state = {current: {name: 'root.editCustomerAdmin'}};
 		customerCtrl = $controller('CustomerAdminController', {$state: state, $window: window});
 
-		httpBackend.expectGET('api/settings/').respond('');
+		httpBackend.whenGET('api/settings').respond('');
 		httpBackend.expectGET('api/media/').respond('');
 		httpBackend.expectGET('api/sections').respond('');
 		httpBackend.expectGET('api/fields').respond('');

@@ -4,6 +4,7 @@ import angular from 'angular';
 import 'admin-lte';
 import 'admin-lte/plugins/slimScroll/jquery.slimscroll'
 import ApplicationConfiguration from './config';
+
 import * as modules from './modules';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -17,6 +18,7 @@ import './modules/core/css/core.css';
 //Start by defining the main module and adding the module dependencies
 angular.module(ApplicationConfiguration.applicationModuleName, [
 	...ApplicationConfiguration.applicationModuleVendorDependencies,
+	modules.common,
 	modules.core,
 	modules.customer,
 	modules.donor,
@@ -41,14 +43,14 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 angular.module(ApplicationConfiguration.applicationModuleName).run(
 	function($http, $rootScope) {
 		// Get template config from db
-		$http.get('api/settings/').then(
-			function successCallback(response){
-				$rootScope.tconfig = response.data;
-			},
-			function errorCallback(response){
-				console.log('Get Template Config: error');
-			}
-		);
+		// $http.get('api/settings/').then(
+		// 	function successCallback(response){
+		// 		$rootScope.tconfig = response.data;
+		// 	},
+		// 	function errorCallback(response){
+		// 		console.log('Get Template Config: error');
+		// 	}
+		// );
 
 		// Get media config data from db
 		$http.get('api/media/').then(

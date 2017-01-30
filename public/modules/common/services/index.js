@@ -1,0 +1,1 @@
+import './tconfig.client.service';

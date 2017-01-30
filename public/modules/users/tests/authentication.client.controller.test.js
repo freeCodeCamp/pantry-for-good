@@ -22,7 +22,7 @@ import ApplicationConfiguration from '../../../config';
 			// A hack to resolve errors during state transitions
 			// httpBackend.whenGET(/views.*/).respond(200, '');
 
-			httpBackend.expectGET('api/settings/').respond('');
+			httpBackend.whenGET('api/settings').respond('');
 			httpBackend.expectGET('api/media/').respond('');
 
 			// Initialize the Authentication controller

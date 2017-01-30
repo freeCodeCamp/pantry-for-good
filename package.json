@@ -27,7 +27,7 @@
     "angular-simple-logger": "^0.1.7",
     "angular-smart-table": "^2.1.8",
     "angular-ui-bootstrap": "^2.2.0",
-    "angular-ui-router": "^0.3.2",
+    "angular-ui-router": "^1.0.0-rc.1",
     "async": "~2.1.4",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",

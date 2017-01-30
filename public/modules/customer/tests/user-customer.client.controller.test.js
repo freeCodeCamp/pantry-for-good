@@ -23,7 +23,7 @@ describe('Controller: CustomerUserController', function() {
 
 		// customerCtrl = $controller('CustomerUserController');
 
-		httpBackend.expectGET('api/settings/').respond('');
+		httpBackend.whenGET('api/settings').respond('');
 		httpBackend.expectGET('api/media/').respond('');
 		httpBackend.expectGET('api/sections').respond([]);
 		httpBackend.expectGET('api/fields').respond([]);

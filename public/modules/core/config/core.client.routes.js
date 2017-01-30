@@ -1,34 +1,30 @@
 import angular from 'angular';
-import footerTemplate from '../views/footer.client.view.html';
-import headerTemplate from '../views/header.client.view.html';
-import homeTemplate from '../views/home.client.view.html';
-import sidebarTemplate from '../views/sidebar.client.view.html';
-import unauthorizedTemplate from '../views/errors/403.client.view.html';
-import notFoundTemplate from '../views/errors/404.client.view.html';
-import errorTemplate from '../views/errors/500.client.view.html';
 
 // Setting up routes
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
-	function($stateProvider, $urlRouterProvider) {
+	/* @ngInject */
+	function($stateProvider, $urlRouterProvider, Tconfig) {
 		// Root state routing
 		$stateProvider.
 		state('root', {
 			url: '/',
+			resolve: {
+				tconfig: function(Tconfig) {
+					return Tconfig.get()
+				}
+			},
 			views: {
 				'header': {
-					template: headerTemplate,
-					controller: 'HeaderController as headerCtrl'
+					component: 'header'
 				},
 				'sidebar': {
-					template: sidebarTemplate,
-					controller: 'SidebarController as sidebarCtrl'
+					component: 'sidebar'
 				},
 				'content': {
-					template: homeTemplate,
-					controller: 'HomeController as homeCtrl'
+					component: 'home'
 				},
 				'footer': {
-					template: footerTemplate
+					component: 'footer'
 				}
 			}
 		}).
@@ -38,7 +34,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '403',
 			views: {
 				'content@': {
-					template: unauthorizedTemplate
+					component: 'unauthorized'
 				}
 			}
 		}).
@@ -47,7 +43,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '404',
 			views: {
 				'content@': {
-					template: notFoundTemplate
+					component: 'notFound'
 				}
 			}
 		}).
@@ -56,7 +52,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '500',
 			views: {
 				'content@': {
-					template: errorTemplate
+					component: 'serverError'
 				}
 			}
 		});
