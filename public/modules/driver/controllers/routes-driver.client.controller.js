@@ -21,34 +21,17 @@
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 		var lpool= {lat: 53.4084, lng: -2.9916};
 
-google.maps.event.addDomListener(document.getElementById("googleMap"), 'load', initMap());
+    google.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
 		function initMap() {
 
-	         self.mapObject = new google.maps.Map(document.getElementById('googleMap'), {
-	           center: {lat: -34.397, lng: 150.644},
-	           zoom: 8
+	         self.mapObject = new google.maps.Map(document.querySelector(".googleMap"), {
+	           center: lpool,
+	           zoom: 12
 	         });
-				 console.log('mapObject',self.mapObject);
+
 					 findDrivers();
 	       }
-/*
-			//retrieve map object
-			NgMap.getMap('googleMap').then(function(map) {
-				self.mapObject = map;
-
-				//Toronto geolocation
-				var options = {
-					zoom:12,
-					center:lpool
-				};
-
-				//options passed to map
-				self.mapObject.setOptions(options);
-
-					findDrivers(); // Start the chain
-
-			});*/
 
 		//=== START Function chain ===//
 		// 1. Find a list of drivers
@@ -138,23 +121,6 @@ google.maps.event.addDomListener(document.getElementById("googleMap"), 'load', i
 	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 		self.isLoading = false;
-
-var flag = false;
-
-$scope.$on("$stateChangeStart", function(event, to, toParams) {
-if (flag) {
-flag = false;
-return;
-}
-markers.forEach(function(marker){
-marker.setMap(null);console.log('stuff');
-});
-markers = [];
-event.preventDefault();
-flag = true;
-
-$timeout(function(){$state.go(to, toParams)},4000);
-});
 
 		}
 		//=== END Function chain ===//
