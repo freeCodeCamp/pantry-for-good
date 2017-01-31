@@ -4,8 +4,8 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout, GoogleObject) {
-		var self = this;console.log('google', GoogleObject);console.log('google global',google);
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout, GoogleMapAPI) {
+		var self = this;
 
 		//=== Bindable variables ===//
 		self.assign = assign;
@@ -22,11 +22,11 @@
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 
 
-    google.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
+    GoogleMapAPI.googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
 		function initMap() {
 
-	         self.mapObject = new google.maps.Map(document.querySelector(".googleMap"), {
+	         self.mapObject = new GoogleMapAPI.googleObject.maps.Map(document.querySelector(".googleMap"), {
 	           center: geoToronto,
 	           zoom: 12
 	         });
@@ -73,12 +73,12 @@
 
 			self.customers.forEach(function(customer) {
 				// create info window instance
-				var infoWindow = new google.maps.InfoWindow(),
+				var infoWindow = new GoogleMapAPI.googleObject.maps.InfoWindow(),
 				 		latitude = customer.location[1] * (Math.random() * (max - min) + min),
 				    longitude = customer.location[0] * (Math.random() * (max - min) + min);
 
 				//create marker instance
-				var googleMarker = new google.maps.Marker({
+				var googleMarker = new GoogleMapAPI.googleObject.maps.Marker({
 				position:{
 					lat:latitude,
 				  lng:longitude
@@ -99,7 +99,7 @@
 					infoWindow.setOptions({
 						content:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>',
 						position:{lat:latitude, lng:longitude},
-						pixelOffset: new google.maps.Size(0, -33)
+						pixelOffset: new GoogleMapAPI.googleObject.maps.Size(0, -33)
 						});
 					infoWindow.open(self.mapObject);
 					}
@@ -118,7 +118,7 @@
 			});
 
 			//create marker cluster instance
-		 var markerCluster = new MarkerClusterer(self.mapObject, markers,
+		 var markerCluster = new GoogleMapAPI.markerClusterer(self.mapObject, markers,
 	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 		self.isLoading = false;

@@ -1,22 +1,14 @@
 (function() {
 	'use strict';
 
-	// Donation service used for communicating with the donation REST endpoints
-	angular.module('driver').factory('GoogleObject', GoogleObject);
+	// Grab global google map API and clusterer variables
+	angular.module('driver').factory('GoogleMapAPI', GoogleMapAPI);
 
 	/* @ngInject */
-	function GoogleObject() {
-		return google;
+	function GoogleMapAPI() {
+		var data = {};
+		data.googleObject = google;
+		data.markerClusterer = MarkerClusterer;
+		return data;
 	}
 })();
-
-
-/*
-function getGoogleObject() {
-	var data= {};
-	var promise = $http.get("https://maps.googleapis.com/maps/api/js").then(function(response){
-		data =  response.data
-	})
-	return data;
-}
-*/
