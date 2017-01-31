@@ -1,12 +1,12 @@
 <!-- Content header (Page header) -->
 <section class="content-header text-center">
-  <img ng-src="{{mediaData.logoPath + mediaData.logoFile}}" alt="logo">
+  <foodbank-logo />
   <h1>Client Request for Assistance Application</h1>
   <div class="alert alert-info text-left top-buffer">
     <h4><i class="icon fa fa-warning"></i>Please fill out the following form</h4>
     Once submitted, your application will be reviewed and you will be contacted directly.
-	  To check on your application status, you may call our client intake line at {{tconfig.clientIntakeNumber}}.
-	  For assistance with this application, please contact our support line at {{tconfig.supportNumber}}.
+	  To check on your application status, you may call our client intake line at {{customerCtrl.settings.clientIntakeNumber}}.
+	  For assistance with this application, please contact our support line at {{customerCtrl.settings.supportNumber}}.
   </div>
 </section><!-- /.content-header -->
 <!-- Main content -->

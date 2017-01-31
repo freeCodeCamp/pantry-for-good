@@ -3,36 +3,23 @@
 
 	angular.module('settings').controller('ChangeMediaController', ChangeMediaController);
 	/* @ngInject */
-	function ChangeMediaController($scope, $rootScope, $stateParams, $state, Authentication, MediaObject, FileUploader) {
+	function ChangeMediaController($scope, $state, Authentication, MediaObject, FileUploader) {
+		var self = this,
+				user = Authentication.user;
+
 		$scope.uploader = new FileUploader({url: 'api/media/uploadLogo'});
 
 		$scope.upload = function(item) {
 			item.onSuccess = function(media) {
-				$rootScope.mediaData = media;
+				$scope.logoSrc = media.logoPath + media.logoFile;
 			};
 			item.upload();
 		};
-
-		var self = this,
-				user = Authentication.user;
 
 		// This provides Authentication context
 		self.authentication = Authentication;
 
 		// If user is not signed in redirect to signin
 		if(!user) $state.go('root.signin');
-
-		MediaObject.readMedia().
-			then(function successCallback(response){
-				$rootScope.mediaData = response.data;
-			},
-			function errorCallback(response){
-				console.log('GET MEDIA DATA: error');
-			}
-		);
-
-		$scope.saveMedia = function () {
-			MediaObject.saveMedia($rootScope.mediaData);
-		};
 	}
 })();

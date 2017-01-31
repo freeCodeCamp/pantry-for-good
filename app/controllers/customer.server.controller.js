@@ -154,12 +154,10 @@ exports.create = function(req, res) {
 					Settings.findOne({}, function(err, settings) {
 						if (err)
 							console.log(err);
-						res.render('templates/accept-customer-email', {
-							fullName: customer.fullName,
-							date: customer.dateReceived.toDateString(),
+						res.render('templates/create-customer-email', {
 							tconfig: settings
 						}, function (err, email) {
-							sendEmail(customer.email, 'Thank you for applying.',
+							sendEmail(config.mailer.to, 'A new client has applied.',
 								email);
 						});
 					});

@@ -7,6 +7,7 @@ module.exports = {
 	sessionCollection: 'sessions',
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		to: process.env.MAILER_TO || 'MAILER_TO',
 		sendgridKey: process.env.SENDGRID_API_KEY || 'SEND_GRID_API_KEY'
 	},
 	googleMaps: {
@@ -60,6 +61,7 @@ module.exports = {
 		tests: [
 			'public/lib/angular-mocks/angular-mocks.js',
 			'public/testInitialization.js',
+			'public/modules/customer/tests/admin-customer.client.controller.test.js',
 			'public/modules/*/tests/*.js'
 		]
 	}

@@ -4,21 +4,25 @@
 	describe('Controller: CustomerUserController', function() {
 		//Initialize global variables
 		var customerCtrl,
-				stateParams,
-				httpBackend,
-				location;
+				httpBackend;
 	
 		// Load the main application module
 		beforeEach(module(ApplicationConfiguration.applicationModuleName));
 		
-		beforeEach(inject(function($controller, $stateParams, $httpBackend, $location) {
-			location = $location;
-			stateParams = $stateParams;
+		beforeEach(inject(function($controller, $httpBackend) {
 			httpBackend = $httpBackend;
 			// A hack to resolve errors during state transitions			
 			httpBackend.whenGET(/views.*/).respond(200, '');
-			
+
+			//var state = {current: {name: 'root.editCustomerAdmin'}};
+			//customerCtrl = $controller('CustomerUserController', {$state: state});
+
 			customerCtrl = $controller('CustomerUserController');
+
+			httpBackend.expectGET('api/settings/').respond('');
+			httpBackend.expectGET('api/media/').respond('');
+			httpBackend.expectGET('api/sections').respond([]);
+			httpBackend.expectGET('api/fields').respond([]);
 		}));
 		
 		afterEach(function() {
