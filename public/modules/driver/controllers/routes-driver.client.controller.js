@@ -4,8 +4,8 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout) {
-		var self = this;
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout, GoogleObject) {
+		var self = this;console.log('google', GoogleObject);console.log('google global',google);
 
 		//=== Bindable variables ===//
 		self.assign = assign;
