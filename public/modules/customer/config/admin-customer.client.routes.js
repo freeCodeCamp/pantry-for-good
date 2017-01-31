@@ -30,17 +30,8 @@ angular.module('customer').config(['$stateProvider',
 					templateUrl: 'modules/customer/views/edit-customer.client.view.html',
 					controller: 'CustomerAdminController as customerCtrl'
 				},
-				'general-info@root.editCustomerAdmin': {
-					templateUrl: 'modules/customer/views/partials/general-info.partial.html'
-				},
-				'employment@root.editCustomerAdmin': {
-					templateUrl: 'modules/customer/views/partials/employment.partial.html'
-				},
 				'food-preferences@root.editCustomerAdmin': {
 					templateUrl: 'modules/customer/views/partials/food-preferences.partial.html'
-				},
-				'financial@root.editCustomerAdmin': {
-					templateUrl: 'modules/customer/views/partials/financial.partial.html'
 				},
 				'household@root.editCustomerAdmin': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'

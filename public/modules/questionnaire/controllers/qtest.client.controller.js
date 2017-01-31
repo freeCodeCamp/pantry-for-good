@@ -1,91 +1,31 @@
-(function() {
-	'use strict';
-
+(function() { 'use strict';
 	angular.module('questionnaire').controller('qTestController', qTestController);
 
 	/* @ngInject */
-	function qTestController(Questionnaire, Section, Field, $scope, $q) {
+	function qTestController() {
+		/*jshint validthis: true */
+		var self = this;
 
-		$scope.handleCheckboxClick = function (name, element) {
+		var mock1 = "ROWS: Employment Income; Employment Insurance Benefits; Social Assistance; Spousal/Child Support; Self Employment; Pension Income (eg. Employer Plan); Disability Income; Workplace Safety and Insurance Board (WSIB) Benefits; Pension Plan; Child Tax Benefits; Income from Rental Property; Severance/Termination Pay; Any other source of income not listed above COLUMNS: PART 1 - MONTHLY GROSS INCOME; Self; Other";
 
-			// Initialise as array if undefined
-			if (typeof $scope.form[name] !== 'object') {
-				$scope.form[name] = [element];
-				return;
+		var mock2 = "ROWS: Rent, mortgage or room and board; Food; Utilities (phone, internet, water, heat/hydro); Transportation, parking and other personal supports; Dependant Care (eg. day care); Disability Needs; Spousal/Child support; Loans; Leases; Insurance; Credit card debt; Property taxes; Other costs not listed above COLUMNS: MONTHLY LIVING EXPENSES; Household";
+
+		var mock3 = "ROWS: Employment Income, Employment Insurance Benefits, Pension Plan, Child Tax Benefits, Income from Rental Property, Severance/Termination Pay COLUMNS: PART 1 - MONTHLY GROSS INCOME; Self; Other; YetAnother";
+
+		var mock = mock2;
+
+		self.mockRows = /(ROWS:\s*)(.*)(COLUMNS)/.exec(mock)[2].split(/;\s*/);
+		self.mockCols = /(COLUMNS:\s*)(.*)/.exec(mock)[2].split(/;\s*/);
+		self.inputFields = self.mockCols.slice(1, 99);
+
+		self.income = [];
+		self.mockRows.forEach(function (item) {
+			var cell = { name: item };
+			for (var i = 0; i < self.inputFields.length; i++) {
+				cell[self.inputFields[i]] = 0;
 			}
-
-			// If element is not yet in array, push it, otherwise delete it from array
-			var i = $scope.form[name].indexOf(element);
-			if (i === -1) {
-				$scope.form[name].push(element);
-			} else {
-				$scope.form[name].splice(i, 1);
-			}
-		};
-
-		$scope.generateForm = function(qId) {
-			var cRows = _.maxBy($scope.fields, 'row').row, cCols = 4;
-			var r, cVoid = 0;
-			var invalidCell = { status: 'invalid' };
-			var voidCell = { status: 'valid', span: 0 };
-
-			var dynamicForm = [];
-			// Using Client Questionnaire only for testing
-			$scope.filteredSections = _.sortBy(_.filter($scope.sections, {'questionnaire': { '_id': qId }}), 'position');
-
-			for (var s = 0; s < $scope.filteredSections.length; s++) {
-				var tmpRow = [];
-				for (var i = 0; i < cRows; i++) {
-					var tmpArr = [];
-					for (var j = 0; j < cCols; j++) {
-						if (cVoid > 0) {
-							tmpArr.push(voidCell);
-							cVoid--;
-						} else {
-							r = _.find($scope.fields, {
-								'row': i + 1,
-								'column': j + 1,
-								'section': $scope.filteredSections[s]
-							});
-
-							if (r === undefined) {
-								tmpArr.push(invalidCell);
-							} else {
-								r.status = 'valid';
-								tmpArr.push(r);
-								cVoid = r.span - 1;
-							} // if r is undefined
-						} // if void cells left
-
-					} // for j, cells
-					tmpRow.push(tmpArr);
-				} // for i, rows
-				dynamicForm.push(tmpRow);
-			} // for s, sections
-
-			$scope.dynForm = dynamicForm;
-		}; // Function generate Form
-
-		$scope.handleSelection = function () {
-			$scope.form = {}; // Object to put input field on
-			$scope.generateForm($scope.selectedQuestionnaire);
-		};
-
-		var promiseHash = {};
-    promiseHash.questionnaires = Questionnaire.query().$promise;
-    promiseHash.sections = Section.query().$promise;
-    promiseHash.fields = Field.query().$promise;
-
-    $q.all(promiseHash)
-			.then(function(results) {
-				$scope.questionnaires = results.questionnaires;
-				$scope.sections = results.sections;
-				$scope.fields = results.fields;
-
-				// Default: Client Questionnaire selected
-				$scope.selectedQuestionnaire = '581da83d367d0b1eef2e8d9e';
-				$scope.handleSelection();
-
+			self.income.push(cell);
 		});
+
 	}
 })();

@@ -7,6 +7,7 @@ module.exports = {
 	sessionCollection: 'sessions',
 	mailer: {
 		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		to: process.env.MAILER_TO || 'MAILER_TO',
 		sendgridKey: process.env.SENDGRID_API_KEY || 'SEND_GRID_API_KEY'
 	},
 	googleMaps: {
@@ -43,9 +44,7 @@ module.exports = {
 				'public/lib/moment-recur/moment-recur.min.js',
 				'public/lib/lodash/dist/lodash.min.js',
 				'public/lib/angular-simple-logger/dist/angular-simple-logger.min.js',
-				'public/lib/angular-google-maps/dist/angular-google-maps.min.js',
-				'public/lib/angular-file-upload/dist/angular-file-upload.js',
-				'public/lib/ngmap/build/scripts/ng-map.min.js'
+				'public/lib/angular-file-upload/dist/angular-file-upload.js'
 			]
 		},
 		css: [
@@ -60,6 +59,7 @@ module.exports = {
 		tests: [
 			'public/lib/angular-mocks/angular-mocks.js',
 			'public/testInitialization.js',
+			'public/modules/customer/tests/admin-customer.client.controller.test.js',
 			'public/modules/*/tests/*.js'
 		]
 	}

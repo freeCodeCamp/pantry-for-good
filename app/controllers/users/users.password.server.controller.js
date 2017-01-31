@@ -8,6 +8,7 @@ var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
+	Settings = mongoose.model('Settings'),
 	config = require('../../../config/config'),
 	async = require('async'),
 	mailHelper = require('sendgrid').mail,
@@ -55,9 +56,19 @@ exports.forgot = function(req, res, next) {
 			}
 		},
 		function(token, user, done) {
+			Settings.findOne({}, function(err, settings) {
+				if (err)
+					return res.status(400).send({
+						message: "Server Error"
+					});
+				done(err, token, user, settings);
+			});
+		},
+		function(token, user, settings, done) {
 			res.render('templates/reset-password-email', {
 				name: user.displayName,
 				appName: config.app.title,
+				tconfig: settings,
 				url: 'http://' + req.headers.host + '/auth/reset/' + token
 			}, function(err, emailHTML) {
 				done(err, emailHTML, user);

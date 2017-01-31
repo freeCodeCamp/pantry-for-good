@@ -24,8 +24,8 @@ db.on('error', function(err) {
 		console.log(chalk.red(err));
 });
 
-	// Mongoose promises deprecated, using Bluebird instead
-	mongoose.Promise = require('bluebird');
+// Mongoose promises deprecated, using Bluebird instead
+mongoose.Promise = require('bluebird');
 
 db.once('open', function() {
 	console.log("Connected to " + config.db);

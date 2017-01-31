@@ -18,7 +18,7 @@ exports.create = function(req, res) {
 
 	// Update user's role to donor and mark as this user as having applied
 	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
-		.then(function(user) {
+		.then(function() {
 			return donor.save(function(err) {
 				if (err) {
 					return res.status(400).send({
@@ -50,6 +50,14 @@ exports.update = function(req, res) {
 	var donor = req.donor;
 
 	donor = _.extend(donor, req.body);
+
+	// Adding fields not defined in the schema
+	var schemaFields = Object.getOwnPropertyNames(Donor.schema.paths);
+	for (var field in req.body) {
+		if (donor.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
+			donor.set(field, req.body[field]);
+		}
+	}
 
 	donor.save(function(err) {
 		if (err) {
@@ -88,10 +96,10 @@ exports.delete = function(req, res) {
 
 	return User.findByIdAndRemove(id)
 		.exec()
-		.then(function(user) {
+		.then(function() {
 			return Donor.findByIdAndRemove(id)
 				.exec()
-				.then(function(donor) {
+				.then(function() {
 					return res.end();
 				});
 		})

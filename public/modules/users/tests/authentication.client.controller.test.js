@@ -6,20 +6,21 @@
 		// Initialize global variables
 		var authenticationCtrl,
 				httpBackend,
-				stateParams,
 				location;
 
 		// Load the main application module
 		beforeEach(module(ApplicationConfiguration.applicationModuleName));
 
-		beforeEach(inject(function($controller, $location, $stateParams, $httpBackend) {
-			stateParams = $stateParams;
+		beforeEach(inject(function($controller, $location, $httpBackend) {
 			httpBackend = $httpBackend;
 			location = $location;
 			
 			// A hack to resolve errors during state transitions
 			httpBackend.whenGET(/views.*/).respond(200, '');
 			
+			httpBackend.expectGET('api/settings/').respond('');
+			httpBackend.expectGET('api/media/').respond('');
+
 			// Initialize the Authentication controller
 			authenticationCtrl = $controller('AuthenticationController');
 		}));

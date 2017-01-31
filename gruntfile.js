@@ -111,9 +111,6 @@ module.exports = function(grunt) {
 			test: {
 				NODE_ENV: 'test'
 			},
-			secure: {
-				NODE_ENV: 'secure'
-			},
 			development: {
 				NODE_ENV: 'development'
 			}
@@ -147,9 +144,6 @@ module.exports = function(grunt) {
 
 	// Default task(s).
 	grunt.registerTask('default', ['lint', 'build', 'concurrent:default']);
-
-	// Secure task(s).
-	grunt.registerTask('secure', ['env:secure', 'lint', 'concurrent:default']);
 
 	// Lint task(s).
 	grunt.registerTask('lint', ['jshint', 'csslint']);

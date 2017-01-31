@@ -10,7 +10,7 @@ angular.module('media').config(['$stateProvider', '$urlRouterProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/media/views/change-media.client.view.html',
-					controller: 'ChangeMediaController as settingsCtrl'
+					controller: 'ChangeMediaController as mediaCtrl'
 				}
 			}
 		});
