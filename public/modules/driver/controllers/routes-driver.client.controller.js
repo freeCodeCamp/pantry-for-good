@@ -4,12 +4,7 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-<<<<<<< HEAD
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope, $state, $timeout) {
-=======
-
 	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout) {
->>>>>>> 407824fe60bddd08d425112b227fb5d0b1e1a29d
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -22,7 +17,7 @@
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
 		self.mapObject = null;
-<<<<<<< HEAD
+
 
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 
@@ -31,16 +26,6 @@
 
 		function initMap() {
 
-=======
-
-		var geoToronto = {lat: 43.8108899, lng: -79.449906};
-
-
-    google.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
-
-		function initMap() {
-
->>>>>>> 407824fe60bddd08d425112b227fb5d0b1e1a29d
 	         self.mapObject = new google.maps.Map(document.querySelector(".googleMap"), {
 	           center: geoToronto,
 	           zoom: 12
