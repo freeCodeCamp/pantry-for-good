@@ -4,11 +4,8 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-<<<<<<< HEAD
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, NgMap, $scope, $state, $timeout) {
-=======
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, $timeout, GoogleMapAPI) {
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
+
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $state, GoogleMapAPI) {
 		var self = this;
 
 		//=== Bindable variables ===//
@@ -21,18 +18,6 @@
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
 		self.mapObject = null;
-<<<<<<< HEAD
-
-		var geoToronto = {lat: 43.8108899, lng: -79.449906};
-
-
-    google.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
-
-		function initMap() {
-
-	         self.mapObject = new google.maps.Map(document.querySelector(".googleMap"), {
-=======
-
 
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 
@@ -42,7 +27,6 @@
 		function initMap() {
 
 	         self.mapObject = new GoogleMapAPI.googleObject.maps.Map(document.querySelector(".googleMap"), {
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
 	           center: geoToronto,
 	           zoom: 12
 	         });
@@ -89,20 +73,14 @@
 
 			self.customers.forEach(function(customer) {
 				// create info window instance
-<<<<<<< HEAD
-				var infoWindow = new google.maps.InfoWindow(),
-=======
+
 				var infoWindow = new GoogleMapAPI.googleObject.maps.InfoWindow(),
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
 				 		latitude = customer.location[1] * (Math.random() * (max - min) + min),
 				    longitude = customer.location[0] * (Math.random() * (max - min) + min);
 
 				//create marker instance
-<<<<<<< HEAD
-				var googleMarker = new google.maps.Marker({
-=======
+
 				var googleMarker = new GoogleMapAPI.googleObject.maps.Marker({
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
 				position:{
 					lat:latitude,
 				  lng:longitude
@@ -123,11 +101,7 @@
 					infoWindow.setOptions({
 						content:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>',
 						position:{lat:latitude, lng:longitude},
-<<<<<<< HEAD
-						pixelOffset: new google.maps.Size(0, -33)
-=======
 						pixelOffset: new GoogleMapAPI.googleObject.maps.Size(0, -33)
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
 						});
 					infoWindow.open(self.mapObject);
 					}
@@ -146,11 +120,7 @@
 			});
 
 			//create marker cluster instance
-<<<<<<< HEAD
-		 var markerCluster = new MarkerClusterer(self.mapObject, markers,
-=======
 		 var markerCluster = new GoogleMapAPI.markerClusterer(self.mapObject, markers,
->>>>>>> 813bc93474b367af193d720a2c57bff087fa66d3
 	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 		self.isLoading = false;
