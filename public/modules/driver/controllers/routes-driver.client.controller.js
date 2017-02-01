@@ -4,8 +4,10 @@
 	angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
 	/* @ngInject */
-	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, uiGmapGoogleMapApi) {
+	function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window) {
 		var self = this;
+		var googleObject = $window.google;
+		var markerClustererObject = $window.MarkerClusterer;
 
 		//=== Bindable variables ===//
 		self.assign = assign;
@@ -16,33 +18,22 @@
 		self.error = {};
 		self.isDisabled = isDisabled;
 		self.isLoading = null;
+		self.mapObject = null;
 
-		var geoToronto = {
-			latitude: 43.8108899,
-			longitude: -79.449906
-		};
+		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 
-		self.map = {
-			center: geoToronto,
-			zoom: 12,
-			markers: [],
-			window: {
-				marker: {},
-				show: false,
-				options: {
-					content: '',
-					pixelOffset: {
-						height: -40,
-						width: 0
-					}
-				}
-			}
-		};
 
-		//=== Private variables ===//
-		var markers = []; // Store google markers
+  googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
-		findDrivers(); // Start the chain
+		function initMap() {
+
+	         self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
+	           center: geoToronto,
+	           zoom: 12
+	         });
+
+					 findDrivers();
+	       }
 
 		//=== START Function chain ===//
 		// 1. Find a list of drivers
@@ -79,43 +70,62 @@
 			// min/max values for nudging markers who are on the same spot
 			var min = 0.999999;
 			var max = 1.000001;
+			var markers = [];
 
 			self.customers.forEach(function(customer) {
-				var marker = {
-					latitude: customer.location[1] * (Math.random() * (max - min) + min),
-					longitude: customer.location[0] * (Math.random() * (max - min) + min),
-					id: customer._id,
-					icon: iconUrlPink,
-					events: {
-						click: function() {
-							customer.isChecked = !customer.isChecked;
-							marker.icon = customer.isChecked ? iconUrlBlue : iconUrlPink;
-						},
-						mouseover: function(marker, eventName, model) {
-							var content = '<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>';
+				// create info window instance
 
-							self.map.window.marker = model;
-							self.map.window.options.content = content;
-							self.map.window.show = true;
-						},
-						mouseout: function() {
-							self.map.window.show = false;
-						}
+				var infoWindow = new googleObject.maps.InfoWindow(),
+				 		latitude = customer.location[1] * (Math.random() * (max - min) + min),
+				    longitude = customer.location[0] * (Math.random() * (max - min) + min);
+
+				//create marker instance
+
+				var googleMarker = new googleObject.maps.Marker({
+				position:{
+					lat:latitude,
+				  lng:longitude
+				},
+				map:self.mapObject,
+		    icon:iconUrlPink,
+			  });
+
+				function clickMarker() {
+					//wrapped in apply function so Angular makes list changes
+					$scope.$apply(function(){
+					customer.isChecked = !customer.isChecked;
+					googleMarker.setIcon( customer.isChecked ? iconUrlBlue : iconUrlPink);
+					 });
 					}
-				};
-				markers.push(marker);
-			});
-			// Trigger next function in the chain
-			renderMap();
-		}
 
-		// 4. Render and configure google maps
-		function renderMap() {
-			self.map.markers = markers;
-			uiGmapGoogleMapApi.then(function () {
-				// Remove loading state
-				self.isLoading = false;
+				function showWindow(){
+					infoWindow.setOptions({
+						content:'<h4><strong>' + customer._id + '</strong> ' + customer.address + '</h4>',
+						position:{lat:latitude, lng:longitude},
+						pixelOffset: new googleObject.maps.Size(0, -33)
+						});
+					infoWindow.open(self.mapObject);
+					}
+
+				function hideWindow(){
+						infoWindow.close();
+					}
+
+				//apply previous functions to the marker
+				googleMarker.addListener('click', clickMarker);
+				googleMarker.addListener('mouseover', showWindow);
+				googleMarker.addListener('mouseout', hideWindow);
+
+				markers.push(googleMarker);
+
 			});
+
+			//create marker cluster instance
+		 var markerCluster = new markerClustererObject(self.mapObject, markers,
+	{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+
+		self.isLoading = false;
+
 		}
 		//=== END Function chain ===//
 
