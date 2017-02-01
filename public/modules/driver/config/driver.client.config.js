@@ -13,13 +13,3 @@ angular.module('driver').run(['Menus',
 		Menus.addMenuItem('driver', 'Route Assignment', 'driver/routes', 'item', 'root.driver.user', '', ['driver'], 1);
 	}
 ]);
-
-// Configuring Google Maps
-angular.module('driver').config(['uiGmapGoogleMapApiProvider',
-	function(uiGmapGoogleMapApiProvider) {
-		uiGmapGoogleMapApiProvider.configure({
-			key: document.googleKey,
-			libraries: 'geometry, visualization'
-		});
-	}
-]);
