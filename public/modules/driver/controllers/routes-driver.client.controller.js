@@ -18,7 +18,6 @@
 		self.isLoading = null;
 		self.mapObject = null;
 
-
 		var geoToronto = {lat: 43.8108899, lng: -79.449906};
 
 
@@ -73,11 +72,13 @@
 
 			self.customers.forEach(function(customer) {
 				// create info window instance
+
 				var infoWindow = new GoogleMapAPI.googleObject.maps.InfoWindow(),
 				 		latitude = customer.location[1] * (Math.random() * (max - min) + min),
 				    longitude = customer.location[0] * (Math.random() * (max - min) + min);
 
 				//create marker instance
+
 				var googleMarker = new GoogleMapAPI.googleObject.maps.Marker({
 				position:{
 					lat:latitude,

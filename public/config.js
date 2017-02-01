@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'foodbank-template';
-	var applicationModuleVendorDependencies = ['ngResource',
+	var applicationModuleVendorDependencies = ['ngResource', 'ngMap',
 	'ui.router', 'ui.bootstrap', 'ui.bootstrap.modal', 'datatables',
   'AngularPrint', 'smart-table',
 	'angularMoment', 'angularFileUpload'];
