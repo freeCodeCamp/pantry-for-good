@@ -10,9 +10,6 @@
 		// This provides Authentication context
 		self.authentication = Authentication;
 
-		// Verify if user has admin role, redirect to home otherwise
-		if (self.authentication.user.roles.indexOf('admin') < 0) $state.go('root');
-
 		// Add plugins into datatable
 		self.dtOptions = {
 			dom: 'Tlfrtip',

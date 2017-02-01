@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up route
-angular.module('customer').config(['$stateProvider',
-	function($stateProvider){
+angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider){
 		// Customer state routing for admin
 		$stateProvider.
 		state('root.listCustomers', {
@@ -12,6 +12,9 @@ angular.module('customer').config(['$stateProvider',
 					templateUrl: 'modules/customer/views/admin/list-customers.client.view.html',
 					controller: 'CustomerAdminController as customerCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.viewCustomerAdmin', {
@@ -21,6 +24,9 @@ angular.module('customer').config(['$stateProvider',
 					templateUrl: 'modules/customer/views/view-customer.client.view.html',
 					controller: 'CustomerAdminController as customerCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.editCustomerAdmin', {
@@ -36,6 +42,9 @@ angular.module('customer').config(['$stateProvider',
 				'household@root.editCustomerAdmin': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}

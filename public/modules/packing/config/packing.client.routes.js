@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up routes
-angular.module('packing').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('packing').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Packing state routing
 		$stateProvider.
 		state('root.packing', {
@@ -12,6 +12,9 @@ angular.module('packing').config(['$stateProvider',
 					templateUrl: 'modules/packing/views/packing.client.view.html',
 					controller: 'PackingController as packingCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}

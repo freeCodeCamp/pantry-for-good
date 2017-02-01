@@ -1,4 +1,4 @@
 'use strict';
 
 // Use application configuration module to register a new module
-ApplicationConfiguration.registerModule('media');
+ApplicationConfiguration.registerModule('media', ['users']);

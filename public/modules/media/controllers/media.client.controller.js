@@ -18,8 +18,5 @@
 
 		// This provides Authentication context
 		self.authentication = Authentication;
-
-		// If user is not signed in redirect to signin
-		if(!user) $state.go('root.signin');
 	}
 })();

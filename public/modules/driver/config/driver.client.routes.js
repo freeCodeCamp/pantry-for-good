@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up routes
-angular.module('driver').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		$stateProvider.
 		state('root.driver', {
 			abstract: true
@@ -25,6 +25,9 @@ angular.module('driver').config(['$stateProvider',
 					templateUrl: 'modules/driver/views/admin-driver.client.view.html',
 					controller: 'DriverAdminController as driverCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.driver.routes', {
@@ -34,6 +37,9 @@ angular.module('driver').config(['$stateProvider',
 					templateUrl: 'modules/driver/views/routes-driver.client.view.html',
 					controller: 'DriverRouteController as driverCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}
