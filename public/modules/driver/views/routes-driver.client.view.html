@@ -71,13 +71,9 @@
 				</div><!-- /.box-header -->
 				<!-- Box body -->
 				<div class="box-body no-padding">
-					<ui-gmap-google-map center="driverCtrl.map.center" zoom="driverCtrl.map.zoom">
-						<ui-gmap-markers models="driverCtrl.map.markers" doCluster="true" coords="'self'" icon="'icon'"></ui-gmap-markers>
-						<ui-gmap-window show="driverCtrl.map.window.show"
-						                coords="driverCtrl.map.window.marker"
-						                options="driverCtrl.map.window.options">
-						</ui-gmap-window>
-					</ui-gmap-google-map>
+					<!-- Google map -->
+					<div class="googleMap"></div>
+					<!-- /.Google map -->
 				</div><!-- /.box-body -->
 				<div class="overlay" ng-show="driverCtrl.isLoading">
 					<i class="fa fa-refresh fa-spin"></i>
