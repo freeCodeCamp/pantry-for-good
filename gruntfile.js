@@ -91,6 +91,14 @@ module.exports = function(grunt) {
 					watch: watchFiles.serverViews.concat(watchFiles.serverJS),
 					ignore: ['node_modules/**']
 				}
+			},
+			prod: {
+				script: 'server.js',
+				options: {
+					ext: 'js,html',
+					watch: watchFiles.serverViews.concat(watchFiles.serverJS),
+					ignore: ['node_modules/**']
+				}
 			}
 		},
 		concat: {
@@ -129,7 +137,8 @@ module.exports = function(grunt) {
 			}
 		},
 		concurrent: {
-			default: ['nodemon', 'watch'],
+			dev: ['nodemon:dev', 'watch'],
+			prod: ['nodemon:prod', 'watch'],
 			options: {
 				logConcurrentOutput: true,
 				limit: 10
@@ -138,9 +147,6 @@ module.exports = function(grunt) {
 		env: {
 			test: {
 				NODE_ENV: 'test'
-			},
-			development: {
-				NODE_ENV: 'development'
 			}
 		},
 		karma: {
@@ -170,11 +176,14 @@ module.exports = function(grunt) {
 		require("./createAdminUser.js");
 	});
 
-	// Default task(s).
-	grunt.registerTask('default', ['lint', 'build:dev', 'concurrent:default']);
+	// Default task
+	grunt.registerTask('default', [process.env.NODE_ENV || 'development']);
 
-	// Production task(s).
-	grunt.registerTask('production', ['lint', 'build:prod', 'concurrent:default']);
+	// Development tasks
+	grunt.registerTask('development', ['lint', 'build:dev', 'concurrent:dev']);
+
+	// Production tasks
+	grunt.registerTask('production', ['lint', 'build:prod', 'concurrent:prod']);
 
 	// Lint task(s).
 	grunt.registerTask('lint', ['jshint', 'csslint']);
