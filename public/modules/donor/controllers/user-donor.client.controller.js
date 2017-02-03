@@ -4,7 +4,7 @@
 	angular.module('donor').controller('DonorUserController', DonorUserController);
 
 	/* @ngInject */
-	function DonorUserController($stateParams, $state, Authentication, DonorUser) {
+	function DonorUserController($stateParams, $state, Authentication, DonorUser, Form, SectionsAndFields) {
 		var self = this,
 				user = Authentication.user;
 
@@ -13,6 +13,13 @@
 
 		// If user is not signed in redirect to signin
 		if(!user) $state.go('root.signin');
+
+		// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
+		SectionsAndFields.get().then(function(res) {
+			self.dynForm = Form.generate(self.donor, res, 'qDonors');
+			self.sectionNames = Form.getSectionNames(res, 'qDonors'); 
+		});
+
 
 		// Redirect to edit if user has already applied
 		if (user && user.hasApplied && $state.is('root.createDonorUser')) $state.go('root.editDonorUser', { donorId: user._id });

@@ -55,6 +55,7 @@
     "swig": "~1.4.1"
   },
   "devDependencies": {
+    "eslint": "^3.14.1",
     "grunt-concurrent": "~2.3.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-watch": "~1.0.0",

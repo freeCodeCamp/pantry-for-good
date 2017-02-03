@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('customer').factory('SectionsAndFields', SectionsAndFields);
+angular.module('core').factory('SectionsAndFields', SectionsAndFields);
 
 /* @ngInject */
 function SectionsAndFields(Section, Field, $q) {

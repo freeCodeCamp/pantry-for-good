@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('customer').factory('Form', Form);
+angular.module('core').factory('Form', Form);
 
 /* @ngInject */
 function Form() {
 	var service = {
 		generate: generate,
+		getSectionNames: getSectionNames,
 		handleCheckboxClick: handleCheckboxClick,
 	};
 
@@ -101,6 +102,13 @@ function Form() {
 		} // Next column
 		return standardRow;
 	} // Helper function generate standard row
+
+	
+	function getSectionNames(sectionsAndFields, qIdentifier) {
+		console.log(_.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name')); 
+		return _.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name');
+	}
+
 
 	function handleCheckboxClick(obj, name, element) {
 		// Initialise as array if undefined

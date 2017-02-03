@@ -4,20 +4,33 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Questionnaire, Section, Field, $q) {
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, SectionsAndFields) {
 		var self = this;
 
-		self.donor = {};
-		self.donations = [];
-		self.donationsCopy = [].concat(self.donations); // Copy data for Smart Table
-		self.donors = [];
-		self.dtOptions = {};
-		self.find = find;
-		self.findOne = findOne;
-		self.update = update;
-		self.newDonation = newDonation;
-		self.viewDonation = viewDonation;
-		self.remove = remove;
+		// If on edit view, not list view, initialize
+		// if ($state.current.name === 'root.editDonorAdmin') {
+			self.donor = self.donor || {};
+
+			// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
+			SectionsAndFields.get().then(function(res) {
+				self.dynForm = Form.generate(self.donor, res, 'qDonors');
+				self.sectionNames = Form.getSectionNames(res, 'qDonors'); 
+			});
+
+			// self.donor = {};
+			self.donations = [];
+			self.donationsCopy = [].concat(self.donations); // Copy data for Smart Table
+			self.donors = [];
+			self.dtOptions = {};
+			self.find = find;
+			self.findOne = findOne;
+			self.update = update;
+			self.newDonation = newDonation;
+			self.viewDonation = viewDonation;
+			self.remove = remove;
+
+		// } // if on edit view
+
 		
 		// Add plugins into datatable
 		self.dtOptions = {
@@ -27,81 +40,6 @@
 				aButtons: ['copy', 'xls']
 			}
 		};
-
-		self.handleCheckboxClick = function (name, element) {
-
-			// Initialise as array if undefined
-			if (typeof self.donor[name] !== 'object') {
-				self.donor[name] = [element];
-				return;
-			}
-
-			// If element is not yet in array, push it, otherwise delete it from array
-			var i = self.donor[name].indexOf(element);
-			if (i === -1) {
-				self.donor[name].push(element);
-			} else {
-				self.donor[name].splice(i, 1);
-			}
-		};
-
-		self.generateForm = function() {
-			var cRows = _.maxBy(self.fields, 'row').row, cCols = 4;
-			var r, cSkip = 0;
-			var emptyCell = { status: 'empty' };
-			var skipCell = { status: 'skip' };
-
-			var dynamicForm = [];
-
-			// Limit to available sections of Donor Questionnaire
-			self.filteredSections = _.sortBy(_.filter(self.sections, {'questionnaire': { 'identifier': 'qDonors' }}), 'position');
-
-			for (var s = 0; s < self.filteredSections.length; s++) {
-				var tmpRow = [];
-				for (var i = 0; i < cRows; i++) {
-					var tmpArr = [];
-					for (var j = 0; j < cCols; j++) {
-						if (cSkip > 0) {
-							tmpArr.push(skipCell);
-							cSkip--;
-						} else {
-							r = _.find(self.fields, {
-								'row': i + 1,
-								'column': j + 1,
-								'section': self.filteredSections[s]
-							});
-
-							if (r === undefined) {
-								tmpArr.push(emptyCell);
-							} else {
-								r.status = 'valid';
-								tmpArr.push(r);
-								cSkip = r.span - 1;
-							} // if r is undefined
-						} // if skip cells left
-
-					} // for j, cells
-					tmpRow.push(tmpArr);
-				} // for i, rows
-				dynamicForm.push(tmpRow);
-			} // for s, sections
-
-			self.dynForm = dynamicForm;
-		}; // Function generate Form
-
-		var promiseHash = {};
-		promiseHash.sections = Section.query().$promise;
-		promiseHash.fields = Field.query().$promise;
-
-		$q.all(promiseHash)
-			.then(function(results) {
-				self.questionnaires = results.questionnaires;
-				self.sections = results.sections;
-				self.fields = results.fields;
-
-				self.generateForm();
-		});
-
 
 		// Find a list of donors
 		function find() {
