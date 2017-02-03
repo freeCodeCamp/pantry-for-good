@@ -12,8 +12,8 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/volunteer/views/user/create-volunteer.client.view.html',
 					controller: 'VolunteerUserController as volunteerCtrl'
 				},
-				'general-info@root.createVolunteerUser': {
-					templateUrl: 'modules/volunteer/views/partials/general-info.partial.html'
+				'dynamic-form@root.createVolunteerUser': {
+					templateUrl: 'modules/volunteer/views/partials/dynamic-form.partial.html'
 				}
 			}
 		}).
@@ -41,8 +41,8 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/volunteer/views/edit-volunteer.client.view.html',
 					controller: 'VolunteerUserController as volunteerCtrl'
 				},
-				'general-info@root.editVolunteerUser': {
-					templateUrl: 'modules/volunteer/views/partials/general-info.partial.html'
+				'dynamic-form@root.editVolunteerUser': {
+					templateUrl: 'modules/volunteer/views/partials/dynamic-form.partial.html'
 				}
 			}
 		});
@@ -80,8 +80,8 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/volunteer/views/edit-volunteer.client.view.html',
 					controller: 'VolunteerAdminController as volunteerCtrl'
 				},
-				'general-info@root.editVolunteerAdmin': {
-					templateUrl: 'modules/volunteer/views/partials/general-info.partial.html'
+				'dynamic-form@root.editVolunteerAdmin': {
+					templateUrl: 'modules/volunteer/views/partials/dynamic-form.partial.html'
 				}
 			},
 			resolve: {

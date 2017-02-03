@@ -4,7 +4,7 @@
 	angular.module('volunteer').controller('VolunteerUserController', VolunteerUserController);
 
 	/* @ngInject */
-	function VolunteerUserController($stateParams, $state, Authentication, VolunteerUser, moment) {
+	function VolunteerUserController($stateParams, $state, Authentication, VolunteerUser, moment, Form, SectionsAndFields) {
 		var self = this,
 				user = Authentication.user;
 		// This provides Authentication context
@@ -24,6 +24,13 @@
 			return moment().diff(dateOfBirth, 'years') < 18;
 		};
 
+		// Use SectionsAndFields service to load sections and fields from db, View service to create dynamic view from questionnaire editor
+		SectionsAndFields.get().then(function(res) {
+			self.dynForm = Form.generate(self.volunteer, res, 'qVolunteers');
+			self.sectionNames = Form.getSectionNames(res, 'qVolunteers'); 
+		});
+
+
 		// Create a new volunteer
 		self.create = function() {
 			var volunteer = new VolunteerUser(self.volunteer);
@@ -42,6 +49,8 @@
 		self.findOne = function() {
 			self.volunteer = VolunteerUser.get({
 				volunteerId: $stateParams.volunteerId
+			}, function(volunteer) {
+				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
 			});
 		};
 

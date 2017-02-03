@@ -6,61 +6,30 @@
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
-      <div class="box box-solid box-primary">
-        <!-- Box header -->
-        <div class="box-header">
-          <h3 class="box-title">General Information</h3>
-        </div><!-- /.box-header-->
-        <!-- Box body -->
-        <div class="box-body">
-          <table class="table-striped table-bordered table-hover table">
-            <tr>
-              <td>Primary Mailing Address:</td>
-              <td>{{volunteerCtrl.volunteer.address}}</td>
-              <td>Apartment Number:</td>
-              <td>{{volunteerCtrl.volunteer.apartmentNumber}}</td>
-              <td>Buzz Number:</td>
-              <td>{{volunteerCtrl.volunteer.buzzNumber}}</td>
-            </tr>
-            <tr>
-              <td>City:</td>
-              <td>{{volunteerCtrl.volunteer.city}}</td>
-              <td>Province:</td>
-              <td>{{volunteerCtrl.volunteer.province}}</td>
-              <td>Postal Code:</td>
-              <td>{{volunteerCtrl.volunteer.postalCode}}</td>
-            </tr>
-            <tr>
-              <td>Telephone:</td>
-              <td>{{volunteerCtrl.volunteer.telephoneNumber}}</td>
-              <td>Mobile:</td>
-              <td>{{volunteerCtrl.volunteer.mobileNumber}}</td>
-              <td>Email:</td>
-              <td>{{volunteerCtrl.volunteer.email}}</td>
-            </tr>
-            <tr>
-              <td>Date of Birth:</td>
-              <td>{{volunteerCtrl.volunteer.dateOfBirth | date: 'mediumDate'}}</td>
-              <td>Best Way to Contact:</td>
-              <td>{{volunteerCtrl.volunteer.contactPreference}}</td>
-	            <td>Referred By:</td>
-	            <td>{{volunteerCtrl.volunteer.referredBy}}</td>
-            </tr>
-            <tr>
-              <td>Volunteer Reason:</td>
-              <td>{{volunteerCtrl.volunteer.volunteerReason}}</td>
-	            <td>Signature:</td>
-	            <td>{{volunteerCtrl.volunteer.disclaimerSign}}</td>
-	            <td>Parent/Guardian Signature:</td>
-	            <td>{{volunteerCtrl.volunteer.disclaimerSignGuardian}}</td>
-            </tr>
-            <tr>
-              <td>Guardian Email:</td>
-              <td>{{volunteerCtrl.volunteer.disclaimerGuardianEmail}}</td>
-            </tr>
-          </table>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
+
+      <!-- Dynamic Form: Sections -->
+      <div ng-repeat="section in volunteerCtrl.dynView track by $index" class="clearfix">
+        <!-- Box -->
+        <div class="box box-solid box-primary">
+          <!-- Box header -->
+          <div class="box-header">
+            <h3 class="box-title">SECTION {{volunteerCtrl.sectionNames[$index] | uppercase}}</h3>
+          </div> <!-- box-header-->
+          <!-- Box body -->
+          <div class="box-body">
+
+            <table class="table-striped table-bordered table-hover table">
+              <!-- Rows -->
+              <tr ng-repeat="row in section track by $index" ng-class="row.header ? 'table-header' : '' ">
+                <td ng-repeat="cell in row track by $index">
+                  {{cell}}
+                </td>
+              </tr>
+            </table>
+          </div> <!-- box-body -->
+        </div> <!-- box -->
+      </div> <!-- section -->
+
       <div class="form-group" data-ng-show="volunteerCtrl.authentication.user.roles.indexOf('admin') >= 0">
         <a class="btn btn-warning" data-ng-click="volunteerCtrl.update('Driver')">Driver</a>
         <a class="btn btn-success" data-ng-click="volunteerCtrl.update('Active')">Active</a>

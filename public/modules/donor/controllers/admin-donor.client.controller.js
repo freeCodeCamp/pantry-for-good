@@ -7,31 +7,27 @@
 	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, SectionsAndFields) {
 		var self = this;
 
-		// If on edit view, not list view, initialize
-		// if ($state.current.name === 'root.editDonorAdmin') {
-			self.donor = self.donor || {};
+		// This provides Authentication context
+		self.authentication = Authentication;
+		self.donor = self.donor || {};
 
-			// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
-			SectionsAndFields.get().then(function(res) {
-				self.dynForm = Form.generate(self.donor, res, 'qDonors');
-				self.sectionNames = Form.getSectionNames(res, 'qDonors'); 
-			});
+		// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
+		SectionsAndFields.get().then(function(res) {
+			self.dynForm = Form.generate(self.donor, res, 'qDonors');
+			self.sectionNames = Form.getSectionNames(res, 'qDonors'); 
+		});
 
-			// self.donor = {};
-			self.donations = [];
-			self.donationsCopy = [].concat(self.donations); // Copy data for Smart Table
-			self.donors = [];
-			self.dtOptions = {};
-			self.find = find;
-			self.findOne = findOne;
-			self.update = update;
-			self.newDonation = newDonation;
-			self.viewDonation = viewDonation;
-			self.remove = remove;
+		self.donations = [];
+		self.donationsCopy = [].concat(self.donations); // Copy data for Smart Table
+		self.donors = [];
+		self.dtOptions = {};
+		self.find = find;
+		self.findOne = findOne;
+		self.update = update;
+		self.newDonation = newDonation;
+		self.viewDonation = viewDonation;
+		self.remove = remove;
 
-		// } // if on edit view
-
-		
 		// Add plugins into datatable
 		self.dtOptions = {
 			dom: 'Tlfrtip',

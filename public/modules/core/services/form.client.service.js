@@ -17,7 +17,10 @@ function Form() {
 	// Dynamically generates a questionnaire form based on the sections and fields
 	// created in the questionnaire editor
 	function generate(formObject, sectionsAndFields, qIdentifier) {
-		var relevantSections = _.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position');
+		var relevantSections = _.sortBy(_.filter(sectionsAndFields.sections, function(obj) {
+			// TODO: REMOVE LIMIT ON POSITION ONCE FIELDS FOR SECTIONS C AND E HAVE BEEN IMPLEMENTED
+			return (obj.questionnaire.identifier === qIdentifier && obj.position < 10);
+		}), 'position');
 		var maxColumns = 4, dynForm = [];
 
 			// Loop through sections for given questionnaire
@@ -105,7 +108,6 @@ function Form() {
 
 	
 	function getSectionNames(sectionsAndFields, qIdentifier) {
-		console.log(_.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name')); 
 		return _.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name');
 	}
 

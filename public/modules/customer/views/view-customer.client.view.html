@@ -6,92 +6,31 @@
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
-      <div class="box box-solid box-primary">
-        <!-- Box header -->
-        <div class="box-header">
-          <h3 class="box-title">SECTION A - IDENTIFICATION AND GENERAL INFORMATION</h3>
-        </div><!-- /.box-header-->
-        <!-- Box body -->
-        <div class="box-body">
-          <table class="table-striped table-bordered table-hover table">
-            <tr>
-              <td>Application Status:</td>
-              <td>{{customerCtrl.customer.status | capitalize}}</td>
-              <td>Preferred Language:</td>
-              <td>{{customerCtrl.customer.language | capitalize}}</td>
-              <td>Primary Mailing Address:</td>
-              <td>{{customerCtrl.customer.address}}</td>
-            </tr>
-            <tr>
-	            <td>Apartment Number:</td>
-	            <td>{{customerCtrl.customer.apartmentNumber}}</td>
-              <td>Buzz Number:</td>
-              <td>{{customerCtrl.customer.buzzNumber}}</td>
-              <td>City:</td>
-              <td>{{customerCtrl.customer.city}}</td>
-            </tr>
-            <tr>
-	            <td>Province:</td>
-	            <td>{{customerCtrl.customer.province}}</td>
-              <td>Postal Code:</td>
-              <td>{{customerCtrl.customer.postalCode}}</td>
-              <td>Telephone:</td>
-              <td>{{customerCtrl.customer.telephoneNumber}}</td>
-            </tr>
-            <tr>
-	            <td>Mobile:</td>
-	            <td>{{customerCtrl.customer.mobileNumber}}</td>
-              <td>Email:</td>
-              <td>{{customerCtrl.customer.email}}</td>
-              <td>Date of Birth:</td>
-              <td>{{customerCtrl.customer.dateOfBirth | date: 'mediumDate'}}</td>
-            </tr>
-            <tr>
-	            <td>Gender:</td>
-	            <td>{{customerCtrl.customer.gender | capitalize}}</td>
-              <td>Accommodation Type:</td>
-              <td>{{customerCtrl.customer.accommodationTypeOther || customerCtrl.customer.accommodationType | capitalize}}</td>
-              <td>Delivery Instructions:</td>
-              <td>{{customerCtrl.customer.deliveryInstructions || 'None'}}</td>
-            </tr>
-            <tr>
-	            <td>Jewish:</td>
-	            <td>{{customerCtrl.customer.jewish ? 'Yes' : 'No'}}</td>
-              <td>Jewish Movement:</td>
-              <td>{{customerCtrl.customer.jewishMovement | capitalize}}</td>
-	            <td>Contact preference:</td>
-	            <td>{{customerCtrl.customer.contactPreference}}</td>
-            </tr>
-	          <tr>
-		          <td>Synagogue:</td>
-		          <td>{{customerCtrl.customer.synagogueName || 'N/A'}}</td>
-		          <td>Assistance Information:</td>
-		          <td>{{customerCtrl.customer.assistanceInformation || 'None'}}</td>
-							<td>General Notes:</td>
-							<td>{{customerCtrl.customer.generalNotes || 'None'}}</td>
-	          </tr>
-          </table>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
-      <div class="box box-solid box-primary">
-        <!-- Box header -->
-        <div class="box-header">
-          <h3 class="box-title">SECTION B - EMPLOYMENT</h3>
-        </div><!-- /.box-header-->
-        <!-- Box body -->
-        <div class="box-body">
-          <table class="table-striped table-bordered table-hover table">
-            <tr>
-              <td>Work Status:</td>
-              <td>{{customerCtrl.customer.employment.workStatus}}</td>
-              <td>Job Title:</td>
-              <td>{{customerCtrl.customer.employment.jobTitle || 'N/A'}}</td>
-              <td>Hours Per Week:</td>
-              <td>{{customerCtrl.customer.employment.hoursPerWeek || 'N/A'}}</td>
-            </tr>
-          </table>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
+
+      <!-- Dynamic Form: Sections -->
+      <div ng-repeat="section in customerCtrl.dynView track by $index" class="clearfix">
+        <!-- Box -->
+        <div class="box box-solid box-primary">
+          <!-- Box header -->
+          <div class="box-header">
+            <h3 class="box-title">SECTION {{customerCtrl.sectionNames[$index] | uppercase}}</h3>
+          </div> <!-- box-header-->
+          <!-- Box body -->
+          <div class="box-body">
+
+            <table class="table-striped table-bordered table-hover table">
+              <!-- Rows -->
+              <tr ng-repeat="row in section track by $index" ng-class="row.header ? 'table-header' : '' ">
+                <td ng-repeat="cell in row track by $index">
+                  {{cell}}
+                </td>
+              </tr>
+            </table>
+          </div> <!-- box-body -->
+        </div> <!-- box -->
+      </div> <!-- section -->
+
+      <!--TODO: REPLACE REMAINING STATIC SECTIONS-->
       <div class="box box-solid box-primary">
         <!-- Box header -->
         <div class="box-header">
@@ -111,44 +50,7 @@
           </table>
         </div><!-- /.box-body -->
       </div><!-- /.box -->
-      <div class="box box-solid box-primary">
-        <!-- Box header -->
-        <div class="box-header">
-          <h3 class="box-title">SECTION D - FINANCIAL ASSESSMENT</h3>
-        </div><!-- /.box-header-->
-        <!-- Box body -->
-        <div class="box-body">
-          <table class="table-striped table-bordered table-hover table">
-            <tr class="info">
-              <th>Monthly Gross Income</th>
-              <th>Self</th>
-              <th>Other</th>
-            </tr>
-            <tr data-ng-repeat="income in customerCtrl.customer.financialAssessment.income">
-              <td ng-show="income.self || income.other">{{income.name}}</td>
-              <td ng-show="income.self || income.other">{{income.self | currency}}</td>
-              <td ng-show="income.self || income.other">{{income.other | currency}}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td>{{customerCtrl.total(customerCtrl.customer.financialAssessment.income, 'self') | currency}}</td>
-              <td>{{customerCtrl.total(customerCtrl.customer.financialAssessment.income, 'other') | currency}}</td>
-            </tr>
-            <tr class="info">
-              <th>Monthly Expenses</th>
-              <th>Household</th>
-            </tr>
-            <tr data-ng-repeat="expense in customerCtrl.customer.financialAssessment.expenses">
-              <td ng-show="expense.value">{{expense.name}}</td>
-              <td ng-show="expense.value">{{expense.value | currency}}</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td>{{customerCtrl.total(customerCtrl.customer.financialAssessment.expenses, 'value') | currency}}</td>
-            </tr>
-          </table>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
+  
       <div class="box box-solid box-primary">
         <!-- Box header -->
         <div class="box-header">

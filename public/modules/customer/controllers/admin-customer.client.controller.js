@@ -2,91 +2,98 @@
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Form, SectionsAndFields) {
+	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Form, View, SectionsAndFields) {
 		var self = this;
 		
 		// This provides Authentication context
 		self.authentication = Authentication;
+		self.customer = self.customer || {};
 
-		// If on edit view, not list view, initialize
+		// Use SectionsAndFields service to load sections and fields from db
+		// If on edit view, use Form service to create dynamic form from questionnaire editor
 		if ($state.current.name === 'root.editCustomerAdmin') {
-			self.customer = self.customer || {};
-
-			// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
 			SectionsAndFields.get().then(function(res) {
 				self.dynForm = Form.generate(self.customer, res, 'qClients');
+				self.sectionNames = Form.getSectionNames(res, 'qClients'); 
 			});
-
-			/**
-			 *	Food Preferences
-			 */
-
-			// Store selected food categories
-			self.foodList = self.foodList || [];
-
-			// Initialize food preferences
-			self.customer.foodPreferences = self.customer.foodPreferences || [];
-
-			// Find list of food items and flatten received objects
-			self.findFood = function() {
-				Food.query({}, function(foods) {
-					foods.forEach(function(food) {
-						self.foodList = self.foodList.concat(food.items);
-					});
+			} else if ($state.current.name === 'root.viewCustomerAdmin') {
+				// If on 'view' view, use View service to create dynamic view from questionnaire editor
+				SectionsAndFields.get().then(function(res) {
+					self.dynView = View.generate(self.customer, res, 'qClients');
+					self.sectionNames = View.getSectionNames(res, 'qClients'); 
 				});
-			};
+			}
 
-			// Toggle selection of all food items
-			self.selectAll = function(checked) {
-				if (!checked) {
-					self.customer.foodPreferences = [];
-					self.foodList.forEach(function(item) {
-						self.customer.foodPreferences.push(item._id);
-					});
-				} else {
-					self.customer.foodPreferences = [];
-				}
-			};
 
-			// Check if food item is selected
-			self.foodIsChecked = function(selectedFood) {
-				if (self.customer.foodPreferences) {
-					return self.customer.foodPreferences.indexOf(selectedFood._id) > -1;
-				}
-			};
+		/**
+		 *	Food Preferences
+		 */
 
-			// Store food category when box is checked an remove when unchecked
-			self.toggleSelection = function(selectedFood) {
-				var index = self.customer.foodPreferences.indexOf(selectedFood._id);
-				if (index > -1) {
-					self.customer.foodPreferences.splice(index, 1);
-				} else {
-					self.customer.foodPreferences.push(selectedFood._id);
-				}
-			};
+		// Store selected food categories
+		self.foodList = self.foodList || [];
 
-			/**
-			 *	Dependants Section
-			 */
+		// Initialize food preferences
+		self.customer.foodPreferences = self.customer.foodPreferences || [];
 
-			// Store dependants in the household
-			self.customer.household = [{
-				name: self.customer.firstName + ' ' + self.customer.lastName,
-				relationship: 'Applicant',
-				dateOfBirth: new Date(self.customer.dateOfBirth)
-			}];
+		// Find list of food items and flatten received objects
+		self.findFood = function() {
+			Food.query({}, function(foods) {
+				foods.forEach(function(food) {
+					self.foodList = self.foodList.concat(food.items);
+				});
+			});
+		};
 
-			// Set an array of dependants based on input value
-			self.setDependantList = function(numberOfDependants) {
-				var temp = angular.copy(self.customer.household);
-				self.customer.household = [];
-				for (var i = numberOfDependants - 1; i >= 0; i--) {
-					self.customer.household[i] = temp[i] || {};
-					self.customer.household[i].dateOfBirth =
-						new Date(self.customer.household[i].dateOfBirth);
-				}
-			};
-		} // if on edit view
+		// Toggle selection of all food items
+		self.selectAll = function(checked) {
+			if (!checked) {
+				self.customer.foodPreferences = [];
+				self.foodList.forEach(function(item) {
+					self.customer.foodPreferences.push(item._id);
+				});
+			} else {
+				self.customer.foodPreferences = [];
+			}
+		};
+
+		// Check if food item is selected
+		self.foodIsChecked = function(selectedFood) {
+			if (self.customer.foodPreferences) {
+				return self.customer.foodPreferences.indexOf(selectedFood._id) > -1;
+			}
+		};
+
+		// Store food category when box is checked an remove when unchecked
+		self.toggleSelection = function(selectedFood) {
+			var index = self.customer.foodPreferences.indexOf(selectedFood._id);
+			if (index > -1) {
+				self.customer.foodPreferences.splice(index, 1);
+			} else {
+				self.customer.foodPreferences.push(selectedFood._id);
+			}
+		};
+
+		/**
+		 *	Dependants Section
+		 */
+
+		// Store dependants in the household
+		self.customer.household = [{
+			name: self.customer.firstName + ' ' + self.customer.lastName,
+			relationship: 'Applicant',
+			dateOfBirth: new Date(self.customer.dateOfBirth)
+		}];
+
+		// Set an array of dependants based on input value
+		self.setDependantList = function(numberOfDependants) {
+			var temp = angular.copy(self.customer.household);
+			self.customer.household = [];
+			for (var i = numberOfDependants - 1; i >= 0; i--) {
+				self.customer.household[i] = temp[i] || {};
+				self.customer.household[i].dateOfBirth =
+					new Date(self.customer.household[i].dateOfBirth);
+			}
+		};
 
 		// Add plugins into datatable
 		self.dtOptions = {

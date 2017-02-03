@@ -12,8 +12,8 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/donor/views/user/create-donor.client.view.html',
 					controller: 'DonorUserController as donorCtrl'
 				},
-				'general-info@root.createDonorUser': {
-					templateUrl: 'modules/donor/views/partials/general-info.partial.html'
+				'dynamic-form@root.createDonorUser': {
+					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
 				}
 			}
 		}).
@@ -41,8 +41,8 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
 					controller: 'DonorUserController as donorCtrl'
 				},
-				'general-info@root.editDonorUser': {
-					templateUrl: 'modules/donor/views/partials/general-info.partial.html'
+				'dynamic-form@root.editDonorUser': {
+					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
 				}
 			}
 		});
@@ -80,8 +80,8 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
 					controller: 'DonorAdminController as donorCtrl'
 				},
-				'general-info@root.editDonorAdmin': {
-					templateUrl: 'modules/donor/views/partials/general-info.partial.html'
+				'dynamic-form@root.editDonorAdmin': {
+					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
 				}
 			},
 			resolve: {
