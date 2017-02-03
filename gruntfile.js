@@ -65,13 +65,13 @@ module.exports = function(grunt) {
 			}
 		},
 		uglify: {
-			production: {
+			prod: {
 				options: {
-					mangle: false,
-					sourceMap: true
+					mangle: true,
+					sourceMap: false
 				},
 				files: {
-					'public/dist/application.min.js': 'public/dist/application.js'
+					'public/dist/application.min.js': 'public/dist/application.min.js'
 				}
 			}
 		},
@@ -91,17 +91,54 @@ module.exports = function(grunt) {
 					watch: watchFiles.serverViews.concat(watchFiles.serverJS),
 					ignore: ['node_modules/**']
 				}
+			},
+			prod: {
+				script: 'server.js',
+				options: {
+					ext: 'js,html',
+					watch: watchFiles.serverViews.concat(watchFiles.serverJS),
+					ignore: ['node_modules/**']
+				}
+			}
+		},
+		concat: {
+			dev: {
+				options: {
+					sourceMap: true,
+					sourceMapStyle: 'inline'
+				},
+				src: '<%= applicationJavaScriptFiles %>', 
+				dest: 'public/dist/application.js'
+			},
+			prod: {
+				options: {
+					sourceMap: false
+				},
+				src: '<%= applicationJavaScriptFiles %>', 
+				dest: 'public/dist/application.js'
 			}
 		},
 		ngAnnotate: {
-			production: {
+			dev: {
+				options: {
+					sourceMap: true
+				},
 				files: {
-					'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
+					'public/dist/application.min.js': 'public/dist/application.js'
+				}
+			},
+			prod: {
+				options: {
+					sourceMap: false
+				},
+				files: {
+					'public/dist/application.min.js': 'public/dist/application.js'
 				}
 			}
 		},
 		concurrent: {
-			default: ['nodemon', 'watch'],
+			dev: ['nodemon:dev', 'watch'],
+			prod: ['nodemon:prod', 'watch'],
 			options: {
 				logConcurrentOutput: true,
 				limit: 10
@@ -110,9 +147,6 @@ module.exports = function(grunt) {
 		env: {
 			test: {
 				NODE_ENV: 'test'
-			},
-			development: {
-				NODE_ENV: 'development'
 			}
 		},
 		karma: {
@@ -142,14 +176,23 @@ module.exports = function(grunt) {
 		require("./createAdminUser.js");
 	});
 
-	// Default task(s).
-	grunt.registerTask('default', ['lint', 'build', 'concurrent:default']);
+	// Default task
+	grunt.registerTask('default', [process.env.NODE_ENV || 'development']);
+
+	// Development tasks
+	grunt.registerTask('development', ['lint', 'build:dev', 'concurrent:dev']);
+
+	// Production tasks
+	grunt.registerTask('production', ['lint', 'build:prod', 'concurrent:prod']);
 
 	// Lint task(s).
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
-	// Build task(s).
-	grunt.registerTask('build', ['loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+	// Build task(s): Dev
+	grunt.registerTask('build:dev', ['loadConfig', 'concat:dev', 'ngAnnotate:dev', 'cssmin']);
+
+	// Build task(s): Prod
+	grunt.registerTask('build:prod', ['loadConfig', 'concat:prod', 'ngAnnotate:prod', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'karma:unit']);

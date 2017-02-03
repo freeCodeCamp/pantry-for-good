@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "grunt-concurrent": "~2.3.1",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-env": "~0.4.1",
     "grunt-karma": "~2.0.0",
