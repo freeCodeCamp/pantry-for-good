@@ -35,14 +35,14 @@ module.exports = function(grunt) {
 			},
 			clientJS: {
 				files: watchFiles.clientJS,
-				tasks: ['jshint', 'build'],
+				tasks: ['jshint', 'build:dev'],
 				options: {
 					livereload: true
 				}
 			},
 			clientCSS: {
 				files: watchFiles.clientCSS,
-				tasks: ['csslint', 'build'],
+				tasks: ['csslint', 'build:dev'],
 				options: {
 					livereload: true
 				}
@@ -138,7 +138,7 @@ module.exports = function(grunt) {
 		},
 		concurrent: {
 			dev: ['nodemon:dev', 'watch'],
-			prod: ['nodemon:prod', 'watch'],
+			prod: ['nodemon:prod'],
 			options: {
 				logConcurrentOutput: true,
 				limit: 10
