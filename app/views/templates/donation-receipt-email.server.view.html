@@ -174,8 +174,8 @@
 		      <p>
 		        We are very grateful for your valued donation of ${{total}} in support of {{tconfig.organization}}.
 		      </p>
-						<span ng-bind-html="tconfig.thanks"></span>
-						<span ng-bind-html="tconfig.mission"></span>
+						<span ng-bind-html="tconfig.thanks | unsafe"></span>
+						<span ng-bind-html="tconfig.mission | unsafe"></span>
 					<p>
 						Please visit our website <a href="http://{{tconfig.url}}">{{tconfig.url}}</a> to find out
 						more about the ways we work together to serve the vulnerable in our community. We hope you continue

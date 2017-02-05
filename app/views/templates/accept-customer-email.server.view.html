@@ -168,8 +168,8 @@
               <div class="content container">
                 <em>
                   <p>Dear Client,</p>
-                    <span ng-bind-html="tconfig.mission"></span>
-                    <span ng-bind-html="tconfig.instructions"></span>
+                    <span ng-bind-html="tconfig.mission | unsafe"></span>
+                    <span ng-bind-html="tconfig.instructions | unsafe"></span>
                   <p>
                     {{tconfig.organization}} is committed to protecting your personal information by following responsible information
                     handling practices and in keeping with privacy laws. All information remains strictly confidential as

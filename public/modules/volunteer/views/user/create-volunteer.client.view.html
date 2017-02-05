@@ -28,7 +28,7 @@
           </div><!-- /.box-header-->
           <!-- Box body -->
           <div class="box-body">
-            <span ng-bind-html="tconfig.mission"></span>
+            <span ng-bind-html="tconfig.mission | unsafe"></span>
             <ol>
               <li>
                 Policies and Safety Rules. For my safety and that of others, I will comply with {{tconfig.organization}}’s volunteer policies and safety rules and its other directors for all volunteer activities.
