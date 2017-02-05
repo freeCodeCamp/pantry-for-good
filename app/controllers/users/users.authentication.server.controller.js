@@ -13,12 +13,12 @@ var _ = require('lodash'),
  * Signup
  */
 exports.signup = function(req, res) {
-	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
-
 	// Init Variables
 	var user = new User(req.body);
-	var message = null;
+	// Take role of newly created user from account type
+	user.roles = req.body.accountType;
+	// Security measure: role/account type admin is discarded
+	_.pull(user.roles, 'admin');
 
 	// Add missing user fields
 	user.provider = 'local';

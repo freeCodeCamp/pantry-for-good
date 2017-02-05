@@ -134,7 +134,7 @@ exports.create = function(req, res) {
 	customer._id = req.user.id;
 
 	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true}})
+	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true, roles: ['customer']}})
 		.then(function() {
 			async.waterfall([
 				function(done) {
@@ -205,7 +205,7 @@ exports.update = function(req, res) {
 
 	customer = _.extend(customer, req.body);
 
-	// Trying Maxim's solution for fields not in the schema
+	// Adding fields not in the schema
 	var schemaFields = Object.getOwnPropertyNames(Customer.schema.paths);
 	for (var field in req.body) {
 		if (customer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
