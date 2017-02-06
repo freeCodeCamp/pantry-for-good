@@ -1,5 +1,9 @@
 {
     "parser": "espree",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
     "ecmaFeatures": {},
     "globals": {
       "angular": true,
