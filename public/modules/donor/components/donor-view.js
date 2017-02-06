@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('donor')
   .component('donorView', {
-    controller: 'DonorAdminController',
+    controller: 'DonorController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header" data-ng-init="$ctrl.findOne()">

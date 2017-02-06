@@ -5,7 +5,7 @@ export default angular.module('donor')
     bindings: {
       tconfig: '='
     },
-    controller: 'DonorUserController',
+    controller: 'DonorController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">

@@ -28,7 +28,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			},
 			views: {
 				'content@': {
-					component: 'donorCreateSucces'
+					component: 'donorCreateSuccess'
 				}
 			}
 		}).

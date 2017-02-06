@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('donor')
   .component('donorList', {
-    controller: 'DonorAdminController',
+    controller: 'DonorController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
