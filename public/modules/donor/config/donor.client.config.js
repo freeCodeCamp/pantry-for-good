@@ -7,6 +7,6 @@ angular.module('donor').run(['Menus',
 		Menus.addMenuItem('admin', 'Donor Database and Tax Receipts', 'admin/donors', 'item', 'root.listDonors', '', ['admin'], 6);
 
 		// Set sidebar menu items for donors
-		Menus.addMenuItem('donor', 'Edit Application', '/edit', 'item', 'root.editDonorUser({donorId: sidebarCtrl.user._id})', '', ['donor'], 0);
+		Menus.addMenuItem('donor', 'Edit Application', '/edit', 'item', 'root.editDonorUser({donorId: $ctrl.user._id})', '', ['donor'], 0);
 	}
 ]);

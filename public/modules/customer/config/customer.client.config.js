@@ -7,6 +7,6 @@ angular.module('customer').run(['Menus',
 		Menus.addMenuItem('admin', 'Client Database', 'admin/customers', 'item', 'root.listCustomers', '', ['admin'], 0);
 
 		// Set sidebar menu items for customer
-		Menus.addMenuItem('customer', 'Edit Application', '/edit', 'item', 'root.editCustomerUser({customerId: sidebarCtrl.user._id})', '', ['customer'], 0);
+		Menus.addMenuItem('customer', 'Edit Application', '/edit', 'item', 'root.editCustomerUser({customerId: $ctrl.user._id})', '', ['customer'], 0);
 	}
 ]);
