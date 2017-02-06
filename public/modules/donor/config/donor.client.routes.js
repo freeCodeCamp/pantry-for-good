@@ -1,7 +1,7 @@
 // Setting up route
 angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 	/* ngInject */
-	function($stateProvider, AuthenticationProvider, Tconfig) {
+	function($stateProvider, AuthenticationProvider, Tconfig, Media) {
 		// Donor state routing for user
 		$stateProvider.
 		state('root.createDonorUser', {
@@ -10,7 +10,10 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 				tconfig: function(Tconfig) {
 					return Tconfig.get();
 				},
-				CurrentUser: AuthenticationProvider.requireLoggedIn
+				CurrentUser: AuthenticationProvider.requireLoggedIn,
+				media: function(Media) {
+					return Media.get();
+				}
 			},
 			views: {
 				'content@': {
@@ -24,7 +27,10 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 				tconfig: function(Tconfig) {
 					return Tconfig.get();
 				},
-				CurrentUser: AuthenticationProvider.requireLoggedIn
+				CurrentUser: AuthenticationProvider.requireLoggedIn,
+				media: function(Media) {
+					return Media.get();
+				}
 			},
 			views: {
 				'content@': {

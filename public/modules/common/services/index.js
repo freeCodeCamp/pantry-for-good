@@ -1,1 +1,2 @@
-import './tconfig.client.service';
+import './media.service';
+import './tconfig.service';

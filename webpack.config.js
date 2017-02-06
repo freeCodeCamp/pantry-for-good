@@ -79,7 +79,8 @@ module.exports = {
 			'/admin/*': 'http://localhost:3000',
       '/customer/*': 'http://localhost:3000',
       '/auth/*': 'http://localhost:3000',
-      '/donor/*': 'http://localhost:3000'
+      '/donor/*': 'http://localhost:3000',
+      '/volunteer/*': 'http://localhost:3000'
 		},
 		contentBase: '/dist',
     port: 8080

@@ -1,14 +1,11 @@
-(function(){
-	'use strict';
+import angular from 'angular';
 
-	angular.module('media').directive('foodbankLogo', logo);
-
-	/* @ngInject */
-	function logo() {
-		return {
-			restrict: "E",
-			template: '<img alt="{{tconfig.organization}}" ng-src="{{mediaData.logoPath + mediaData.logoFile}}">',
-		};
-	}
-
-})();
+export default angular.module('media')
+	.component('foodbankLogo', {
+		bindings: {
+			tconfig: '=',
+			media: '='
+		},
+		template: `<img alt="{{$ctrl.tconfig.organization}}" ng-src="{{$ctrl.media.logoPath + $ctrl.media.logoFile}}">`
+	})
+	.name;

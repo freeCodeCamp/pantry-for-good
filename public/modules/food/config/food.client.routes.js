@@ -1,5 +1,3 @@
-import foodTemplate from '../views/foods.client.view.html';
-
 // Setting up routes
 angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider) {
@@ -9,8 +7,7 @@ angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/foods',
 			views: {
 				'content@': {
-					template: foodTemplate,
-					controller: 'FoodController as foodCtrl'
+					component: 'foodList'
 				},
 				resolve: {
 					CurrentUser: AuthenticationProvider.requireAdminUser

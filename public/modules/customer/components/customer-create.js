@@ -4,12 +4,13 @@ export default angular.module('customer')
   .component('customerCreate', {
     controller: 'CustomerController',
     bindings: {
-      tconfig: '='
+      tconfig: '=',
+      media: '='
     },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo />
+        <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
         <h1>Client Request for Assistance Application</h1>
         <div class="alert alert-info text-left top-buffer">
           <h4><i class="icon fa fa-warning"></i>Please fill out the following form</h4>

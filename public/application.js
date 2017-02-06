@@ -40,31 +40,6 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 	}
 ]);
 
-angular.module(ApplicationConfiguration.applicationModuleName).run(
-	function($http, $rootScope) {
-		// Get template config from db
-		// $http.get('api/settings/').then(
-		// 	function successCallback(response){
-		// 		$rootScope.tconfig = response.data;
-		// 	},
-		// 	function errorCallback(response){
-		// 		console.log('Get Template Config: error');
-		// 	}
-		// );
-
-		// Get media config data from db
-		$http.get('api/media/').then(
-			function successCallback(response){
-				$rootScope.mediaData = response.data;
-			},
-			function errorCallback(response){
-				console.log('Get Media Data: error');
-			}
-		);
-	}
-
-);
-
 // not getting user object passed from server now, need to get it before starting app
 $.ajax({
 	url: 'users/me'

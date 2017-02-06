@@ -1,20 +1,24 @@
-import changeMediaTemplate from '../views/change-media.client.view.html';
-
 // Setting up routes
 angular.module('media').config(['$stateProvider', '$urlRouterProvider', 'AuthenticationProvider',
-	function($stateProvider, $urlRouterProvider, AuthenticationProvider) {
+	/* ngInject */
+	function($stateProvider, $urlRouterProvider, AuthenticationProvider, Tconfig, Media) {
 		// Routing for general settings page
 		$stateProvider.
 		state('root.changeMedia', {
 			url: 'media',
+			resolve: {
+				tconfig: function(Tconfig) {
+					return Tconfig.get();
+				},
+				media: function(Media) {
+					return Media.get();
+				},
+				CurrentUser: AuthenticationProvider.requireAdminUser
+			},
 			views: {
 				'content@': {
-					template: changeMediaTemplate,
-					controller: 'ChangeMediaController as mediaCtrl'
+					component: 'changeMedia'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}
