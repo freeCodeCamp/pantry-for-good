@@ -4,7 +4,7 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, formInit) {
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, formInit, Tconfig) {
 		var self = this;
 
 		// This provides Authentication context
@@ -91,8 +91,7 @@
 		// Open donation form in a modal window
 		function newDonation() {
 			var modalInstance = $uibModal.open({
-				templateUrl: 'modules/donor/views/admin/create-donation.client.view.html',
-				controller: 'DonationController as donationCtrl',
+				component: 'donationCreate',
 				resolve: {
 					donationItem: function() {
 						return {};
@@ -111,11 +110,13 @@
 		// View donation in a modal window
 		function viewDonation(donation) {
 			$uibModal.open({
-				templateUrl: 'modules/donor/views/admin/view-donation.client.view.html',
-				controller: 'DonationController as donationCtrl',
+				component: 'donationView',
 				resolve: {
 					donationItem: function() {
 						return donation;
+					},
+					tconfig: function(Tconfig) {
+						return Tconfig.get();
 					}
 				}
 			});
