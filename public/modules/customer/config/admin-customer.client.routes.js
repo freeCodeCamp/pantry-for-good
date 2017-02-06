@@ -1,37 +1,28 @@
-import customerAdminTemplate from '../views/admin/list-customers.client.view.html';
-import viewCustomerTemplate from '../views/view-customer.client.view.html';
-import editCustomerTemplate from '../views/edit-customer.client.view.html';
-import householdTemplate from '../views/partials/household.partial.html';
-import waiverTemplate from '../views/partials/waiver.partial.html';
-import dynamicViewTemplate from '../../core/views/partials/dynamic-view.partial.html';
-import dynamicFormTemplate from '../../core/views/partials/dynamic-form.partial.html';
-
 // Setting up route
-angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
-	function($stateProvider, AuthenticationProvider){
+angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
+	/* ngInject */
+	function($stateProvider, AuthenticationProvider, CustomerAdmin){
 		// Customer state routing for admin
 		$stateProvider.
 		state('root.listCustomers', {
 			url: 'admin/customers',
+			resolve: {
+				customers: function(CustomerAdmin) {
+					return CustomerAdmin.query();
+				},
+				CurrentUser: AuthenticationProvider.requireAdminUser
+			},
 			views: {
 				'content@': {
-					template: customerAdminTemplate,
-					controller: 'CustomerAdminController as dynCtrl'
+					component: 'customerList'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		}).
 		state('root.viewCustomerAdmin', {
 			url: 'admin/customers/:customerId',
 			views: {
 				'content@': {
-					template: viewCustomerTemplate,
-					controller: 'CustomerAdminController as dynCtrl'
-				},
-				'dynamic-view@root.viewCustomerAdmin': {
-					template: dynamicViewTemplate
+					component: 'customerView'
 				}
 			},
 			resolve: {
@@ -42,14 +33,7 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/customers/:customerId/edit',
 			views: {
 				'content@': {
-					template: editCustomerTemplate,
-					controller: 'CustomerAdminController as dynCtrl'
-				},
-				'dynamic-form@root.editCustomerAdmin': {
-					template: dynamicFormTemplate
-				},
-				'household@root.editCustomerAdmin': {
-					template: householdTemplate
+					component: 'customerEdit'
 				}
 			},
 			resolve: {
@@ -57,5 +41,4 @@ angular.module('customer').config(//['$stateProvider', 'AuthenticationProvider',
 			}
 		});
 	}
-//]
-);
+]);

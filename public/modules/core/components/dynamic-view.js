@@ -1,7 +1,7 @@
 import angular from 'angular';
 
 export default angular.module('core')
-  .component('dynamicForm', {
+  .component('dynamicView', {
     bindings: {
       dynForm: '='
     },
@@ -12,7 +12,7 @@ export default angular.module('core')
         <div class="box box-solid box-primary">
           <!-- Box header -->
           <div class="box-header">
-            <h3 class="box-title">SECTION {{dynCtrl.sectionNames[$index] | uppercase}}</h3>
+            <h3 class="box-title">SECTION {{$ctrl.sectionNames[$index] | uppercase}}</h3>
           </div> <!-- box-header-->
           <!-- Box body -->
           <div class="box-body">

@@ -1,10 +1,11 @@
+// import '../services/customer.client.service';
 'use strict';
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
 	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Form, View, formInit) {
 		var self = this;
-		
+
 		// This provides Authentication context
 		self.authentication = Authentication;
 		self.dynType = self.dynType || {};

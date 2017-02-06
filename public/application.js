@@ -20,6 +20,7 @@ angular.module(ApplicationConfiguration.applicationModuleName, [
 	...ApplicationConfiguration.applicationModuleVendorDependencies,
 	modules.common,
 	modules.core,
+	modules.users,
 	modules.customer,
 	modules.donor,
 	modules.driver,
@@ -29,7 +30,6 @@ angular.module(ApplicationConfiguration.applicationModuleName, [
 	modules.questionnaire,
 	modules.schedule,
 	modules.settings,
-	modules.users,
 	modules.volunteer
 ]);
 

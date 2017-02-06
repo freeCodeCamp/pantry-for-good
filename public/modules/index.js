@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export const common = angular.module('common', []).name;
 export const core = angular.module('core', [common]).name;
-export const users = angular.module('users', []).name;
+export const users = angular.module('users', [core]).name;
 export const customer = angular.module('customer', [users, core]).name;
 export const donor = angular.module('donor', [users, core]).name;
 export const driver = angular.module('driver', [users, core]).name;
@@ -16,6 +16,7 @@ export const volunteer = angular.module('volunteer', [users, core]).name;
 
 require('./common');
 require('./core');
+require('./users');
 require('./customer');
 require('./donor');
 require('./driver');
@@ -25,5 +26,4 @@ require('./packing');
 require('./questionnaire');
 require('./schedule');
 require('./settings');
-require('./users');
 require('./volunteer');

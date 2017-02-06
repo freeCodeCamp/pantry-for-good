@@ -1,4 +1,4 @@
-'use strict';
+import angular from 'angular';
 
 // Customer service used for communicating with the application REST endpoints
 angular.module('customer').factory('CustomerUser', ['$resource',
@@ -22,4 +22,3 @@ angular.module('customer').factory('CustomerUser', ['$resource',
 		});
 	}
 ]);
-
