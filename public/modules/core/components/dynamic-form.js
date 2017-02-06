@@ -4,6 +4,7 @@ export default angular.module('core')
   .component('dynamicForm', {
     bindings: {
       sectionNames: '=',
+      dynForm: '=',
       dynType: '=',
       foodList: '=',
       isChecked: '&',

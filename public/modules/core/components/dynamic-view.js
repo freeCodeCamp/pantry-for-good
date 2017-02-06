@@ -3,11 +3,12 @@ import angular from 'angular';
 export default angular.module('core')
   .component('dynamicView', {
     bindings: {
-      dynForm: '='
+      dynForm: '=',
+      sectionNames: '='
     },
     template: `
       <!-- Dynamic View: Sections -->
-      <div ng-repeat="section in dynCtrl.dynForm track by $index" class="clearfix">
+      <div ng-repeat="section in $ctrl.dynForm track by $index" class="clearfix">
         <!-- Box -->
         <div class="box box-solid box-primary">
           <!-- Box header -->

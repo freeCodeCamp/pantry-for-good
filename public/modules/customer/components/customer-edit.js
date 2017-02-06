@@ -2,10 +2,7 @@ import angular from 'angular';
 
 export default angular.module('customer')
   .component('customerEdit', {
-    controller: 'CustomerAdminController',
-    bindings: {
-      customer: '=',
-    },
+    controller: 'CustomerController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header" data-ng-init="$ctrl.findOne()">
@@ -17,22 +14,22 @@ export default angular.module('customer')
           <div class="col-xs-12">
             <!-- Form -->
             <form name="dynTypeForm" data-ng-submit="dynTypeForm.$valid && $ctrl.update()">
-
               <dynamic-form
-                sectionNames="$ctrl.sectionNames"
-                dynType="$ctrl.dynType"
-                foodList="$ctrl.foodList"
-                isChecked="$ctrl.isChecked(dynType, cellName, choice)"
-                handleCheckbox="$ctrl.handleCheckbox(dynType, cellName, choice)"
-                foodIsChecked="$ctrl.foodIsChecked(dynType, food)"
-                toggleFoodSelection="$ctrl.toggleFoodSelection(dynType, food)"
+                section-names="$ctrl.sectionNames"
+                dyn-form="$ctrl.dynForm"
+                dyn-type="$ctrl.dynType"
+                food-list="$ctrl.foodList"
+                is-checked="$ctrl.dynMethods.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.dynMethods.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.dynMethods.foodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.dynMethods.toggleFoodSelection(dynType, food)"
               />
 
               <!-- TO BE REPLACED ONCE THE NEEDED FIELD TYPE IS IMPLEMENTED -->
               <!-- Section E - Dependants and people in household -->
               <household
                 number-of-dependants="$ctrl.numberOfDependants"
-                dependants="$ctrl.customer.household"
+                dependants="$ctrl.dynType.household"
                 set-dependant-list="$ctrl.setDependantList(num)"
               ></household>
               <!-- Buttons -->
@@ -41,8 +38,8 @@ export default angular.module('customer')
                   <button type="submit" class="btn btn-success btn-block top-buffer">Update</button>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-2">
-                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.authentication.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/customers">Cancel</a>
-                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.authentication.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
+                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.isAdmin" data-ng-href="/#!/admin/customers">Cancel</a>
+                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="!$ctrl.isAdmin" data-ng-href="/#!/">Cancel</a>
                 </div>
               </div><!-- /.buttons -->
               <!-- Error -->

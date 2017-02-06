@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('customer')
   .component('customerList', {
-    controller: 'CustomerAdminController',
+    controller: 'CustomerController',
     bindings: {
       customers: '='
     },
@@ -26,7 +26,7 @@ export default angular.module('customer')
                   class="table table-bordered table-striped"
                   datatable="ng"
                   dt-options="$ctrl.dtOptions"
-                  print-table="$trl.customers"
+                  print-table="$ctrl.customers"
                 >
                   <!-- Table columns -->
                   <thead>

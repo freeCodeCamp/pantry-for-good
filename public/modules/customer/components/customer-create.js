@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('customer')
   .component('customerCreate', {
-    controller: 'CustomerUserController',
+    controller: 'CustomerController',
     bindings: {
       tconfig: '='
     },
@@ -26,13 +26,13 @@ export default angular.module('customer')
             <form name="customerForm" data-ng-submit="$ctrl.create()" novalidate>
               <!-- Dynamic Form -->
               <dynamic-form
-                sectionNames="$ctrl.sectionNames"
-                dynType="$ctrl.dynType"
-                foodList="$ctrl.foodList"
-                isChecked="$ctrl.isChecked(dynType, cellName, choice)"
-                handleCheckbox="$ctrl.handleCheckbox(dynType, cellName, choice)"
-                foodIsChecked="$ctrl.foodIsChecked(dynType, food)"
-                toggleFoodSelection="$ctrl.toggleFoodSelection(dynType, food)"
+                section-names="$ctrl.sectionNames"
+                dyn-type="$ctrl.dynType"
+                food-list="$ctrl.foodList"
+                is-checked="$ctrl.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.foodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.toggleFoodSelection(dynType, food)"
               />
 
               <!-- TO BE REPLACED ONCE THE NEEDED FIELD TYPE IS IMPLEMENTED -->
@@ -45,7 +45,7 @@ export default angular.module('customer')
 
               <!-- Section F - Client Release and Waiver of Liability -->
               <waiver
-                customer="$ctrl.customer"
+                customer="$ctrl.dynType"
                 organization="$ctrl.tconfig.organization"
               ></waiver>
               <!-- Buttons -->
