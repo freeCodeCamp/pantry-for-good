@@ -20,6 +20,7 @@
     "datatables-tabletools": "^2.2.4",
     "AdminLTE": "admin-lte#^2.3.8",
     "font-awesome": "fontawesome#^4.7.0",
-    "angularPrint": "angular-print#^0.3.8"
+    "angularPrint": "angular-print#^0.3.8",
+    "lodash": "^4.17.4"
   }
 }

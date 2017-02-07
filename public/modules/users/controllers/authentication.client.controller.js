@@ -38,7 +38,7 @@
 		   }
 
 		    function initialiseTimer() {
-		      $timeout(logout, 900000);//angular's own timeout function. Set to 5 secs for demonstration
+		      $timeout(logout, 900000);//angular's own timeout function.
 		       flag = false;
 		    }
 				initialiseTimer();//initialises timer
@@ -54,7 +54,7 @@
 				// If successful we assign the response to the global user model
 				self.authentication.user = response;
 
-				//function listens for 10 mins inactivity and logs the user out
+				//function listens for 15 mins inactivity and logs the user out
 				inactivityTimer();
 
 				var accountType = response.accountType[0].charAt(0).toUpperCase() + response.accountType[0].slice(1);
@@ -70,7 +70,7 @@
 			$http.post('/auth/signin', self.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
 				self.authentication.user = response;
-				//function listens for 10 mins inactivity and logs the user out
+				//function listens for 15 mins inactivity and logs the user out
 				inactivityTimer();
 
 				var accountType = response.accountType[0].charAt(0).toUpperCase() + response.accountType[0].slice(1);
