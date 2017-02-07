@@ -70,7 +70,6 @@ console.log('this.dynMethods', this.dynMethods)
 			this.foodList = init.foodList;
 		});
 	}
-
 	/**
 	 *	Dependants Section
 	 */
@@ -82,6 +81,37 @@ console.log('this.dynMethods', this.dynMethods)
 		dateOfBirth: new Date(this.dynType.dateOfBirth)
 	}];
 
+
+	// Common functions
+
+	// Toggle selection of all food items
+	this.selectAll = checked => {
+		if (!checked) {
+			this.customer.foodPreferences = [];
+			this.foodList.forEach(item =>
+				this.customer.foodPreferences.push(item._id));
+		} else {
+			this.customer.foodPreferences = [];
+		}
+	};
+
+	// Check if food item is selected
+	this.foodIsChecked = selectedFood => {
+		if (this.customer.foodPreferences) {
+			return this.customer.foodPreferences.indexOf(selectedFood._id) > -1;
+		}
+	};
+
+	// Store food category when box is checked an remove when unchecked
+	this.toggleSelection = selectedFood => {
+		this.customer.foodPreferences = this.customer.foodPreferences || [];
+		var index = this.customer.foodPreferences.indexOf(selectedFood._id);
+		if (index > -1) {
+			this.customer.foodPreferences.splice(index, 1);
+		} else {
+			this.customer.foodPreferences.push(selectedFood._id);
+		}
+	};
 	// Set an array of dependants based on input value
 	this.setDependantList = numberOfDependants => {
 		var temp = angular.copy(this.dynType.household);

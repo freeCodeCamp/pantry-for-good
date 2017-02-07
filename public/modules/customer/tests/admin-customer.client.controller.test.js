@@ -16,10 +16,11 @@ describe('Controller: CustomerAdminController', function() {
 		// A hack to resolve errors during state transitions
 		// httpBackend.whenGET(/views.*/).respond(200, '');
 		var state = {current: {name: 'root.editCustomerAdmin'}};
-		customerCtrl = $controller('CustomerAdminController', {$state: state, $window: window});
+		customerCtrl = $controller('CustomerController', {$state: state, $window: window});
 
 		httpBackend.whenGET('api/settings').respond('');
-		httpBackend.expectGET('api/media/').respond('');
+		httpBackend.whenGET('api/media').respond('');
+		// httpBackend.expectGET('api/media/').respond('');
 		httpBackend.expectGET('api/sections').respond('');
 		httpBackend.expectGET('api/fields').respond('');
 
@@ -101,6 +102,7 @@ describe('Controller: CustomerAdminController', function() {
 		customerCtrl.findFood();
 		httpBackend.flush();
 
+		customerCtrl.customer.foodPreferences = [];
 		customerCtrl.customer.foodPreferences.push(food1.items[0]._id);
 		expect(customerCtrl.foodIsChecked(food1.items[0])).toBeTruthy();
 		expect(customerCtrl.foodIsChecked(food2.items[0])).toBeFalsy();

@@ -23,7 +23,7 @@ import ApplicationConfiguration from '../../../config';
 			// httpBackend.whenGET(/views.*/).respond(200, '');
 
 			httpBackend.whenGET('api/settings').respond('');
-			httpBackend.expectGET('api/media/').respond('');
+			httpBackend.whenGET('api/media').respond('');
 
 			// Initialize the Authentication controller
 			authenticationCtrl = $controller('AuthenticationController');

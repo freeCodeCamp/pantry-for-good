@@ -19,12 +19,12 @@ describe('Controller: CustomerUserController', function() {
 
 
 		var state = {current: {name: 'root.editCustomerUser'}};
-		customerCtrl = $controller('CustomerUserController', {$state: state});
+		customerCtrl = $controller('CustomerController', {$state: state});
 
 		// customerCtrl = $controller('CustomerUserController');
 
 		httpBackend.whenGET('api/settings').respond('');
-		httpBackend.expectGET('api/media/').respond('');
+		httpBackend.whenGET('api/media').respond('');
 		httpBackend.expectGET('api/sections').respond([]);
 		httpBackend.expectGET('api/fields').respond([]);
 	}));
