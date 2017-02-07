@@ -1,51 +1,40 @@
-import createVolunteerTemplate from '../views/user/create-volunteer.client.view.html';
-import createVolunteerSuccessTemplate from '../views/user/create-volunteer-success.client.view.html';
-import listVolunteersTemplate from '../views/admin/list-volunteers.client.view.html';
-import editVolunteerTemplate from '../views/edit-volunteer.client.view.html';
-import viewVolunteerTemplate from '../views/view-volunteer.client.view.html';
-import dynamicFormTemplate from '../../core/views/partials/dynamic-form.partial.html';
-import dynamicViewTemplate from '../../core/views/partials/dynamic-view.partial.html';
-
 // Setting up route
 angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
-	function($stateProvider, AuthenticationProvider) {
+	/* ngInject */
+	function($stateProvider, AuthenticationProvider, Tconfig, Media) {
 		// Volunteer state routing for user
 		$stateProvider.
 		state('root.createVolunteerUser', {
 			url: 'volunteer/create',
+			resolve: {
+				tconfig: function(Tconfig) { return Tconfig.get(); },
+				media: function(Media) { return Media.get(); },
+				CurrentUser: AuthenticationProvider.requireLoggedIn
+			},
 			views: {
 				'content@': {
-					template: createVolunteerTemplate,
-					controller: 'VolunteerUserController as dynCtrl'
-				},
-				'dynamic-form@root.createVolunteerUser': {
-					template: dynamicFormTemplate
+					component: 'createVolunteer'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.createVolunteerUser-success', {
 			url: 'volunteer/create/success',
+			resolve: {
+				tconfig: function(Tconfig) { return Tconfig.get(); },
+				media: function(Media) { return Media.get(); },
+				CurrentUser: AuthenticationProvider.requireLoggedIn
+			},
 			views: {
 				'content@': {
-					template: createVolunteerSuccessTemplate
+					component: 'createVolunteerSuccess'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.viewVolunteerUser', {
 			url: 'volunteer/:volunteerId',
 			views: {
 				'content@': {
-					template: viewVolunteerTemplate,
-					controller: 'VolunteerUserController as dynCtrl'
-				},
-				'dynamic-view@root.viewVolunteerUser': {
-					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
+					component: 'viewVolunteer'
 				}
 			},
 			resolve: {
@@ -56,11 +45,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'volunteer/:volunteerId/edit',
 			views: {
 				'content@': {
-					template: editVolunteerTemplate,
-					controller: 'VolunteerUserController as dynCtrl'
-				},
-				'dynamic-form@root.editVolunteerUser': {
-					template: dynamicViewTemplate
+					component: 'editVolunteer'
 				}
 			},
 			resolve: {
@@ -74,8 +59,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers',
 			views: {
 				'content@': {
-					template: listVolunteersTemplate,
-					controller: 'VolunteerAdminController as dynCtrl'
+					component: 'listVolunteers'
 				}
 			},
 			resolve: {
@@ -86,11 +70,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers/:volunteerId',
 			views: {
 				'content@': {
-					template: viewVolunteerTemplate,
-					controller: 'VolunteerAdminController as dynCtrl'
-				},
-				'dynamic-view@root.viewVolunteerAdmin': {
-					template: dynamicViewTemplate
+					component: 'viewVolunteer'
 				}
 			},
 			resolve: {
@@ -101,11 +81,7 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/volunteers/:volunteerId/edit',
 			views: {
 				'content@': {
-					template: editVolunteerTemplate,
-					controller: 'VolunteerAdminController as dynCtrl'
-				},
-				'dynamic-form@root.editVolunteerAdmin': {
-					template: dynamicFormTemplate
+					component: 'editVolunteer'
 				}
 			},
 			resolve: {
