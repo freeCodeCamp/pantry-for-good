@@ -1,5 +1,3 @@
-import packingTemplate from '../views/packing.client.view.html';
-
 // Setting up routes
 angular.module('packing').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider) {
@@ -9,8 +7,7 @@ angular.module('packing').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/packing',
 			views: {
 				'content@': {
-					template: packingTemplate,
-					controller: 'PackingController as packingCtrl'
+					component: 'packingList'
 				}
 			},
 			resolve: {

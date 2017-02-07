@@ -1,6 +1,3 @@
-import qTestTemplate from '../views/qtest.client.view.html';
-import questionnairesTemplate from '../views/questionnaires.client.view.html';
-
 // Setting up routes
 angular.module('questionnaire').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider) {
@@ -10,8 +7,9 @@ angular.module('questionnaire').config(['$stateProvider', 'AuthenticationProvide
 			url: 'admin/questionnaires',
 			views: {
 				'content@': {
-					template: questionnairesTemplate,
-					controller: 'QuestionnaireController as questionnaireCtrl'
+					component: 'questionnaires'
+					// template: questionnairesTemplate,
+					// controller: 'QuestionnaireController as questionnaireCtrl'
 				}
 			},
 			resolve: {
@@ -22,8 +20,9 @@ angular.module('questionnaire').config(['$stateProvider', 'AuthenticationProvide
 			url: 'admin/qtest',
 			views: {
 				'content@': {
-					template: qTestTemplate,
-					controller: 'qTestController as qtCtrl'
+					component: 'qTest'
+					// template: qTestTemplate,
+					// controller: 'qTestController as qtCtrl'
 				}
 			},
 			resolve: {

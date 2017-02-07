@@ -1,5 +1,3 @@
-import scheduleTemplate from '../views/schedules.client.view.html';
-
 // Setting up routes
 angular.module('schedule').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider) {
@@ -9,8 +7,7 @@ angular.module('schedule').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'admin/schedules',
 			views: {
 				'content@': {
-					template: scheduleTemplate,
-					controller: 'ScheduleController as scheduleCtrl'
+					component: 'schedules'
 				}
 			},
 			resolve: {

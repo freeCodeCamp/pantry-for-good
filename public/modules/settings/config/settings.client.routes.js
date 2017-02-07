@@ -1,24 +1,21 @@
-import changeSettingsTemplate from '../views/change-settings.client.view.html';
-import basicSettingsTemplate from '../views/partials/basic-settings.partial.html';
-
 // Setting up routes
 angular.module('settings').config(['$stateProvider', '$urlRouterProvider', 'AuthenticationProvider',
-	function($stateProvider, $urlRouterProvider, AuthenticationProvider) {
+	/* ngInject */
+	function($stateProvider, $urlRouterProvider, AuthenticationProvider, Tconfig) {
 		// Routing for general settings page
 		$stateProvider.
 		state('root.changeSettings', {
 			url: 'settings',
+			resolve: {
+				tconfig: function(Tconfig) {
+					return Tconfig.get();
+				},
+				CurrentUser: AuthenticationProvider.requireAdminUser
+			},
 			views: {
 				'content@': {
-					template: changeSettingsTemplate,
-					controller: 'ChangeSettingsController as settingsCtrl'
-				},
-				'basic-settings@root.changeSettings': {
-					template: basicSettingsTemplate
+					component: 'settings'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireAdminUser
 			}
 		});
 	}
