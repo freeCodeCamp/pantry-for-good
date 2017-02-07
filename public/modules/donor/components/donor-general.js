@@ -1,9 +1,10 @@
 import angular from 'angular';
 
 export default angular.module('donor')
-  .component('generalInfo', {
+  .component('donorGeneral', {
     bindings: {
       dynForm: '=',
+      filteredSections: '=',
       donor: '='
     },
     template: `

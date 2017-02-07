@@ -15,7 +15,7 @@ export default angular.module('donor')
         <br>
         <div class="alert alert-info text-left">
           <i class="icon fa fa-warning"></i>For assistance with this application, please contact our support line at
-          {{tconfig.supportNumber}}.
+          {{$ctrl.tconfig.supportNumber}}.
         </div>
       </section>
       <!-- Main content -->
