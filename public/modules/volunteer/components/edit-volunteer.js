@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('volunteer')
   .component('editVolunteer', {
-    controller: 'VolunteerAdminController',
+    controller: 'VolunteerController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header" data-ng-init="$ctrl.findOne()">
@@ -15,12 +15,16 @@ export default angular.module('volunteer')
             <!-- Form -->
             <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && $ctrl.update()">
               <!-- Identification and General Information -->
-              <!-- <dynamic-form ... /> -->
-              <volunteer-general
+              <dynamic-form
+                section-names="$ctrl.sectionNames"
                 dyn-form="$ctrl.dynForm"
-                filtered-sections="$ctrl.filteredSections"
-                volunteer="$ctrl.volunteer"
-              ></volunteer-general>
+                dyn-type="$ctrl.dynType"
+                food-list="$ctrl.foodList"
+                is-checked="$ctrl.dynMethods.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.dynMethods.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.dynMethods.foodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.dynMethods.toggleFoodSelection(dynType, food)"
+              />
               <!-- Buttons -->
               <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-2">

@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('volunteer')
   .component('viewVolunteer', {
-    controller: 'VolunteerAdminController',
+    controller: 'VolunteerController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header" data-ng-init="$ctrl.findOne()">
@@ -12,9 +12,9 @@ export default angular.module('volunteer')
       <section class="content">
         <div class="row">
           <div class="col-xs-12">
-            <dynamic-view
 
-            />
+            <dynamic-view dyn-form="$ctrl.dynForm" section-names="$ctrl.sectionNames" />
+
             <div class="form-group" data-ng-show="$ctrl.authentication.user.roles.indexOf('admin') >= 0">
               <a class="btn btn-warning" data-ng-click="$ctrl.update('Driver')">Driver</a>
               <a class="btn btn-success" data-ng-click="$ctrl.update('Active')">Active</a>

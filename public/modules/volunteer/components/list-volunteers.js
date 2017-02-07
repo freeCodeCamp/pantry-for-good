@@ -2,7 +2,7 @@ import angular from 'angular';
 
 export default angular.module('volunteer')
   .component('listVolunteers', {
-    controller: 'VolunteerAdminController',
+    controller: 'VolunteerController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">

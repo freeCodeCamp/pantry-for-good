@@ -5,7 +5,7 @@ angular.module('users').run(['Menus',
 	function(Menus) {
 		// Set sidebar menu items for users
 		Menus.addMenuItem('user', 'Apply', '/create', 'item', 'root.createREPLACETYPEUser', '', ['user'], 0);
-		Menus.addMenuItem('user', 'Edit Application', '/edit', 'item', 'root.editREPLACETYPEUser({REPLACEIDId: sidebarCtrl.user._id})', '', ['user'], 0);
+		Menus.addMenuItem('user', 'Edit Application', '/edit', 'item', 'root.editREPLACETYPEUser({REPLACEIDId: $ctrl.user._id})', '', ['user'], 0);
 	}
 ]);
 
@@ -27,7 +27,7 @@ angular.module('users').config(['$httpProvider',
 								break;
 							case 403:
 								// 403 Unauthorized behaviour
-								$location.path('403');	
+								$location.path('403');
 								break;
 							case 500:
 								// 500 Server error

@@ -6,7 +6,7 @@ export default angular.module('volunteer')
       tconfig: '=',
       media: '='
     },
-    controller: 'VolunteerUserController',
+    controller: 'VolunteerController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
@@ -25,8 +25,16 @@ export default angular.module('volunteer')
             <!-- Form -->
             <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && $ctrl.create()">
               <!-- Identification and General Information -->
-              <!-- <dynamic-form ... /> -->
-              <volunteer-general dyn-form="$ctrl.dynForm" filtered-sections="$ctrl.filteredSections"></volunteer-general>
+              <dynamic-form
+                section-names="$ctrl.sectionNames"
+                dyn-form="$ctrl.dynForm"
+                dyn-type="$ctrl.dynType"
+                food-list="$ctrl.foodList"
+                is-checked="$ctrl.dynMethods.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.dynMethods.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.dynMethods.foodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.dynMethods.toggleFoodSelection(dynType, food)"
+              />
 
               <!-- Box -->
               <div class="box box-solid box-primary">

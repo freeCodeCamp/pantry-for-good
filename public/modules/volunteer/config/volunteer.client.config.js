@@ -7,6 +7,6 @@ angular.module('volunteer').run(['Menus',
 		Menus.addMenuItem('admin', 'Volunteer Database', 'admin/volunteers', 'item', 'root.listVolunteers', '', ['admin'], 5);
 
 		// Set sidebar menu items for volunteers
-		Menus.addMenuItem('volunteer', 'Edit Application', '/edit', 'item', 'root.editVolunteerUser({volunteerId: sidebarCtrl.user._id})', '', ['volunteer'], 0);
+		Menus.addMenuItem('volunteer', 'Edit Application', '/edit', 'item', 'root.editVolunteerUser({volunteerId: $ctrl.user._id})', '', ['volunteer'], 0);
 	}
 ]);
