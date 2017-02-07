@@ -1,24 +1,14 @@
-import changePasswordTemplate from '../views/settings/change-password.client.view.html';
-import editProfileTemplate from '../views/settings/edit-profile.client.view.html';
-import signinTemplate from '../views/authentication/signin.client.view.html';
-import signupTemplate from '../views/authentication/signup.client.view.html';
-import forgotPasswordTemplate from '../views/password/forgot-password.client.view.html';
-import resetPasswordTemplate from '../views/password/reset-password.client.view.html';
-import resetPasswordSuccessTemplate from '../views/password/reset-password-success.client.view.html';
-import resetPasswordInvalidTemplate from '../views/password/reset-password-invalid.client.view.html';
-import socialAccountsTemplate from '../../'
-
 // Setting up route
 angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
-	function($stateProvider, AuthenticationProvider) {
+	/* ngInject */
+	function($stateProvider, AuthenticationProvider, Tconfig, Media) {
 		// Users state routing
 		$stateProvider.
 		state('root.profile', {
 			url: 'settings/profile',
 			views: {
 				'content@': {
-					template: editProfileTemplate,
-					controller: 'SettingsController as settingsCtrl'
+					component: 'editProfile'
 				}
 			},
 			resolve: {
@@ -29,40 +19,45 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'settings/password',
 			views: {
 				'content@': {
-					template: changePasswordTemplate,
-					controller: 'SettingsController as settingsCtrl'
+					component: 'changePassword'
 				}
 			},
 			resolve: {
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
-		state('root.accounts', {
-			url: 'settings/accounts',
-			views: {
-				'content@': {
-					templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
-				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireLoggedIn
-			}
-		}).
+		// state('root.accounts', {
+		// 	url: 'settings/accounts',
+		// 	views: {
+		// 		'content@': {
+		// 			templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
+		// 		}
+		// 	},
+		// 	resolve: {
+		// 		CurrentUser: AuthenticationProvider.requireLoggedIn
+		// 	}
+		// }).
 		state('root.signup', {
 			url: 'signup',
+			resolve: {
+				tconfig: function(Tconfig) { return Tconfig.get(); },
+				media: function(Media) { return Media.get(); }
+			},
 			views: {
 				'content@': {
-					template: signupTemplate,
-					controller: 'AuthenticationController as authenticationCtrl'
+					component: 'signup'
 				}
 			}
 		}).
 		state('root.signin', {
 			url: 'signin',
+			resolve: {
+				tconfig: function(Tconfig) { return Tconfig.get(); },
+				media: function(Media) { return Media.get(); }
+			},
 			views: {
 				'content@': {
-					template: signinTemplate,
-					controller: 'AuthenticationController as authenticationCtrl'
+					component: 'signin'
 				}
 			}
 		}).
@@ -70,8 +65,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/forgot',
 			views: {
 				'content@': {
-					template: forgotPasswordTemplate,
-					controller: 'PasswordController as passwordCtrl'
+					component: 'forgotPassword'
 				}
 			}
 		}).
@@ -79,7 +73,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/invalid',
 			views: {
 				'content@': {
-					template: resetPasswordInvalidTemplate
+					component: 'resetPasswordFailure'
 				}
 			}
 		}).
@@ -87,7 +81,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/success',
 			views: {
 				'content@': {
-					template: resetPasswordSuccessTemplate
+					component: 'resetPasswordSuccess'
 				}
 			}
 		}).
@@ -95,8 +89,7 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'password/reset/:token',
 			views: {
 				'content@': {
-					template: resetPasswordTemplate,
-					controller: 'PasswordController as passwordCtrl'
+					component: 'resetPassword'
 				}
 			}
 		});
