@@ -41,6 +41,9 @@ module.exports = function(config) {
 					jQuery: 'jquery',
 					'window.jQuery': 'jquery',
 					_: 'lodash'
+				}),
+				new webpack.DefinePlugin({
+					'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
 				})
 			],
 			devtool: 'inline-source-map'

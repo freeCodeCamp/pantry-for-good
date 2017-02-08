@@ -65,7 +65,10 @@ module.exports = {
       from: path.resolve(__dirname, 'public', 'modules', 'core', 'img'),
       to: path.resolve(__dirname, 'public', 'dist', 'media')
     }]),
-    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js")
+    new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
+    })
   ],
   devServer: {
 		hot: true,

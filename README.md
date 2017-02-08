@@ -3,7 +3,7 @@ Conversion to react
 Plan:
 
 * <s>build with webpack</s>
-* refactor to angular components
+* <s>refactor to angular components</s>
 * migrate business logic to redux
 * convert angular components to react
 * finish webpack setup for production

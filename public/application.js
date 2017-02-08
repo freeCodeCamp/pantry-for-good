@@ -3,8 +3,8 @@ import 'bootstrap';
 import angular from 'angular';
 import 'admin-lte';
 import 'admin-lte/plugins/slimScroll/jquery.slimscroll'
+import thunk from 'redux-thunk';
 import ApplicationConfiguration from './config';
-
 import * as modules from './modules';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -34,11 +34,25 @@ angular.module(ApplicationConfiguration.applicationModuleName, [
 ]);
 
 // Setting HTML5 Location Mode
-angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider',
-	function($locationProvider) {
+angular.module(ApplicationConfiguration.applicationModuleName).config(['$locationProvider', '$ngReduxProvider',
+	function($locationProvider, $ngReduxProvider) {
 		$locationProvider.hashPrefix('!');
-	}
-]);
+		let reducer = (state, action) => ({foo: 'bar'});
+		$ngReduxProvider.createStoreWith(reducer, [thunk], [
+			window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : () => {}
+		]);
+	}]);
+
+if (process.env.NODE_ENV !== 'test') {
+	angular.module(ApplicationConfiguration.applicationModuleName)
+		.run(($ngRedux, $rootScope, $timeout) => {
+			// To reflect state changes when disabling/enabling actions via the monitor
+			// there is probably a smarter way to achieve that
+			$ngRedux.subscribe(() => {
+					$timeout(() => {$rootScope.$apply(() => {})}, 100);
+			});
+		});
+}
 
 // not getting user object passed from server now, need to get it before starting app
 $.ajax({

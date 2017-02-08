@@ -18,6 +18,7 @@ import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import 'angular-datatables/dist/plugins/buttons/angular-datatables.buttons';
+import ngRedux from 'ng-redux';
 
 // Init the application configuration module for AngularJS application
 export default (function() {
@@ -25,7 +26,7 @@ export default (function() {
 	var applicationModuleName = 'foodbank-template';
 	var applicationModuleVendorDependencies = ['ngResource',
 	'ui.router', 'ui.bootstrap', 'ui.bootstrap.modal', 'datatables',
-  'AngularPrint', 'smart-table',
+  'AngularPrint', 'smart-table', ngRedux,
 	'angularMoment', 'angularFileUpload'];
 
 	// Add a new vertical module
