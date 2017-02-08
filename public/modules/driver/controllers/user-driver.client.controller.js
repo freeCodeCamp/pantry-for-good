@@ -11,7 +11,7 @@
 
 		//=== Bindable variables ===//
 		self.allChecked = false;
-		self.customers = {};
+		self.customers = [];
 		self.customersCopy = [].concat(self.customers); // Copy data for smart table
 		self.deliver = deliver;
 		self.driver = {};

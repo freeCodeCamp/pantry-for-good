@@ -9,7 +9,7 @@ angular.module('driver').run(['Menus',
 		Menus.addSubMenuItem('admin', 'admin/drivers', 'Route Assignment', 'admin/drivers/routes', 'root.driver.routes', '', ['admin'], 1);
 
 		// Set sidebar menu items for drivers
-		Menus.addMenuItem('driver', 'Edit Application', '/edit', 'item', 'root.editVolunteerUser', '', ['driver'], 0);
+		Menus.addMenuItem('driver', 'Edit Application', '/edit', 'item', 'root.editVolunteerUser({volunteerId:sidebarCtrl.user._id})', '', ['driver'], 0);
 		Menus.addMenuItem('driver', 'Route Assignment', 'driver/routes', 'item', 'root.driver.user', '', ['driver'], 1);
 	}
 ]);
