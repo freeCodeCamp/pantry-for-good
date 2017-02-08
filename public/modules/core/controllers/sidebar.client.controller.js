@@ -21,17 +21,17 @@
 			var menus = angular.copy(Menus);
 
 			self.menu = menus.getMenu(role);
-			// Adjust menu ui-routes based on the user's account type   
+			// Adjust menu ui-routes based on the user's account type
 			if (role === 'user'){
 				var accountType = user.accountType[0].charAt(0).toUpperCase() + user.accountType[0].slice(1);
-				
+
 				self.menu.items.forEach(function(item) {
 					item.uiRoute = item.uiRoute.replace(/REPLACETYPE/, accountType).replace(/REPLACEID/, user.accountType[0]);
 				});
 				// Show the right menu before and after a user applies
 				if (user.hasApplied) {
 					menus.removeMenuItem(role, '/create');
-				} else { 
+				} else {
 					menus.removeMenuItem(role, '/edit');
 				}
 			}
