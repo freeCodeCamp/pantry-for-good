@@ -113,10 +113,8 @@ module.exports = function(db) {
 	app.use(helmet());
 	app.disable('x-powered-by');
 
-	// Globbing routing files
-	config.getGlobbedFiles('./app/routes/**/*.js').forEach(function(routePath) {
-		require(path.resolve(routePath))(app);
-	});
+	// Use api routes
+	app.use('/api', require('../app/routes/api.server.routes'));
 
 	// Setting the app router and static folder
 	if (process.env.NODE_ENV === 'production') {

@@ -3,7 +3,8 @@
 /**
  * Module dependencies
  */
-var media = require('../controllers/media.server.controller'),
+var express = require('express'),
+    media = require('../controllers/media.server.controller'),
     multer = require('multer');
 
 var storage = multer.diskStorage({
@@ -16,16 +17,16 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage });
+var mediaRouter = express.Router({mergeParams: true});
 
-module.exports = function(app) {
-	// Media routes
-	app.route('/api/media/uploadLogo')
-		.post(multer({storage:storage}).single('file'), media.uploadLogo);
+// Media routes
+mediaRouter.route('/media/uploadLogo')
+  .post(multer({storage:storage}).single('file'), media.uploadLogo);
 
-	app.route('/api/media')
-		.post(media.save);
-		
-	app.route('/api/media')
-		.get(media.read);
+mediaRouter.route('/media')
+  .post(media.save);
 
-};
+mediaRouter.route('/media')
+  .get(media.read);
+
+module.exports = mediaRouter;

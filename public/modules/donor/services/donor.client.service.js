@@ -3,7 +3,7 @@
 // Donor service used for communicating with the donor REST endpoints
 angular.module('donor').factory('DonorUser', ['$resource',
 	function($resource) {
-		return $resource('donor/:donorId', {
+		return $resource('api/donor/:donorId', {
 			donorId: '@_id'
 		}, {
 			update: {
@@ -13,7 +13,7 @@ angular.module('donor').factory('DonorUser', ['$resource',
 	}
 ]).factory('DonorAdmin', ['$resource',
 	function($resource) {
-		return $resource('admin/donors/:donorId', {
+		return $resource('api/admin/donors/:donorId', {
 			donorId: '@_id'
 		}, {
 			update: {

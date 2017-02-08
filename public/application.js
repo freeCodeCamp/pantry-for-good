@@ -56,7 +56,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 // not getting user object passed from server now, need to get it before starting app
 $.ajax({
-	url: 'users/me'
+	url: 'api/users/me'
 }).then(function(user) {
 	global.user = user;
 	console.log('user', user)

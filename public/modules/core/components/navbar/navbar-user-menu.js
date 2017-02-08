@@ -21,7 +21,7 @@ export default angular.module('core')
             </li>
             <li class="divider"></li>
             <li>
-              <a href="/auth/signout">Signout</a>
+              <a href="/api/auth/signout">Signout</a>
             </li>
           </ul>
         </li>

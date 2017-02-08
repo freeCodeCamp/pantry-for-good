@@ -3,7 +3,7 @@
 // Food service used for communicating with the food REST endpoints
 angular.module('food').factory('FoodAdmin', ['$resource',
 	function($resource) {
-		return $resource('admin/foods/:foodId', {
+		return $resource('api/admin/foods/:foodId', {
 			foodId: '@_id'
 		}, {
 			update: {
@@ -13,7 +13,7 @@ angular.module('food').factory('FoodAdmin', ['$resource',
 	}
 ]).factory('FoodItem', ['$resource',
 	function($resource) {
-		return $resource('admin/foods/:foodId/items/:itemId', {
+		return $resource('api/admin/foods/:foodId/items/:itemId', {
 			foodId: '@categoryId',
 			itemId: '@_id'
 		}, {

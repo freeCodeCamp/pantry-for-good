@@ -3,13 +3,16 @@
 /**
  * Module dependencies
  */
-var donation = require('../controllers/donation.server.controller');
+var express = require('express'),
+		donation = require('../controllers/donation.server.controller');
 
-module.exports = function(app) {
-	// Donation routes for admin
-	app.route('/admin/donations')
-		.post(donation.create);
-		
-	app.route('/admin/donations/:donorId')
-		.put(donation.sendEmail);
-};
+var donationRouter = express.Router({mergeParams: true});
+
+// Donation routes for admin
+donationRouter.route('/admin/donations')
+	.post(donation.create);
+
+donationRouter.route('/admin/donations/:donorId')
+	.put(donation.sendEmail);
+
+module.exports = donationRouter;

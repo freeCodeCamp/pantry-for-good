@@ -43,7 +43,7 @@ describe('Controller: CustomerUserController', function() {
 			}]
 		});
 
-		httpBackend.expectGET('customer').respond([sampleFood]);
+		httpBackend.expectGET('api/customer').respond([sampleFood]);
 
 
 		customerCtrl.findFood();
@@ -70,7 +70,7 @@ describe('Controller: CustomerUserController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('customer').respond([food1, food2]);
+		httpBackend.expectGET('api/customer').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();
@@ -101,7 +101,7 @@ describe('Controller: CustomerUserController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('customer').respond([food1, food2]);
+		httpBackend.expectGET('api/customer').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();
@@ -129,7 +129,7 @@ describe('Controller: CustomerUserController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('customer').respond([food1, food2]);
+		httpBackend.expectGET('api/customer').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();

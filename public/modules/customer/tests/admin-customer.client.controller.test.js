@@ -20,7 +20,6 @@ describe('Controller: CustomerAdminController', function() {
 
 		httpBackend.whenGET('api/settings').respond('');
 		httpBackend.whenGET('api/media').respond('');
-		// httpBackend.expectGET('api/media/').respond('');
 		httpBackend.expectGET('api/sections').respond('');
 		httpBackend.expectGET('api/fields').respond('');
 
@@ -40,7 +39,7 @@ describe('Controller: CustomerAdminController', function() {
 			}]
 		});
 
-		httpBackend.expectGET('admin/foods').respond([sampleFood]);
+		httpBackend.expectGET('api/admin/foods').respond([sampleFood]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();
@@ -66,7 +65,7 @@ describe('Controller: CustomerAdminController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('admin/foods').respond([food1, food2]);
+		httpBackend.expectGET('api/admin/foods').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();
@@ -97,7 +96,7 @@ describe('Controller: CustomerAdminController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('admin/foods').respond([food1, food2]);
+		httpBackend.expectGET('api/admin/foods').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();
@@ -126,7 +125,7 @@ describe('Controller: CustomerAdminController', function() {
 			}]
 		};
 
-		httpBackend.expectGET('admin/foods').respond([food1, food2]);
+		httpBackend.expectGET('api/admin/foods').respond([food1, food2]);
 
 		customerCtrl.findFood();
 		httpBackend.flush();

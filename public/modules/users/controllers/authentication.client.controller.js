@@ -49,7 +49,7 @@
 		if (self.authentication.user) $state.go('root');
 
 		self.signup = function() {
-			$http.post('/auth/signup', self.credentials).then(function(response) {
+			$http.post('/api/auth/signup', self.credentials).then(function(response) {
 				// deprecated since ~1.4.4!?
 				// .success(function(response) {
 				response = response.data;
@@ -72,7 +72,7 @@
 		};
 
 		self.signin = function() {
-			$http.post('/auth/signin', self.credentials).then(function(response) {
+			$http.post('/api/auth/signin', self.credentials).then(function(response) {
 				response = response.data;
 
 				// If successful we assign the response to the global user model

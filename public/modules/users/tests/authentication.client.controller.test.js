@@ -34,7 +34,7 @@ import ApplicationConfiguration from '../../../config';
 			authenticationCtrl.authentication.credentials = user;
 
 			// Test expected GET request
-			httpBackend.expectPOST('/auth/signin').respond(200, user);
+			httpBackend.expectPOST('/api/auth/signin').respond(200, user);
 
 			authenticationCtrl.signin();
 			httpBackend.flush();
@@ -45,7 +45,7 @@ import ApplicationConfiguration from '../../../config';
 
 		it('self.signin() should fail to log in with nothing', function() {
 			// Test expected POST request
-			httpBackend.expectPOST('/auth/signin').respond(400, {
+			httpBackend.expectPOST('/api/auth/signin').respond(400, {
 				'message': 'Missing credentials'
 			});
 
@@ -61,7 +61,7 @@ import ApplicationConfiguration from '../../../config';
 			authenticationCtrl.credentials = 'Bar';
 
 			// Test expected POST request
-			httpBackend.expectPOST('/auth/signin').respond(400, {
+			httpBackend.expectPOST('/api/auth/signin').respond(400, {
 				'message': 'Unknown user'
 			});
 
@@ -75,7 +75,7 @@ import ApplicationConfiguration from '../../../config';
 		it('self.signup() should register with correct data', function() {
 			// Test expected GET request
 			authenticationCtrl.authentication.user = 'Fred';
-			httpBackend.expectPOST('/auth/signup').respond(200, 'Fred');
+			httpBackend.expectPOST('/api/auth/signup').respond(200, 'Fred');
 
 			authenticationCtrl.signup();
 			httpBackend.flush();
@@ -87,7 +87,7 @@ import ApplicationConfiguration from '../../../config';
 
 		it('self.signup() should fail to register with duplicate Username', function() {
 			// Test expected POST request
-			httpBackend.expectPOST('/auth/signup').respond(400, {
+			httpBackend.expectPOST('/api/auth/signup').respond(400, {
 				'message': 'Username already exists'
 			});
 

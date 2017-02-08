@@ -3,7 +3,7 @@
 // Volunteer service used for communicating with the volunteer REST endpoints
 angular.module('volunteer').factory('VolunteerUser', ['$resource',
 	function($resource) {
-		return $resource('volunteer/:volunteerId', {
+		return $resource('api/volunteer/:volunteerId', {
 			volunteerId: '@_id'
 		}, {
 			update: {
@@ -13,7 +13,7 @@ angular.module('volunteer').factory('VolunteerUser', ['$resource',
 	}
 ]).factory('VolunteerAdmin', ['$resource',
 	function($resource) {
-		return $resource('admin/volunteers/:volunteerId', {
+		return $resource('api/admin/volunteers/:volunteerId', {
 			volunteerId: '@_id'
 		}, {
 			update: {
