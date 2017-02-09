@@ -5,9 +5,9 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-md-6">
 			<!-- Box -->
-			<div class="box">
+			<div class="box box-success">
 				<!-- Box header -->
 				<div class="box-header">
 					<h3 class="box-title">Packages</h3>
@@ -47,12 +47,12 @@
 				<!-- Box footer -->
 				<div class="box-footer">
 					<div class="row">
-						<div class="col-sm-6 col-md-4 col-lg-2">
+						<div class="col-sm-6 col-md-5 col-lg-4">
 							<button class="btn btn-success btn-flat btn-block" data-ng-click="driverCtrl.deliver()" data-ng-disabled="driverCtrl.isDisabled()">
 								Mark delivered
 							</button>
 						</div>
-						<div class="col-sm-6 col-md-4 col-lg-2 col-md-offset-4 col-lg-offset-8">
+						<div class="col-sm-6 col-md-4 col-lg-3 col-md-offset-3 col-lg-offset-5">
 							<button class="btn btn-default btn-flat btn-block" print-btn print-landscape><i class="fa fa-print"></i> Print</button>
 						</div>
 					</div>
@@ -62,6 +62,26 @@
 				</div>
 			</div><!-- /.box -->
 		</div><!-- /.col -->
+		<div class="col-md-6">
+			<!-- Box -->
+			<div class="box box-primary">
+				<!-- Box header -->
+				<div class="box-header">
+					<h3 class="box-title">Google Maps</h3>
+				</div><!-- /.box-header -->
+				<!-- Box body -->
+				<div class="box-body no-padding">
+					<!-- Google map -->
+					<div class="googleMap"></div>
+					<!-- /.Google map -->
+				</div><!-- /.box-body -->
+				<div class="overlay" ng-show="driverCtrl.isLoading">
+					<i class="fa fa-refresh fa-spin"></i>
+				</div>
+			</div><!-- /.box -->
+		</div><!-- /.col -->
+	</div><!-- /.row -->
+	<div class="row">
 		<div class="col-sm-12">
 			<!-- Box -->
 			<div class="box">
