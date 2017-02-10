@@ -15,6 +15,9 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 				'dynamic-form@root.createVolunteerUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.createVolunteerUser-success', {
@@ -23,6 +26,9 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 				'content@': {
 					templateUrl: 'modules/volunteer/views/user/create-volunteer-success.client.view.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.viewVolunteerUser', {
@@ -35,6 +41,9 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 				'dynamic-view@root.viewVolunteerUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.editVolunteerUser', {
@@ -47,6 +56,9 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 				'dynamic-form@root.editVolunteerUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		});
 

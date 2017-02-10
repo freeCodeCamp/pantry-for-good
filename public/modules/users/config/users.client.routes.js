@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up route
-angular.module('users').config(['$stateProvider',
-	function($stateProvider) {
+angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider) {
 		// Users state routing
 		$stateProvider.
 		state('root.profile', {
@@ -12,6 +12,9 @@ angular.module('users').config(['$stateProvider',
 					templateUrl: 'modules/users/views/settings/edit-profile.client.view.html',
 					controller: 'SettingsController as settingsCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.password', {
@@ -21,6 +24,9 @@ angular.module('users').config(['$stateProvider',
 					templateUrl: 'modules/users/views/settings/change-password.client.view.html',
 					controller: 'SettingsController as settingsCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.accounts', {
@@ -29,6 +35,9 @@ angular.module('users').config(['$stateProvider',
 				'content@': {
 					templateUrl: 'modules/users/views/settings/social-accounts.client.view.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.signup', {

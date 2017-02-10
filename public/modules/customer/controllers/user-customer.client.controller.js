@@ -11,9 +11,6 @@
 		// This provides Authentication context
 		self.authentication = Authentication;
 
-		// If user is not signed in redirect to signin
-		if (!user) $state.go('root.signin');
-
 		// Redirect to edit if user has already applied
 		if (user && user.hasApplied && $state.is('root.createCustomerUser')) $state.go('root.editCustomerUser', { customerId: user._id });
 
