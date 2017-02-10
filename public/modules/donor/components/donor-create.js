@@ -3,19 +3,18 @@ import angular from 'angular';
 export default angular.module('donor')
   .component('donorCreate', {
     bindings: {
-      tconfig: '=',
       media: '='
     },
     controller: 'DonorController',
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+        <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
         <h1>Donor Profile Creation</h1>
         <br>
         <div class="alert alert-info text-left">
           <i class="icon fa fa-warning"></i>For assistance with this application, please contact our support line at
-          {{$ctrl.tconfig.supportNumber}}.
+          {{$ctrl.settings.supportNumber}}.
         </div>
       </section>
       <!-- Main content -->

@@ -1,7 +1,7 @@
 // Setting up route
 angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 	/* ngInject */
-	function($stateProvider, AuthenticationProvider, Tconfig, Media) {
+	function($stateProvider, AuthenticationProvider, Media) {
 		// Users state routing
 		$stateProvider.
 		state('root.profile', {
@@ -40,7 +40,6 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 		state('root.signup', {
 			url: 'signup',
 			resolve: {
-				tconfig: function(Tconfig) { return Tconfig.get(); },
 				media: function(Media) { return Media.get(); }
 			},
 			views: {
@@ -52,7 +51,6 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 		state('root.signin', {
 			url: 'signin',
 			resolve: {
-				tconfig: function(Tconfig) { return Tconfig.get(); },
 				media: function(Media) { return Media.get(); }
 			},
 			views: {

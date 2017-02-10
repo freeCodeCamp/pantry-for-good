@@ -10,12 +10,12 @@ export default angular.module('volunteer')
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+        <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
         <h1>Volunteer Application</h1>
         <br>
         <div class="alert alert-info text-left">
           <i class="icon fa fa-warning"></i>For assistance with this application, please contact our support line at
-          {{$ctrl.tconfig.supportNumber}}.
+          {{$ctrl.settings.supportNumber}}.
         </div>
       </section>
       <!-- Main content -->
@@ -47,31 +47,31 @@ export default angular.module('volunteer')
                 </div><!-- /.box-header-->
                 <!-- Box body -->
                 <div class="box-body">
-                  <span ng-bind-html="$ctrl.tconfig.mission"></span>
+                  <span ng-bind-html="$ctrl.settings.mission"></span>
                   <ol>
                     <li>
-                      Policies and Safety Rules. For my safety and that of others, I will comply with {{$ctrl.tconfig.organization}}’s volunteer policies and safety rules and its other directors for all volunteer activities.
+                      Policies and Safety Rules. For my safety and that of others, I will comply with {{$ctrl.settings.organization}}’s volunteer policies and safety rules and its other directors for all volunteer activities.
                     </li>
                     <li>
-                      Awareness and Assumption of Risk. I understand that my volunteer activities may have inherit risks that may arise from the activities themselves, {{$ctrl.tconfig.organization}}’s operations, my own actions or inactions, or the actions or inactions of {{$ctrl.tconfig.organization}}, its trustees, directors, employees, and agents, other volunteers, and others present. These risks may include, but are not limited to, working around vehicles, lifting objects, and performing repetitive tasks. I assume full responsibility for any and all risks of bodily injury, death or property damage caused by or arising directly or indirectly from my presence or participation at {{$ctrl.tconfig.organization}}’s activities, regardless of the cause.
+                      Awareness and Assumption of Risk. I understand that my volunteer activities may have inherit risks that may arise from the activities themselves, {{$ctrl.settings.organization}}’s operations, my own actions or inactions, or the actions or inactions of {{$ctrl.settings.organization}}, its trustees, directors, employees, and agents, other volunteers, and others present. These risks may include, but are not limited to, working around vehicles, lifting objects, and performing repetitive tasks. I assume full responsibility for any and all risks of bodily injury, death or property damage caused by or arising directly or indirectly from my presence or participation at {{$ctrl.settings.organization}}’s activities, regardless of the cause.
                     </li>
                     <li>
-                      Waiver and Release of Claims. I waive and release any and all claims against {{$ctrl.tconfig.organization}}, its trustees, directors, officers, officials, employees, volunteers, donors, sponsors, beneficiaries, sponsoring agencies and affiliates (collectively, the “Released Parties”), for any liability, loss, damages, claims, expenses and legal fees resulting from death, or injury to my person or property, caused by or arising directly or indirectly from my presence at {{$ctrl.tconfig.organization}}, or participation in activities on behalf of {{$ctrl.tconfig.organization}}, regardless of the cause even if caused by negligence, whether passive or active. I agree not to sue any of the Released Parties on the basis of these waived and released claims. I understand that {{$ctrl.tconfig.organization}} would not permit me to volunteer without my agreeing to these waivers and releases.
+                      Waiver and Release of Claims. I waive and release any and all claims against {{$ctrl.settings.organization}}, its trustees, directors, officers, officials, employees, volunteers, donors, sponsors, beneficiaries, sponsoring agencies and affiliates (collectively, the “Released Parties”), for any liability, loss, damages, claims, expenses and legal fees resulting from death, or injury to my person or property, caused by or arising directly or indirectly from my presence at {{$ctrl.settings.organization}}, or participation in activities on behalf of {{$ctrl.settings.organization}}, regardless of the cause even if caused by negligence, whether passive or active. I agree not to sue any of the Released Parties on the basis of these waived and released claims. I understand that {{$ctrl.settings.organization}} would not permit me to volunteer without my agreeing to these waivers and releases.
                     </li>
                     <li>
-                      Medical Care Consent and Waiver. I authorize {{$ctrl.tconfig.organization}} to provide to me first aid and, through medical personnel of its choice, medical assistance, transportation, and emergency medical services. This consent does not impose a duty upon {{$ctrl.tconfig.organization}} to provide such assistance, transportation, or services. In addition, I waive and release any claims against the Released Parties arising out of any first aid, treatment, or medical service, including the lack or timing of such, made in connection with my volunteer activities with {{$ctrl.tconfig.organization}}.
+                      Medical Care Consent and Waiver. I authorize {{$ctrl.settings.organization}} to provide to me first aid and, through medical personnel of its choice, medical assistance, transportation, and emergency medical services. This consent does not impose a duty upon {{$ctrl.settings.organization}} to provide such assistance, transportation, or services. In addition, I waive and release any claims against the Released Parties arising out of any first aid, treatment, or medical service, including the lack or timing of such, made in connection with my volunteer activities with {{$ctrl.settings.organization}}.
                     </li>
                     <li>
-                      Indemnification. I will defend, indemnify, and hold the Released Parties harmless from and against any and all loss, damages, claims, expenses and legal fees that may be suffered by any Released Party resulting directly or indirectly from my volunteer activities for {{$ctrl.tconfig.organization}}, except and only to extent the liability is caused by gross negligence or willful misconduct of the relevant Released Party.
+                      Indemnification. I will defend, indemnify, and hold the Released Parties harmless from and against any and all loss, damages, claims, expenses and legal fees that may be suffered by any Released Party resulting directly or indirectly from my volunteer activities for {{$ctrl.settings.organization}}, except and only to extent the liability is caused by gross negligence or willful misconduct of the relevant Released Party.
                     </li>
                     <li>
-                      Publicity. I consent to the unrestricted use of my image, voice, name and/or story in any format including video, print, or electronic (collectively the “Materials”) that the Released Parties or others may create in connection with my participation in activities at or for {{$ctrl.tconfig.organization}}. {{$ctrl.tconfig.organization}} may make Materials available at its discretion to third parties, including photos or streamed or other videos, on {{$ctrl.tconfig.organization}}’s websites and internal displays, in publications, or through and other media, including social networking websites. I waive any right to inspect or approve the finished product and acknowledge that I am not entitled to any compensation for creation or use of the finished product.
+                      Publicity. I consent to the unrestricted use of my image, voice, name and/or story in any format including video, print, or electronic (collectively the “Materials”) that the Released Parties or others may create in connection with my participation in activities at or for {{$ctrl.settings.organization}}. {{$ctrl.settings.organization}} may make Materials available at its discretion to third parties, including photos or streamed or other videos, on {{$ctrl.settings.organization}}’s websites and internal displays, in publications, or through and other media, including social networking websites. I waive any right to inspect or approve the finished product and acknowledge that I am not entitled to any compensation for creation or use of the finished product.
                     </li>
                     <li>
-                      Confidentiality. As a volunteer, I may have access to sensitive or confidential information. This information includes, but is not limited to, identity, address, contact information, and financial information. At all times during and after my participation, I agree to hold in confidence and not disclose or use any such confidential information except as required in my volunteer activities or as expressly authorized in writing by {{$ctrl.tconfig.organization}}’s executives.
+                      Confidentiality. As a volunteer, I may have access to sensitive or confidential information. This information includes, but is not limited to, identity, address, contact information, and financial information. At all times during and after my participation, I agree to hold in confidence and not disclose or use any such confidential information except as required in my volunteer activities or as expressly authorized in writing by {{$ctrl.settings.organization}}’s executives.
                     </li>
                     <li>
-                      Volunteer Not an Employee. I understand that (i) I am not an employee of {{$ctrl.tconfig.organization}}, (ii) that I will not be paid for my participation, and (iii) I am not covered by or eligible for any insurance, health care, worker’s compensation, or other benefits. I may choose at any time not to participate in an activity, or to stop my participation entirely, with {{$ctrl.tconfig.organization}}.
+                      Volunteer Not an Employee. I understand that (i) I am not an employee of {{$ctrl.settings.organization}}, (ii) that I will not be paid for my participation, and (iii) I am not covered by or eligible for any insurance, health care, worker’s compensation, or other benefits. I may choose at any time not to participate in an activity, or to stop my participation entirely, with {{$ctrl.settings.organization}}.
                     </li>
                     <p>
                       <strong>I HAVE READ THIS WAIVER AND RELEASE OF LIABILITY, FULLY UNDERSTAND ITS TERMS, UNDERSTAND THAT I HAVE ASSUMED SIGNIFICANT RISKS AND GIVEN UP SUBSTANTIAL RIGHTS BY SIGNING IT, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.</strong>

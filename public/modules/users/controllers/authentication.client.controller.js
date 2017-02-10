@@ -7,7 +7,8 @@ import {signUp, signIn, clearUser} from '../../../store/auth';
 const mapStateToThis = state => ({
 	auth: state.auth,
 	success: state.auth.success,
-	error: state.auth.error
+	error: state.auth.error,
+	settings: state.settings.data
 });
 
 const mapDispatchToThis = dispatch => ({

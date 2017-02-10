@@ -31,8 +31,8 @@ exports.save = function(req, res) {
 	// If settings object already exist, update, otherwise save
 	Settings.count({}, function (err, count){
     if (count>0) {
-			Settings.findByIdAndUpdate(req.body._id, req.body, function(err, settings) {
-			  if (err) throw err;
+			Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, settings) {
+				if (err) throw err;
 				res.json(settings);
 			});
 		} else {

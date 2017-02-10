@@ -3,7 +3,6 @@ import angular from 'angular';
 export default angular.module('users')
   .component('signin', {
     bindings: {
-      tconfig: '=',
       media: '='
     },
     controller: 'AuthenticationController',
@@ -14,7 +13,7 @@ export default angular.module('users')
         <div class="login-box">
           <!-- Logo -->
           <div class="login-logo">
-            <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+            <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
           </div>
           <!-- Login box body -->
           <div class="login-box-body">

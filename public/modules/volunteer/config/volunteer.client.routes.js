@@ -1,13 +1,12 @@
 // Setting up route
 angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 	/* ngInject */
-	function($stateProvider, AuthenticationProvider, Tconfig, Media) {
+	function($stateProvider, AuthenticationProvider, Media) {
 		// Volunteer state routing for user
 		$stateProvider.
 		state('root.createVolunteerUser', {
 			url: 'volunteer/create',
 			resolve: {
-				tconfig: function(Tconfig) { return Tconfig.get(); },
 				media: function(Media) { return Media.get(); },
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			},
@@ -20,7 +19,6 @@ angular.module('volunteer').config(['$stateProvider', 'AuthenticationProvider',
 		state('root.createVolunteerUser-success', {
 			url: 'volunteer/create/success',
 			resolve: {
-				tconfig: function(Tconfig) { return Tconfig.get(); },
 				media: function(Media) { return Media.get(); },
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			},

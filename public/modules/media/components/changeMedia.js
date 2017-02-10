@@ -3,7 +3,6 @@ import angular from 'angular';
 export default angular.module('media')
   .component('changeMedia', {
     bindings: {
-      tconfig: '=',
       media: '='
     },
     controller: 'ChangeMediaController',
@@ -18,7 +17,7 @@ export default angular.module('media')
           <div class="box-body">
             <div class="row">
               <div class="col-sm-6 col-md-4 col-lg-2">
-                <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+                <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
               </div>
             </div>
           </div>
@@ -33,10 +32,10 @@ export default angular.module('media')
           <div class="box-body">
             <div class="row">
               <div class="col-sm-6 col-md-4 col-lg-2">
-                <input type="file" nv-file-select uploader="uploader"/>
-                <div ng-repeat="item in uploader.queue">
+                <input type="file" nv-file-select uploader="$ctrl.uploader"/>
+                <div ng-repeat="item in $ctrl.uploader.queue">
                   <div ng-thumb="{ file:item._file, height:100 }"></div>
-                  <button class="btn btn-success btn-block top-buffer" ng-click="upload(item)">Upload Logo</button>
+                  <button class="btn btn-success btn-block top-buffer" ng-click="$ctrl.upload(item)">Upload Logo</button>
                 </div>
               </div>
             </div>

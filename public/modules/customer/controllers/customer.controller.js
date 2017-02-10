@@ -3,6 +3,7 @@ import {stateGo} from 'redux-ui-router';
 
 const mapStateToThis = state => ({
 	auth: state.auth,
+	settings: state.settings.data
 });
 
 const mapDispatchToThis = dispatch => ({

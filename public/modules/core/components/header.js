@@ -3,12 +3,9 @@ import angular from 'angular';
 export default angular.module('core')
   .component('header', {
     controller: 'HeaderController',
-    bindings: {
-      tconfig: '='
-    },
     template: `
       <!-- Logo -->
-      <a data-ng-href="/#!/" class="logo">{{$ctrl.tconfig.organization}}</a>
+      <a data-ng-href="/#!/" class="logo">{{$ctrl.settings.organization}}</a>
       <!-- Header navbar -->
       <navbar user="$ctrl.auth.user"></navbar>
     `

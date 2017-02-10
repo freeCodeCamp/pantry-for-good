@@ -3,15 +3,12 @@ import angular from 'angular';
 // Setting up routes
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 	/* @ngInject */
-	function($stateProvider, $urlRouterProvider, Tconfig, Media) {
+	function($stateProvider, $urlRouterProvider, Media) {
 		// Root state routing
 		$stateProvider.
 		state('root', {
 			url: '/',
 			resolve: {
-				tconfig: function(Tconfig) {
-					return Tconfig.get();
-				},
 				media: function(Media) {
 					return Media.get();
 				}

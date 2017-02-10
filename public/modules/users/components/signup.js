@@ -3,7 +3,6 @@ import angular from 'angular';
 export default angular.module('users')
   .component('signup', {
     bindings: {
-      tconfig: '=',
       media: '='
     },
     controller: 'AuthenticationController',
@@ -14,7 +13,7 @@ export default angular.module('users')
         <div class="register-box">
           <!-- Logo -->
           <div class="register-logo">
-            <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+            <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
           </div>
           <!-- Signup box body -->
           <div class="register-box-body">

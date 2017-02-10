@@ -4,19 +4,18 @@ export default angular.module('customer')
   .component('customerCreate', {
     controller: 'CustomerController',
     bindings: {
-      tconfig: '=',
       media: '='
     },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
+        <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
         <h1>Client Request for Assistance Application</h1>
         <div class="alert alert-info text-left top-buffer">
           <h4><i class="icon fa fa-warning"></i>Please fill out the following form</h4>
           Once submitted, your application will be reviewed and you will be contacted directly.
-          To check on your application status, you may call our client intake line at {{$ctrl.tconfig.clientIntakeNumber}}.
-          For assistance with this application, please contact our support line at {{$ctrl.tconfig.supportNumber}}.
+          To check on your application status, you may call our client intake line at {{$ctrl.settings.clientIntakeNumber}}.
+          For assistance with this application, please contact our support line at {{$ctrl.settings.supportNumber}}.
         </div>
       </section><!-- /.content-header -->
       <!-- Main content -->
@@ -47,7 +46,7 @@ export default angular.module('customer')
               <!-- Section F - Client Release and Waiver of Liability -->
               <waiver
                 customer="$ctrl.dynType"
-                organization="$ctrl.tconfig.organization"
+                organization="$ctrl.settings.organization"
               ></waiver>
               <!-- Buttons -->
               <div class="row">

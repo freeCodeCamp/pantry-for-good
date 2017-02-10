@@ -2,9 +2,6 @@ import angular from 'angular';
 
 export default angular.module('settings')
   .component('settings', {
-    bindings: {
-      tconfig: '='
-    },
     controller: 'ChangeSettingsController',
     template: `
       <!-- Change Settings Page -->
@@ -18,11 +15,11 @@ export default angular.module('settings')
           <!-- Box body -->
           <div class="box-body">
             <!-- Basic Settings -->
-            <basic-settings tconfig="$ctrl.tconfig"></basic-settings>
+            <basic-settings settings="$ctrl.settings" form-model="$ctrl.formModel"></basic-settings>
             <!-- Buttons -->
             <div class="row">
               <div class="col-sm-6 col-md-4 col-lg-2">
-                <button class="btn btn-success btn-block top-buffer" ng-click="saveSettings()">Save Changes</button>
+                <button class="btn btn-success btn-block top-buffer" ng-click="$ctrl.saveSettings()">Save Changes</button>
               </div>
               <div class="col-sm-6 col-md-4 col-lg-2">
                 <a class="btn btn-primary btn-block top-buffer" data-ng-href="/#!/">Cancel</a>

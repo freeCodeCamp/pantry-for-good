@@ -3,6 +3,7 @@ import {stateGo} from 'redux-ui-router';
 
 const mapStateToThis = state => ({
 	auth: state.auth,
+	settings: state.settings.data
 });
 
 const mapDispatchToThis = dispatch => ({
@@ -13,7 +14,7 @@ angular.module('donor').controller('DonorController', DonorController);
 
 /* @ngInject */
 function DonorController($window, $uibModal, $state, $stateParams, Authentication,
-													DonorAdmin, DonorUser, Form, formInit, Tconfig, $ngRedux) {
+													DonorAdmin, DonorUser, Form, formInit, $ngRedux) {
 	this.$onInit = () => {
 		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
 		this.dynType = this.dynType || {};
@@ -22,15 +23,15 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 		this.donors = [];
 		// this.dtOptions = {};
 		const {user} = this.auth;
-		const isAdmin = user.roles.indexOf('admin') !== -1;
+		this.isAdmin = user.roles.indexOf('admin') !== -1;
 
-		if (!isAdmin) {
+		if (!this.isAdmin) {
 			// Redirect to edit if user has already applied
 			if (user.hasApplied && $state.is('root.createDonorUser'))
 				this.push('root.editDonorUser', { donorId: user._id });
 
 			// Verify is user has admin role, redirect to home otherwise
-			if (!isAdmin && $state.includes('*Admin') || $state.includes('.listDonors'))
+			if (!this.isAdmin && $state.includes('*Admin') || $state.includes('.listDonors'))
 				this.push('root');
 
 			// Populate donor object if the user has filled an application
@@ -156,8 +157,8 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 				donationItem: function() {
 					return donation;
 				},
-				tconfig: function(Tconfig) {
-					return Tconfig.get();
+				settings: () => {
+					return this.settings;
 				}
 			}
 		});

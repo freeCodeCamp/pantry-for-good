@@ -20,7 +20,7 @@ export default angular.module('donor')
           <div class="col-xs-4">
             <address>
               From<br>
-              <strong>{{$ctrl.resolve.tconfig.organization}}</strong><br>
+              <strong>{{$ctrl.resolve.settings.organization}}</strong><br>
               Address<br>
               Number
             </address>

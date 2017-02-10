@@ -3,7 +3,8 @@ import angular from 'angular';
 angular.module('core').controller('HeaderController', HeaderController)
 
 const mapStateToThis = state => ({
-	auth: state.auth
+	auth: state.auth,
+	settings: state.settings.data
 });
 
 /* @ngInject */
