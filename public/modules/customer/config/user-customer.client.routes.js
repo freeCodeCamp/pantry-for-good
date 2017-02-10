@@ -10,10 +10,10 @@ angular.module('customer').config(['$stateProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/user/create-customer.client.view.html',
-					controller: 'CustomerUserController as customerCtrl'
+					controller: 'CustomerUserController as dynCtrl'
 				},
-				'food-preferences@root.createCustomerUser': {
-					templateUrl: 'modules/customer/views/partials/food-preferences.partial.html'
+				'dynamic-form@root.createCustomerUser': {
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				},
 				'household@root.createCustomerUser': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'
@@ -36,7 +36,10 @@ angular.module('customer').config(['$stateProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/view-customer.client.view.html',
-					controller: 'CustomerUserController as customerCtrl'
+					controller: 'CustomerUserController as dynCtrl'
+				},
+				'dynamic-view@root.viewCustomerUser': {
+					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
 				}
 			}
 		}).
@@ -45,10 +48,10 @@ angular.module('customer').config(['$stateProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/edit-customer.client.view.html',
-					controller: 'CustomerUserController as customerCtrl'
+					controller: 'CustomerUserController as dynCtrl'
 				},
-				'food-preferences@root.editCustomerUser': {
-					templateUrl: 'modules/customer/views/partials/food-preferences.partial.html'
+				'dynamic-form@root.editCustomerUser': {
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				},
 				'household@root.editCustomerUser': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'

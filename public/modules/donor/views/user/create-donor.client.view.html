@@ -13,9 +13,11 @@
   <div class="row">
     <div class="col-xs-12">
       <!-- Form -->
-      <form name="donorForm" data-ng-submit="donorCtrl.create()">
-        <!-- Identification and General Information -->
+      <form name="donorForm" data-ng-submit="dynCtrl.create()">
+        
+        <!-- Dynamic Form -->
         <div ui-view="dynamic-form"></div>
+        
         <!-- Buttons -->
         <div class="row">
           <div class="col-sm-6 col-md-4 col-lg-2">
@@ -26,8 +28,8 @@
           </div>
         </div><!-- /.buttons -->
         <!-- Error -->
-        <div data-ng-show="donorCtrl.error" class="text-danger">
-          <strong data-ng-bind="donorCtrl.error"></strong>
+        <div data-ng-show="dynCtrl.error" class="text-danger">
+          <strong data-ng-bind="dynCtrl.error"></strong>
         </div><!-- /.error -->
       </form><!-- /.form -->
     </div><!-- /.col -->

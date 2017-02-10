@@ -1,10 +1,10 @@
 <!-- Sections -->
-<div ng-repeat="section in donorCtrl.dynForm track by $index" class="clearfix">
+<div ng-repeat="section in dynCtrl.dynForm track by $index" class="clearfix">
   <!-- Box -->
   <div class="box box-solid box-primary">
     <!-- Box header -->
     <div class="box-header">
-      <h3 class="box-title">SECTION {{donorCtrl.sectionNames[$index] | uppercase}}</h3>
+      <h3 class="box-title">SECTION {{dynCtrl.sectionNames[$index] | uppercase}}</h3>
     </div> <!-- box-header-->
       <!-- Box body -->
       <div class="box-body">
@@ -17,7 +17,7 @@
               <tr class="info">
                 <th ng-repeat="tableHeader in row.tableHeaders">{{tableHeader}}</th>
               </tr>
-              <tr ng-repeat="tableRow in donorCtrl.donor[row.tableName]">
+              <tr ng-repeat="tableRow in dynCtrl.dynType[row.tableName]">
                 <td>{{tableRow.name}}</td>
                 <td ng-repeat="(tableCell, value) in tableRow" ng-if="tableCell !== 'name'">
                   <input type="number"
@@ -40,32 +40,42 @@
                     <label>{{cell.label}}</label>
 
                     <!-- Normal text input -->
-                    <input ng-if="cell.type == 'Text'" class="form-control" type="text" ng-model="donorCtrl.donor[cell.name]" placeholder="{{cell.label}}">
+                    <input ng-if="cell.type == 'Text'" class="form-control" type="text" ng-model="dynCtrl.dynType[cell.name]" placeholder="{{cell.label}}">
 
                     <!-- Textarea input -->
-                    <textarea ng-if="cell.type == 'Textarea'" class="form-control" ng-model="donorCtrl.donor[cell.name]" placeholder="{{cell.label}}"></textarea>
+                    <textarea ng-if="cell.type == 'Textarea'" class="form-control" ng-model="dynCtrl.dynType[cell.name]" placeholder="{{cell.label}}"></textarea>
 
                     <!-- Date input -->
-                    <input ng-if="cell.type == 'Date'" class="form-control" type="date" ng-model="donorCtrl.donor[cell.name]">
+                    <input ng-if="cell.type == 'Date'" class="form-control" type="date" ng-model="dynCtrl.dynType[cell.name]">
 
                     <!-- Radio buttons -->
                     <div ng-if="cell.type == 'Radio Buttons'">
                       <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="radio-inline">
-                        <input name="{{cell.name}}" type="radio" ng-model="donorCtrl.donor[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
+                        <input name="{{cell.name}}" type="radio" ng-model="dynCtrl.dynType[cell.name]" value="{{choice.trim()}}"> {{choice.trim()}}
                         </label>
                       </div> <!-- Repeat choices -->
                     </div> <!-- Radio buttons -->
 
                     <!-- Checkboxes -->
                     <div ng-if="cell.type == 'Checkboxes'">
-                      <div ng-repeat="choice in cell.choices.split(',')" {{cell.choices}} <label class="checkbox-inline">
-                        <input name="{{cell.name}}" type="checkbox" value="{{choice.trim()}}"
-                          ng-click="handleCheckboxClick(cell.name, choice.trim())"
-                        >
-                          <{{cell.name}}> {{choice.trim()}}
+                      <span ng-repeat="choice in cell.choices.split(',')">
+                        <label class="checkbox-inline">
+                          <input name="{{cell.name}}" type="checkbox" value="{{choice.trim()}}" 
+                            ng-checked="dynCtrl.dynMethods.isChecked(dynCtrl.dynType, cell.name, choice.trim())"
+                            ng-click="dynCtrl.dynMethods.handleCheckbox(dynCtrl.dynType, cell.name, choice.trim())">
+                            {{choice.trim()}}&nbsp;&nbsp;
                         </label>
-                      </div> <!-- Repeat choices -->
+                      </span> <!-- Repeat choices -->
                     </div> <!-- Checkboxes -->
+
+                    <!-- Lookup -->
+                    <div ng-if="cell.type == 'Lookup'">
+                      <label class="checkbox-inline" ng-repeat="food in dynCtrl.foodList">
+                        <input type="checkbox" name="selectedFood" value="{{food.name}}"
+                                data-ng-checked="dynCtrl.dynMethods.foodIsChecked(dynCtrl.dynType, food)"
+                                data-ng-click="dynCtrl.dynMethods.toggleFoodSelection(dynCtrl.dynType, food)">{{food.name}}
+                      </label> <!-- Lookup -->
+                    </div> <!-- Lookup -->
 
                   </div> <!-- form group -->
                 </div>

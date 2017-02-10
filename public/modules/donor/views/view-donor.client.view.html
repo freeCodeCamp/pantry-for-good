@@ -1,6 +1,6 @@
 <!-- Content header (Page header) -->
-<section class="content-header" data-ng-init="donorCtrl.findOne()">
-  <h1><span data-ng-bind="donorCtrl.donor.fullName"></span></h1>
+<section class="content-header" data-ng-init="dynCtrl.findOne()">
+  <h1><span data-ng-bind="dynCtrl.dynType.fullName"></span></h1>
 </section>
 <!-- Main content -->
 <section class="content">
@@ -12,7 +12,7 @@
         <div class="box-header">
           <h3 class="box-title">Donations</h3>
 	        <div class="box-tools">
-		        <button class="btn btn-success btn-flat" data-ng-click="donorCtrl.newDonation()">
+		        <button class="btn btn-success btn-flat" data-ng-click="dynCtrl.newDonation()">
 			        <i class="fa fa-plus"></i> Add Donation
 		        </button>
 	        </div>
@@ -20,7 +20,7 @@
         <!-- Box body -->
         <div class="box-body table-responsive no-padding top-buffer">
 	        <!-- Table -->
-          <table class="table table-bordered table-striped" st-table="donorCtrl.donationsCopy" st-safe-src="donorCtrl.donations" print-section>
+          <table class="table table-bordered table-striped" st-table="dynCtrl.donationsCopy" st-safe-src="dynCtrl.donations" print-section>
             <!-- Table columns -->
 	          <thead>
 		          <tr>
@@ -33,16 +33,16 @@
 	          </thead><!-- /.table-columns -->
 	          <!-- Table body -->
 	          <tbody>
-							<tr data-ng-repeat="donation in donorCtrl.donationsCopy">
+							<tr data-ng-repeat="donation in dynCtrl.donationsCopy">
 								<td><span data-ng-bind="donation.dateReceived | date:'shortDate'"></span></td>
 								<td><span data-ng-bind="donation.eligibleForTax | currency:'$':2"></span></td>
 								<td><span data-ng-bind="donation.type"></span></td>
 								<td><span data-ng-bind="donation._id"></span></td>
 								<td print-remove>
-									<a class="btn btn-info btn-flat btn-xs" data-ng-click="donorCtrl.viewDonation(donation)"><i class="fa fa-eye"></i> View</a>
+									<a class="btn btn-info btn-flat btn-xs" data-ng-click="dynCtrl.viewDonation(donation)"><i class="fa fa-eye"></i> View</a>
 								</td>
 							</tr>
-		          <tr data-ng-if="!donorCtrl.donations.length">
+		          <tr data-ng-if="!dynCtrl.donations.length">
 			          <td class="text-center" colspan="5">This donor hasn't made any donations yet.</td>
 		          </tr>
 	          </tbody><!-- /.table-body -->

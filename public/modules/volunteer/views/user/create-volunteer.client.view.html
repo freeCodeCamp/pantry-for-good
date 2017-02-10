@@ -13,8 +13,9 @@
   <div class="row">
     <div class="col-xs-12">
       <!-- Form -->
-      <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && volunteerCtrl.create()">
-	      <!-- Identification and General Information -->
+      <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && dynCtrl.create()">
+
+	      <!-- Dynamic Form -->
 	      <div ui-view="dynamic-form"></div>
 
 	      <!-- Box -->
@@ -63,7 +64,7 @@
 				            <div>
 					            <label class="checkbox-inline">
 						            <input type="checkbox"
-						                   data-ng-model="volunteerCtrl.volunteer.disclaimerAgree"
+						                   data-ng-model="dynCtrl.dynType.disclaimerAgree"
 						                   value="true"
 						                   required>I agree
 					            </label>
@@ -72,32 +73,32 @@
 		            </div>
 		            <div class="col-xs-8 col-md-6 col-lg-4">
 			            <div class="form-group">
-				            <input data-ng-disabled="!volunteerCtrl.volunteer.disclaimerAgree"
+				            <input data-ng-disabled="!dynCtrl.dynType.disclaimerAgree"
 				                   class="form-control"
 				                   type="text"
-				                   data-ng-model="volunteerCtrl.volunteer.disclaimerSign"
+				                   data-ng-model="dynCtrl.dynType.disclaimerSign"
 				                   placeholder="Sign here"
 				                   required>
 			            </div>
 		            </div>
 		            <div class="clearfix"></div>
-		            <div class="col-md-6 col-lg-4" data-ng-show="volunteerCtrl.isMinor(volunteerCtrl.volunteer.dateOfBirth)">
+		            <div class="col-md-6 col-lg-4" data-ng-show="dynCtrl.isMinor(dynCtrl.dynType.dateOfBirth)">
 									<div class="form-group">
 										<label>Parent/Guardian Signature</label>
 										<input type="text"
 										       class="form-control"
-										       data-ng-model="volunteerCtrl.volunteer.disclaimerSignGuardian"
-										       data-ng-required="volunteerCtrl.isMinor(volunteerCtrl.volunteer.dateOfBirth)"
+										       data-ng-model="dynCtrl.dynType.disclaimerSignGuardian"
+										       data-ng-required="dynCtrl.isMinor(dynCtrl.dynType.dateOfBirth)"
 										       required>
 									</div>
 		            </div>
-		            <div class="col-md-6 col-lg-4" data-ng-show="volunteerCtrl.isMinor(volunteerCtrl.volunteer.dateOfBirth)">
+		            <div class="col-md-6 col-lg-4" data-ng-show="dynCtrl.isMinor(dynCtrl.dynType.dateOfBirth)">
 			            <div class="form-group">
 				            <label>Parent/Guardian Email</label>
 				            <input type="email"
 				                   class="form-control"
-				                   data-ng-model="volunteerCtrl.volunteer.disclaimerGuardianEmail"
-				                   data-ng-required="volunteerCtrl.volunteer.isMinor(volunteer.dateOfBirth)"
+				                   data-ng-model="dynCtrl.dynType.disclaimerGuardianEmail"
+				                   data-ng-required="dynCtrl.dynType.isMinor(dynType.dateOfBirth)"
 				                   required>
 			            </div>
 		            </div>
@@ -105,6 +106,7 @@
             </ol>
           </div><!-- /.box-body -->
         </div><!-- /.box -->
+
 	      <!-- Buttons -->
 	      <div class="row">
 		      <div class="col-sm-6 col-md-4 col-lg-2">
@@ -115,8 +117,8 @@
 		      </div>
 	      </div><!-- /.buttons -->
 	      <!-- Error -->
-        <div data-ng-show="volunteerCtrl.error" class="text-danger">
-          <strong data-ng-bind="volunteerCtrl.error"></strong>
+        <div data-ng-show="dynCtrl.error" class="text-danger">
+          <strong data-ng-bind="dynCtrl.error"></strong>
         </div>
       </form><!-- /.form -->
     </div><!-- /.col -->

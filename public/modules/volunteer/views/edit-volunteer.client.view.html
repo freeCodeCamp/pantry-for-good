@@ -1,28 +1,30 @@
 <!-- Content header (Page header) -->
-<section class="content-header" data-ng-init="volunteerCtrl.findOne()">
-  <h1>{{volunteerCtrl.volunteer.firstName}} {{volunteerCtrl.volunteer.lastName}}</h1>
+<section class="content-header" data-ng-init="dynCtrl.findOne()">
+  <h1>{{dynCtrl.dynType.firstName}} {{dynCtrl.dynType.lastName}}</h1>
 </section>
 <!-- Main content -->
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
       <!-- Form -->
-      <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && volunteerCtrl.update()">
-        <!-- Identification and General Information -->
+      <form name="dynTypeForm" data-ng-submit="dynTypeForm.$valid && dynCtrl.update()">
+
+        <!-- Dynamic Form -->
         <div ui-view="dynamic-form"></div>
+
         <!-- Buttons -->
         <div class="row">
           <div class="col-sm-6 col-md-4 col-lg-2">
             <button type="submit" class="btn btn-success btn-block top-buffer">Update</button>
           </div>
           <div class="col-sm-6 col-md-4 col-lg-2">
-            <a class="btn btn-primary btn-block top-buffer" data-ng-if="volunteerCtrl.authentication.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/volunteers">Cancel</a>
-            <a class="btn btn-primary btn-block top-buffer" data-ng-if="volunteerCtrl.authentication.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
+            <a class="btn btn-primary btn-block top-buffer" data-ng-if="dynCtrl.authentication.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/volunteers">Cancel</a>
+            <a class="btn btn-primary btn-block top-buffer" data-ng-if="dynCtrl.authentication.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
           </div>
         </div><!-- /.buttons -->
         <!-- Error -->
-        <div data-ng-show="volunteerCtrl.error" class="text-danger">
-          <strong data-ng-bind="volunteerCtrl.error"></strong>
+        <div data-ng-show="dynCtrl.error" class="text-danger">
+          <strong data-ng-bind="dynCtrl.error"></strong>
         </div>
       </form><!-- /.form -->
     </div><!-- /.col -->

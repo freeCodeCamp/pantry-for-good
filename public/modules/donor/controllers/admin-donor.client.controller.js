@@ -4,17 +4,19 @@
 	angular.module('donor').controller('DonorAdminController', DonorAdminController);
 
 	/* @ngInject */
-	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, SectionsAndFields) {
+	function DonorAdminController($window, $uibModal, $state, $stateParams, Authentication, DonorAdmin, Form, formInit) {
 		var self = this;
 
 		// This provides Authentication context
 		self.authentication = Authentication;
-		self.donor = self.donor || {};
+		self.dynType = self.dynType || {};
 
-		// Use SectionsAndFields service to load sections and fields from db, Form service to create dynamic form from questionnaire editor
-		SectionsAndFields.get().then(function(res) {
-			self.dynForm = Form.generate(self.donor, res, 'qDonors');
-			self.sectionNames = Form.getSectionNames(res, 'qDonors'); 
+		self.dynMethods = Form.methods;
+		formInit.get().then(function(res) {
+			var init = self.dynMethods.generate(self.dynType, res, 'qDonors');
+			self.dynForm = init.dynForm;
+			self.sectionNames = init.sectionNames;
+			self.foodList = init.foodList;
 		});
 
 		self.donations = [];
@@ -58,14 +60,14 @@
 			DonorAdmin.get({
 				donorId: $stateParams.donorId
 			}, function(donor) {
-				self.donor = donor;
+				self.dynType = donor;
 				self.donations = donor.donations;
 			});
 		}
 
 		// Update donor
 		function update() {
-			var donor = self.donor;
+			var donor = self.dynType;
 
 			donor.$update(function() {
 				// Redirect after update

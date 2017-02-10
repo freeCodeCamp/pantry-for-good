@@ -1,56 +1,16 @@
 <!-- Content header (Page header) -->
-<section class="content-header" data-ng-init="customerCtrl.findOne(); customerCtrl.findFood()">
-  <h1><span data-ng-bind="customerCtrl.customer.fullName"></span></h1>
+<section class="content-header" data-ng-init="dynCtrl.findOne()">
+  <h1><span data-ng-bind="dynCtrl.dynType.fullName"></span></h1>
 </section>
 <!-- Main content -->
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
 
-      <!-- Dynamic Form: Sections -->
-      <div ng-repeat="section in customerCtrl.dynView track by $index" class="clearfix">
-        <!-- Box -->
-        <div class="box box-solid box-primary">
-          <!-- Box header -->
-          <div class="box-header">
-            <h3 class="box-title">SECTION {{customerCtrl.sectionNames[$index] | uppercase}}</h3>
-          </div> <!-- box-header-->
-          <!-- Box body -->
-          <div class="box-body">
-
-            <table class="table-striped table-bordered table-hover table">
-              <!-- Rows -->
-              <tr ng-repeat="row in section track by $index" ng-class="row.header ? 'table-header' : '' ">
-                <td ng-repeat="cell in row track by $index">
-                  {{cell}}
-                </td>
-              </tr>
-            </table>
-          </div> <!-- box-body -->
-        </div> <!-- box -->
-      </div> <!-- section -->
+      <!-- Dynamic form, view only -->
+      <div ui-view="dynamic-view"></div>
 
       <!--TODO: REPLACE REMAINING STATIC SECTIONS-->
-      <div class="box box-solid box-primary">
-        <!-- Box header -->
-        <div class="box-header">
-          <h3 class="box-title">SECTION C - FOOD PREFERENCES</h3>
-        </div><!-- /.box-header-->
-        <!-- Box body -->
-        <div class="box-body">
-          <table class="table-striped table-bordered table-hover table">
-            <tr>
-              <td>Kosher:</td>
-              <td>{{customerCtrl.customer.kosher ? 'Yes' : 'No'}}</td>
-              <td>Food Allergies:</td>
-              <td>{{customerCtrl.customer.dietaryRequest || 'None'}}</td>
-              <td>Food Preferences:</td>
-              <td>{{customerCtrl.splitByComma(customerCtrl.customer.foodPreferences) || 'None'}}</td>
-            </tr>
-          </table>
-        </div><!-- /.box-body -->
-      </div><!-- /.box -->
-  
       <div class="box box-solid box-primary">
         <!-- Box header -->
         <div class="box-header">
@@ -64,7 +24,7 @@
               <th>Relationship</th>
               <th>Date of Birth</th>
             </tr>
-            <tr data-ng-repeat="dependant in customerCtrl.customer.household">
+            <tr data-ng-repeat="dependant in dynCtrl.dynType.household">
               <td>{{dependant.name}}</td>
               <td>{{dependant.relationship}}</td>
               <td>{{dependant.dateOfBirth | date: 'mediumDate'}}</td>
@@ -72,21 +32,21 @@
           </table>
         </div><!-- /.box-body -->
       </div><!-- /.box -->
-      <div class="form-group" data-ng-if="customerCtrl.authentication.user.roles.indexOf('admin') >= 0">
-        <a class="btn btn-success" data-ng-click="customerCtrl.update('Accepted')">Accept</a>
-        <a class="btn btn-danger" data-ng-click="customerCtrl.update('Rejected')">Reject</a>
-        <a class="btn btn-warning" data-ng-click="customerCtrl.update('Inactive')">Inactive</a>
-				<a class="btn btn-warning" data-ng-click="customerCtrl.delete(customerCtrl.customer)">Delete</a>
-        <a class="btn btn-primary" data-ng-href="/#!/admin/customers/{{customerCtrl.customer._id}}/edit">Edit</a>
+      <div class="form-group" data-ng-if="dynCtrl.authentication.user.roles.indexOf('admin') >= 0">
+        <a class="btn btn-success" data-ng-click="dynCtrl.update('Accepted')">Accept</a>
+        <a class="btn btn-danger" data-ng-click="dynCtrl.update('Rejected')">Reject</a>
+        <a class="btn btn-warning" data-ng-click="dynCtrl.update('Inactive')">Inactive</a>
+				<a class="btn btn-warning" data-ng-click="dynCtrl.delete(dynCtrl.dynType)">Delete</a>
+        <a class="btn btn-primary" data-ng-href="/#!/admin/customers/{{dynCtrl.dynType._id}}/edit">Edit</a>
         <a class="btn btn-primary" data-ng-href="/#!/admin/customers">Cancel</a>
       </div>
-      <div class="form-group" data-ng-if="customerCtrl.authentication.user.roles.indexOf('admin') < 0">
-        <a class="btn btn-primary" data-ng-href="/#!/customer/{{customerCtrl.customer._id}}/edit">Edit</a>
+      <div class="form-group" data-ng-if="dynCtrl.authentication.user.roles.indexOf('admin') < 0">
+        <a class="btn btn-primary" data-ng-href="/#!/customer/{{dynCtrl.dynType._id}}/edit">Edit</a>
         <a class="btn btn-primary" data-ng-href="/#!/">Cancel</a>
       </div>
     </div><!-- /.col -->
   </div><!-- /.row -->
-  <div data-ng-show="customerCtrl.error" class="text-danger">
-    <strong data-ng-bind="customerCtrl.error"></strong>
+  <div data-ng-show="dynCtrl.error" class="text-danger">
+    <strong data-ng-bind="dynCtrl.error"></strong>
   </div>
 </section><!-- /.content -->

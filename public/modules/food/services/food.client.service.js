@@ -1,7 +1,7 @@
 'use strict';
 
 // Food service used for communicating with the food REST endpoints
-angular.module('food').factory('Food', ['$resource',
+angular.module('food').factory('FoodAdmin', ['$resource',
 	function($resource) {
 		return $resource('admin/foods/:foodId', {
 			foodId: '@_id'
@@ -21,5 +21,9 @@ angular.module('food').factory('Food', ['$resource',
 				method: 'PUT'
 			}
 		});
+	}
+]).factory('FoodUser', ['$resource',
+	function($resource) {
+		return $resource('foods/', {});
 	}
 ]);

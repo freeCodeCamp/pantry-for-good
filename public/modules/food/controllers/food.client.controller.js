@@ -4,7 +4,7 @@
 	angular.module('food').controller('FoodController', FoodController);
 
 	/* @ngInject */
-	function FoodController(Food, FoodItem) {
+	function FoodController(FoodAdmin, FoodItem) {
 		var self = this;
 
 		// Copy food item for smart table
@@ -50,7 +50,7 @@
 
 		// Create food category
 		self.create = function() {
-			var food = new Food(self.food);
+			var food = new FoodAdmin(self.food);
 
 			food.$save(function() {
 				// If successful refresh the table
@@ -67,7 +67,7 @@
 			// Set loading state
 			self.isLoading = true;
 
-			Food.query({}, function (foods) {
+			FoodAdmin.query({}, function (foods) {
 				self.foods = foods;
 				// Flatten obtained data for ng-repeat
 				self.items = [];

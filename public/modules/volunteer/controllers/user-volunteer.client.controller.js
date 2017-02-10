@@ -4,7 +4,7 @@
 	angular.module('volunteer').controller('VolunteerUserController', VolunteerUserController);
 
 	/* @ngInject */
-	function VolunteerUserController($stateParams, $state, Authentication, VolunteerUser, moment, Form, SectionsAndFields) {
+	function VolunteerUserController($stateParams, $state, Authentication, VolunteerUser, moment, Form, formInit) {
 		var self = this,
 				user = Authentication.user;
 		// This provides Authentication context
@@ -17,27 +17,28 @@
 		if (user && user.hasApplied && $state.is('root.createVolunteerUser')) $state.go('root.editVolunteerUser', { volunteerId: user._id });
 
 		// Populate volunteer object if the user has filled an application
-		self.volunteer = Authentication.user;
+		self.dynType = Authentication.user;
 
 		// Helper method to determine the volunteer's age
 		self.isMinor = function(dateOfBirth) {
 			return moment().diff(dateOfBirth, 'years') < 18;
 		};
 
-		// Use SectionsAndFields service to load sections and fields from db, View service to create dynamic view from questionnaire editor
-		SectionsAndFields.get().then(function(res) {
-			self.dynForm = Form.generate(self.volunteer, res, 'qVolunteers');
-			self.sectionNames = Form.getSectionNames(res, 'qVolunteers'); 
+		self.dynMethods = Form.methods;
+		formInit.get().then(function(res) {
+			var init = self.dynMethods.generate(self.dynType, res, 'qVolunteers');
+			self.dynForm = init.dynForm;
+			self.sectionNames = init.sectionNames;
+			self.foodList = init.foodList;
 		});
-
 
 		// Create a new volunteer
 		self.create = function() {
-			var volunteer = new VolunteerUser(self.volunteer);
+			var volunteer = new VolunteerUser(self.dynType);
 			delete volunteer._id;
-			self.volunteer.hasApplied = true;
+			volunteer.hasApplied = true;
 
-			volunteer.$save(function(response) {
+			volunteer.$save(function() {
 				// Redirect after save
 				$state.go('root.createVolunteerUser-success', null, { reload: true });
 			}, function(errorResponse) {
@@ -47,16 +48,16 @@
 
 		// Find existing volunteer
 		self.findOne = function() {
-			self.volunteer = VolunteerUser.get({
+			self.dynType = VolunteerUser.get({
 				volunteerId: $stateParams.volunteerId
 			}, function(volunteer) {
-				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
+				self.dynType.dateOfBirth = new Date(volunteer.dateOfBirth);
 			});
 		};
 
 		// Update existing volunteer
 		self.update = function() {
-			var volunteer = self.volunteer;
+			var volunteer = self.dynType;
 
 			volunteer.$update(function() {
 				// Redirect after update

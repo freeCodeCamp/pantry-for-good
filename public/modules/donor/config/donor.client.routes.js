@@ -10,10 +10,10 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/user/create-donor.client.view.html',
-					controller: 'DonorUserController as donorCtrl'
+					controller: 'DonorUserController as dynCtrl'
 				},
 				'dynamic-form@root.createDonorUser': {
-					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
 			}
 		}).
@@ -30,7 +30,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/view-donor.client.view.html',
-					controller: 'DonorUserController as donorCtrl'
+					controller: 'DonorUserController as dynCtrl'
 				}
 			}
 		}).
@@ -39,10 +39,10 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
-					controller: 'DonorUserController as donorCtrl'
+					controller: 'DonorUserController as dynCtrl'
 				},
 				'dynamic-form@root.editDonorUser': {
-					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
 			}
 		});
@@ -54,7 +54,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/admin/list-donors.client.view.html',
-					controller: 'DonorAdminController as donorCtrl'
+					controller: 'DonorAdminController as dynCtrl'
 				}
 			},
 			resolve: {
@@ -66,7 +66,7 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/view-donor.client.view.html',
-					controller: 'DonorAdminController as donorCtrl'
+					controller: 'DonorAdminController as dynCtrl'
 				}
 			},
 			resolve: {
@@ -78,10 +78,10 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/donor/views/edit-donor.client.view.html',
-					controller: 'DonorAdminController as donorCtrl'
+					controller: 'DonorAdminController as dynCtrl'
 				},
 				'dynamic-form@root.editDonorAdmin': {
-					templateUrl: 'modules/donor/views/partials/dynamic-form.partial.html'
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
 			},
 			resolve: {

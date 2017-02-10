@@ -4,27 +4,26 @@ angular.module('core').factory('View', View);
 
 /* @ngInject */
 function View() {
-	var service = {
-		generate: generate,
-		getSectionNames: getSectionNames
+	var methods = {
+		generate: generate
 	};
-	return service;
+	return { methods: methods };
 
 	// Factory Implementation
 
 	// Dynamically generates a questionnaire view based on the sections and fields
 	// created in the questionnaire editor
-	function generate(viewObject, sectionsAndFields, qIdentifier) {
-		var relevantSections = _.sortBy(_.filter(sectionsAndFields.sections, function(obj) {
-			// TODO: REMOVE LIMIT ON POSITION ONCE FIELDS FOR SECTIONS C AND E HAVE BEEN IMPLEMENTED
-			return (obj.questionnaire.identifier === qIdentifier && obj.position < 10);
+	function generate(viewObject, formInit, qIdentifier) {
+		var relevantSections = _.sortBy(_.filter(formInit.sections, function(obj) {
+			return (obj.questionnaire.identifier === qIdentifier);
 		}), 'position');
+		var foodList = _.flatMap(formInit.foods, function(category) {return category.items; });
 		var maxColumns = 6, dynView = [];
 
 			// Loop through sections for given questionnaire
 			for (var iSect = 0; iSect < relevantSections.length; iSect++) {
 				var dynSection = [];
-				var fieldsInSection = _.sortBy(_.filter(sectionsAndFields.fields, { section: relevantSections[iSect] }), ['row', 'column']);
+				var fieldsInSection = _.sortBy(_.filter(formInit.fields, { section: relevantSections[iSect] }), ['row', 'column']);
 
 				// Loop through all fields for given section, inserting rows as defined by maxColumns
 				var dynRow = [];
@@ -45,15 +44,34 @@ function View() {
 					} else {
 
 						// If field is not a table, insert standard row into section
-						var content = fieldsInSection[iField].type === 'Date' ? new Date(viewObject[fieldsInSection[iField].name]).toDateString() : viewObject[fieldsInSection[iField].name];
+						// Differentiate field types
+						var content, fieldValue = viewObject[fieldsInSection[iField].name];
+						switch (fieldsInSection[iField].type) {
+							case 'Date':
+								content = new Date(fieldValue).toDateString();
+								break;
+							case 'Checkboxes':
+								content = fieldValue ? fieldValue.join(', ') : '';
+								break;
+							case 'Lookup':
+								content = '';
+								for (var i = 0; i < fieldValue.length; i++) {
+									var foodItem = _.find(foodList, { _id: fieldValue[i] });
+									if (foodItem) { content += foodItem.name + ', '; }
+								}
+								content = content.length > 1 ? content.substr(0, content.length - 2) : content;
+								break;
+							default:
+								content = fieldValue;
+								break;
+						}
 						dynRow.push(fieldsInSection[iField].label + ':', content || '-');
 						if (dynRow.length >= maxColumns) {
 							dynSection.push(dynRow);
 							dynRow = [];
 						}
 					} // if table
-				
-				} // Next field
+				} // next field
 
 				// Flush row if necessary
 				if (dynRow.length > 0) dynSection.push(dynRow); 
@@ -61,7 +79,12 @@ function View() {
 
 			} // Next section
 
-			return dynView;
+			return {
+				dynForm: dynView,
+				sectionNames: _.map(_.sortBy(_.filter(formInit.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name'),
+				foodList: foodList
+			};
+
 	} // Function generate
 
 	// Helper function: generate table
@@ -93,11 +116,5 @@ function View() {
 
 		return tmpTable;
 	}
-
-
-	function getSectionNames(sectionsAndFields, qIdentifier) {
-		return _.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name');
-	}
-
 
 } // Factory View

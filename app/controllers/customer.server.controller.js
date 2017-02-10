@@ -134,7 +134,7 @@ exports.create = function(req, res) {
 	customer._id = req.user.id;
 
 	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true, roles: ['customer']}})
+	User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true }})
 		.then(function() {
 			async.waterfall([
 				function(done) {

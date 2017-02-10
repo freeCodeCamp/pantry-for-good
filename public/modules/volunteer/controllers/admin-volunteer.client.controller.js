@@ -4,26 +4,28 @@
 	angular.module('volunteer').controller('VolunteerAdminController', VolunteerAdminController);
 
 	/* @ngInject */
-	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, Form, View, SectionsAndFields) {
+	function VolunteerAdminController($window, $stateParams, $state, Authentication, VolunteerAdmin, Form, View, formInit) {
 		var self = this;
 
 		// This provides Authentication context
 		self.authentication = Authentication;
-		// Use SectionsAndFields service to load sections and fields from db
+
+		// Use formInit service to load sections and fields from db
 		// If on edit view, use Form service to create dynamic form from questionnaire editor
 		if ($state.current.name === 'root.editVolunteerAdmin') {
-			SectionsAndFields.get().then(function(res) {
-				self.dynForm = Form.generate(self.volunteer, res, 'qVolunteers');
-				self.sectionNames = Form.getSectionNames(res, 'qVolunteers'); 
-			});
+			self.dynMethods = Form.methods;
 		} else if ($state.current.name === 'root.viewVolunteerAdmin') {
-			// If on 'view' view, use View service to create dynamic view from questionnaire editor
-			SectionsAndFields.get().then(function(res) {
-				self.dynView = View.generate(self.volunteer, res, 'qVolunteers');
-				self.sectionNames = View.getSectionNames(res, 'qVolunteers'); 
-			});
+			self.dynMethods = View.methods;
 		}
 
+		if ($state.current.name === 'root.editVolunteerAdmin' || $state.current.name ===  'root.viewVolunteerAdmin') {
+			formInit.get().then(function(res) {
+				var init = self.dynMethods.generate(self.dynType, res, 'qVolunteers');
+				self.dynForm = init.dynForm;
+				self.sectionNames = init.sectionNames;
+				self.foodList = init.foodList;
+			});
+		}
 
 		// Add plugins into datatable
 		self.dtOptions = {
@@ -41,16 +43,16 @@
 
 		// Find existing volunteer
 		self.findOne = function() {
-			self.volunteer = VolunteerAdmin.get({
+			self.dynType = VolunteerAdmin.get({
 				volunteerId: $stateParams.volunteerId
 			}, function(volunteer) {
-				self.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
+				self.dynType.dateOfBirth = new Date(volunteer.dateOfBirth);
 			});
 		};
 
 		// Update existing volunteer
 		self.update = function(updateType) {
-			var volunteer = self.volunteer;
+			var volunteer = self.dynType;
 
 			if (updateType === 'Driver') {
 				volunteer.driver = true;

@@ -3,7 +3,7 @@
 	<h1>Client Database</h1>
 </section>
 <!-- Main content -->
-<section class="content" data-ng-init="customerCtrl.find()">
+<section class="content" data-ng-init="dynCtrl.find()">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -14,7 +14,7 @@
         <!-- Box body -->
         <div class="box-body table-responsive">
           <!-- Data table -->
-	        <table class="table table-bordered table-striped" datatable="ng" dt-options="customerCtrl.dtOptions" print-table="customerCtrl.customers">
+	        <table class="table table-bordered table-striped" datatable="ng" dt-options="dynCtrl.dtOptions" print-table="dynCtrl.customers">
             <!-- Table columns -->
             <thead>
               <tr>
@@ -34,7 +34,7 @@
             <tfoot></tfoot><!-- /.table footer -->
             <!-- Table content -->
             <tbody>
-              <tr data-ng-repeat="customer in customerCtrl.customers">
+              <tr data-ng-repeat="customer in dynCtrl.customers">
                 <td><span data-ng-bind="customer._id"></span></td>
                 <td><span data-ng-bind="customer.fullName"></span></td>
                 <td><span data-ng-bind="customer.fullAddress"></span></td>
@@ -64,7 +64,7 @@
       </div><!-- /.box -->
     </div><!-- /.col -->
   </div><!-- /.row -->
-  <div data-ng-show="customerCtrl.error" class="text-danger">
-    <strong data-ng-bind="customerCtrl.error"></strong>
+  <div data-ng-show="dynCtrl.error" class="text-danger">
+    <strong data-ng-bind="dynCtrl.error"></strong>
   </div>
 </section><!-- /.content -->

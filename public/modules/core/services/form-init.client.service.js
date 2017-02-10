@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('core').factory('SectionsAndFields', SectionsAndFields);
+angular.module('core').factory('formInit', formInit);
 
 /* @ngInject */
-function SectionsAndFields(Section, Field, $q) {
+function formInit(Section, Field, FoodUser, $q) {
 		var service = {
 			get: get
 		};
@@ -13,8 +13,9 @@ function SectionsAndFields(Section, Field, $q) {
 			var promiseHash = {};
 			promiseHash.sections = Section.query().$promise;
 			promiseHash.fields = Field.query().$promise;
+			promiseHash.foods = FoodUser.query().$promise;
 
 			return $q.all(promiseHash);
 		}
 
-} // Factory GetSectionsAndFields
+} // Factory GetformInit

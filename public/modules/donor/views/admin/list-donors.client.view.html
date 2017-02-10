@@ -3,7 +3,7 @@
   <h1>Donor Database</h1>
 </section>
 <!-- Main content -->
-<section class="content" data-ng-init="donorCtrl.find()">
+<section class="content" data-ng-init="dynCtrl.find()">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -14,7 +14,7 @@
         <!-- Box body -->
         <div class="box-body table-responsive">
           <!-- Data table -->
-          <table class="table table-bordered table-striped" datatable="ng" dt-options="donorCtrl.dtOptions">
+          <table class="table table-bordered table-striped" datatable="ng" dt-options="dynCtrl.dtOptions">
             <!-- Table columns -->
             <thead>
             <tr role="row">
@@ -31,7 +31,7 @@
             <tfoot></tfoot><!-- /.table footer -->
             <!-- Table content -->
             <tbody role="alert" aria-live="polite" aria-relevant="all">
-	            <tr data-ng-repeat="donor in donorCtrl.donors">
+	            <tr data-ng-repeat="donor in dynCtrl.donors">
 	              <td><span data-ng-bind="donor._id"></span></td>
 	              <td><span data-ng-bind="donor.fullName"></span></td>
                 <td><span data-ng-bind="donor.totalDonated | currency:'$':2"></span></td>
@@ -41,7 +41,7 @@
 	              <td>
 	                <a data-ng-href="/#!/admin/donors/{{donor._id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
 	                <a data-ng-href="/#!/admin/donors/{{donor._id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-									<a data-ng-click="donorCtrl.remove(donor)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
+									<a data-ng-click="dynCtrl.remove(donor)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
 	              </td>
 	            </tr>
             </tbody><!-- /.table content -->
@@ -50,7 +50,7 @@
       </div><!-- /.box -->
     </div><!-- /.col -->
   </div><!-- /.row -->
-  <div data-ng-show="donorCtrl.error" class="text-danger">
-    <strong data-ng-bind="donorCtrl.error"></strong>
+  <div data-ng-show="dynCtrl.error" class="text-danger">
+    <strong data-ng-bind="dynCtrl.error"></strong>
   </div>
 </section><!-- /.content -->

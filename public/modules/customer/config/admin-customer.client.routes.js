@@ -10,7 +10,7 @@ angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/admin/list-customers.client.view.html',
-					controller: 'CustomerAdminController as customerCtrl'
+					controller: 'CustomerAdminController as dynCtrl'
 				}
 			},
 			resolve: {
@@ -22,7 +22,10 @@ angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/view-customer.client.view.html',
-					controller: 'CustomerAdminController as customerCtrl'
+					controller: 'CustomerAdminController as dynCtrl'
+				},
+				'dynamic-view@root.viewCustomerAdmin': {
+					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
 				}
 			},
 			resolve: {
@@ -34,10 +37,10 @@ angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/customer/views/edit-customer.client.view.html',
-					controller: 'CustomerAdminController as customerCtrl'
+					controller: 'CustomerAdminController as dynCtrl'
 				},
-				'food-preferences@root.editCustomerAdmin': {
-					templateUrl: 'modules/customer/views/partials/food-preferences.partial.html'
+				'dynamic-form@root.editCustomerAdmin': {
+					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				},
 				'household@root.editCustomerAdmin': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'

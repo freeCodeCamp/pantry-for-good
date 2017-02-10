@@ -4,29 +4,31 @@ angular.module('core').factory('Form', Form);
 
 /* @ngInject */
 function Form() {
-	var service = {
+	var methods = {
 		generate: generate,
-		getSectionNames: getSectionNames,
-		handleCheckboxClick: handleCheckboxClick,
+		handleCheckbox: handleCheckbox,
+		isChecked: isChecked,
+		selectAllFoods: selectAllFoods,
+		foodIsChecked: foodIsChecked,
+		toggleFoodSelection: toggleFoodSelection,
 	};
 
-	return service;
+	return { methods: methods };
 
 	// Factory Implementation
 
-	// Dynamically generates a questionnaire form based on the sections and fields
-	// created in the questionnaire editor
-	function generate(formObject, sectionsAndFields, qIdentifier) {
-		var relevantSections = _.sortBy(_.filter(sectionsAndFields.sections, function(obj) {
-			// TODO: REMOVE LIMIT ON POSITION ONCE FIELDS FOR SECTIONS C AND E HAVE BEEN IMPLEMENTED
-			return (obj.questionnaire.identifier === qIdentifier && obj.position < 10);
+	// Dynamically generate a form based on the questionnaire sections and fields
+	// created in the questionnaire editor, and the list of foods in the db
+	function generate(formObject, formInit, qIdentifier) {
+		var relevantSections = _.sortBy(_.filter(formInit.sections, function(obj) {
+			return (obj.questionnaire.identifier === qIdentifier);
 		}), 'position');
 		var maxColumns = 4, dynForm = [];
 
 			// Loop through sections for given questionnaire
 			for (var iSect = 0; iSect < relevantSections.length; iSect++) {
 				var dynSection = [];
-				var fieldsInSection = _.filter(sectionsAndFields.fields, { section: relevantSections[iSect] });
+				var fieldsInSection = _.filter(formInit.fields, { section: relevantSections[iSect] });
 				var rowMaxInSection = _.maxBy(fieldsInSection, 'row') ? _.maxBy(fieldsInSection, 'row').row : 0;
 
 				// Loop through rows for given section
@@ -44,7 +46,11 @@ function Form() {
 				} // Next row
 				dynForm.push(dynSection);
 			} // Next section
-			return dynForm;
+			return {
+				dynForm: dynForm,
+				sectionNames: _.map(_.sortBy(_.filter(formInit.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name'),
+				foodList: _.flatMap(formInit.foods, function(category) {return category.items; })
+			};
 	} // Function generate
 
 	// Helper function: generate table
@@ -107,12 +113,11 @@ function Form() {
 	} // Helper function generate standard row
 
 	
-	function getSectionNames(sectionsAndFields, qIdentifier) {
-		return _.map(_.sortBy(_.filter(sectionsAndFields.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name');
+	function isChecked(obj, name, element) {
+		return (typeof(obj[name]) === 'object' && obj[name].indexOf(element) > -1);
 	}
 
-
-	function handleCheckboxClick(obj, name, element) {
+	function handleCheckbox(obj, name, element) {
 		// Initialise as array if undefined
 		if (typeof obj[name] !== 'object') {
 			obj[name] = [element];
@@ -126,6 +131,41 @@ function Form() {
 		} else {
 			obj[name].splice(i, 1);
 		}
-	} // Function handleCheckboxClick
+	} // Function handleCheckbox
+
+	function selectAllFoods(formObject, checked) {
+	// Toggle selection of all food items
+		if (!checked) {
+			formObject.foodPreferences = [];
+			formObject.foodList.forEach(function(item) {
+				formObject.foodPreferences.push(item._id);
+			});
+		} else {
+			formObject.foodPreferences = [];
+		}
+	}
+
+	// Check if food item is selected
+	function foodIsChecked(formObject, selectedFood) {
+		if (formObject.foodPreferences) {
+			return formObject.foodPreferences.indexOf(selectedFood._id) > -1;
+		}
+	}
+
+	// Store food category when box is checked an remove when unchecked
+	function toggleFoodSelection(formObject, selectedFood) {
+		// Initialise as array if undefined
+		if (typeof formObject.foodPreferences !== 'object') {
+			formObject.foodPreferences = [selectedFood._id];
+			return;
+		}
+
+		var index = formObject.foodPreferences.indexOf(selectedFood._id);
+		if (index > -1) {
+			formObject.foodPreferences.splice(index, 1);
+		} else {
+			formObject.foodPreferences.push(selectedFood._id);
+		}
+	}
 
 } // Factory Form

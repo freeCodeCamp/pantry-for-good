@@ -3,7 +3,7 @@
   <h1>Volunteer Database</h1>
 </section>
 <!-- Main content -->
-<section class="content" data-ng-init="volunteerCtrl.find()">
+<section class="content" data-ng-init="dynCtrl.find()">
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -14,7 +14,7 @@
         <!-- Box body -->
         <div class="box-body table-responsive">
           <!-- Data table -->
-          <table class="table table-bordered table-striped" datatable="ng" dt-options="volunteerCtrl.dtOptions">
+          <table class="table table-bordered table-striped" datatable="ng" dt-options="dynCtrl.dtOptions">
             <!-- Table columns -->
             <thead>
             <tr role="row">
@@ -31,7 +31,7 @@
             <tfoot></tfoot><!-- /.table footer -->
             <!-- Table content -->
             <tbody role="alert" aria-live="polite" aria-relevant="all">
-            <tr data-ng-repeat="volunteer in volunteerCtrl.volunteers">
+            <tr data-ng-repeat="volunteer in dynCtrl.volunteers">
               <td><span data-ng-bind="volunteer._id"></span></td>
               <td><span data-ng-bind="volunteer.fullName"></span></td>
               <td><span data-ng-bind="volunteer.fullAddress"></span></td>

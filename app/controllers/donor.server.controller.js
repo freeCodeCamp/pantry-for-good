@@ -17,7 +17,7 @@ exports.create = function(req, res) {
 	donor._id = req.user.id;
 
 	// Update user's role to donor and mark as this user as having applied
-	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true, roles: ['donor']}})
+	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true }})
 		.then(function() {
 			return donor.save(function(err) {
 				if (err) {

@@ -13,8 +13,8 @@
 					<div class="col-sm-2">
 						<input type="number"
 						       id="numberOfDependants"
-						       data-ng-model="customerCtrl.numberOfDependants"
-						       data-ng-change="customerCtrl.setDependantList(customerCtrl.numberOfDependants)"
+						       data-ng-model="dynCtrl.numberOfDependants"
+						       data-ng-change="dynCtrl.setDependantList(dynCtrl.numberOfDependants)"
 						       class="form-control"
 						       value="1"
 						       min="1"
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 			<div class="clearfix"></div>
-			<div ng-repeat="dependant in customerCtrl.customer.household track by $index">
+			<div ng-repeat="dependant in dynCtrl.dynType.household track by $index">
 				<div class="col-sm-6 col-lg-4">
 					<div class="form-group">
 						<label>Name</label>

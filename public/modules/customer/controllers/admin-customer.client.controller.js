@@ -2,96 +2,49 @@
 	angular.module('customer').controller('CustomerAdminController', CustomerAdminController);
 
 	/* @ngInject */
-	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Food, Form, View, SectionsAndFields) {
+	function CustomerAdminController($window, $stateParams, $state, Authentication, CustomerAdmin, Form, View, formInit) {
 		var self = this;
 		
 		// This provides Authentication context
 		self.authentication = Authentication;
-		self.customer = self.customer || {};
+		self.dynType = self.dynType || {};
 
-		// Use SectionsAndFields service to load sections and fields from db
+		// Use formInit service to load sections and fields from db
 		// If on edit view, use Form service to create dynamic form from questionnaire editor
 		if ($state.current.name === 'root.editCustomerAdmin') {
-			SectionsAndFields.get().then(function(res) {
-				self.dynForm = Form.generate(self.customer, res, 'qClients');
-				self.sectionNames = Form.getSectionNames(res, 'qClients'); 
+			self.dynMethods = Form.methods;
+		} else if ($state.current.name === 'root.viewCustomerAdmin') {
+			self.dynMethods = View.methods;
+		}
+
+		if ($state.current.name === 'root.editCustomerAdmin' || $state.current.name ===  'root.viewCustomerAdmin') {
+			formInit.get().then(function(res) {
+				var init = self.dynMethods.generate(self.dynType, res, 'qClients');
+				self.dynForm = init.dynForm;
+				self.sectionNames = init.sectionNames;
+				self.foodList = init.foodList;
 			});
-			} else if ($state.current.name === 'root.viewCustomerAdmin') {
-				// If on 'view' view, use View service to create dynamic view from questionnaire editor
-				SectionsAndFields.get().then(function(res) {
-					self.dynView = View.generate(self.customer, res, 'qClients');
-					self.sectionNames = View.getSectionNames(res, 'qClients'); 
-				});
-			}
-
-
-		/**
-		 *	Food Preferences
-		 */
-
-		// Store selected food categories
-		self.foodList = self.foodList || [];
-
-		// Initialize food preferences
-		self.customer.foodPreferences = self.customer.foodPreferences || [];
-
-		// Find list of food items and flatten received objects
-		self.findFood = function() {
-			Food.query({}, function(foods) {
-				foods.forEach(function(food) {
-					self.foodList = self.foodList.concat(food.items);
-				});
-			});
-		};
-
-		// Toggle selection of all food items
-		self.selectAll = function(checked) {
-			if (!checked) {
-				self.customer.foodPreferences = [];
-				self.foodList.forEach(function(item) {
-					self.customer.foodPreferences.push(item._id);
-				});
-			} else {
-				self.customer.foodPreferences = [];
-			}
-		};
-
-		// Check if food item is selected
-		self.foodIsChecked = function(selectedFood) {
-			if (self.customer.foodPreferences) {
-				return self.customer.foodPreferences.indexOf(selectedFood._id) > -1;
-			}
-		};
-
-		// Store food category when box is checked an remove when unchecked
-		self.toggleSelection = function(selectedFood) {
-			var index = self.customer.foodPreferences.indexOf(selectedFood._id);
-			if (index > -1) {
-				self.customer.foodPreferences.splice(index, 1);
-			} else {
-				self.customer.foodPreferences.push(selectedFood._id);
-			}
-		};
+		}
 
 		/**
 		 *	Dependants Section
 		 */
 
 		// Store dependants in the household
-		self.customer.household = [{
-			name: self.customer.firstName + ' ' + self.customer.lastName,
+		self.dynType.household = [{
+			name: self.dynType.firstName + ' ' + self.dynType.lastName,
 			relationship: 'Applicant',
-			dateOfBirth: new Date(self.customer.dateOfBirth)
+			dateOfBirth: new Date(self.dynType.dateOfBirth)
 		}];
 
 		// Set an array of dependants based on input value
 		self.setDependantList = function(numberOfDependants) {
-			var temp = angular.copy(self.customer.household);
-			self.customer.household = [];
+			var temp = angular.copy(self.dynType.household);
+			self.dynType.household = [];
 			for (var i = numberOfDependants - 1; i >= 0; i--) {
-				self.customer.household[i] = temp[i] || {};
-				self.customer.household[i].dateOfBirth =
-					new Date(self.customer.household[i].dateOfBirth);
+				self.dynType.household[i] = temp[i] || {};
+				self.dynType.household[i].dateOfBirth =
+					new Date(self.dynType.household[i].dateOfBirth);
 			}
 		};
 
@@ -107,19 +60,6 @@
 		/**
 		 * Helper Functions
 		 */
-
-		// Refactor food item objects into a list of names separated by comma's
-		self.splitByComma = function(foodItems) {
-			if (foodItems) {
-				var temp = [];
-				foodItems.forEach(function(itemId) {
-					self.foodList.forEach(function(food) {
-						if (itemId === food._id) temp.push(food.name);
-					});
-				});
-				return temp.join(', ');
-			}
-		};
 
 		// Add up totals in Financial Assessment
 		self.total = function(data, type) {
@@ -141,10 +81,10 @@
 
 		// Find existing customer
 		self.findOne = function() {
-			self.customer = CustomerAdmin.get({
+			self.dynType = CustomerAdmin.get({
 				customerId: $stateParams.customerId
 			}, function(customer){
-				self.customer.dateOfBirth = new Date(customer.dateOfBirth);
+				self.dynType.dateOfBirth = new Date(customer.dateOfBirth);
 				self.numberOfDependants = customer.household.length;
 				self.setDependantList(self.numberOfDependants);
 			});
@@ -152,9 +92,9 @@
 
 		// Update existing customer
 		self.update = function(status) {
-			if (status) self.customer.status = status;
+			if (status) self.dynType.status = status;
 
-			self.customer.$update()
+			self.dynType.$update()
 				.then(function() {
 				// Redirect after update
 				$state.go('root.listCustomers');
