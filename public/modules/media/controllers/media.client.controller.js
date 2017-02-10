@@ -1,22 +1,33 @@
-(function() {
-	'use strict';
+import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
 
-	angular.module('settings').controller('ChangeMediaController', ChangeMediaController);
-	/* @ngInject */
-	function ChangeMediaController($scope, $state, Authentication, MediaObject, FileUploader) {
-		var self = this,
-				user = Authentication.user;
+const mapStateToThis = state => ({
+	auth: state.auth,
+});
 
-		$scope.uploader = new FileUploader({url: 'api/media/uploadLogo'});
+const mapDispatchToThis = dispatch => ({
+	push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
-		$scope.upload = function(item) {
-			item.onSuccess = function(media) {
-				$scope.logoSrc = media.logoPath + media.logoFile;
-			};
-			item.upload();
+angular.module('settings').controller('ChangeMediaController', ChangeMediaController);
+
+/* @ngInject */
+function ChangeMediaController($scope, $state, $ngRedux, MediaObject, FileUploader) {
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+
+		// If user is not signed in redirect to signin
+		if (!this.auth.user) this.push('root.signin');
+	};
+
+	this.$onDestroy = () => this.unsubscribe();
+
+	$scope.uploader = new FileUploader({url: 'api/media/uploadLogo'});
+
+	$scope.upload = function(item) {
+		item.onSuccess = function(media) {
+			$scope.logoSrc = media.logoPath + media.logoFile;
 		};
-
-		// This provides Authentication context
-		self.authentication = Authentication;
-	}
-})();
+		item.upload();
+	};
+}

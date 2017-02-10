@@ -1,30 +1,37 @@
 import angular from 'angular';
+import capitalize from 'lodash/capitalize';
+
+const mapStateToThis = state => ({
+	auth: state.auth
+});
 
 angular.module('core').controller('SidebarController', SidebarController);
 
 /* @ngInject */
-function SidebarController($scope, Authentication, Menus) {
-	var self = this;
+function SidebarController($scope, $ngRedux, Menus) {
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
 
-	self.authentication = Authentication;
-	self.user = Authentication.user;
-	self.isCollapsed = false;
-	self.getMenu = getMenu;
-	self.toggleCollapsibleMenu = toggleCollapsibleMenu;
-	// Get menus based on user's role
-	if (self.user) getMenu(self.user);
+		this.user = this.auth.user;
+		this.isCollapsed = false;
 
-	function getMenu(user) {
-		var role = user.roles[0];
+		// Get menus based on user's role
+		if (this.user) this.getMenu(this.user);
+	};
+
+	this.$onDestroy = () => this.unsubscribe();
+
+	this.getMenu = user => {
+		const role = user.roles[0];
 		// Copy the Menus object to avoid the need for a page refresh after redirects
-		var menus = angular.copy(Menus);
+		const menus = angular.copy(Menus);
 
-		self.menu = menus.getMenu(role);
+		this.menu = menus.getMenu(role);
 		// Adjust menu ui-routes based on the user's account type
 		if (role === 'user'){
-			var accountType = user.accountType[0].charAt(0).toUpperCase() + user.accountType[0].slice(1);
+			const accountType = capitalize(user.accountType[0]);
 
-			self.menu.items.forEach(function(item) {
+			this.menu.items.forEach(function(item) {
 				item.uiRoute = item.uiRoute.replace(/REPLACETYPE/, accountType).replace(/REPLACEID/, user.accountType[0]);
 			});
 			// Show the right menu before and after a user applies
@@ -34,14 +41,15 @@ function SidebarController($scope, Authentication, Menus) {
 				menus.removeMenuItem(role, '/edit');
 			}
 		}
-	}
+	};
 
-	function toggleCollapsibleMenu() {
-		self.isCollapsed = !self.isCollapsed;
-	}
+	this.toggleCollapsibleMenu = () => this.isCollapsed = !this.isCollapsed;
+
+	// tests run before setUser action fires, how to do this better?
+	this.auth = this.auth || {};
 
 	// Collapsing the menu after navigation
-	$scope.$on('$stateChangeSuccess', function() {
-		self.isCollapsed = false;
+	$scope.$on('$stateChangeSuccess', () => {
+		this.isCollapsed = false;
 	});
 }

@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "A customizable food bank webapp.",
   "dependencies": {
-    "angularPrint": "angular-print#^0.3.8",
-    "lodash": "^4.17.4"
+    "angularPrint": "angular-print#^0.3.8"
   }
 }

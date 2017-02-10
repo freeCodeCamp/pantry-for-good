@@ -1,98 +1,78 @@
-(function() {
-	'use strict';
+import angular from 'angular';
+import capitalize from 'lodash/capitalize';
+import {stateGo} from 'redux-ui-router';
 
-	angular.module('users').controller('AuthenticationController', AuthenticationController);
+import {signUp, signIn, clearUser} from '../../../store/auth';
 
-	/* @ngInject */
-	function AuthenticationController($http, Authentication, $state, $timeout) {
-		var self = this;
+const mapStateToThis = state => ({
+	auth: state.auth,
+	success: state.auth.success,
+	error: state.auth.error
+});
 
-			function inactivityTimer () {//function for determining the user's inactivity
-				var flag;
+const mapDispatchToThis = dispatch => ({
+	register: credentials => dispatch(signUp(credentials)),
+	login: credentials => dispatch(signIn(credentials)),
+	logout: () => dispatch(clearUser()),
+	push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
-				// DOM Events
-				document.onmousemove = loggedIn;
-				document.onkeypress = loggedIn;
+angular.module('users').controller('AuthenticationController', AuthenticationController);
 
-				function logout() {
-					//if flag is true, then the user is still active and the timeout function runs again
-					if(flag) {
-						flag = false;
-						$timeout(logout, 900000);
-					} else {
-						$http.get('/auth/signout').success(function(response) {
-							//deauthenticated the user
-							Authentication.user = null;
-							//changed route to 'signin'
-							$state.go('root.signin', null, { reload: true});
-
-						}).error(function(response) {
-							self.error = response.message;
-						});
-					}
-				}
-
-				function loggedIn(){
-					flag = true;//mouse moves or keydown, the flag is true and the timeout function will fire again
-				}
-
-				function initialiseTimer() {
-					$timeout(logout, 900000);//angular's own timeout function.
-						flag = false;
-				}
-				initialiseTimer();//initialises timer
-		}
-
-		self.authentication = Authentication;
+/* @ngInject */
+function AuthenticationController($http, Authentication, $state, $timeout, $ngRedux) {
+	var self = this;
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
 
 		// If user is signed in then redirect back home
-		if (self.authentication.user) $state.go('root');
+		if (this.auth.user) this.push('root');
+	};
 
-		self.signup = function() {
-			$http.post('/api/auth/signup', self.credentials).then(function(response) {
-				// deprecated since ~1.4.4!?
-				// .success(function(response) {
-				response = response.data;
+	this.$onDestroy = () => this.unsubscribe();
 
-				// If successful we assign the response to the global user model
-				self.authentication.user = response;
+	this.$doCheck = () => {
+		// redirect on login
+		const {user} = this.auth;
+		if (!user) return;
+		if (user.roles[0] === 'admin') {
+			this.push('root', null, {reload: true});
+		} else {
+			const accountType = capitalize(user.accountType[0]);
+			this.push(`root.create${accountType}User`, null, {reload: true});
+		}
+	};
 
-				//function listens for 15 mins inactivity and logs the user out
-				inactivityTimer();
+	this.signup = () => this.register(this.credentials);
 
-				var accountType = response.accountType[0].charAt(0).toUpperCase() + response.accountType[0].slice(1);
+	this.signin = () => this.login(this.credentials);
 
-				// And redirect to create application state
-				$state.go('root.create' + accountType + 'User', null, { reload: true });
-			}).catch(function(response) {
-				if (!response || ! response.data || !response.data.message) return;
-				response = response.data;
-				self.error = response.message;
-			});
-		};
+	function inactivityTimer () {//function for determining the user's inactivity
+		var flag;
 
-		self.signin = function() {
-			$http.post('/api/auth/signin', self.credentials).then(function(response) {
-				response = response.data;
+		// DOM Events
+		document.onmousemove = loggedIn;
+		document.onkeypress = loggedIn;
 
-				// If successful we assign the response to the global user model
-				self.authentication.user = response;
-				//function listens for 15 mins inactivity and logs the user out
-				inactivityTimer();
+		function logout() {
+			//if flag is true, then the user is still active and the timeout function runs again
+			if(flag) {
+				flag = false;
+				$timeout(logout, 900000);
+			} else {
+				self.logout();
+				self.push('root.signin', null, { reload: true});
+			}
+		}
 
-				var accountType = response.accountType[0].charAt(0).toUpperCase() + response.accountType[0].slice(1);
+		function loggedIn(){
+			flag = true;//mouse moves or keydown, the flag is true and the timeout function will fire again
+		}
 
-				// And redirect to create application or root state
-				if (self.authentication.user.roles[0] === 'admin') {
-					$state.go('root', null, { reload: true });
-				} else {
-					$state.go('root.create' + accountType + 'User', null, { reload: true });
-				}
-			}).catch(function(response) {
-				if (!response || ! response.data || !response.data.message) return;
-				response = response.data;
-				self.error = response.message;
-			});
-		};
+		function initialiseTimer() {
+			$timeout(logout, 900000);//angular's own timeout function.
+				flag = false;
+		}
+		initialiseTimer();//initialises timer
 	}
-})();
+}

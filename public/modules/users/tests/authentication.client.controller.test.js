@@ -31,7 +31,8 @@ import ApplicationConfiguration from '../../../config';
 
 
 		it('self.signin() should login with a correct user and password', function() {
-			authenticationCtrl.authentication.credentials = user;
+			// authenticationCtrl.authentication.credentials = user;
+			authenticationCtrl.credentials = user;
 
 			// Test expected GET request
 			httpBackend.expectPOST('/api/auth/signin').respond(200, user);

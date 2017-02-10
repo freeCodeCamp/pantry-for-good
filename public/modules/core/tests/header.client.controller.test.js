@@ -12,6 +12,6 @@ describe('Controller: HeaderController', function() {
 	}));
 
 	it('should expose the authentication service', function() {
-		expect(headerCtrl.authentication).toBeTruthy();
+		expect(headerCtrl.auth).toBeTruthy();
 	});
 });

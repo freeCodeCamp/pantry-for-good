@@ -13,7 +13,7 @@ import ApplicationConfiguration from '../../../config';
 		}));
 
 		it('should expose the authentication service', function() {
-			expect(homeCtrl.authentication).toBeTruthy();
+			expect(homeCtrl.auth).toBeTruthy();
 		});
 	});
 })();

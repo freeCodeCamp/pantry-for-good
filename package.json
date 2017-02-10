@@ -9,7 +9,7 @@
     "url": "git@github.com:FreeCodeCamp/food-bank-app.git"
   },
   "scripts": {
-    "postinstall": "bower install --config.interactive=false && gulp build",
+    "postinstall": "bower install --config.interactive=false",
     "heroku-postbuild": "grunt build",
     "dev": "gulp watch",
     "start": "node server.js",
@@ -95,11 +95,13 @@
     "request": "^2.79.0",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "redux-ui-router": "^0.7.1-rc.1",
     "style-loader": "^0.13.1",
     "sendgrid": "^4.7.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^3.14.1",

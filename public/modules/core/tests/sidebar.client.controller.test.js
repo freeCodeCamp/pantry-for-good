@@ -21,7 +21,7 @@ import ApplicationConfiguration from '../../../config';
 		}));
 
 		it('should expose the authentication service', function() {
-			expect(sidebarCtrl.authentication).toBeTruthy();
+			expect(sidebarCtrl.auth).toBeTruthy();
 		});
 
 		it('should not have any menus on load', function() {

@@ -1,32 +1,60 @@
+import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
+
+const mapStateToThis = state => ({
+	auth: state.auth,
+});
+
+const mapDispatchToThis = dispatch => ({
+	push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
+
 angular.module('donor').controller('DonorController', DonorController);
 
 /* @ngInject */
 function DonorController($window, $uibModal, $state, $stateParams, Authentication,
-													DonorAdmin, DonorUser, Form, formInit, Tconfig) {
-	this.dynType = this.dynType || {};
-	this.donations = [];
-	this.donationsCopy = [].concat(this.donations); // Copy data for Smart Table
-	this.donors = [];
-	this.dtOptions = {};
+													DonorAdmin, DonorUser, Form, formInit, Tconfig, $ngRedux) {
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+		this.dynType = this.dynType || {};
+		this.donations = [];
+		this.donationsCopy = [].concat(this.donations); // Copy data for Smart Table
+		this.donors = [];
+		// this.dtOptions = {};
+		const {user} = this.auth;
+		const isAdmin = user.roles.indexOf('admin') !== -1;
 
-	this.dynMethods = Form.methods;
-	formInit.get().then(res => {
-		var init = this.dynMethods.generate(this.dynType, res, 'qDonors');
-		this.dynForm = init.dynForm;
-		this.sectionNames = init.sectionNames;
-		this.foodList = init.foodList;
-	});
+		if (!isAdmin) {
+			// Redirect to edit if user has already applied
+			if (user.hasApplied && $state.is('root.createDonorUser'))
+				this.push('root.editDonorUser', { donorId: user._id });
 
-	const user = Authentication.user;
-	const isAdmin = user.roles.indexOf('admin') !== -1;
+			// Verify is user has admin role, redirect to home otherwise
+			if (!isAdmin && $state.includes('*Admin') || $state.includes('.listDonors'))
+				this.push('root');
 
-	if (!isAdmin) {
-		// Redirect to edit if user has already applied
-		if (user.hasApplied && $state.is('root.createDonorUser')) $state.go('root.editDonorUser', { donorId: user._id });
+			// Populate donor object if the user has filled an application
+			this.dynType = user;
 
-		// Populate donor object if the user has filled an application
-		this.dynType = user;
-	}
+			this.dynMethods = Form.methods;
+			formInit.get().then(res => {
+				var init = this.dynMethods.generate(this.dynType, res, 'qDonors');
+				this.dynForm = init.dynForm;
+				this.sectionNames = init.sectionNames;
+				this.foodList = init.foodList;
+			});
+		}
+
+		this.create = this.create.bind(this);
+		this.find = this.find.bind(this);
+		this.findOne = this.findOne.bind(this);
+		this.update = this.update.bind(this);
+		this.remove = this.remove.bind(this);
+		this.newDonation = this.newDonation.bind(this);
+		this.isAdmin = isAdmin;
+	};
+
+	this.$onDestroy = () => this.unsubscribe();
 
 	// Add plugins into datatable
 	this.dtOptions = {
@@ -43,7 +71,7 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 		delete donor._id;
 		this.dynType.hasApplied = true;
 
-		donor.$save(response => {
+		donor.$save(() => {
 			// Redirect after save
 			$state.go('root.createDonorUser-success', null, { reload: true });
 		}, errorResponse => {
@@ -52,7 +80,7 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 	};
 
 	// Find a list of donors
-	this.find = () => {
+	this.find = function() {
 		this.donors = DonorAdmin.query({}, function(donors) {
 			// Calculate and add a total donated property for each donor
 			donors.forEach(function(donor) {
@@ -68,8 +96,8 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 	};
 
 	// Find existing donor
-	this.findOne = () => {
-		const DonorService = isAdmin ? DonorAdmin : DonorUser;
+	this.findOne = function() {
+		const DonorService = this.isAdmin ? DonorAdmin : DonorUser;
 		DonorService.get({
 			donorId: $stateParams.donorId
 		}, donor => {
@@ -84,14 +112,14 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 
 		donor.$update(() => {
 			// Redirect after update
-			$state.go(isAdmin ? 'root.listDonors' : 'root');
+			$state.go(this.isAdmin ? 'root.listDonors' : 'root');
 		}, errorResponse => {
 			this.error = errorResponse.data.message;
 		});
 	};
 
 	// Delete donor
-	this.remove = donor => {
+	this.remove = function(donor) {
 		if ($window.confirm('Are you sure?')) {
 			donor.$remove(() => {
 				$state.go('root.listDonors', null, { reload: true });
@@ -102,7 +130,7 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 	};
 
 	// Open donation form in a modal window
-	this.newDonation = () => {
+	this.newDonation = function() {
 		var modalInstance = $uibModal.open({
 			component: 'donationCreate',
 			resolve: {

@@ -7,6 +7,7 @@ module.exports = {
   entry: {
     app: [
       'webpack-dev-server/client?http://localhost:8080',
+      'whatwg-fetch',
       path.resolve(__dirname, 'public', 'application.js')
     ],
     vendor: ['webpack-dev-server/client?http://localhost:8080', 'jquery', 'lodash', 'angular',

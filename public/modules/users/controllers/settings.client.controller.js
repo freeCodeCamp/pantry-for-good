@@ -1,46 +1,40 @@
-(function() {
-	'use strict';
+import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
 
-	angular.module('users').controller('SettingsController', SettingsController);
+import {setUser, setProfile, setPassword} from '../../../store/auth';
 
-	/* @ngInject */
-	function SettingsController($http, $location, Users, Authentication) {
-		var self = this;
+const mapStateToThis = state => ({
+	auth: state.auth,
+	success: state.auth.success,
+	error: state.auth.error
+});
 
-		self.user = Authentication.user;
+const mapDispatchToThis = dispatch => ({
+	setUser: user => dispatch(setUser(user)),
+	setProfile: user => dispatch(setProfile(user)),
+	setPassword: password => dispatch(setPassword(password)),
+	push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
+
+angular.module('users').controller('SettingsController', SettingsController);
+
+/* @ngInject */
+function SettingsController($ngRedux) {
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
 
 		// If user is not signed in then redirect back home
-		if (!self.user) $location.path('/');
+		if (!this.auth.user) this.push('root');
 
-		// Update a user profile
-		self.updateUserProfile = function(isValid) {
-			if (isValid) {
-				self.success = self.error = null;
-				var user = new Users(self.user);
+		// set the forms user model to current user
+		this.user = this.auth.user;
+	};
 
-				user.$update(function(response) {
-					self.success = true;
-					Authentication.user = response;
-				}, function(response) {
-					self.error = response.data.message;
-				});
-			} else {
-				self.submitted = true;
-			}
-		};
+	this.$onDestroy = () => this.unsubscribe();
 
-		// Change user password
-		self.changeUserPassword = function() {
-			self.success = self.error = null;
+	// Update a user profile
+	this.updateUserProfile = isValid => isValid && this.setProfile(this.user);
 
-			$http.post('/users/password', self.passwordDetails).then(function(response) {
-				//.success(function(response) {
-				// If successful show success message and clear form
-				self.success = true;
-				self.passwordDetails = null;
-			}).catch(function(response) {
-				self.error = response.message;
-			});
-		};
-	}
-})();
+	// Change user password
+	this.changeUserPassword = () => this.setPassword(this.passwordDetails);
+}

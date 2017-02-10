@@ -6,7 +6,7 @@ export default angular.module('core')
     template: `
       <section class="sidebar">
         <sidebar-menu
-          user="$ctrl.authentication.user"
+          user="$ctrl.auth.user"
           menu="$ctrl.menu"
         ></sidebar-menu>
       </section>

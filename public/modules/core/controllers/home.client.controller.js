@@ -2,10 +2,15 @@ import angular from 'angular';
 
 angular.module('core').controller('HomeController', HomeController);
 
-/* @ngInject */
-function HomeController(Authentication) {
-	var self = this;
+const mapStateToThis = state => ({
+	auth: state.auth
+});
 
-	// This provides Authentication context.
-	self.authentication = Authentication;
+/* @ngInject */
+function HomeController($ngRedux) {
+	this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
+	this.$onDestroy = () => this.unsubscribe();
+
+	// tests run before setUser action fires, how to do this better?
+	this.auth = this.auth || {user: null};
 }

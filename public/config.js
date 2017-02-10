@@ -1,4 +1,4 @@
-import 'angular';
+import angular from 'angular';
 import 'angular-resource';
 import 'angular-file-upload';
 import 'angular-simple-logger';
@@ -19,6 +19,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import 'angular-datatables/dist/plugins/buttons/angular-datatables.buttons';
 import ngRedux from 'ng-redux';
+import ngReduxUiRouter from 'redux-ui-router';
 
 // Init the application configuration module for AngularJS application
 export default (function() {
@@ -26,7 +27,7 @@ export default (function() {
 	var applicationModuleName = 'foodbank-template';
 	var applicationModuleVendorDependencies = ['ngResource',
 	'ui.router', 'ui.bootstrap', 'ui.bootstrap.modal', 'datatables',
-  'AngularPrint', 'smart-table', ngRedux,
+  'AngularPrint', 'smart-table', ngRedux, ngReduxUiRouter,
 	'angularMoment', 'angularFileUpload'];
 
 	// Add a new vertical module

@@ -1,51 +1,65 @@
-(function() {
-	'use strict';
+import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
 
-	angular.module('users').controller('PasswordController', PasswordController);
+import {setUser} from '../../../store/auth';
 
-	/* @ngInject */
-	function PasswordController($stateParams, $http, $state, Authentication) {
-		var self = this;
+const mapStateToThis = state => ({
+	auth: state.user
+});
 
-		self.authentication = Authentication;
+const mapDispatchToThis = dispatch => ({
+	setUser: user => dispatch(setUser(user)),
+	push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
-		//If user is signed in then redirect back home
-		if (self.authentication.user) $state.go('root');
+angular.module('users').controller('PasswordController', PasswordController);
 
-		// Submit forgotten password account id
-		self.askForPasswordReset = function() {
-			self.success = self.error = null;
+/* @ngInject */
+function PasswordController($stateParams, $http, $state, $ngRedux) {
+	this.$onInit = () => {
+		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
 
-			$http.post('/auth/forgot', self.credentials).then(function(response) {
-				response = response.data;
-				// Show user success message and clear form
-				self.credentials = null;
-				self.success = response.message;
+		// If user is not signed in then redirect back home
+		if (this.authentication.user) this.push('root');
+		this.user = this.auth.user;
+	};
 
-			}).catch(function(response) {
-				// Show user error message and clear form
-				self.credentials = null;
-				self.error = response.message;
-			});
-		};
+	this.$onDestroy = () => this.unsubscribe();
 
-		// Change user password
-		self.resetUserPassword = function() {
-			self.success = self.error = null;
+	// Submit forgotten password account id
+	this.askForPasswordReset = () => {
+		this.success = this.error = null;
 
-			$http.post('/auth/reset/' + $stateParams.token, self.passwordDetails).then(function(response) {
-				response = response.data;
-				// If successful show success message and clear form
-				self.passwordDetails = null;
+		$http.post('/api/auth/forgot', this.credentials).then(response => {
+			response = response.data;
 
-				// Attach user profile
-				Authentication.user = response;
+			// Show user success message and clear form
+			this.credentials = null;
+			this.success = response.message;
+		}).catch(response => {
+			// Show user error message and clear form
+			this.credentials = null;
+			this.error = response.message;
+		});
+	};
 
-				// And redirect to the index page
-				$state.go('root.reset-success', null, { reload: true });
-			}).catch(function(response) {
-				self.error = response.message;
-			});
-		};
-	}
-})();
+	// Change user password
+	this.resetUserPassword = () => {
+		this.success = this.error = null;
+
+		$http.post('/api/auth/reset/' + $stateParams.token, this.passwordDetails).then(response => {
+			response = response.data;
+
+			// If successful show success message and clear form
+			this.passwordDetails = null;
+
+			// Attach user profile
+			this.setUser(response);
+
+			// And redirect to the index page
+			$state.go('root.reset-success', null, { reload: true });
+		}).catch(response => {
+			this.error = response.message;
+		});
+	};
+}
