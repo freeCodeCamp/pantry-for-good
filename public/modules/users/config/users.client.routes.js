@@ -39,9 +39,6 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 		// }).
 		state('root.signup', {
 			url: 'signup',
-			resolve: {
-				media: function(Media) { return Media.get(); }
-			},
 			views: {
 				'content@': {
 					component: 'signup'
@@ -50,9 +47,6 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 		}).
 		state('root.signin', {
 			url: 'signin',
-			resolve: {
-				media: function(Media) { return Media.get(); }
-			},
 			views: {
 				'content@': {
 					component: 'signin'

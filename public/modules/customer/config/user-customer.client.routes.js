@@ -1,16 +1,13 @@
 // Setting up route
 angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 	/* ngInject */
-	function($stateProvider, AuthenticationProvider, Media){
+	function($stateProvider, AuthenticationProvider){
 		// Customer state routing for user
 		$stateProvider.
 		state('root.createCustomerUser', {
 			url: 'customer/create',
 			resolve: {
 				CurrentUser: AuthenticationProvider.requireLoggedIn,
-				media: function(Media) {
-					return Media.get();
-				}
 			},
 			views: {
 				'content@': {
@@ -22,9 +19,6 @@ angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 			url: 'customer/create/success',
 			resolve: {
 				CurrentUser: AuthenticationProvider.requireLoggedIn,
-				media: function(Media) {
-					return Media.get();
-				}
 			},
 			views: {
 				'content@': {

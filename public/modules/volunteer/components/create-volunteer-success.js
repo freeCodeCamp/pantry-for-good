@@ -2,9 +2,6 @@ import angular from 'angular';
 
 export default angular.module('volunteer')
   .component('createVolunteerSuccess', {
-    bindings: {
-      media: '='
-    },
     template: `
       <section class="row text-center">
         <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>

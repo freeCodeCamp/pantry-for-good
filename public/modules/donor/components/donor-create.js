@@ -2,9 +2,6 @@ import angular from 'angular';
 
 export default angular.module('donor')
   .component('donorCreate', {
-    bindings: {
-      media: '='
-    },
     controller: 'DonorController',
     template: `
       <!-- Content header (Page header) -->

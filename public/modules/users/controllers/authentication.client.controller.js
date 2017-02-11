@@ -8,7 +8,8 @@ const mapStateToThis = state => ({
 	auth: state.auth,
 	success: state.auth.success,
 	error: state.auth.error,
-	settings: state.settings.data
+	settings: state.settings.data,
+	media: state.media.data
 });
 
 const mapDispatchToThis = dispatch => ({

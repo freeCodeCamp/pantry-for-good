@@ -3,16 +3,11 @@ import angular from 'angular';
 // Setting up routes
 angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 	/* @ngInject */
-	function($stateProvider, $urlRouterProvider, Media) {
+	function($stateProvider, $urlRouterProvider) {
 		// Root state routing
 		$stateProvider.
 		state('root', {
 			url: '/',
-			resolve: {
-				media: function(Media) {
-					return Media.get();
-				}
-			},
 			views: {
 				'header': {
 					component: 'header'

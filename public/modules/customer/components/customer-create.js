@@ -3,9 +3,6 @@ import angular from 'angular';
 export default angular.module('customer')
   .component('customerCreate', {
     controller: 'CustomerController',
-    bindings: {
-      media: '='
-    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">

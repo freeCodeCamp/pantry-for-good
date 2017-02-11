@@ -2,10 +2,6 @@ import angular from 'angular';
 
 export default angular.module('volunteer')
   .component('createVolunteer', {
-    bindings: {
-      tconfig: '=',
-      media: '='
-    },
     controller: 'VolunteerController',
     template: `
       <!-- Content header (Page header) -->

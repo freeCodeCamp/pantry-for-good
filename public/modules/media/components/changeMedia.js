@@ -2,9 +2,6 @@ import angular from 'angular';
 
 export default angular.module('media')
   .component('changeMedia', {
-    bindings: {
-      media: '='
-    },
     controller: 'ChangeMediaController',
     template: `
       <!-- Change Media Page -->

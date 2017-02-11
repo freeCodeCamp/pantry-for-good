@@ -2,8 +2,6 @@ import angular from 'angular';
 
 export default angular.module('customer')
   .component('customerCreateSuccess', {
-    bindings: {
-    },
     template: `
       <section class="row text-center">
         <foodbank-logo tconfig="$ctrl.tconfig" media="$ctrl.media"></foodbank-logo>
