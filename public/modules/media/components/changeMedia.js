@@ -14,7 +14,7 @@ export default angular.module('media')
           <div class="box-body">
             <div class="row">
               <div class="col-sm-6 col-md-4 col-lg-2">
-                <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
+                <foodbank-logo />
               </div>
             </div>
           </div>

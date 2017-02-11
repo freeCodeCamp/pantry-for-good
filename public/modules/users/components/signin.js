@@ -13,7 +13,7 @@ export default angular.module('users')
         <div class="login-box">
           <!-- Logo -->
           <div class="login-logo">
-            <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
+            <foodbank-logo />
           </div>
           <!-- Login box body -->
           <div class="login-box-body">

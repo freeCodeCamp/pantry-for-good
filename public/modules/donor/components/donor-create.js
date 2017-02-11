@@ -6,7 +6,7 @@ export default angular.module('donor')
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
+        <foodbank-logo />
         <h1>Donor Profile Creation</h1>
         <br>
         <div class="alert alert-info text-left">

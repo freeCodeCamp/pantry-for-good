@@ -4,7 +4,7 @@ export default angular.module('donor')
   .component('donorCreateSuccess', {
     template: `
       <section class="row text-center">
-        <foodbank-logo tconfig="$ctrl.settings" media="$ctrl.media"></foodbank-logo>
+        <foodbank-logo />
         <h3 class="col-md-12">Successfully submited. Thank you!</h3>
         <a href="/#!/" class="col-md-12">Go to {{$ctrl.settings.organization}}'s Homepage</a>
       </section>
