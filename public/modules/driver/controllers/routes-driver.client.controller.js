@@ -4,7 +4,21 @@
     angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
     /* search of food bank city lattitude and langitude */
-    function citySearch(city) {
+    function findCity() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/api/settings", false);
+        xhr.send();
+
+        if (xhr.status != 200) {
+            console.log(xhr.status + ': ' + xhr.statusText); // example: 404: Not Found
+        } else {
+            var result = JSON.parse(xhr.responseText);
+        }
+        return result.foodBankCity;
+    }
+
+    function citySearch() {
+        var city = findCity();
         var xhr = new XMLHttpRequest();
         //var city = "Toronto";
         xhr.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(city), false);
@@ -43,19 +57,18 @@
         self.isDisabled = isDisabled;
         self.isLoading = null;
         self.mapObject = null;
+        self.settings = [];
 
         //var geoToronto = {lat: 43.8108899, lng: -79.449906};
-
-
+        console.log(self);
         googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
         function initMap() {
 
             self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
-                center: citySearch("NewYourk"),
+                center: citySearch(),
                 zoom: 12
             });
-
             findDrivers();
         }
 
@@ -111,7 +124,7 @@
                         lng: longitude
                     },
                     map: self.mapObject,
-                    icon: iconUrlPink,
+                    icon: iconUrlPink
                 });
 
                 function clickMarker() {
