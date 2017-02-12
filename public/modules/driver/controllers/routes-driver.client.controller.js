@@ -87,7 +87,7 @@
 				  lng:longitude
 				},
 				map:self.mapObject,
-		    icon:iconUrlPink,
+		    icon:iconUrlPink
 			  });
 
 				function clickMarker() {
