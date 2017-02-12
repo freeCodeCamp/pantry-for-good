@@ -34,5 +34,20 @@ angular.module('users').provider('Authentication', ['$windowProvider', function(
 		}
 		return deferred.promise;		
 	}];
+
+	// This is used in ui-router resolve to ensure a user is logged in
+	this.requireLoggedIn = ['$q', '$state', '$timeout', function ($q, $state, $timeout) {
+		var deferred = $q.defer();
+		if (!_this._data.user) {
+			// Not signed in
+			$timeout(function() {
+				deferred.reject();
+				$state.go('root.signin');
+			}, 100);
+		} else {
+			deferred.resolve(_this._data.user);
+		}
+		return deferred.promise;		
+	}];
 }]);
 
