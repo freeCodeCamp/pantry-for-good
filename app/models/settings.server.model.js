@@ -35,6 +35,11 @@ var SettingsSchema = new Schema({
 		trim: true,
 		default: 'www.example.com'
 	},
+	foodBankCity:{
+		type: String,
+		trim: true,
+		default: 'Toronto'
+	},
 	clientIntakeNumber: {
 		type: String,
 		trim: true,
