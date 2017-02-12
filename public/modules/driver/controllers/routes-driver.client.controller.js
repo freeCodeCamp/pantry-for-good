@@ -59,8 +59,6 @@
         self.mapObject = null;
         self.settings = [];
 
-        //var geoToronto = {lat: 43.8108899, lng: -79.449906};
-        console.log(self);
         googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
         function initMap() {
