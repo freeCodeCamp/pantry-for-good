@@ -3,46 +3,8 @@
 
     angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
-    /* search of food bank city lattitude and langitude */
-    function findCity() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', "/api/settings", false);
-        xhr.send();
-
-        if (xhr.status != 200) {
-            console.log(xhr.status + ': ' + xhr.statusText); // example: 404: Not Found
-        } else {
-            var result = JSON.parse(xhr.responseText);
-        }
-        return result.foodBankCity;
-    }
-
-    function citySearch() {
-        var city = findCity();
-        var xhr = new XMLHttpRequest();
-        //var city = "Toronto";
-        xhr.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(city), false);
-        xhr.send();
-
-        if (xhr.status != 200) {
-            console.log(xhr.status + ': ' + xhr.statusText); // example: 404: Not Found
-        } else {
-            var result = JSON.parse(xhr.responseText);
-        }
-
-        var arr = $.map(result, function (el) {
-            return el;
-        });
-
-        var lat = arr[0].geometry.location.lat;
-        var lng = arr[0].geometry.location.lng;
-
-        return {lat: lat, lng: lng}
-
-    }
-
     /* @ngInject */
-    function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window) {
+    function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window, GeoLocation) {
         var self = this;
         var googleObject = $window.google;
         var markerClustererObject = $window.MarkerClusterer;
@@ -58,13 +20,29 @@
         self.isLoading = null;
         self.mapObject = null;
         self.settings = [];
+        self.markerClusterer = null;
+		    self.markers = [];
+        self.foodBankGeo = {};
 
-        googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
+        //call server for foodbank location
+        GeoLocation.getCity().get(function(response){
+
+              var city = response.foodBankCity;
+
+            GeoLocation.getGeoLocation(city).then(function(response){
+              var lat = response.data.results[0].geometry.location.lat;
+              var lng = response.data.results[0].geometry.location.lng;
+              self.foodBankGeo = {lat:lat, lng: lng};
+              //event handler to initialise map
+              googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
+            });
+          });
+
 
         function initMap() {
 
             self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
-                center: citySearch(),
+                center: self.foodBankGeo,
                 zoom: 12
             });
             findDrivers();
@@ -105,7 +83,6 @@
             // min/max values for nudging markers who are on the same spot
             var min = 0.999999;
             var max = 1.000001;
-            var markers = [];
 
             self.customers.forEach(function (customer) {
                 // create info window instance
@@ -151,12 +128,12 @@
                 googleMarker.addListener('mouseover', showWindow);
                 googleMarker.addListener('mouseout', hideWindow);
 
-                markers.push(googleMarker);
+                self.markers.push(googleMarker);
 
             });
 
             //create marker cluster instance
-            var markerCluster = new markerClustererObject(self.mapObject, markers,
+            self.markerClusterer = new markerClustererObject(self.mapObject, self.markers,
                 {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
             self.isLoading = false;
@@ -167,6 +144,16 @@
 
         // Assign customers to drivers
         function assign() {
+
+          //clears markers and culsterer os there are no duplicates on re-render
+          if(self.markers.length > 0){
+				self.markers.forEach(function(marker){
+					marker.setMap(null);
+				});
+				self.markerClusterer.clearMarkers();
+				self.markers = [];
+			}
+
             // Set loading state
             self.isLoading = true;
             // Keep track of server calls that haven't returned yet
