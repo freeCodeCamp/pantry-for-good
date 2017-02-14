@@ -1,8 +1,8 @@
 'use strict';
 
 // Setting up route
-angular.module('customer').config(['$stateProvider',
-	function($stateProvider){
+angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
+	function($stateProvider, AuthenticationProvider){
 		// Customer state routing for user
 		$stateProvider.
 		state('root.createCustomerUser', {
@@ -21,6 +21,9 @@ angular.module('customer').config(['$stateProvider',
 				'waiver@root.createCustomerUser': {
 					templateUrl: 'modules/customer/views/partials/waiver.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.createCustomerUser-success', {
@@ -29,6 +32,9 @@ angular.module('customer').config(['$stateProvider',
 				'content@': {
 					templateUrl: 'modules/customer/views/user/create-customer-success.client.view.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.viewCustomerUser', {
@@ -41,6 +47,9 @@ angular.module('customer').config(['$stateProvider',
 				'dynamic-view@root.viewCustomerUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-view.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.editCustomerUser', {
@@ -56,6 +65,9 @@ angular.module('customer').config(['$stateProvider',
 				'household@root.editCustomerUser': {
 					templateUrl: 'modules/customer/views/partials/household.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		});
 	}

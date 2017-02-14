@@ -15,6 +15,9 @@ angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/driver/views/user-driver.client.view.html',
 					controller: 'DriverUserController as driverCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		// Driver state routing for admin

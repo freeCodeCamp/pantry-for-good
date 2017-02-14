@@ -15,6 +15,9 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 				'dynamic-form@root.createDonorUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.createDonorUser-success', {
@@ -23,6 +26,9 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 				'content@': {
 					templateUrl: 'modules/donor/views/user/create-donor-success.client.view.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.viewDonorUser', {
@@ -32,6 +38,9 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 					templateUrl: 'modules/donor/views/view-donor.client.view.html',
 					controller: 'DonorUserController as dynCtrl'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
 		state('root.editDonorUser', {
@@ -44,6 +53,9 @@ angular.module('donor').config(['$stateProvider', 'AuthenticationProvider',
 				'dynamic-form@root.editDonorUser': {
 					templateUrl: 'modules/core/views/partials/dynamic-form.partial.html'
 				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		});
 
