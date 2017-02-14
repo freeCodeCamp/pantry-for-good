@@ -5,40 +5,36 @@
 
     /* search of food bank city lattitude and langitude */
     function findCity() {
-        var xhr = new XMLHttpRequest();
+        var result, xhr = new XMLHttpRequest();
         xhr.open('GET', "/api/settings", false);
         xhr.send();
 
-        if (xhr.status != 200) {
+        if (xhr.status !== 200) {
             console.log(xhr.status + ': ' + xhr.statusText); // example: 404: Not Found
         } else {
-            var result = JSON.parse(xhr.responseText);
+            result = JSON.parse(xhr.responseText);
         }
         return result.foodBankCity;
     }
 
     function citySearch() {
         var city = findCity();
-        var xhr = new XMLHttpRequest();
-        //var city = "Toronto";
+        var result, xhr = new XMLHttpRequest();
         xhr.open('GET', "https://maps.googleapis.com/maps/api/geocode/json?address=" + encodeURIComponent(city), false);
         xhr.send();
 
-        if (xhr.status != 200) {
+        if (xhr.status !== 200) {
             console.log(xhr.status + ': ' + xhr.statusText); // example: 404: Not Found
         } else {
-            var result = JSON.parse(xhr.responseText);
+            result = JSON.parse(xhr.responseText);
         }
+	
+				var mostLikelyCity = result.results[0];
 
-        var arr = $.map(result, function (el) {
-            return el;
-        });
+        var lat = mostLikelyCity.geometry.location.lat;
+        var lng = mostLikelyCity.geometry.location.lng;
 
-        var lat = arr[0].geometry.location.lat;
-        var lng = arr[0].geometry.location.lng;
-
-        return {lat: lat, lng: lng}
-
+        return {lat: lat, lng: lng};
     }
 
     /* @ngInject */
