@@ -1,15 +1,13 @@
 // Setting up route
 angular.module('customer').config(['$stateProvider', 'AuthenticationProvider',
 	/* ngInject */
-	function($stateProvider, AuthenticationProvider, CustomerAdmin){
+	function($stateProvider, AuthenticationProvider){
 		// Customer state routing for admin
 		$stateProvider.
 		state('root.listCustomers', {
 			url: 'admin/customers',
 			resolve: {
-				customers: function(CustomerAdmin) {
-					return CustomerAdmin.query();
-				},
+
 				CurrentUser: AuthenticationProvider.requireAdminUser
 			},
 			views: {

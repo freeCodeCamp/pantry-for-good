@@ -1,11 +1,34 @@
 import angular from 'angular';
 
+import {loadCustomers, selectors as customerSelectors} from '../../../store/customer';
+
+const mapStateToThis = state => ({
+  customers: customerSelectors.getAllCustomers(state.customer.ids, state.entities)
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadCustomers: () => dispatch(loadCustomers())
+});
+
 export default angular.module('customer')
   .component('customerList', {
-    controller: 'CustomerController',
-    bindings: {
-      customers: '='
-    },
+    controller: ['$ngRedux', function($ngRedux) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.loadCustomers();
+      };
+
+      this.$onDestroy = () => this.unsubscribe;
+
+      // Add plugins into datatable
+			this.dtOptions = {
+				dom: 'TCRlfrtip',
+				tableTools: {
+					sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
+					aButtons: ['copy', 'xls']
+				}
+			};
+    }],
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
@@ -48,7 +71,7 @@ export default angular.module('customer')
                   <!-- Table content -->
                   <tbody>
                     <tr data-ng-repeat="customer in $ctrl.customers">
-                      <td><span data-ng-bind="customer._id"></span></td>
+                      <td><span data-ng-bind="customer.id"></span></td>
                       <td><span data-ng-bind="customer.fullName"></span></td>
                       <td><span data-ng-bind="customer.fullAddress"></span></td>
                       <td><span data-ng-bind="customer.telephoneNumber"></span></td>
