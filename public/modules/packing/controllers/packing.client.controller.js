@@ -4,7 +4,7 @@
 	angular.module('packing').controller('PackingController', PackingController);
 
 	/* @ngInject */
-	function PackingController($filter, Food, FoodItem, CustomerAdmin, moment) {
+	function PackingController($filter, FoodAdmin, FoodItem, CustomerAdmin, moment) {
 		var self = this;
 
 		// Copy data for smart table
@@ -20,7 +20,7 @@
 			// Set loading state
 			self.isLoading = true;
 
-			Food.query({}, function (foods) {
+			FoodAdmin.query({}, function (foods) {
 				// Flatten obtained data for ng-repeat
 				self.items = [];
 				for (var food in foods) {
