@@ -3,7 +3,8 @@
 
     angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
-
+<<<<<<< HEAD
+=======
     /* search of food bank city lattitude and langitude */
     function findCity() {
         var result, xhr = new XMLHttpRequest();
@@ -38,8 +39,7 @@
         return {lat: lat, lng: lng};
     }
 
-
-
+>>>>>>> staging
     /* @ngInject */
     function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window, GeoLocation) {
         var self = this;

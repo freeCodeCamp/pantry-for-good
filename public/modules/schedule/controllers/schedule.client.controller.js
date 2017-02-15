@@ -4,7 +4,7 @@
 	angular.module('schedule').controller('ScheduleController', ScheduleController);
 
 	/* @ngInject */
-	function ScheduleController(Food, FoodItem, moment) {
+	function ScheduleController(FoodAdmin, FoodItem, moment) {
 		var self = this;
 
 		// Copy food item for smart table
@@ -18,7 +18,7 @@
 			// Set loading state
 			self.isLoading = true;
 
-			Food.query({}, function (foods) {
+			FoodAdmin.query({}, function (foods) {
 				// Flatten obtained data for ng-repeat
 				self.items = [];
 				for (var food in foods) {
