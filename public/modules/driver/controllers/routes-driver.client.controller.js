@@ -3,6 +3,7 @@
 
     angular.module('driver').controller('DriverRouteController', DriverAdminController);
 
+
     /* search of food bank city lattitude and langitude */
     function findCity() {
         var result, xhr = new XMLHttpRequest();
@@ -28,7 +29,7 @@
         } else {
             result = JSON.parse(xhr.responseText);
         }
-	
+
 				var mostLikelyCity = result.results[0];
 
         var lat = mostLikelyCity.geometry.location.lat;
@@ -37,8 +38,10 @@
         return {lat: lat, lng: lng};
     }
 
+
+
     /* @ngInject */
-    function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window) {
+    function DriverAdminController($filter, CustomerAdmin, VolunteerAdmin, $scope, $window, GeoLocation) {
         var self = this;
         var googleObject = $window.google;
         var markerClustererObject = $window.MarkerClusterer;
@@ -54,8 +57,11 @@
         self.isLoading = null;
         self.mapObject = null;
         self.settings = [];
+        self.markerClusterer = null;
+		    self.markers = [];
 
-        googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
+       googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
+
 
         function initMap() {
 
@@ -101,7 +107,6 @@
             // min/max values for nudging markers who are on the same spot
             var min = 0.999999;
             var max = 1.000001;
-            var markers = [];
 
             self.customers.forEach(function (customer) {
                 // create info window instance
@@ -147,12 +152,12 @@
                 googleMarker.addListener('mouseover', showWindow);
                 googleMarker.addListener('mouseout', hideWindow);
 
-                markers.push(googleMarker);
+                self.markers.push(googleMarker);
 
             });
 
             //create marker cluster instance
-            var markerCluster = new markerClustererObject(self.mapObject, markers,
+            self.markerClusterer = new markerClustererObject(self.mapObject, self.markers,
                 {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
             self.isLoading = false;
@@ -163,6 +168,16 @@
 
         // Assign customers to drivers
         function assign() {
+
+          //clears markers and culsterer os there are no duplicates on re-render
+          if(self.markers.length > 0){
+				self.markers.forEach(function(marker){
+					marker.setMap(null);
+				});
+				self.markerClusterer.clearMarkers();
+				self.markers = [];
+			}
+
             // Set loading state
             self.isLoading = true;
             // Keep track of server calls that haven't returned yet
