@@ -29,7 +29,7 @@
         } else {
             result = JSON.parse(xhr.responseText);
         }
-	
+
 				var mostLikelyCity = result.results[0];
 
         var lat = mostLikelyCity.geometry.location.lat;
@@ -59,27 +59,14 @@
         self.settings = [];
         self.markerClusterer = null;
 		    self.markers = [];
-        self.foodBankGeo = {};
 
-        //call server for foodbank location
-        GeoLocation.getCity().get(function(response){
-
-              var city = response.foodBankCity;
-
-            GeoLocation.getGeoLocation(city).then(function(response){
-              var lat = response.data.results[0].geometry.location.lat;
-              var lng = response.data.results[0].geometry.location.lng;
-              self.foodBankGeo = {lat:lat, lng: lng};
-              //event handler to initialise map
-              googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
-            });
-          });
+       googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 
 
         function initMap() {
 
             self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
-                center: self.foodBankGeo,
+                center: citySearch(),
                 zoom: 12
             });
             findDrivers();

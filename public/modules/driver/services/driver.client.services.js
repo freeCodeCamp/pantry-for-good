@@ -12,8 +12,8 @@
 			getGeoLocation:getGeoLocation
 		};
 
-		function getGeoLocation(city){
-				return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + city);
+		function getGeoLocation(address){
+				return $http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address);
 
 		}
 

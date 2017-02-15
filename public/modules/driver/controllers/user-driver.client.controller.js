@@ -28,16 +28,14 @@
 		self.waypointsMarker = [];
 		self.driverMarker = null;
 		self.foodBankGeo = null;
-
 		self.navigator = null;
-
+		self.geoLocationFail = false;
+		self.changeOrigin = false;
 
 	$rootScope.$on("$stateChangeStart", function(event, to, fromState){
    navigator.geolocation.clearWatch(self.navigator);
 });
 
-		var geoToronto = {lat: 43.8108899, lng: -79.449906};
-		var lpool ={lat:53.4084, lng:-2.9916};
 
 		//call server for foodbank location
 		GeoLocation.getCity().get(function(response){
@@ -98,54 +96,71 @@
 					self.driverMarker = driverMarker;
 						//stops findCustomers firing repeatedly
 						if(!flag){
-							findCustomers();
+							findCustomers(false);
 							flag = true;
 						}
 
 				 }, function() {
 					 //if geo location not working
-					createStartingPoint();
+					 self.geoLocationFail = true;
+					findCustomers(true);
 				 });
 			 }
 			 else {
 				 //if geo location not supported
-			 	createStartingPoint();
+				 self.geoLocationFail = true;
+				 findCustomers(true);
 			 }
      }
+          function clearWatchPosition(){
+						//stops function firing intermittently if geo location errors
+					 	if (navigator.geolocation && self.navigator || self.navigator === 0) {
+					 		navigator.geolocation.clearWatch(self.navigator);
+					 		self.navigator = null;
+					 	}
+					 	//removes previously rendered driver marker so there's only one
+					 	if(self.driverMarker){
+					 		self.driverMarker.setMap(null);
+					 		self.driverMarker = null;
+					 	}
 
+					}
+
+					function getDriversAddress(){
+						//driver marker icon
+		 				 var driverIcon = 'modules/driver/images/driver-marker.png';
+
+						var driversAddress = self.driver.fullAddress;
+
+						GeoLocation.getGeoLocation(driversAddress).then(function(response){
+							var lat = response.data.results[0].geometry.location.lat;
+							var lng = response.data.results[0].geometry.location.lng;
+							self.driverPosition = {lat:lat, lng: lng};
+							//event handler to initialise map
+							self.mapObject.setCenter(self.driverPosition);
+
+							var driverMarker = new googleObject.maps.Marker({
+								position:self.driverPosition,
+								map:self.mapObject,
+								icon:driverIcon
+							});
+
+							self.driverMarker = driverMarker;
+							furthestClientFromDriver();
+						});
+					}
 
 		 		 //set starting point to the city if geo location not working
 		 		 	function createStartingPoint(){
-		 				//driver marker icon
-		 				 var driverIcon = 'modules/driver/images/driver-marker.png';
-						 //stops function firing intermittently if geo location errors
-						  if (navigator.geolocation && self.navigator) {
-								navigator.geolocation.clearWatch(self.navigator);
-								self.navigator = null;
-							}
-							//removes previously rendered driver marker so there's only one
-							if(self.driverMarker){
-								self.driverMarker.setMap(null);
-								self.driverMarker = null;
-							}
-							//makes it explicit that driverPosition is now the city location
-		 					self.driverPosition = self.foodBankGeo;
 
-							self.mapObject.setCenter(self.driverPosition);
-
-		 				var driverMarker = new googleObject.maps.Marker({
-		 				position:self.driverPosition,
-		 				map:self.mapObject,
-		 				icon:driverIcon
-		 				});
-
-		 				self.driverMarker = driverMarker;
-	 					findCustomers();
-
-		 			}
+						 clearWatchPosition();
+	           getDriversAddress();
+			 			}
 
 					//unable to create optimised route, fire this function
 					function createMarkersWithoutRoute(){
+
+						clearWatchPosition();
 						//client marker icon
 						var clientIcon = 'modules/driver/images/client-marker.png';
 
@@ -202,19 +217,20 @@
 
 							//if user selects 'not now' to sharing location on
 							//firefox, it doesn't fire the error function.
+							//safari usually doesn't respond to geolocation
 							//$timeout is the way around this
 			function checkFunctionChain(){
 				if(!self.driverPosition){
-					createStartingPoint();
+					findCustomers(true);
 				}
 			}
 
 //checks map and route is rendered
-$timeout(checkFunctionChain, 9000);
+$timeout(checkFunctionChain, 5000);
 
      //=== START Function chain ===//
 		// Find a list of customers
-		function findCustomers() {
+		function findCustomers(geolocationFail){
 			// Set loading state
 			self.isLoading = true;
 			VolunteerUser.get({
@@ -229,7 +245,12 @@ $timeout(checkFunctionChain, 9000);
 				// Remove loading state
 				self.isLoading = false;
 				// Trigger next function in the chain
-				furthestClientFromDriver();
+				if(geolocationFail){
+					createStartingPoint();
+				}
+				else{
+					furthestClientFromDriver();
+				}
 			});
 		}
 
@@ -307,15 +328,14 @@ $timeout(checkFunctionChain, 9000);
 			createMarkers(result.routes[0].waypoint_order);
     }
 		else {
-			//if route fails because of driver position, change it to the city geo location
-		if(self.driverPosition.lat !== self.foodBankGeo.lat && self.driverPosition.lng !== self.foodBankGeo.lng){
-			//repaints route changing start position to the city geo location
-				createStartingPoint();
-			}
-			else{
 				//if route fails, just show markers
-				createMarkersWithoutRoute();
-			}
+				if(!self.changeOrigin){
+					self.changeOrigin = true;
+					findCustomers(true);
+				}
+				else{
+					createMarkersWithoutRoute();
+				}
 		}
   });
 		}
@@ -409,7 +429,7 @@ $timeout(checkFunctionChain, 9000);
 					// render the view again
 					// Note: This will trigger only once, depending on which callback comes in last,
 					// which is why it's in both the customer and driver callbacks
-					if (!updatesInProgress) findCustomers();
+					if (!updatesInProgress) findCustomers(self.geolocationFail);
 				}, function(errorResponse) {
 					self.error = errorResponse.data.message;
 				});
@@ -425,7 +445,7 @@ $timeout(checkFunctionChain, 9000);
 			driver.generalNotes = driver.newNotes;
 
 			driver.$update(function() {
-				findCustomers();
+				findCustomers(self.geolocationFail);
 			}, function(errorResponse) {
 				self.error = errorResponse.data.message;
 			});
