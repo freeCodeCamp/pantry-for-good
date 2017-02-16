@@ -31,6 +31,7 @@
 		self.navigator = null;
 		self.geoLocationFail = false;
 		self.changeOrigin = false;
+		self.useDriverAddress = false;
 
 	$rootScope.$on("$stateChangeStart", function(event, to, fromState){
    navigator.geolocation.clearWatch(self.navigator);
@@ -62,7 +63,7 @@
 		function initMap() {
 
 	         self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
-						 center: new google.maps.LatLng(0, 0),
+						 center: new googleObject.maps.LatLng(0, 0),
 	           zoom: 1
 	         });
 					 //to ensures the findCustomers function is fired once
@@ -241,6 +242,7 @@
 							//$timeout is the way around this
 			function checkFunctionChain(){
 				if(!self.driverPosition){
+				self.useDriverAddress = true;
 					findCustomers(true, true);
 				}
 			}
@@ -352,7 +354,7 @@ $timeout(checkFunctionChain, 5000);
     }
 		else {
 				//if route fails, just show markers
-				if(!self.changeOrigin){
+				if(!self.changeOrigin && !self.useDriverAddress){
 					self.changeOrigin = true;
 					findCustomers(true, true);
 				}
