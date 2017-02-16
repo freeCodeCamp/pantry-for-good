@@ -43,10 +43,13 @@
 					var city = response.foodBankCity;
 						//call google api for city lat/lng
 				GeoLocation.getGeoLocation(city).then(function(response){
-					var lat = response.data.results[0].geometry.location.lat;
-					var lng = response.data.results[0].geometry.location.lng;
-					self.foodBankGeo = {lat:lat, lng: lng};
-					//event handler to initialise map
+					console.log('geolocation city response is:',response.data.status);
+					if(response.data.status === 'OK'){
+						var lat = response.data.results[0].geometry.location.lat;
+						var lng = response.data.results[0].geometry.location.lng;
+						self.foodBankGeo = {lat:lat, lng: lng};
+						//event handler to initialise map
+					}
 					googleObject.maps.event.addDomListener(document.querySelector(".googleMap"), 'load', initMap());
 				});
 			});
@@ -59,8 +62,8 @@
 		function initMap() {
 
 	         self.mapObject = new googleObject.maps.Map(document.querySelector(".googleMap"), {
-	           center: self.foodBankGeo,
-	           zoom: 12
+						 center: new google.maps.LatLng(0, 0),
+	           zoom: 1
 	         });
 					 //to ensures the findCustomers function is fired once
 					 //in the recursive watchPosition method
@@ -91,25 +94,25 @@
 	 				position:driverPosition,
 	 				map:self.mapObject,
 	 		    icon:driverIcon
-	 			  });
+				});
 
 					self.driverMarker = driverMarker;
 						//stops findCustomers firing repeatedly
 						if(!flag){
-							findCustomers(false);
+							findCustomers(false, true);
 							flag = true;
 						}
 
 				 }, function() {
 					 //if geo location not working
 					 self.geoLocationFail = true;
-					findCustomers(true);
+					findCustomers(true, true);
 				 });
 			 }
 			 else {
 				 //if geo location not supported
 				 self.geoLocationFail = true;
-				 findCustomers(true);
+				 findCustomers(true, true);
 			 }
      }
           function clearWatchPosition(){
@@ -131,23 +134,35 @@
 		 				 var driverIcon = 'modules/driver/images/driver-marker.png';
 
 						var driversAddress = self.driver.fullAddress;
+						if(driversAddress.length !== 0){
+							GeoLocation.getGeoLocation(driversAddress).then(function(response){
+								console.log('geolocation driver address response is:',response.data.status);
+								if(response.data.status === 'OK'){
+									var lat = response.data.results[0].geometry.location.lat;
+									var lng = response.data.results[0].geometry.location.lng;
+									self.driverPosition = {lat:lat, lng: lng};
+									//event handler to initialise map
+									self.mapObject.setCenter(self.driverPosition);
 
-						GeoLocation.getGeoLocation(driversAddress).then(function(response){
-							var lat = response.data.results[0].geometry.location.lat;
-							var lng = response.data.results[0].geometry.location.lng;
-							self.driverPosition = {lat:lat, lng: lng};
-							//event handler to initialise map
-							self.mapObject.setCenter(self.driverPosition);
+									var driverMarker = new googleObject.maps.Marker({
+										position:self.driverPosition,
+										map:self.mapObject,
+										icon:driverIcon
+									});
 
-							var driverMarker = new googleObject.maps.Marker({
-								position:self.driverPosition,
-								map:self.mapObject,
-								icon:driverIcon
+									self.driverMarker = driverMarker;
+									furthestClientFromDriver();
+								}
+								else{
+									//unable to retrieve driver's address
+									createMarkersWithoutRoute();
+								}
 							});
-
-							self.driverMarker = driverMarker;
-							furthestClientFromDriver();
-						});
+						}
+						else{
+							//no driver's address in DB
+							createMarkersWithoutRoute();
+						}
 					}
 
 		 		 //set starting point to the city if geo location not working
@@ -177,6 +192,11 @@
 								longitude = customer.location[0] * (Math.random() * (max - min) + min);
 
 								number++;
+
+						//centers first marker
+						if(number === 1){
+							self.mapObject.setCenter({lat:latitude, lng:longitude});
+						}
 
 					//create marker instance
 					var googleMarker = new googleObject.maps.Marker({
@@ -221,16 +241,19 @@
 							//$timeout is the way around this
 			function checkFunctionChain(){
 				if(!self.driverPosition){
-					findCustomers(true);
+					findCustomers(true, true);
 				}
 			}
+
+//fires list immediately without triggering chain
+findCustomers(true, false);
 
 //checks map and route is rendered
 $timeout(checkFunctionChain, 5000);
 
      //=== START Function chain ===//
 		// Find a list of customers
-		function findCustomers(geolocationFail){
+		function findCustomers(geolocationFail,fireCustomersList){
 			// Set loading state
 			self.isLoading = true;
 			VolunteerUser.get({
@@ -245,10 +268,10 @@ $timeout(checkFunctionChain, 5000);
 				// Remove loading state
 				self.isLoading = false;
 				// Trigger next function in the chain
-				if(geolocationFail){
+				if(geolocationFail && fireCustomersList){
 					createStartingPoint();
 				}
-				else{
+				else if(fireCustomersList){
 					furthestClientFromDriver();
 				}
 			});
@@ -331,7 +354,7 @@ $timeout(checkFunctionChain, 5000);
 				//if route fails, just show markers
 				if(!self.changeOrigin){
 					self.changeOrigin = true;
-					findCustomers(true);
+					findCustomers(true, true);
 				}
 				else{
 					createMarkersWithoutRoute();
@@ -429,7 +452,7 @@ $timeout(checkFunctionChain, 5000);
 					// render the view again
 					// Note: This will trigger only once, depending on which callback comes in last,
 					// which is why it's in both the customer and driver callbacks
-					if (!updatesInProgress) findCustomers(self.geolocationFail);
+					if (!updatesInProgress) findCustomers(self.geolocationFail, true);
 				}, function(errorResponse) {
 					self.error = errorResponse.data.message;
 				});
@@ -445,7 +468,7 @@ $timeout(checkFunctionChain, 5000);
 			driver.generalNotes = driver.newNotes;
 
 			driver.$update(function() {
-				findCustomers(self.geolocationFail);
+				findCustomers(self.geolocationFail, true);
 			}, function(errorResponse) {
 				self.error = errorResponse.data.message;
 			});
