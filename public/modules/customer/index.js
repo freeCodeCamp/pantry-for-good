@@ -1,6 +1,6 @@
 import './services';
 import './components';
 import './config';
-import './controllers';
 import './filters';
 
+import './css/customer.css';

@@ -13,7 +13,7 @@ Usage:
 ```
 git clone git@github.com:jspaine/food-bank-app.git
 cd food-bank-app
-git checkout reactify/angular-components
+git checkout reactify/redux
 npm install
 npm run dev
 npm test

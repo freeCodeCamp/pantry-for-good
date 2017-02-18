@@ -24,6 +24,6 @@ angular.module('food').factory('FoodAdmin', ['$resource',
 	}
 ]).factory('FoodUser', ['$resource',
 	function($resource) {
-		return $resource('foods/', {});
+		return $resource('api/foods/', {});
 	}
 ]);

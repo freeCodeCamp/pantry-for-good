@@ -1,5 +1,6 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
 import {normalize} from 'normalizr';
+import angular from 'angular';
 
 const API_ROOT = 'http://localhost:8080/api/';
 
@@ -20,9 +21,10 @@ const callApi = (endpoint, method = 'GET', body, schema) => {
     delete entity.__v;
 
     // normalize or denormalize removes _id?
-    body = JSON.stringify({...entity, _id: Number(entity.id)});
+    // angular.toJson omits angular specific attributes
+    body = angular.toJson({...entity, _id: Number(entity.id)});
   } else if (body) {
-    body = JSON.stringify(body);
+    body = angular.toJson(body);
   }
 
   return fetch(fullUrl, {

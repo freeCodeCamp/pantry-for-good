@@ -18,7 +18,7 @@ export default angular.module('customer')
         this.loadCustomers();
       };
 
-      this.$onDestroy = () => this.unsubscribe;
+      this.$onDestroy = () => this.unsubscribe();
 
       // Add plugins into datatable
 			this.dtOptions = {
@@ -88,8 +88,8 @@ export default angular.module('customer')
                         </span>
                       </td>
                       <td print-remove>
-                        <a data-ng-href="/#!/admin/customers/{{customer._id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
-                        <a data-ng-href="/#!/admin/customers/{{customer._id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                        <a data-ng-href="/#!/admin/customers/{{customer.id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
+                        <a data-ng-href="/#!/admin/customers/{{customer.id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
                       </td>
                     </tr>
                   </tbody><!-- /.table content -->
