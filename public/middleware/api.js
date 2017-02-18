@@ -1,20 +1,34 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
-import { normalize, schema } from 'normalizr';
+import {normalize} from 'normalizr';
 
 const API_ROOT = 'http://localhost:8080/api/';
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
-const callApi = (endpoint, method = 'GET', body, schema = null) => {
+const callApi = (endpoint, method = 'GET', body, schema) => {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
   const headers = method === 'GET' ? null : new Headers({
     'Content-Type': 'application/json'
   });
 
+  if (body && schema) {
+    // renormalize body before put/post
+    // assume element types not arrays
+    const entityType = schema._key;
+    const wrappedEntity = normalize(body, schema).entities[entityType]
+    const entity = Object.keys(wrappedEntity).map(k => wrappedEntity[k])[0];
+    delete entity.__v;
+
+    // normalize or denormalize removes _id?
+    body = JSON.stringify({...entity, _id: Number(entity.id)});
+  } else if (body) {
+    body = JSON.stringify(body);
+  }
+
   return fetch(fullUrl, {
     method,
     headers,
-    body: JSON.stringify(body),
+    body,
     credentials: 'same-origin'
   })
     .then(response =>

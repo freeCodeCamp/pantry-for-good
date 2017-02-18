@@ -2,7 +2,7 @@ import union from 'lodash/union';
 import difference from 'lodash/difference';
 import {denormalize} from 'normalizr';
 
-import {customer, arrayOfCustomers} from './schemas';
+import {customer as customerSchema, arrayOfCustomers} from './schemas';
 import {CALL_API} from '../middleware/api';
 
 export const LOAD_CUSTOMERS_REQUEST = 'customer/LOAD_CUSTOMERS_REQUEST';
@@ -26,22 +26,28 @@ export const loadCustomers = () => ({
   }
 });
 
-export const loadCustomer = id => ({
+export const loadCustomer = (id, admin) => ({
   [CALL_API]: {
-    endpoint: `customer/${id}`,
-    schema: customer,
+    endpoint: admin ? `admin/customers/${id}` : `customer/${id}`,
+    schema: customerSchema,
     types: [LOAD_CUSTOMER_REQUEST, LOAD_CUSTOMER_SUCCESS, LOAD_CUSTOMER_FAILURE]
   }
 });
 
-export const saveCustomer = customer => ({
-  [CALL_API]: {
-    endpoint: customer._id ? `customer/${customer._id}` : `customer`,
-    method: customer._id ? 'PUT' : 'POST',
-    schema: customer,
-    types: [SAVE_CUSTOMER_REQUEST, SAVE_CUSTOMER_SUCCESS, SAVE_CUSTOMER_FAILURE]
-  }
-});
+export const saveCustomer = (customer, admin) => {
+  let endpoint;
+  if (admin) endpoint = customer.id ? `admin/customers/${customer.id}` : `admin/customers`
+  else endpoint = customer.id ? `customer/${customer.id}` : `customer`
+  return {
+    [CALL_API]: {
+      endpoint,
+      method: customer.id ? 'PUT' : 'POST',
+      body: customer,
+      schema: customerSchema,
+      types: [SAVE_CUSTOMER_REQUEST, SAVE_CUSTOMER_SUCCESS, SAVE_CUSTOMER_FAILURE]
+    }
+  };
+};
 
 export const deleteCustomer = id => ({
   [CALL_API]: {
@@ -110,8 +116,7 @@ export const selectors = {
   getAllCustomers(customers, entities) {
     return denormalize({customers}, {customers: arrayOfCustomers}, entities).customers;
   },
-  getCustomerById(id, customers, entities) {
-    if (!customers.find(customerId => customerId === id)) return;
-    return denormalize({customers: id}, {customers: customer}, entities).customers;
+  getCustomerById(id, entities) {
+    return denormalize({customers: id}, {customers: customerSchema}, entities).customers;
   }
 }
