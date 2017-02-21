@@ -87,10 +87,10 @@
 					</div>
 				</div><!-- /.box-header -->
 				<!-- Box body -->
-				<div class="box-body table-responsive no-padding top-buffer">
+				<div class="box-body table-responsive ">
 					<form name="itemForm" data-ng-submit="foodCtrl.createItem()">
 						<!-- Table -->
-						<table class="table table-bordered table-striped">
+						<table class="table table-bordered table-striped" datatable='ng' dt-options="foodCtrl.dtOptions">
 							<!-- Table columns -->
 							<thead>
 								<tr>
@@ -160,6 +160,9 @@
 								</tr>
 								<tr data-ng-if="!foodCtrl.items.length">
 									<td class="text-center" colspan="4">No food items yet.</td>
+									<td></td>
+									<td></td>
+									<td></td>
 								</tr>
 							</tbody><!-- /.table-body -->
 						</table><!-- /.table -->
