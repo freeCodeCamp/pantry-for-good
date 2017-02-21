@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverUserController', DriverUserController);
 
 	/* @ngInject */
-	function DriverUserController($filter, Authentication, VolunteerUser, CustomerAdmin, moment, $window, $timeout, $state,$rootScope, GeoLocation) {
+	function DriverUserController($filter, Authentication, VolunteerUser, CustomerUser, moment, $window, $timeout, $state,$rootScope, GeoLocation) {
 		var self = this;
 		var googleObject = $window.google;
 		var markerClustererObject = $window.MarkerClusterer;
@@ -440,10 +440,12 @@ $timeout(checkFunctionChain, 5000);
 			self.customers.filter(function(customer) {
 				return customer.isChecked;
 			}).forEach(function(customerOld) {
-				var customer = new CustomerAdmin(customerOld);
+				var customer = new CustomerUser(customerOld);
 
 				// Update delivered date to this week
 				customer.lastDelivered = beginWeek;
+				//Give driver auth to change client
+				customer.driverDeliverPackage = true;
 				// Add server call
 				updatesInProgress++;
 

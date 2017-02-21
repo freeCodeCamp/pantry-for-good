@@ -4,7 +4,8 @@
 angular.module('customer').factory('CustomerUser', ['$resource',
 	function($resource) {
 		return $resource('customer/:customerId', {
-			customerId: '@_id'
+			customerId: '@_id',
+			driverDeliverPackage:'@driverDeliverPackage'
 		}, {
 			update: {
 				method: 'PUT'
@@ -22,4 +23,3 @@ angular.module('customer').factory('CustomerUser', ['$resource',
 		});
 	}
 ]);
-
