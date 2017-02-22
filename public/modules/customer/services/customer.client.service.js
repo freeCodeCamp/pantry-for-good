@@ -22,4 +22,3 @@ angular.module('customer').factory('CustomerUser', ['$resource',
 		});
 	}
 ]);
-

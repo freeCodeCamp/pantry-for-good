@@ -4,7 +4,7 @@
 	angular.module('driver').controller('DriverUserController', DriverUserController);
 
 	/* @ngInject */
-	function DriverUserController($filter, Authentication, VolunteerUser, CustomerAdmin, moment, $window, $timeout, $state,$rootScope, GeoLocation) {
+	function DriverUserController($filter, Authentication, VolunteerUser, CustomerDriver, moment, $window, $timeout, $state, $rootScope, GeoLocation) {
 		var self = this;
 		var googleObject = $window.google;
 		var markerClustererObject = $window.MarkerClusterer;
@@ -44,7 +44,7 @@
 					var city = response.foodBankCity;
 						//call google api for city lat/lng
 				GeoLocation.getGeoLocation(city).then(function(response){
-					console.log('geolocation city response is:',response.data.status);
+
 					if(response.data.status === 'OK'){
 						var lat = response.data.results[0].geometry.location.lat;
 						var lng = response.data.results[0].geometry.location.lng;
@@ -137,7 +137,7 @@
 						var driversAddress = self.driver.fullAddress;
 						if(driversAddress.length !== 0){
 							GeoLocation.getGeoLocation(driversAddress).then(function(response){
-								console.log('geolocation driver address response is:',response.data.status);
+
 								if(response.data.status === 'OK'){
 									var lat = response.data.results[0].geometry.location.lat;
 									var lng = response.data.results[0].geometry.location.lng;
@@ -152,7 +152,9 @@
 									});
 
 									self.driverMarker = driverMarker;
-									furthestClientFromDriver();
+
+											furthestClientFromDriver();
+
 								}
 								else{
 									//unable to retrieve driver's address
@@ -273,9 +275,9 @@ $timeout(checkFunctionChain, 5000);
 				if(geolocationFail && fireCustomersList){
 					createStartingPoint();
 				}
-				else if(fireCustomersList){
-					furthestClientFromDriver();
-				}
+				else if(fireCustomersList && self.customers.length > 0){
+						furthestClientFromDriver();
+					}
 			});
 		}
 
@@ -293,11 +295,11 @@ $timeout(checkFunctionChain, 5000);
 	});
 
     //finds the client furthest away from the driver's position
-		var furthestClientFromDriver = self.customers.reduce(function(prev, current) {
+		var  clientFurthestFromDriver = self.customers.reduce(function(prev, current) {
     return (prev.distanceFromDriver > current.distanceFromDriver) ? prev : current;
 	});
 	//furthest client from driver is herein referred to as destination
-		self.destination = furthestClientFromDriver;
+		self.destination = clientFurthestFromDriver;
 
 		var removedDestination = self.customers.filter(function(customer){
 			return customer.distanceFromDriver !== self.destination.distanceFromDriver;
@@ -432,33 +434,27 @@ $timeout(checkFunctionChain, 5000);
 		function deliver() {
 			// Set loading state
 			self.isLoading = true;
-			// Keep track of server calls that haven't returned yet
-			var updatesInProgress = 0;
 
-			var driver = self.driver;
+			var deliveryData = {
+				beginWeek:beginWeek,
+				volunteerId:user._id,
+				arrayOfCustomers:[]
+			};
 
 			self.customers.filter(function(customer) {
 				return customer.isChecked;
 			}).forEach(function(customerOld) {
-				var customer = new CustomerAdmin(customerOld);
+				deliveryData.arrayOfCustomers.push(customerOld._id);
+			});
 
-				// Update delivered date to this week
-				customer.lastDelivered = beginWeek;
-				// Add server call
-				updatesInProgress++;
+			var customer = new CustomerDriver(deliveryData);
 
-				customer.$update(function() {
-					// Subtract server call upon return
-					updatesInProgress--;
-					// If all customers and driver updates have returned from the server then we can
-					// render the view again
-					// Note: This will trigger only once, depending on which callback comes in last,
-					// which is why it's in both the customer and driver callbacks
-					if (!updatesInProgress) findCustomers(self.geolocationFail, true);
-				}, function(errorResponse) {
+			customer.$update(function(){
+				findCustomers(self.geolocationFail, true);
+			}, function(errorResponse) {
 					self.error = errorResponse.data.message;
 				});
-			});
+
 		}
 
 		// Update general notes

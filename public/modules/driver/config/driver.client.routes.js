@@ -13,7 +13,10 @@ angular.module('driver').config(['$stateProvider', 'AuthenticationProvider',
 			views: {
 				'content@': {
 					templateUrl: 'modules/driver/views/user-driver.client.view.html',
-					controller: 'DriverUserController as driverCtrl'
+					controller: 'DriverUserController as driverCtrl',
+					params:{
+						volunteerId:'stuff'
+					}
 				}
 			},
 			resolve: {
