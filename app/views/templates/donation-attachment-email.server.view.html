@@ -54,7 +54,7 @@
 				</tr>
 			</tbody>
 		</table>
-		{% if type === 'Non-cash' || type === 'Non-cash with advantage' %}
+		{% if type == 'Non-cash' || type == 'Non-cash with advantage' %}
 		<h3>Non-cash payment details</h3>
 		<table>
 			<tbody>
@@ -73,7 +73,7 @@
 			</tbody>
 		</table>
 		{% endif %}
-		{% if type === 'Cash with advantage' || type === 'Non-cash with advantage' %}
+		{% if type == 'Cash with advantage' || type == 'Non-cash with advantage' %}
 		<h3>Advantage information</h3>
 		<table>
 			<tbody>

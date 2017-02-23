@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	geocoder = require('geocoder'),
+	nodeGeocoder = require('node-geocoder'),
 	moment = require('moment');
 
 /**
@@ -204,18 +204,25 @@ var CustomerSchema = new Schema({
 	{ strict: false }
 );
 
+// Initialize geocoder options for pre save method 
+var geocodeOptions = {
+  provider: 'google',
+  formatter: null
+};
+var geocoder = nodeGeocoder(geocodeOptions);
+
 /**
  * Hook a pre save method to construct the geolocation of the address
  */
 CustomerSchema.pre('save', function(next) {
 	var doc = this;
-	var address = doc.address + doc.city + doc.province;
+  var address = `${doc.address}, ${doc.city}, ${doc.province}`;
 
 	geocoder.geocode(address, function(err, data) {
-		if (data && data.status === 'OK') {
+		if (data) {
 			var location = [];
-			location[0] = data.results[0].geometry.location.lng;
-			location[1] = data.results[0].geometry.location.lat;
+			location[0] = data[0].longitude;
+			location[1] = data[0].latitude;
 			doc.location = location;
 		}
 

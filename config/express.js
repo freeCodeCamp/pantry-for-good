@@ -20,7 +20,8 @@ var fs = require('fs'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
-	path = require('path');
+	path = require('path'),
+  nunjucks  = require('nunjucks');
 
 module.exports = function(db) {
 	// Initialize express app
@@ -53,8 +54,17 @@ module.exports = function(db) {
 	// Showing stack errors
 	app.set('showStackError', true);
 
-	// Set swig as the template engine
+	// Set nunjucks as the template engine
 	app.engine('server.view.html', consolidate[config.templateEngine]);
+
+  // add filter from swig for backwards compatibility
+  var env = nunjucks.configure('./app/views', {
+    autoescape: false,
+    express: app
+  });
+  env.addFilter('json', function(input, indent) {
+    return JSON.stringify(input, null, indent || 0);
+  });
 
 	// Set views path and view engine
 	app.set('view engine', 'server.view.html');
