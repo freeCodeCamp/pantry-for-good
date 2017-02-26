@@ -2,7 +2,7 @@
 
 module.exports = {
 	port: process.env.PORT || 3000,
-	templateEngine: 'swig',
+	templateEngine: 'nunjucks',
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
 	mailer: {

@@ -10,6 +10,34 @@
 		// Copy food item for smart table
 		self.itemsCopy = [].concat(self.items);
 
+		// Add plugins into datatable
+		self.dtOptions =
+		{
+			dom: 'Tlrtip',
+			tableTools: {
+				sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
+				aButtons: [
+					"copy",
+					{
+						"sExtends":    "collection",
+						"sButtonText": "Save",
+						"aButtons":    [ {
+							"sExtends": "csv",
+							"sButtonText": "CSV",
+							"mColumns": [ 0, 1, 2 ],
+							"bSelectedOnly": true,
+							"sFileName": 'report.csv'
+						}, {
+							"sExtends": "xls",
+							"sButtonText": "Excel",
+							"mColumns": [ 0, 1, 2 ],
+							"bSelectedOnly": true,
+							"sFileName": 'report.xls'
+						}]
+					}
+				]
+			}
+		};
 		// Create food item
 		self.createItem = function() {
 			var item = new FoodItem(self.item);
