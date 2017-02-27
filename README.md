@@ -17,6 +17,8 @@ Contributing
 
 We welcome pull requests from seasoned Javascript developers. Please read our [guide](CONTRIBUTING.md) first, then check out our open issues.
 
+**Please Note: This app is currently undergoing an overhaul to use React in place of Angular. Any current contributions made to the front end will be overwritten with this change.** 
+
 Local Installation
 ------------------
 
