@@ -203,7 +203,11 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var customer = req.customer;
 
+	//changes field to false to stop unauthorized changes by driver
+  req.body.driverDeliverPackage = false;
+
 	customer = _.extend(customer, req.body);
+
 
 	// Adding fields not in the schema
 	var schemaFields = Object.getOwnPropertyNames(Customer.schema.paths);
@@ -319,7 +323,9 @@ exports.customerById = function(req, res, next, id) {
  * Customer authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.customer._id !== +req.user.id) {
+var driverDeliverPackage = req.query.driverDeliverPackage;
+
+	if (req.customer._id !== +req.user.id && !driverDeliverPackage) {
 		return res.status(403).send({
 			message: 'User is not authorized'
 		});
