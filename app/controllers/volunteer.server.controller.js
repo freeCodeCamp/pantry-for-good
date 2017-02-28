@@ -162,19 +162,23 @@ exports.delete = function(req, res) {
  */
 exports.sendPackage = function(req, res){
 	var customers = req.body.arrayOfCustomers;
-	var volunteer = req.volunteer;
   var length = customers.length;
 	var number = 0;
+	var driver = req.user;
 
-	customers.forEach(function(customerId){
+customers.forEach(function(customerId){
 
-		Customer.findByIdAndUpdate(customerId, {$set:{"lastDelivered":req.body.beginWeek}})
-						.exec()
-						.then(function(){
-							number++;
-							if(number === length) return res.end();
-						});
+	Customer.findById(customerId, function(err, customer){
+		if(customer.assignedTo === +driver.id){
+			Customer.findByIdAndUpdate(customerId, {$set:{"lastDelivered":req.body.beginWeek}})
+			.exec()
+			.then(function(){
+				number++;
+				if(number === length) return res.end();
 			});
+		 }
+	 });
+ });
 };
 
 /**

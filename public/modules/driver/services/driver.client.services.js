@@ -22,9 +22,8 @@
 	}
 ]).factory('CustomerDriver', ['$resource',
    function($resource) {
-		 return $resource('volunteer/driver/:volunteerId', {
-			 volunteerId:'@volunteerId'
-		 }, {
+		 return $resource('driver/delivered',
+		 {}, {
 			 update: {
 				 method: 'PUT'
 			 }

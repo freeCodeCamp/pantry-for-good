@@ -437,7 +437,6 @@ $timeout(checkFunctionChain, 5000);
 
 			var deliveryData = {
 				beginWeek:beginWeek,
-				volunteerId:user._id,
 				arrayOfCustomers:[]
 			};
 
