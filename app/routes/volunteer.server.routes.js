@@ -14,6 +14,9 @@ module.exports = function(app) {
 		.get(users.requiresLogin, volunteer.hasAuthorization, volunteer.read)
 		.put(users.requiresLogin, volunteer.hasAuthorization, volunteer.update);
 
+	app.route('/driver/delivered')
+	   .put(volunteer.sendPackage);
+
 	// Volunteer routes for admin
 	app.route('/admin/volunteers')
 		.get(volunteer.list);

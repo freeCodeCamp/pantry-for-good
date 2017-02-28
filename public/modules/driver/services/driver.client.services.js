@@ -1,10 +1,7 @@
-(function() {
-	'use strict';
+'use strict';
 
 	// GeoLocation service used for communicating with the donation REST endpoints
-	angular.module('driver').factory('GeoLocation', GeoLocation);
-
-	/* @ngInject */
+	angular.module('driver').factory('GeoLocation', ['$resource','$http',
 	function GeoLocation($resource, $http) {
 
 		var service = {
@@ -23,4 +20,13 @@
 
 		return service;
 	}
-})();
+]).factory('CustomerDriver', ['$resource',
+   function($resource) {
+		 return $resource('driver/delivered',
+		 {}, {
+			 update: {
+				 method: 'PUT'
+			 }
+		 });
+	 }
+ ]);

@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
 		Volunteer = mongoose.model('Volunteer'),
+		Customer = mongoose.model('Customer'),
 		User = mongoose.model('User'),
 		_ = require('lodash');
 
@@ -154,6 +155,30 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		});
+};
+
+/**
+ * Driver sending package
+ */
+exports.sendPackage = function(req, res){
+	var customers = req.body.arrayOfCustomers;
+  var length = customers.length;
+	var number = 0;
+	var driver = req.user;
+
+customers.forEach(function(customerId){
+
+	Customer.findById(customerId, function(err, customer){
+		if(customer.assignedTo === +driver.id){
+			Customer.findByIdAndUpdate(customerId, {$set:{"lastDelivered":req.body.beginWeek}})
+			.exec()
+			.then(function(){
+				number++;
+				if(number === length) return res.end();
+			});
+		 }
+	 });
+ });
 };
 
 /**
