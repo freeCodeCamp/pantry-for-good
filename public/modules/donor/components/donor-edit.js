@@ -31,8 +31,8 @@ export default angular.module('donor')
                   <button type="submit" class="btn btn-success btn-block top-buffer">Update</button>
                 </div>
                 <div class="col-sm-6 col-md-4 col-lg-2">
-                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.authentication.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/donors">Cancel</a>
-                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.authentication.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
+                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.auth.user.roles.indexOf('admin') >= 0" data-ng-href="/#!/admin/donors">Cancel</a>
+                  <a class="btn btn-primary btn-block top-buffer" data-ng-if="$ctrl.auth.user.roles.indexOf('admin') < 0" data-ng-href="/#!/">Cancel</a>
                 </div>
               </div><!-- /.buttons -->
               <!-- Error -->

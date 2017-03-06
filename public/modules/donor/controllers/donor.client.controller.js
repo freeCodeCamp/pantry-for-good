@@ -37,15 +37,15 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 
 			// Populate donor object if the user has filled an application
 			this.dynType = user;
-
-			this.dynMethods = Form.methods;
-			formInit.get().then(res => {
-				var init = this.dynMethods.generate(this.dynType, res, 'qDonors');
-				this.dynForm = init.dynForm;
-				this.sectionNames = init.sectionNames;
-				this.foodList = init.foodList;
-			});
 		}
+
+		this.dynMethods = Form.methods;
+		formInit.get().then(res => {
+			var init = this.dynMethods.generate(this.dynType, res, 'qDonors');
+			this.dynForm = init.dynForm;
+			this.sectionNames = init.sectionNames;
+			this.foodList = init.foodList;
+		});
 
 		this.create = this.create.bind(this);
 		this.find = this.find.bind(this);
@@ -53,7 +53,6 @@ function DonorController($window, $uibModal, $state, $stateParams, Authenticatio
 		this.update = this.update.bind(this);
 		this.remove = this.remove.bind(this);
 		this.newDonation = this.newDonation.bind(this);
-		this.isAdmin = isAdmin;
 	};
 
 	this.$onDestroy = () => this.unsubscribe();

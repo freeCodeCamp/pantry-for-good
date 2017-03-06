@@ -34,7 +34,7 @@ function VolunteerController($window, $stateParams, $state, Authentication, Volu
 			}
 
 			if ($state.current.name === 'root.editVolunteerAdmin' || $state.current.name ===  'root.viewVolunteerAdmin') {
-				formInit.get().then(function(res) {
+				formInit.get().then(res => {
 					var init = this.dynMethods.generate(this.dynType, res, 'qVolunteers');
 					this.dynForm = init.dynForm;
 					this.sectionNames = init.sectionNames;
@@ -73,7 +73,7 @@ function VolunteerController($window, $stateParams, $state, Authentication, Volu
 			this.dynType = Authentication.user;
 
 			this.dynMethods = Form.methods;
-			formInit.get().then(function(res) {
+			formInit.get().then(res => {
 				var init = this.dynMethods.generate(this.dynType, res, 'qVolunteers');
 				this.dynForm = init.dynForm;
 				this.sectionNames = init.sectionNames;
@@ -105,16 +105,16 @@ function VolunteerController($window, $stateParams, $state, Authentication, Volu
 		// Find existing volunteer
 		this.findOne = () => {
 			const VolunteerService = isAdmin ? VolunteerAdmin : VolunteerUser;
-			this.volunteer = VolunteerService.get({
+			this.dynType = VolunteerService.get({
 				volunteerId: $stateParams.volunteerId
 			}, volunteer => {
-				this.volunteer.dateOfBirth = new Date(volunteer.dateOfBirth);
+				this.dynType.dateOfBirth = new Date(volunteer.dateOfBirth);
 			});
 		};
 
 		// Update existing volunteer
 		this.update = updateType => {
-			var volunteer = this.volunteer;
+			var volunteer = this.dynType;
 
 			if (isAdmin) {
 				if (updateType === 'Driver') {

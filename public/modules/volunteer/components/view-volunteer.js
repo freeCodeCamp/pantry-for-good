@@ -15,7 +15,7 @@ export default angular.module('volunteer')
 
             <dynamic-view dyn-form="$ctrl.dynForm" section-names="$ctrl.sectionNames" />
 
-            <div class="form-group" data-ng-show="$ctrl.authentication.user.roles.indexOf('admin') >= 0">
+            <div class="form-group" data-ng-show="$ctrl.auth.user.roles.indexOf('admin') >= 0">
               <a class="btn btn-warning" data-ng-click="$ctrl.update('Driver')">Driver</a>
               <a class="btn btn-success" data-ng-click="$ctrl.update('Active')">Active</a>
               <a class="btn btn-danger" data-ng-click="$ctrl.update('Inactive')">Inactive</a>
@@ -23,7 +23,7 @@ export default angular.module('volunteer')
               <a class="btn btn-primary" data-ng-href="/#!/admin/volunteers/{{$ctrl.dynType._id}}/edit">Edit</a>
               <a class="btn btn-primary" data-ng-href="/#!/admin/volunteers">Cancel</a>
             </div>
-            <div class="form-group" data-ng-show="$ctrl.authentication.user.roles.indexOf('admin') < 0">
+            <div class="form-group" data-ng-show="$ctrl.auth.user.roles.indexOf('admin') < 0">
               <a class="btn btn-primary" data-ng-href="/#!/volunteer/{{$ctrl.dynType._id}}/edit">Edit</a>
               <a class="btn btn-primary" data-ng-href="/#!/">Cancel</a>
             </div>
