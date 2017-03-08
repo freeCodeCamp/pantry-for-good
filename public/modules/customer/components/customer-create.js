@@ -1,114 +1,83 @@
 import angular from 'angular';
 import {stateGo} from 'redux-ui-router';
 
+import {selectors} from '../../../store';
 import {saveCustomer} from '../../../store/customer';
+import {loadFields} from '../../../store/field';
 import {loadFoods} from '../../../store/food-category';
-import {loadQuestionnaires} from '../../../store/questionnaire';
-import {loadSections, selectors as sectionSelectors} from '../../../store/section';
-import {loadFields, selectors as fieldSelectors} from '../../../store/field';
-import {selectors as foodItemSelectors} from '../../../store/food-item';
+import {loadSections} from '../../../store/section';
 
 const mapStateToThis = state => ({
   user: state.auth.user,
+  savingCustomers: selectors.savingCustomers(state),
+  saveCustomersError: selectors.saveCustomersError(state),
+  formData: selectors.getFormData(state),
+  loadingFormData: selectors.loadingFormData(state),
+  loadFormDataError: selectors.loadFormDataError(state),
   settings: state.settings.data,
-  savingCustomer: state.customer.saving,
-  savingCustomerError: state.customer.saveError,
-  getFoodItems: () => foodItemSelectors.getAllFoods(state.foodItem.ids, state.entities),
-  getFields: () => fieldSelectors.getAllFields(state.field.ids, state.entities),
-  getSections: () => sectionSelectors.getAllSections(state.section.ids, state.entities),
 });
 
 const mapDispatchToThis = dispatch => ({
-  _saveCustomer: customer => dispatch(saveCustomer(customer)),
-  loadFoods: () => dispatch(loadFoods()),
-  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
-  loadFields: () => dispatch(loadFields()),
-  loadSections: () => dispatch(loadSections()),
+  saveCustomer: customer => dispatch(saveCustomer(customer)),
+  loadFormData: () => {
+    dispatch(loadFoods());
+    dispatch(loadFields());
+    dispatch(loadSections());
+  },
   push: (route, params, options) => dispatch(stateGo(route, params, options))
 });
 
 export default angular.module('customer')
   .component('customerCreate', {
     /* @ngInject */
-    controller: function($ngRedux, Form, formInit) {
+    controller: function($ngRedux, Form) {
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
-        this.loading = false;
-        this.loaded = false;
-        this.saving = false;
-        this.saved = false;
-        this.dynMethods = Form.methods;
+        this.prevState = {};
+        this.loadedFormData = false;
+        this.initialized = false;
+
+        this.formMethods = Form.methods;
+        this.loadFormData();
       };
 
-       this.$doCheck = () => {
-        if (this.saving && !this.savingCustomer) {
-          if (this.savingCustomerError) this.error = this.savingCustomerError;
+      this.$doCheck = () => {
+        // Tried to save customer
+        if (this.prevState.savingCustomers && !this.savingCustomers) {
+          if (this.savingCustomersError) this.error = this.savingCustomersError;
           else this.push('root.createCustomerUser-success', null, { reload: true });
         }
 
-        if (!this.loaded) {
-          // roughly when everything is loaded, should add loaded flags to store or better manual tracking
-          if (this.getFields().length &&
-              this.getSections().length &&
-              this.getFoodItems().length) {
-            this.foodList = this.getFoodItems();
-            this.sectionNames = this.getSections();
-
-            // set up form model and generate form
-            this.customerModel = {
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              email: this.user.email,
-              household: [{
-                name: `${this.user.firstName} ${this.user.lastName}`,
-                relationship: 'Applicant'
-              }],
-              foodPreferences: []
-            };
-
-            formInit.get().then(res => {
-              const init = this.dynMethods.generate(this.customerModel, res, 'qClients');
-              this.dynForm = init.dynForm;
-            });
-
-            this.loaded = true;
-          }
+        // Tried to load form data
+        if (this.prevState.loadingFormData && !this.loadingFormData) {
+          if (this.loadFormDataError) this.error = this.loadFormDataError;
+          else this.loadedFormData = true
         }
 
-        // skip if not ready or already loaded
-        if (this.loading || this.loaded) return;
+        // Set up form if data loaded and not already done
+        if (this.loadedFormData && !this.initialized) {
+          this.customer = this.user;
 
-        this.loadFoods();
-        this.loadQuestionnaires();
-        this.loadFields();
-        this.loadSections();
-        this.loading = true;
+          this.customerModel = {
+            ...this.customer,
+            dateOfBirth: new Date(this.customer.dateOfBirth),
+            household: [{
+              name: this.customer.displayName,
+              relationship: 'Applicant'
+            }],
+            foodPreferences: this.customer.foodPreferences || []
+          };
+
+          this.customerForm = this.formMethods.generate(this.customerModel,
+                                      this.formData, 'qClients');
+
+          this.initialized = true;
+        }
+
+        this.prevState = {...this};
       };
 
       this.$onDestroy = () => this.unsubscribe();
-
-      this.saveCustomer = customer => {
-        this.saving = true;
-        this._saveCustomer(customer);
-      };
-
-      // Toggle selection of all food items
-      this.selectAll = checked =>
-        this.customerModel.foodPreferences = checked ? [...this.foodList] : [];
-
-      // Check if food item is selected
-      this.foodIsChecked = selectedFood =>
-        this.customerModel.foodPreferences.find(food => food._id === selectedFood._id);
-
-      // Store food category when box is checked an remove when unchecked
-      this.toggleSelection = selectedFood => {
-        if (this.foodIsChecked(selectedFood)) {
-          this.customerModel.foodPreferences = this.customerModel.foodPreferences
-            .filter(food => food._id !== selectedFood._id)
-        } else {
-          this.customerModel.foodPreferences = [...this.customerModel.foodPreferences, selectedFood];
-        }
-      };
 
       // Set an array of dependants based on input value
       this.setDependantList = numberOfDependants => {
@@ -142,16 +111,17 @@ export default angular.module('customer')
         <div class="row">
           <div class="col-xs-12">
             <!-- Form -->
-            <form name="customerForm" data-ng-submit="$ctrl.create()" novalidate>
+            <form name="customerForm" data-ng-submit="$ctrl.saveCustomer($ctrl.customerModel)" novalidate>
               <!-- Dynamic Form -->
               <dynamic-form
-                section-names="$ctrl.sectionNames"
+                section-names="$ctrl.customerForm.sectionNames"
+                dyn-form="$ctrl.customerForm.dynForm"
                 dyn-type="$ctrl.customerModel"
                 food-list="$ctrl.foodList"
-                is-checked="$ctrl.isChecked(dynType, cellName, choice)"
-                handle-checkbox="$ctrl.handleCheckbox(dynType, cellName, choice)"
-                food-is-checked="$ctrl.foodIsChecked(dynType, food)"
-                toggle-food-selection="$ctrl.toggleFoodSelection(dynType, food)"
+                is-checked="$ctrl.formMethods.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.formMethods.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.formMethodsfoodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.formMethodstoggleFoodSelection(dynType, food)"
               />
 
               <!-- TO BE REPLACED ONCE THE NEEDED FIELD TYPE IS IMPLEMENTED -->

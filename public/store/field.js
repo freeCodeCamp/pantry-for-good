@@ -108,10 +108,10 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllFields(fields, entities) {
+  getAll(fields, entities) {
     return denormalize({fields}, {fields: arrayOfFields}, entities).fields;
   },
-  getFieldById(id, entities) {
+  getOne(id, entities) {
     return denormalize({fields: id}, {fields: field}, entities).fields;
   }
 }

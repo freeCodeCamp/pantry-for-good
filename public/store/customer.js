@@ -113,10 +113,22 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllCustomers(customers, entities) {
+  getAll(customers, entities) {
     return denormalize({customers}, {customers: arrayOfCustomers}, entities).customers;
   },
-  getCustomerById(id, entities) {
+  getOne(id, entities) {
     return denormalize({customers: id}, {customers: customerSchema}, entities).customers;
+  },
+  loading(customers) {
+    return customers.fetching
+  },
+  loadError(customers) {
+    return customers.fetchError
+  },
+  saving(customers) {
+    return customers.saving
+  },
+  saveError(customers) {
+    return customers.saveError
   }
 }

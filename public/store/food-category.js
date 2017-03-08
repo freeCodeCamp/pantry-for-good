@@ -93,10 +93,16 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllFoods(foodCategories, entities) {
+  getAll(foodCategories, entities) {
     return denormalize({foodCategories}, {foodCategories: arrayOfFoodCategories}, entities).foodCategories;
   },
-  getFoodById(id, entities) {
+  getOne(id, entities) {
     return denormalize({foodCategories: id}, {foodCategories: foodCategory}, entities).foodCategories;
+  },
+  loading(foodCategory) {
+    return foodCategory.fetching;
+  },
+  loadError(foodCategory) {
+    return foodCategory.fetchError;
   }
 }

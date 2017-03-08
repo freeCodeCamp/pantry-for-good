@@ -3,13 +3,13 @@ import {router} from 'redux-ui-router';
 import merge from 'lodash/merge';
 
 import auth from './auth';
-import customer from './customer';
-import field from './field';
-import foodCategory from './food-category';
-import foodItem from './food-item';
+import customer, {selectors as customerSelectors} from './customer';
+import field, {selectors as fieldSelectors} from './field';
+import foodCategory, {selectors as foodCategorySelectors} from './food-category';
+import foodItem, {selectors as foodItemSelectors} from './food-item';
 import media from './media';
-import questionnaire from './questionnaire';
-import section from './section';
+import questionnaire, {selectors as questionnaireSelectors} from './questionnaire';
+import section, {selectors as sectionSelectors} from './section';
 import settings from './settings';
 
 // Updates an entity cache in response to any action with response.entities.
@@ -45,3 +45,25 @@ export default combineReducers({
   section,
   settings
 });
+
+export const selectors = {
+  getFormData: state => ({
+    fields: fieldSelectors.getAll(state.field.ids, state.entities),
+    foods: foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+    sections: sectionSelectors.getAll(state.section.ids, state.entities)
+  }),
+  loadingFormData: state =>
+    state.field.fetching || state.foodCategory.fetching || state.section.fetching,
+  loadFormDataError: state =>
+    state.field.fetchError || state.foodCategory.fetchError || state.section.fetchError,
+
+  getAllCustomers: state => customerSelectors.getAll(state.customer.ids, state.entities),
+  getOneCustomer: state => id => customerSelectors.getOne(id, state.entities),
+  loadingCustomers: state => customerSelectors.loading(state.customer),
+  loadCustomersError: state => customerSelectors.loadError(state.customer),
+  savingCustomers: state => customerSelectors.saving(state.customer),
+  saveCustomersError: state => customerSelectors.saveError(state.customer),
+
+  loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
+  loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory)
+};

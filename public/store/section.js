@@ -108,10 +108,10 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllSections(sections, entities) {
+  getAll(sections, entities) {
     return denormalize({sections}, {sections: arrayOfSections}, entities).sections;
   },
-  getSectionById(id, entities) {
+  getOne(id, entities) {
     return denormalize({sections: id}, {sections: section}, entities).sections;
   }
 }

@@ -1,27 +1,34 @@
 import angular from 'angular';
 import {stateGo} from 'redux-ui-router';
 
-import {
-  loadCustomer,
-  saveCustomer,
-  deleteCustomer,
-  selectors as customerSelectors
-} from '../../../store/customer';
+import {selectors} from '../../../store';
+import {loadCustomer, saveCustomer, deleteCustomer} from '../../../store/customer';
+import {loadFields} from '../../../store/field';
 import {loadFoods} from '../../../store/food-category';
+import {loadSections} from '../../../store/section';
 
 const mapStateToThis = state => ({
   user: state.auth.user,
   savingCustomer: state.customer.saving,
   savingCustomerError: state.customer.saveError,
-  getCustomer: id => customerSelectors.getCustomerById(id, state.entities),
+  loadingCustomers: selectors.loadingCustomers(state),
+  loadCustomersError: selectors.loadCustomersError(state),
+  getCustomer: selectors.getOneCustomer(state),
   customerId: state.router.currentParams.customerId,
+  formData: selectors.getFormData(state),
+  loadingFormData: selectors.loadingFormData(state),
+  loadFormDataError: selectors.loadFormDataError(state)
 });
 
 const mapDispatchToThis = dispatch => ({
   loadCustomer: (id, admin) => dispatch(loadCustomer(id, admin)),
   _saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
   deleteCustomer: id => dispatch(deleteCustomer(id)),
-  loadFoods: () => dispatch(loadFoods()),
+  loadFormData: () => {
+    dispatch(loadFoods());
+    dispatch(loadFields());
+    dispatch(loadSections());
+  },
   push: (route, params, options) => dispatch(stateGo(route, params, options))
 });
 
@@ -30,47 +37,54 @@ export default angular.module('customer')
     controller: function($ngRedux, Form, View, formInit) {
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
-        this.loading = false;
-        this.loaded = false;
-        this.saving = false;
-        this.saved = false;
+        this.prevState = {};
+        this.loadedFormData = false;
+        this.initialized = false;
+
         this.isAdmin = this.user.roles.find(role => role === 'admin');
-        this.dynMethods = View.methods;
+        this.viewMethods = View.methods;
+
+        // Only admin should be able to view other customers
+        if (!this.isAdmin && this.user._id !== Number(this.customerId))
+          return this.push('root.403');
+
+        this.loadCustomer(this.customerId, this.isAdmin);
+        this.loadFormData();
       };
 
       this.$doCheck = () => {
-        if (this.saving && !this.savingCustomer && this.savingCustomerError)
-          this.error = this.savingCustomerError;
-
-        this.customer = this.getCustomer(this.customerId);
-
-        if (!this.loaded && this.customer && this.customer.foodPreferences) {
-          this.foodPreferences = this.getFoodPreferences();
-          formInit.get().then(res => {
-            var init = this.dynMethods.generate(this.customer, res, 'qClients');
-            this.dynForm = init.dynForm;
-            this.sectionNames = init.sectionNames;
-            this.foodList = init.foodList;
-          });
-          this.loaded = true;
+        // Tried to save customer
+        if (!this.savingCustomers && this.prevState.savingCustomers) {
+          if (this.savingCustomerError) this.error = this.savingCustomerError;
+          else this.error = null;
         }
 
-        // skip if not ready or already loaded
-        if (!this.customerId || this.loading || this.loaded) return;
-        // only admin can view other users
-        if (!this.isAdmin && this.user._id !== Number(this.customerId)) return this.push('root.403');
+        // Tried to load customer
+        if (!this.loadingCustomers && this.prevState.loadingCustomers) {
+          if (this.loadCustomersError) this.error = this.loadCustomersError;
+          else this.customer = this.getCustomer(this.customerId);
+        }
 
-        this.loadCustomer(this.customerId, this.isAdmin);
-        this.loadFoods();
-        this.loading = true;
+        // Tried to load form data
+        if (!this.loadingFormData && this.prevState.loadingFormData) {
+          if (this.loadFormDataError) this.error = this.loadFormDataError;
+          else this.loadedFormData = true;
+        }
+
+        if (this.customer && this.loadedFormData && !this.initialized) {
+          this.foodPreferences = this.getFoodPreferences();
+          this.customerView = this.viewMethods.generate(this.customer,
+                                                    this.formData, 'qClients');
+
+          this.initialized = true;
+        }
+
+        this.prevState = {...this};
       }
 
       this.$onDestroy = () => this.unsubscribe();
 
-      this.saveCustomer = status => {
-        this.saving = true;
-        this._saveCustomer({...this.customer, status}, this.isAdmin);
-      };
+      this.saveCustomer = status => this._saveCustomer({...this.customer, status},this.isAdmin);
 
       this.getFoodPreferences = () => {
         const {foodPreferences, foodPreferencesOther} = this.customer;
@@ -97,7 +111,10 @@ export default angular.module('customer')
         <div class="row">
           <div class="col-xs-12">
             <!-- Dynamic form, view only -->
-            <dynamic-view dyn-form="$ctrl.dynForm" section-names="$ctrl.sectionNames" />
+            <dynamic-view
+              dyn-form="$ctrl.customerView.dynForm"
+              section-names="$ctrl.customerView.sectionNames"
+            />
 
             <!--TODO: REPLACE REMAINING STATIC SECTIONS-->
             <div class="box box-solid box-primary">
@@ -113,7 +130,7 @@ export default angular.module('customer')
                     <th>Relationship</th>
                     <th>Date of Birth</th>
                   </tr>
-                  <tr data-ng-repeat="dependant in $ctrl.dynType.household">
+                  <tr data-ng-repeat="dependant in $ctrl.customer.household">
                     <td>{{dependant.name}}</td>
                     <td>{{dependant.relationship}}</td>
                     <td>{{dependant.dateOfBirth | date: 'mediumDate'}}</td>

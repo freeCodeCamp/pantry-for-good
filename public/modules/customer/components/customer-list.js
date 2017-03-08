@@ -1,9 +1,12 @@
 import angular from 'angular';
 
-import {loadCustomers, selectors as customerSelectors} from '../../../store/customer';
+import {selectors} from '../../../store';
+import {loadCustomers} from '../../../store/customer';
 
 const mapStateToThis = state => ({
-  customers: customerSelectors.getAllCustomers(state.customer.ids, state.entities)
+  customers: selectors.getAllCustomers(state),
+  loadingCustomers: selectors.loadingCustomers(state),
+  loadCustomersError: selectors.loadCustomersError(state)
 });
 
 const mapDispatchToThis = dispatch => ({
@@ -100,8 +103,8 @@ export default angular.module('customer')
             </div><!-- /.box -->
           </div><!-- /.col -->
         </div><!-- /.row -->
-        <div data-ng-show="$ctrl.error" class="text-danger">
-          <strong data-ng-bind="$ctrl.error"></strong>
+        <div data-ng-show="$ctrl.loadCustomersError" class="text-danger">
+          <strong data-ng-bind="$ctrl.loadCustomersError"></strong>
         </div>
       </section>
     `

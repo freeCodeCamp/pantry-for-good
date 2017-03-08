@@ -17,7 +17,7 @@ function View() {
 		var relevantSections = _.sortBy(_.filter(formInit.sections, function(obj) {
 			return (obj.questionnaire.identifier === qIdentifier);
 		}), 'position');
-		var foodList = _.flatMap(formInit.foods, function(category) {return category.items; });
+		var foodList = formInit.foods;
 		var maxColumns = 6, dynView = [];
 
 			// Loop through sections for given questionnaire

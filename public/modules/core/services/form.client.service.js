@@ -49,7 +49,7 @@ function Form() {
 			return {
 				dynForm: dynForm,
 				sectionNames: _.map(_.sortBy(_.filter(formInit.sections, {'questionnaire': { 'identifier': qIdentifier }}), 'position'), 'name'),
-				foodList: _.flatMap(formInit.foods, function(category) {return category.items; })
+				foodList: formInit.foods
 			};
 	} // Function generate
 

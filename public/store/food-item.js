@@ -68,10 +68,10 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllFoods(foodItems, entities) {
+  getAll(foodItems, entities) {
     return denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems;
   },
-  getFoodItemById(id, entities) {
+  getOne(id, entities) {
     return denormalize({foodItems: id}, {foodItems: foodItem}, entities).foodItems;
   }
 }

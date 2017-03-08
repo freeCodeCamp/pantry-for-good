@@ -108,10 +108,10 @@ export default (state = {
 };
 
 export const selectors = {
-  getAllQuestionnaires(questionnaires, entities) {
+  getAll(questionnaires, entities) {
     return denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires;
   },
-  getQuestionnaireById(id, entities) {
+  getOne(id, entities) {
     return denormalize({questionnaires: id}, {questionnaires: questionnaire}, entities).questionnaires;
   }
 }
