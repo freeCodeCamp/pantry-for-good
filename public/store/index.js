@@ -64,6 +64,7 @@ export const selectors = {
   savingCustomers: state => customerSelectors.saving(state.customer),
   saveCustomersError: state => customerSelectors.saveError(state.customer),
 
+  getAllFoods: state => foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
   loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory)
 };

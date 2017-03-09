@@ -34,7 +34,7 @@ const mapDispatchToThis = dispatch => ({
 
 export default angular.module('customer')
   .component('customerView', {
-    controller: function($ngRedux, Form, View, formInit) {
+    controller: function($ngRedux, View) {
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
         this.prevState = {};
