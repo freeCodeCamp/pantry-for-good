@@ -13,6 +13,17 @@ angular.module('food').config(['$stateProvider', 'AuthenticationProvider',
 					CurrentUser: AuthenticationProvider.requireAdminUser
 				}
 			}
+		}).
+		state('root.foodsAdminReact', {
+			url: 'admin/foods-react',
+			views: {
+				'content@': {
+					component: 'foodListReact'
+				},
+				resolve: {
+					CurrentUser: AuthenticationProvider.requireAdminUser
+				}
+			}
 		});
 	}
 ]);

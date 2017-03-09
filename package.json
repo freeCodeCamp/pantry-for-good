@@ -93,6 +93,9 @@
     "passport": "~0.3.2",
     "passport-local": "~1.0.0",
     "request": "^2.79.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.3",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "redux-ui-router": "^0.7.1-rc.1",
@@ -104,6 +107,7 @@
     "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
+    "babel-preset-react": "^6.23.0",
     "eslint": "^3.14.1",
     "grunt-concurrent": "~2.3.1",
     "grunt-contrib-concat": "^1.0.1",
