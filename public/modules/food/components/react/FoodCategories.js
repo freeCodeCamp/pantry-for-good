@@ -1,27 +1,34 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
+import NewCategory from './NewCategory'
+import { selectors } from '../../../../store/index'
+import { loadFoods, saveFood as saveFoodCategory } from '../../../../store/food-category'
 
 class FoodCategories extends Component {
+    constructor(props) {
+        super(props)
+        this.props.loadFoods()
+    }
 
-    onItemEdit(id, value) {
+    onItemEdit = (id, value) => {
         console.log('onItemEdit ', id, ' ', value)
     }
 
-    onItemRemove(id) {
+    onItemRemove = (id) => {
         console.log('onItemRemove ', id)
     }
 
-    render() {
-        let rows 
-        if (this.props.foodCategories && this.props.foodCategories.length > 0) {
-            rows = this.props.foodCategory.ids.map((id) => {
-                return (
-                    <ListItem key={id} id={id} category={this.props.entities[id].category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
-                )
-            })
+    getTableRows = () => {
+        if (this.props.foods.length > 0) {
+            return this.props.foods.map((category) => (
+                <ListItem key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
+            ))
         } else {
-            rows = (<tr><td className="text-center">No food categories yet.</td></tr>)
+            return (<tr><td className="text-center">No food categories yet.</td></tr>)
         }
+    }
+
+    render() {
 
         return (
             <div className="box">
@@ -35,26 +42,13 @@ class FoodCategories extends Component {
                             <tr><th>Name</th></tr>
                         </thead>
                         <tbody>
-                            {rows}
+                            {this.getTableRows()}
                         </tbody>
                     </table>
                 </div>
 
                 <div className="box-footer">
-                    <form name="categoryForm" data-ng-submit="$ctrl.create()">
-                        <div className="input-group">
-                            <input type="text"
-                                className="form-control"
-                                data-ng-model="$ctrl.food.category"
-                                placeholder="Add category"
-                                required />
-                            <span className="input-group-btn">
-                                <button className="btn btn-success btn-flat" type="submit" data-ng-disabled="categoryForm.$invalid">
-                                    <i className="fa fa-plus"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
+                    <NewCategory createCategory={this.props.createCategory} />
 
                     <div data-ng-show="$ctrl.error" className="text-center text-danger">
                         <strong data-ng-bind="$ctrl.error"></strong>
@@ -74,11 +68,18 @@ class FoodCategories extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    entities: state.entities.foodCategories, 
+    foods: selectors.getAllFoods(state),
     foodCategory: state.foodCategory
 })
 
-export default connect(mapStateToProps)(FoodCategories)
+const mapDispatchToProps = (dispatch) => ({
+    loadFoods: () => dispatch(loadFoods()),
+    createCategory: (category) => dispatch(saveFoodCategory({ category: category }))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodCategories)
+
+
 
 class ListItem extends Component {
     constructor(props) {
@@ -86,7 +87,7 @@ class ListItem extends Component {
         this.state = { showEdit: false, value: this.props.category }
     }
 
-    render() {
+    render = () => {
         if (this.state.showEdit) {
             return (
                 <tr>
@@ -117,20 +118,20 @@ class ListItem extends Component {
         }
     }
 
-    onChange(e) {
-        this.setState({value: e.target.value})
+    onChange = (e) => {
+        this.setState({ value: e.target.value })
     }
 
-    onClickShowEdit() {
+    onClickShowEdit = () => {
         this.setState({ showEdit: true })
     }
 
-    onClickSubmitEdit(e) {
+    onClickSubmitEdit = (e) => {
         this.setState({ showEdit: false })
         this.props.onItemEdit(this.props.id, this.state.value)
     }
 
-    onClickRemove() {
+    onClickRemove = () => {
         this.props.onItemRemove(this.props.id)
     }
 }
