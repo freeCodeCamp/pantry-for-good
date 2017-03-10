@@ -125,7 +125,7 @@ exports.updateItem = function(req, res) {
 
 	async.waterfall([
 		function(done) {
-			Food.findOneAndUpdate({_id: id, 'items._id': item._id}, {$set: {'items.$': item}}, function(err, food) {
+			Food.findOneAndUpdate({_id: id, 'items._id': item._id}, {$set: {'items.$': item}}, {new: true}, function(err, food) {
 				if (!food) {
 					// No document found which means the food item has changed category, go on with the waterfall
 					done(err);

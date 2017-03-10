@@ -84,6 +84,8 @@ export const selectors = {
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
   loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory),
 
+  getAllFoodItems: state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+
   getAllVolunteers: state => volunteerSelectors.getAll(state.volunteer.ids, state.entities),
   getOneVolunteer: state => id => volunteerSelectors.getOne(id, state.entities),
   loadingVolunteers: state => volunteerSelectors.loading(state.volunteer),

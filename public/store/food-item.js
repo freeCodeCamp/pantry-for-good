@@ -2,21 +2,30 @@ import union from 'lodash/union';
 import difference from 'lodash/difference';
 import {denormalize} from 'normalizr';
 
-import {foodItem, arrayOfFoodItems} from './schemas';
+import {
+  foodCategory as foodCategorySchema,
+  foodItem as foodItemSchema,
+  arrayOfFoodItems
+} from './schemas';
 import {CALL_API} from '../middleware/api';
 import {actions as foodCategoryActions} from './food-category';
 import {crudActions} from './utils';
 
 export const actions = crudActions('foodItem');
 
-export const saveFoodItem = (categoryId, foodItem) => ({
-  [CALL_API]: {
-    endpoint: foodItem._id ? `admin/foods/${categoryId}/items/${foodItem._id}` : `admin/foods/${categoryId}/items`,
-    method: foodItem._id ? 'PUT' : 'POST',
-    schema: foodItem,
-    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-  }
-});
+export const saveFoodItem = (categoryId, foodItem) => {
+  console.log('saving foodItem', foodItem, 'in categoryId', categoryId)
+  return {
+    [CALL_API]: {
+      endpoint: foodItem._id ? `admin/foods/${categoryId}/items/${foodItem._id}` : `admin/foods/${categoryId}/items`,
+      method: foodItem._id ? 'PUT' : 'POST',
+      body: foodItem,
+      schema: foodItemSchema,
+      responseSchema: foodCategorySchema,
+      types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+    }
+  };
+};
 
 export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
@@ -39,10 +48,11 @@ export default (state = {
       };
     case actions.SAVE_SUCCESS:
     case actions.DELETE_SUCCESS:
-      const result = Array.isArray(action.response.result) ? action.response.result : [action.response.result];
+      // save (and delete?) returns the whole updated food category
+      const result = Object.keys(action.response.entities.foodItems);
       return {
         ...state,
-        ids: action.type === DELETE_FOOD_SUCCESS ?
+        ids: action.type === actions.DELETE_SUCCESS ?
                               difference(result, state.ids) :
                               union(result, state.ids),
         saving: false
@@ -68,6 +78,6 @@ export const selectors = {
     return denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems;
   },
   getOne(id, entities) {
-    return denormalize({foodItems: id}, {foodItems: foodItem}, entities).foodItems;
+    return denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems;
   }
 }

@@ -16,9 +16,10 @@ const API_ROOT = 'http://localhost:8080/api/';
  * @param {string} [method='GET']
  * @param {object} body
  * @param {any} schema
+ * @param {any} responseSchema for when the api returns something else...
  * @returns promise
  */
-export function callApi(endpoint, method = 'GET', body, schema) {
+export function callApi(endpoint, method = 'GET', body, schema, responseSchema) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
   const headers = method === 'GET' ? null : new Headers({
     'Content-Type': 'application/json'
@@ -34,7 +35,7 @@ export function callApi(endpoint, method = 'GET', body, schema) {
 
     // normalize or denormalize removes _id?
     // angular.toJson omits angular specific attributes
-    body = angular.toJson({...entity, _id: Number(entity.id)});
+    body = angular.toJson({...entity, _id: entity._id || Number(entity.id)});
   } else if (body) {
     body = angular.toJson(body);
   }
@@ -51,7 +52,9 @@ export function callApi(endpoint, method = 'GET', body, schema) {
           return Promise.reject(json);
         }
 
-        return schema ? normalize(json, schema) : json;
+        if (responseSchema) return normalize(json, responseSchema);
+        else if (schema) return normalize(json, schema);
+        else return json;
       })
     );
 };
@@ -68,7 +71,7 @@ export default store => next => action => {
   }
 
   let { endpoint } = callAPI;
-  const { schema, types, method, body } = callAPI;
+  const { schema, responseSchema, types, method, body } = callAPI;
 
   if (typeof endpoint === 'function') {
     endpoint = endpoint(store.getState());
@@ -96,7 +99,7 @@ export default store => next => action => {
   const [ requestType, successType, failureType ] = types;
   next(actionWith({ type: requestType }));
 
-  return callApi(endpoint, method, body, schema).then(
+  return callApi(endpoint, method, body, schema, responseSchema).then(
     response => next(actionWith({
       response,
       type: successType
