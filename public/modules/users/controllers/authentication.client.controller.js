@@ -2,7 +2,12 @@ import angular from 'angular';
 import capitalize from 'lodash/capitalize';
 import {stateGo} from 'redux-ui-router';
 
-import {signUp, signIn, clearUser} from '../../../store/auth';
+import {
+	signUp,
+	signIn,
+	clearUser,
+	clearFlags
+} from '../../../store/auth';
 
 const mapStateToThis = state => ({
 	auth: state.auth,
@@ -16,6 +21,7 @@ const mapDispatchToThis = dispatch => ({
 	register: credentials => dispatch(signUp(credentials)),
 	login: credentials => dispatch(signIn(credentials)),
 	logout: () => dispatch(clearUser()),
+	clearFlags: () => dispatch(clearFlags()),
 	push: (route, params, options) => dispatch(stateGo(route, params, options))
 });
 
@@ -26,6 +32,7 @@ function AuthenticationController($http, Authentication, $state, $timeout, $ngRe
 	var self = this;
 	this.$onInit = () => {
 		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+		this.clearFlags();
 
 		// If user is signed in then redirect back home
 		if (this.auth.user) this.push('root');

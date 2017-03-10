@@ -1,7 +1,12 @@
 import angular from 'angular';
 import {stateGo} from 'redux-ui-router';
 
-import {setUser, setProfile, setPassword} from '../../../store/auth';
+import {
+	setUser,
+	setProfile,
+	setPassword,
+	clearFlags
+} from '../../../store/auth';
 
 const mapStateToThis = state => ({
 	auth: state.auth,
@@ -13,6 +18,7 @@ const mapDispatchToThis = dispatch => ({
 	setUser: user => dispatch(setUser(user)),
 	setProfile: user => dispatch(setProfile(user)),
 	setPassword: password => dispatch(setPassword(password)),
+	clearFlags: () => dispatch(clearFlags()),
 	push: (route, params, options) => dispatch(stateGo(route, params, options))
 });
 
@@ -22,6 +28,7 @@ angular.module('users').controller('SettingsController', SettingsController);
 function SettingsController($ngRedux) {
 	this.$onInit = () => {
 		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+		this.clearFlags();
 
 		// If user is not signed in then redirect back home
 		if (!this.auth.user) this.push('root');

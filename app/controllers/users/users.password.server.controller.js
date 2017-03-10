@@ -69,7 +69,7 @@ exports.forgot = function(req, res, next) {
 				name: user.displayName,
 				appName: config.app.title,
 				tconfig: settings,
-				url: 'http://' + req.headers.host + '/auth/reset/' + token
+				url: 'http://' + req.headers.host + '/#!/password/reset/' + token
 			}, function(err, emailHTML) {
 				done(err, emailHTML, user);
 			});
@@ -170,7 +170,7 @@ exports.reset = function(req, res, next) {
 									if (err) {
 										res.status(400).send(err);
 									} else {
-										// Return authenticated user 
+										// Return authenticated user
 										res.json(user);
 
 										done(err, user);

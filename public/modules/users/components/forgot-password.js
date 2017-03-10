@@ -8,7 +8,7 @@ export default angular.module('users')
         <h3 class="col-md-12 text-center">Restore your password</h3>
         <p class="small text-center">Enter your account username.</p>
         <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-          <form data-ng-submit="$ctrl.askForPasswordReset()" class="signin form-horizontal" autocomplete="off">
+          <form data-ng-submit="$ctrl.forgotPassword($ctrl.credentials)" class="signin form-horizontal" autocomplete="off">
             <fieldset>
               <div class="form-group">
                 <input type="text" id="username" name="username" class="form-control" data-ng-model="$ctrl.credentials.username" placeholder="Username">
@@ -20,7 +20,7 @@ export default angular.module('users')
                 <strong>{{$ctrl.error}}</strong>
               </div>
               <div data-ng-show="$ctrl.success" class="text-center text-success">
-                <strong>{{$ctrl.success}}</strong>
+                <strong>Success {{$ctrl.success}}</strong>
               </div>
             </fieldset>
           </form>
