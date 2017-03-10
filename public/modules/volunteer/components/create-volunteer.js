@@ -1,8 +1,84 @@
 import angular from 'angular';
+import moment from 'moment';
+import {stateGo} from 'redux-ui-router';
+
+import {selectors} from '../../../store';
+import {saveVolunteer} from '../../../store/volunteer';
+import {loadFields} from '../../../store/field';
+import {loadFoods} from '../../../store/food-category';
+import {loadSections} from '../../../store/section';
+
+const mapStateToThis = state => ({
+  user: state.auth.user,
+  savingVolunteers: selectors.savingVolunteers(state),
+  saveVolunteersError: selectors.saveVolunteersError(state),
+  formData: selectors.getFormData(state),
+  loadingFormData: selectors.loadingFormData(state),
+  loadFormDataError: selectors.loadFormDataError(state),
+  settings: state.settings.data,
+});
+
+const mapDispatchToThis = dispatch => ({
+  saveVolunteer: volunteer => dispatch(saveVolunteer(volunteer)),
+  loadFormData: () => {
+    dispatch(loadFoods());
+    dispatch(loadFields());
+    dispatch(loadSections());
+  },
+  push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
 export default angular.module('volunteer')
   .component('createVolunteer', {
-    controller: 'VolunteerController',
+    controller: function($ngRedux, Form) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.prevState = {};
+        this.loadedFormData = false;
+        this.initialized = false;
+
+        this.formMethods = Form.methods;
+        this.loadFormData();
+      };
+
+      this.$doCheck = () => {
+        // Tried to save volunteer
+        if (this.prevState.savingVolunteers && !this.savingVolunteers) {
+          if (this.savingVolunteersError) this.error = this.savingVolunteersError;
+          else this.push('root.createVolunteerUser-success', null, { reload: true });
+        }
+
+        // Tried to load form data
+        if (this.prevState.loadingFormData && !this.loadingFormData) {
+          if (this.loadFormDataError) this.error = this.loadFormDataError;
+          else this.loadedFormData = true
+        }
+
+        // Set up form if data loaded and not already done
+        if (this.loadedFormData && !this.initialized) {
+          this.volunteer = this.user;
+
+          this.volunteerModel = {
+            ...this.volunteer,
+            dateOfBirth: new Date(this.volunteer.dateOfBirth)
+          };
+
+          this.volunteerForm = this.formMethods.generate(this.volunteerModel,
+                                      this.formData, 'qVolunteers');
+
+          this.initialized = true;
+        }
+
+        this.prevState = {...this};
+      };
+
+      this.$onDestroy = () => this.unsubscribe();
+
+      // Helper method to determine the volunteer's age
+			this.isMinor = function(dateOfBirth) {
+				return moment().diff(dateOfBirth, 'years') < 18;
+			};
+    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
@@ -19,17 +95,17 @@ export default angular.module('volunteer')
         <div class="row">
           <div class="col-xs-12">
             <!-- Form -->
-            <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && $ctrl.create()">
+            <form name="volunteerForm" data-ng-submit="volunteerForm.$valid && $ctrl.saveVolunteer($ctrl.volunteerModel)">
               <!-- Identification and General Information -->
               <dynamic-form
-                section-names="$ctrl.sectionNames"
-                dyn-form="$ctrl.dynForm"
-                dyn-type="$ctrl.dynType"
-                food-list="$ctrl.foodList"
-                is-checked="$ctrl.dynMethods.isChecked(dynType, cellName, choice)"
-                handle-checkbox="$ctrl.dynMethods.handleCheckbox(dynType, cellName, choice)"
-                food-is-checked="$ctrl.dynMethods.foodIsChecked(dynType, food)"
-                toggle-food-selection="$ctrl.dynMethods.toggleFoodSelection(dynType, food)"
+                section-names="$ctrl.volunteerForm.sectionNames"
+                dyn-form="$ctrl.volunteerForm.dynForm"
+                dyn-type="$ctrl.volunteerModel"
+                /*food-list="$ctrl.volunteerForm.foodList"*/
+                is-checked="$ctrl.formMethods.isChecked(dynType, cellName, choice)"
+                handle-checkbox="$ctrl.formMethods.handleCheckbox(dynType, cellName, choice)"
+                food-is-checked="$ctrl.formMethods.foodIsChecked(dynType, food)"
+                toggle-food-selection="$ctrl.formMethods.toggleFoodSelection(dynType, food)"
               />
 
               <!-- Box -->
@@ -78,7 +154,7 @@ export default angular.module('volunteer')
                           <div>
                             <label class="checkbox-inline">
                               <input type="checkbox"
-                                    data-ng-model="$ctrl.volunteer.disclaimerAgree"
+                                    data-ng-model="$ctrl.volunteerModel.disclaimerAgree"
                                     value="true"
                                     required>I agree
                             </label>
@@ -87,32 +163,32 @@ export default angular.module('volunteer')
                       </div>
                       <div class="col-xs-8 col-md-6 col-lg-4">
                         <div class="form-group">
-                          <input data-ng-disabled="!$ctrl.volunteer.disclaimerAgree"
+                          <input data-ng-disabled="!$ctrl.volunteerModel.disclaimerAgree"
                                 class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.volunteer.disclaimerSign"
+                                data-ng-model="$ctrl.volunteerModel.disclaimerSign"
                                 placeholder="Sign here"
                                 required>
                         </div>
                       </div>
                       <div class="clearfix"></div>
-                      <div class="col-md-6 col-lg-4" data-ng-show="$ctrl.isMinor($ctrl.volunteer.dateOfBirth)">
+                      <div class="col-md-6 col-lg-4" data-ng-show="$ctrl.isMinor($ctrl.volunteerModel.dateOfBirth)">
                         <div class="form-group">
                           <label>Parent/Guardian Signature</label>
                           <input type="text"
                                 class="form-control"
-                                data-ng-model="$ctrl.volunteer.disclaimerSignGuardian"
-                                data-ng-required="$ctrl.isMinor($ctrl.volunteer.dateOfBirth)"
+                                data-ng-model="$ctrl.volunteerModel.disclaimerSignGuardian"
+                                data-ng-required="$ctrl.isMinor($ctrl.volunteerModel.dateOfBirth)"
                                 required>
                         </div>
                       </div>
-                      <div class="col-md-6 col-lg-4" data-ng-show="$ctrl.isMinor($ctrl.volunteer.dateOfBirth)">
+                      <div class="col-md-6 col-lg-4" data-ng-show="$ctrl.isMinor($ctrl.volunteerModel.dateOfBirth)">
                         <div class="form-group">
                           <label>Parent/Guardian Email</label>
                           <input type="email"
                                 class="form-control"
-                                data-ng-model="$ctrl.volunteer.disclaimerGuardianEmail"
-                                data-ng-required="$ctrl.volunteer.isMinor(volunteer.dateOfBirth)"
+                                data-ng-model="$ctrl.volunteerModel.disclaimerGuardianEmail"
+                                data-ng-required="$ctrl.volunteerModel.isMinor(volunteer.dateOfBirth)"
                                 required>
                         </div>
                       </div>

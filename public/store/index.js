@@ -13,6 +13,7 @@ import media from './media';
 import questionnaire, {selectors as questionnaireSelectors} from './questionnaire';
 import section, {selectors as sectionSelectors} from './section';
 import settings from './settings';
+import volunteer, {selectors as volunteerSelectors} from './volunteer';
 
 // Updates an entity cache in response to any action with response.entities.
 const entities = (state = {
@@ -47,7 +48,8 @@ export default combineReducers({
   questionnaire,
   router,
   section,
-  settings
+  settings,
+  volunteer
 });
 
 export const selectors = {
@@ -80,5 +82,12 @@ export const selectors = {
 
   getAllFoods: state => foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
-  loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory)
+  loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory),
+
+  getAllVolunteers: state => volunteerSelectors.getAll(state.volunteer.ids, state.entities),
+  getOneVolunteer: state => id => volunteerSelectors.getOne(id, state.entities),
+  loadingVolunteers: state => volunteerSelectors.loading(state.volunteer),
+  loadVolunteersError: state => volunteerSelectors.loadError(state.volunteer),
+  savingVolunteers: state => volunteerSelectors.saving(state.volunteer),
+  saveVolunteersError: state => volunteerSelectors.saveError(state.volunteer),
 };
