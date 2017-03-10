@@ -4,6 +4,8 @@ import merge from 'lodash/merge';
 
 import auth from './auth';
 import customer, {selectors as customerSelectors} from './customer';
+import donation, {selectors as donationSelectors} from './donation';
+import donor, {selectors as donorSelectors} from './donor';
 import field, {selectors as fieldSelectors} from './field';
 import foodCategory, {selectors as foodCategorySelectors} from './food-category';
 import foodItem, {selectors as foodItemSelectors} from './food-item';
@@ -36,6 +38,8 @@ export default combineReducers({
   entities,
   auth,
   customer,
+  donation,
+  donor,
   field,
   foodCategory,
   foodItem,
@@ -63,6 +67,16 @@ export const selectors = {
   loadCustomersError: state => customerSelectors.loadError(state.customer),
   savingCustomers: state => customerSelectors.saving(state.customer),
   saveCustomersError: state => customerSelectors.saveError(state.customer),
+
+  savingDonations: state => donationSelectors.saving(state.donation),
+  saveDonationsError: state => donationSelectors.saveError(state.donation),
+
+  getAllDonors: state => donorSelectors.getAll(state.donor.ids, state.entities),
+  getOneDonor: state => id => donorSelectors.getOne(id, state.entities),
+  loadingDonors: state => donorSelectors.loading(state.donor),
+  loadDonorsError: state => donorSelectors.loadError(state.donor),
+  savingDonors: state => donorSelectors.saving(state.donor),
+  saveDonorsError: state => donorSelectors.saveError(state.donor),
 
   getAllFoods: state => foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),

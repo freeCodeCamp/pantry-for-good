@@ -6,7 +6,19 @@ const API_ROOT = 'http://localhost:8080/api/';
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
-const callApi = (endpoint, method = 'GET', body, schema) => {
+
+
+/**
+ * callApi - api client
+ *
+ * @export
+ * @param {string} endpoint
+ * @param {string} [method='GET']
+ * @param {object} body
+ * @param {any} schema
+ * @returns promise
+ */
+export function callApi(endpoint, method = 'GET', body, schema) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
   const headers = method === 'GET' ? null : new Headers({
     'Content-Type': 'application/json'

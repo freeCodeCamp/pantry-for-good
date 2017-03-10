@@ -99,8 +99,8 @@ exports.delete = function(req, res) {
 		.then(function() {
 			return Donor.findByIdAndRemove(id)
 				.exec()
-				.then(function() {
-					return res.end();
+				.then(function(donor) {
+					return res.send(donor);
 				});
 		})
 		.catch(function (err) {

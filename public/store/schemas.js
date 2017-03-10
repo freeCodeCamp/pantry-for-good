@@ -12,6 +12,7 @@ export const user = new schema.Entity('users', {}, {idAttribute: '_id'});
 export const volunteer = new schema.Entity('volunteers', {}, {idAttribute: '_id'});
 
 export const arrayOfDonations = new schema.Array(donation);
+export const arrayOfDonors = new schema.Array(donor);
 export const arrayOfCustomers = new schema.Array(customer);
 export const arrayOfFields = new schema.Array(field);
 export const arrayOfFoodCategories = new schema.Array(foodCategory);

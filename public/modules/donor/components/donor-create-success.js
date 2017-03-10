@@ -1,7 +1,16 @@
 import angular from 'angular';
 
+const mapStateToThis = state => ({
+  settings: state.settings.data
+});
+
 export default angular.module('donor')
   .component('donorCreateSuccess', {
+    controller: function($ngRedux) {
+      this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
+
+      this.$onDestroy = () => this.unsubscribe();
+    },
     template: `
       <section class="row text-center">
         <foodbank-logo />

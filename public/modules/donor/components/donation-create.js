@@ -1,5 +1,17 @@
 import angular from 'angular';
 
+import {selectors} from '../../../store';
+import {saveDonation} from '../../../store/donation';
+
+const mapStateToThis = state => ({
+  savingDonations: selectors.savingDonations(state),
+  saveDonationsError: selectors.saveDonationsError(state)
+});
+
+const mapDispatchToThis = dispatch => ({
+  _saveDonation: (donation, donor) => dispatch(saveDonation(donation, donor)),
+});
+
 export default angular.module('donor')
   .component('donationCreate', {
     bindings: {
@@ -8,7 +20,26 @@ export default angular.module('donor')
       close: '&',
       dismiss: '&'
     },
-    controller: 'DonationController',
+    controller: function($ngRedux) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.donation = {};
+        this.prevState = {};
+      };
+
+      this.$doCheck = () => {
+        if (!this.savingDonations && this.prevState.savingDonations) {
+          if (this.saveDonationsError) this.error = this.saveDonationsError;
+          else this.close();
+        }
+
+        this.prevState = {...this};
+      };
+
+      this.$onDestroy = () => this.unsubscribe();
+
+      this.saveDonation = donation => this._saveDonation(donation, this.resolve.donor);
+    },
     template: `
       <!-- Modal header -->
       <div class="modal-header">
@@ -154,7 +185,7 @@ export default angular.module('donor')
       </div><!-- /.modal-body -->
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button class="btn btn-success pull-left" data-ng-disabled="donationForm.$invalid" data-ng-click="$ctrl.create()">Submit</button>
+        <button class="btn btn-success pull-left" data-ng-disabled="donationForm.$invalid" data-ng-click="$ctrl.saveDonation($ctrl.donation)">Submit</button>
         <button class="btn btn-default" data-ng-click="$ctrl.dismiss()">Cancel</button>
       </div><!-- /.modal-footer
     `

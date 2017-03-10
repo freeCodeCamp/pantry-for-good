@@ -1,15 +1,45 @@
 import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
+
+import {selectors} from '../../../store';
+import {loadDonors, deleteDonor} from '../../../store/donor';
+
+const mapStateToThis = state => ({
+  savingDonors: selectors.savingDonors(state),
+  saveDonorsError: selectors.saveDonorsError(state),
+  loadingDonors: selectors.loadingDonors(state),
+  loadDonorsError: selectors.loadDonorsError(state),
+  donors: selectors.getAllDonors(state),
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadDonors: () => dispatch(loadDonors()),
+  deleteDonor: donor => dispatch(deleteDonor(donor.id)),
+  push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
 export default angular.module('donor')
   .component('donorList', {
-    controller: 'DonorController',
+    controller: function($ngRedux) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.loadDonors();
+      };
+
+      this.totalDonations = donor => {
+        if (!donor || !donor.donations) return 0;
+        return donor.donations.reduce((acc, x) => acc + x.eligibleForTax || 0, 0);
+      };
+
+      this.$onDestroy = () => this.unsubscribe();
+    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
         <h1>Donor Database</h1>
       </section>
       <!-- Main content -->
-      <section class="content" data-ng-init="$ctrl.find()">
+      <section class="content">
         <div class="row">
           <div class="col-xs-12">
             <div class="box">
@@ -38,16 +68,16 @@ export default angular.module('donor')
                   <!-- Table content -->
                   <tbody role="alert" aria-live="polite" aria-relevant="all">
                     <tr data-ng-repeat="donor in $ctrl.donors">
-                      <td><span data-ng-bind="donor._id"></span></td>
+                      <td><span data-ng-bind="donor.id"></span></td>
                       <td><span data-ng-bind="donor.fullName"></span></td>
-                      <td><span data-ng-bind="donor.totalDonated | currency:'$':2"></span></td>
+                      <td><span data-ng-bind="$ctrl.totalDonations(donor) | currency:'$':2"></span></td>
                       <td><span data-ng-bind="donor.fullAddress"></span></td>
                       <td><span data-ng-bind="donor.telephoneNumber"></span></td>
                       <td><span data-ng-bind="donor.email"></span></td>
                       <td>
-                        <a data-ng-href="/#!/admin/donors/{{donor._id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
-                        <a data-ng-href="/#!/admin/donors/{{donor._id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                        <a data-ng-click="$ctrl.remove(donor)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
+                        <a data-ng-href="/#!/admin/donors/{{donor.id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
+                        <a data-ng-href="/#!/admin/donors/{{donor.id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
+                        <a data-ng-click="$ctrl.deleteDonor(donor)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash-o"></i> Delete</a>
                       </td>
                     </tr>
                   </tbody><!-- /.table content -->

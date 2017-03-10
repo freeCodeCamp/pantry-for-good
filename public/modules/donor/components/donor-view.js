@@ -1,12 +1,88 @@
 import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
+
+import {selectors} from '../../../store';
+import {loadDonor, saveDonor, deleteDonor} from '../../../store/donor';
+
+const mapStateToThis = state => ({
+  user: state.auth.user,
+  savingDonor: state.donor.saving,
+  savingDonorError: state.donor.saveError,
+  loadingDonors: selectors.loadingDonors(state),
+  loadDonorsError: selectors.loadDonorsError(state),
+  getDonor: selectors.getOneDonor(state),
+  donorId: state.router.currentParams.donorId,
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadDonor: (id, admin) => dispatch(loadDonor(id, admin)),
+  deleteDonor: id => dispatch(deleteDonor(id)),
+  push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
+
 
 export default angular.module('donor')
   .component('donorView', {
-    controller: 'DonorController',
+    controller: function($ngRedux, $uibModal) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.prevState = {};
+        this.isAdmin = this.user.roles.find(role => role === 'admin');
+        this.loadDonor(this.donorId, this.isAdmin);
+      };
+
+      this.$doCheck = () => {
+        // Tried to save donor
+        if (!this.savingDonors && this.prevState.savingDonors) {
+          if (this.savingDonorError) this.error = this.savingDonorError;
+          else this.donor = this.getDonor(this.donorId);
+        }
+
+        // Tried to load donor
+        if (!this.loadingDonors && this.prevState.loadingDonors) {
+          if (this.loadDonorsError) this.error = this.loadDonorsError;
+          else this.donor = this.getDonor(this.donorId);
+        }
+
+        this.prevState = {...this};
+      }
+
+      this.$onDestroy = () => this.unsubscribe();
+
+      // Open donation form in a modal window
+      this.newDonation = () => {
+        var modalInstance = $uibModal.open({
+          component: 'donationCreate',
+          resolve: {
+            donor: () => this.donor
+          }
+        });
+      };
+
+      // View donation in a modal window
+      this.viewDonation = donation => {
+        $uibModal.open({
+          component: 'donationView',
+          resolve: {
+            donationItem: function() {
+              return donation;
+            },
+            settings: () => {
+              return this.settings;
+            }
+          }
+        });
+      };
+
+      // this.saveDonation = donation => this._saveDonor({
+      //   ...this.donor,
+      //   donations: [...this.donor.donations, donation]
+      // }, this.isAdmin);
+    },
     template: `
       <!-- Content header (Page header) -->
-      <section class="content-header" data-ng-init="$ctrl.findOne()">
-        <h1><span data-ng-bind="$ctrl.dynType.fullName"></span></h1>
+      <section class="content-header">
+        <h1><span data-ng-bind="$ctrl.donor.fullName"></span></h1>
       </section>
       <!-- Main content -->
       <section class="content">
@@ -39,7 +115,7 @@ export default angular.module('donor')
                   </thead><!-- /.table-columns -->
                   <!-- Table body -->
                   <tbody>
-                    <tr data-ng-repeat="donation in $ctrl.donationsCopy">
+                    <tr data-ng-repeat="donation in $ctrl.donor.donations">
                       <td><span data-ng-bind="donation.dateReceived | date:'shortDate'"></span></td>
                       <td><span data-ng-bind="donation.eligibleForTax | currency:'$':2"></span></td>
                       <td><span data-ng-bind="donation.type"></span></td>
@@ -48,7 +124,7 @@ export default angular.module('donor')
                         <a class="btn btn-info btn-flat btn-xs" data-ng-click="$ctrl.viewDonation(donation)"><i class="fa fa-eye"></i> View</a>
                       </td>
                     </tr>
-                    <tr data-ng-if="!$ctrl.donations.length">
+                    <tr data-ng-if="!$ctrl.donor.donations.length">
                       <td class="text-center" colspan="5">This donor hasn't made any donations yet.</td>
                     </tr>
                   </tbody><!-- /.table-body -->
