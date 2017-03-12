@@ -18,6 +18,7 @@ export const saveFood = food => ({
   [CALL_API]: {
     endpoint: food._id ? `admin/foods/${food._id}` : `admin/foods`,
     method: food._id ? 'PUT' : 'POST',
+    body: food,
     schema: foodCategory,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }

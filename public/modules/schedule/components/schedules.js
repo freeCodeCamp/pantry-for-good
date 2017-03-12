@@ -25,22 +25,27 @@ export default angular.module('schedule')
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
         this.foodItemsModel = [];
+        this.prevState = {};
         this.loadFoods();
       };
 
       this.$doCheck = () => {
-        if (!this.loadingFoods)
-          this.foodItemsModel = this.foodItems;
+        if (!this.loadingFoods && this.prevState.loadingFoods) {
+          this.foodItemsModel = this.foodItems.map(item => {
+            if (item.startDate)
+              return {...item, startDate: new Date(item.startDate)}
+            return item;
+          })
+        }
+        this.prevState = {...this};
       };
 
       this.saveFood = food => {
-        console.log('food', food);
-        const categoryId = this.foodCategories.find(cat =>
+        const category = this.foodCategories.find(cat =>
           cat.items.find(item => item._id === food._id)
-        )._id;
-        console.log('categoryId', categoryId)
+        );
 
-        this._saveFood(categoryId, food);
+        this._saveFood(category._id, food);
       };
 
       this.$onDestroy = () => this.unsubscribe();
@@ -54,7 +59,7 @@ export default angular.module('schedule')
       <section class="content">
         <div class="row">
           <div class="col-xs-12">
-            <div class="box" st-table="$ctrl.foodItemsModel" st-safe-src="$ctrl.foodItems">
+            <div class="box" st-table="$ctrl.foodItemsModel">
               <!-- Box header -->
               <div class="box-header">
                 <h3 class="box-title">Items</h3>
@@ -101,7 +106,7 @@ export default angular.module('schedule')
                         <a data-ng-hide="item.showEdit" data-ng-click="item.showEdit = true" class="btn btn-primary btn-flat btn-xs">
                           <i class="fa fa-pencil"></i> Edit
                         </a>
-                        <a data-ng-show="item.showEdit" data-ng-click="console.log(item); $ctrl.saveFood(item)" class="btn btn-success btn-flat btn-xs">
+                        <a data-ng-show="item.showEdit" data-ng-click="$ctrl.saveFood(item)" class="btn btn-success btn-flat btn-xs">
                           <i class="fa fa-download"></i> Save
                         </a>
                         <a data-ng-show="item.showEdit" data-ng-click="$ctrl.loadFoods(); item.showEdit=false" class="btn btn-primary btn-flat btn-xs">

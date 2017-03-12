@@ -14,7 +14,6 @@ import {crudActions} from './utils';
 export const actions = crudActions('foodItem');
 
 export const saveFoodItem = (categoryId, foodItem) => {
-  console.log('saving foodItem', foodItem, 'in categoryId', categoryId)
   return {
     [CALL_API]: {
       endpoint: foodItem._id ? `admin/foods/${categoryId}/items/${foodItem._id}` : `admin/foods/${categoryId}/items`,
@@ -60,7 +59,8 @@ export default (state = {
     case foodCategoryActions.LOAD_ALL_SUCCESS:
       return {
         ...state,
-        ids: Object.keys(action.response.entities.foodItems)
+        ids: action.response.entities.foodItems ?
+              Object.keys(action.response.entities.foodItems) : []
       };
     case actions.SAVE_FAILURE:
     case actions.DELETE_FAILURE:
