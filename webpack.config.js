@@ -13,8 +13,10 @@ module.exports = {
     vendor: ['webpack-dev-server/client?http://localhost:8080', 'jquery', 'lodash', 'angular',
             'angular-resource', 'angular-file-upload', 'angular-simple-logger', 'angular-google-maps',
             'angular-moment', 'angular-smart-table', 'angular-ui-bootstrap', 'angular-ui-router',
-            'angular-datatables', 'datatables.net', 'datatables.net-bs', 'datatables.net-buttons',
-            'datatables.net-buttons-bs', 'admin-lte', 'bootstrap', 'moment', 'moment-recur']
+            'angular-datatables', 'datatables', 'datatables-tabletools', 'datatables.net',
+            'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
+            'bootstrap', 'moment', 'moment-recur', 'redux', 'ng-redux', 'redux-thunk', 'redux-ui-router',
+            'normalizr', 'whatwg-fetch']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),
