@@ -6,12 +6,13 @@
 var mongoose 			= require('mongoose'),
 		errorHandler 	= require('./errors.server.controller'),
 		Donation 			= mongoose.model('Donation'),
+		Donor					= mongoose.model('Donor'),
 		Settings			= mongoose.model('Settings'),
 		async 				= require('async'),
 		mailHelper    = require('sendgrid').mail,
 		config 				= require('../../config/config'),
 		fs						= require('fs');
-		
+
 /**
  * Create a donation
  */
@@ -34,36 +35,42 @@ exports.create = function(req, res) {
  */
 exports.sendEmail = function(req, res, next) {
 	var donation = req.body;
-	
+
 	var temp = new Date(donation.dateIssued).toDateString().split(' ').splice(1);
 	donation.dateIssued = temp[0] + ' ' + temp[1] + ', ' + temp[2];
 
-	Settings.findOne({}, function(err, settings) {
-		if (err)
-			console.log(err);
+	var donorId = req.params.donorId;
+	Donor.findById(donorId, function(err, donor) {
+		if (err) return next(err);
 
-		donation.tconfig = settings;
+		Settings.findOne({}, function(err, settings) {
+			if (err)
+				console.log(err);
 
-		res.render('templates/donation-attachment-email', donation, function(err, email) {
-			var from_email = new mailHelper.Email(config.mailer.from);
-			var to_email = new mailHelper.Email(req.donor.email);
-			var sg = require('sendgrid')(config.mailer.sendgridKey);
-			var sgContent = new mailHelper.Content('text/html', email);
-			var mail = new mailHelper.Mail(from_email, "Tax Receipt", to_email, sgContent);
-			var request = sg.emptyRequest({
-				method: 'POST',
-				path: '/v3/mail/send',
-				body: mail.toJSON()
-			});
+			donation.tconfig = settings;
 
-			sg.API(request, function(error, response) {
-				if (error) {
-					console.log(error);
-					console.log(response.body.errors);
-				}
+			res.render('templates/donation-attachment-email', donation, function(err, email) {
+				var from_email = new mailHelper.Email(config.mailer.from);
+				var to_email = new mailHelper.Email(donor.email);
+				var sg = require('sendgrid')(config.mailer.sendgridKey);
+				var sgContent = new mailHelper.Content('text/html', email);
+				var mail = new mailHelper.Mail(from_email, "Tax Receipt", to_email, sgContent);
+				var request = sg.emptyRequest({
+					method: 'POST',
+					path: '/v3/mail/send',
+					body: mail.toJSON()
+				});
+
+				sg.API(request, function(error, response) {
+					if (error) {
+						console.log(error);
+						console.log(response.body.errors);
+					}
+				});
 			});
 		});
 	});
+
 	/*async.waterfall([
 		function(done) {
 			res.render('templates/donation-attachment-email', donation, function(err, emailHTMLAttachment) {

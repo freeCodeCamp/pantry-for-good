@@ -36,12 +36,18 @@ export default angular.module('donor')
         if (!this.savingDonors && this.prevState.savingDonors) {
           if (this.savingDonorError) this.error = this.savingDonorError;
           else this.donor = this.getDonor(this.donorId);
+          console.log('this.donor', this.donor)
+
         }
 
         // Tried to load donor
         if (!this.loadingDonors && this.prevState.loadingDonors) {
-          if (this.loadDonorsError) this.error = this.loadDonorsError;
-          else this.donor = this.getDonor(this.donorId);
+          if (this.loadDonorsError) {
+            this.error = this.loadDonorsError;
+          } else {
+            this.donor = this.getDonor(this.donorId);
+            this.donationsModel = [...this.donor.donations];
+          }
         }
 
         this.prevState = {...this};
@@ -64,20 +70,12 @@ export default angular.module('donor')
         $uibModal.open({
           component: 'donationView',
           resolve: {
-            donationItem: function() {
-              return donation;
-            },
-            settings: () => {
-              return this.settings;
-            }
+            donation: () => donation,
+            donor: () => this.donor,
+            settings: () => this.settings
           }
         });
       };
-
-      // this.saveDonation = donation => this._saveDonor({
-      //   ...this.donor,
-      //   donations: [...this.donor.donations, donation]
-      // }, this.isAdmin);
     },
     template: `
       <!-- Content header (Page header) -->
@@ -102,7 +100,7 @@ export default angular.module('donor')
               <!-- Box body -->
               <div class="box-body table-responsive no-padding top-buffer">
                 <!-- Table -->
-                <table class="table table-bordered table-striped" st-table="$ctrl.donationsCopy" st-safe-src="$ctrl.donations" print-section>
+                <table class="table table-bordered table-striped" st-table="$ctrl.donationsModel" st-safe-src="$ctrl.donor.donations" print-section>
                   <!-- Table columns -->
                   <thead>
                     <tr>

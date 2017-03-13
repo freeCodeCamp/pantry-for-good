@@ -8,8 +8,13 @@ import {saveDonor} from './donor';
 export const SAVE_DONATION_REQUEST = 'donation/SAVE_REQUEST';
 export const SAVE_DONATION_SUCCESS = 'donation/SAVE_SUCCESS';
 export const SAVE_DONATION_FAILURE = 'donation/SAVE_FAILURE';
+export const RECEIPT_DONATION_REQUEST = 'donation/RECEIPT_REQUEST';
+export const RECEIPT_DONATION_SUCCESS = 'donation/RECEIPT_SUCCESS';
+export const RECEIPT_DONATION_FAILURE = 'donation/RECEIPT_FAILURE';
 
 const saveDonationRequest = () => ({type: SAVE_DONATION_REQUEST});
+const receiptDonationRequest = () => ({type: RECEIPT_DONATION_REQUEST});
+const receiptDonationSuccess = () => ({type: RECEIPT_DONATION_SUCCESS});
 
 const saveDonationSuccess = result => ({
   type: SAVE_DONATION_SUCCESS,
@@ -23,6 +28,11 @@ const saveDonationSuccess = result => ({
 
 const saveDonationFailure = error => ({
   type: SAVE_DONATION_FAILURE,
+  error
+});
+
+const receiptDonationFailure = error => ({
+  type: RECEIPT_DONATION_FAILURE,
   error
 });
 
@@ -41,11 +51,20 @@ export const saveDonation = (donation, donor) =>
       .catch(err => dispatch(saveDonationFailure(err)));
   };
 
+export const sendReceipt = (donation, donorId) =>
+  dispatch => {
+    dispatch(receiptDonationRequest());
+    callApi(`admin/donations/${donorId}`, 'PUT', donation)
+      .then(res => dispatch(receiptDonationSuccess()))
+      .catch(err => dispatch(receiptDonationFailure(err)));
+  }
+
 export default (state = {
   ids: []
 }, action) => {
   switch (action.type) {
     case SAVE_DONATION_REQUEST:
+    case RECEIPT_DONATION_REQUEST:
       return {
         ...state,
         saving: true,
@@ -57,7 +76,13 @@ export default (state = {
         saving: false,
         ids: union([action.response.result], state.ids)
       };
+    case RECEIPT_DONATION_SUCCESS:
+      return {
+        ...state,
+        saving: false,
+      };
     case SAVE_DONATION_FAILURE:
+    case RECEIPT_DONATION_FAILURE:
       return {
         ...state,
         saving: false,
