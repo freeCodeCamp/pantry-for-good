@@ -1,1 +1,0 @@
-import './schedule.client.controller';
