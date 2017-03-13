@@ -1,6 +1,6 @@
 import {denormalize} from 'normalizr';
 
-import {field, arrayOfFields} from './schemas';
+import {field as fieldSchema, arrayOfFields} from './schemas';
 import {CALL_API} from '../middleware/api';
 import {crudActions, crudReducer} from './utils';
 
@@ -17,7 +17,7 @@ export const loadFields = () => ({
 export const loadField = id => ({
   [CALL_API]: {
     endpoint: `fields/${id}`,
-    schema: field,
+    schema: fieldSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
 });
@@ -26,7 +26,8 @@ export const saveField = field => ({
   [CALL_API]: {
     endpoint: field._id ? `fields/${field._id}` : `fields`,
     method: field._id ? 'PUT' : 'POST',
-    schema: field,
+    body: field,
+    schema: fieldSchema,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
 });
@@ -35,6 +36,7 @@ export const deleteField = id => ({
   [CALL_API]: {
     endpoint: `fields/${id}`,
     method: 'DELETE',
+    schema: fieldSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });
@@ -46,6 +48,12 @@ export const selectors = {
     return denormalize({fields}, {fields: arrayOfFields}, entities).fields;
   },
   getOne(id, entities) {
-    return denormalize({fields: id}, {fields: field}, entities).fields;
+    return denormalize({fields: id}, {fields: fieldSchema}, entities).fields;
+  },
+  saving(field) {
+    return field.saving;
+  },
+  saveError(field) {
+    return field.saveError;
   }
-}
+};

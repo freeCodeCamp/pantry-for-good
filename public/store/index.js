@@ -80,13 +80,34 @@ export const selectors = {
   savingDonors: state => donorSelectors.saving(state.donor),
   saveDonorsError: state => donorSelectors.saveError(state.donor),
 
-  getAllFoods: state => foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
+  savingField: state => fieldSelectors.saving(state.field),
+  saveFieldError: state => fieldSelectors.saveError(state.field),
+
+  getAllFoods: state =>
+    foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
   loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory),
 
   getAllFoodItems: state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
 
-  getAllVolunteers: state => volunteerSelectors.getAll(state.volunteer.ids, state.entities),
+  getAllQuestionnaires: state =>
+    questionnaireSelectors.getAll(state.questionnaire.ids, state.entities),
+  getOneQuestionnaire: state =>
+    id => questionnaireSelectors.getOne(id, state.entities),
+  loadingQuestionnaires: state =>
+    questionnaireSelectors.loading(state.questionnaire),
+  loadQuestionnairesError: state =>
+    questionnaireSelectors.loadError(state.questionnaire),
+  savingQuestionnaires: state =>
+    questionnaireSelectors.saving(state.questionnaire),
+  saveQuestionnairesError: state =>
+    questionnaireSelectors.saveError(state.questionnaire),
+
+  savingSection: state => sectionSelectors.saving(state.section),
+  saveSectionError: state => sectionSelectors.saveError(state.section),
+
+  getAllVolunteers: state =>
+    volunteerSelectors.getAll(state.volunteer.ids, state.entities),
   getOneVolunteer: state => id => volunteerSelectors.getOne(id, state.entities),
   loadingVolunteers: state => volunteerSelectors.loading(state.volunteer),
   loadVolunteersError: state => volunteerSelectors.loadError(state.volunteer),

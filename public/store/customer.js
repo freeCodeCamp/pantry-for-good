@@ -41,6 +41,7 @@ export const deleteCustomer = id => ({
   [CALL_API]: {
     endpoint: `admin/customers/${id}`,
     method: 'DELETE',
+    schema: customerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });

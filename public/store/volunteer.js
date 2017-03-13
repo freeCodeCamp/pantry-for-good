@@ -41,6 +41,7 @@ export const deleteVolunteer = id => ({
   [CALL_API]: {
     endpoint: `admin/volunteers/${id}`,
     method: 'DELETE',
+    schema: volunteerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });

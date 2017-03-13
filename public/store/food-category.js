@@ -28,6 +28,7 @@ export const deleteFood = id => ({
   [CALL_API]: {
     endpoint: `admin/foods/${id}`,
     method: 'DELETE',
+    schema: foodCategory,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });
