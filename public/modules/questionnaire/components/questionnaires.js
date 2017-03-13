@@ -1,20 +1,95 @@
 import angular from 'angular';
+import {stateGo} from 'redux-ui-router';
+
+import {selectors} from '../../../store';
+import {
+  loadQuestionnaires,
+  saveQuestionnaire,
+  deleteQuestionnaire
+} from '../../../store/questionnaire';
+import {loadFields, saveField, deleteField} from '../../../store/field';
+import {loadSections, saveSection, deleteSection} from '../../../store/section';
+
+const mapStateToThis = state => ({
+  user: state.auth.user,
+  questionnaires: selectors.getAllQuestionnaires(state),
+  loadingQuestionnaires: selectors.loadingQuestionnaires(state),
+  loadQuestionnairesError: selectors.loadQuestionnairesError(state),
+  savingQuestionnaires: selectors.savingQuestionnaires(state),
+  saveQuestionnairesError: selectors.saveQuestionnairesError(state),
+  formData: selectors.getFormData(state),
+  loadingFormData: selectors.loadingFormData(state),
+  loadFormDataError: selectors.loadFormDataError(state),
+  savingField: selectors.savingField(state),
+  saveFieldError: selectors.saveFieldError(state),
+  savingSection: selectors.savingSection(state),
+  saveSectionError: selectors.saveSectionError(state),
+  settings: state.settings.data,
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  saveQuestionnaire: questionnaire => dispatch(saveQuestionnaire(questionnaire)),
+  deleteQuestionnaire: questionnaire => dispatch(deleteQuestionnaire(questionnaire._id)),
+  loadFormData: () => {
+    dispatch(loadFields());
+    dispatch(loadSections());
+  },
+  saveField: field => dispatch(saveField(field)),
+  deleteField: field => dispatch(deleteField(field._id)),
+  _saveSection: section => dispatch(saveSection(section)),
+  deleteSection: section => dispatch(deleteSection(section._id)),
+  push: (route, params, options) => dispatch(stateGo(route, params, options))
+});
 
 export default angular.module('questionnaire')
   .component('questionnaires', {
-    controller: 'QuestionnaireController',
+    controller: function($ngRedux) {
+       this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.questionnairesModel = [];
+        this.questionnaireModel = {};
+        this.sectionModel = {};
+        this.fieldModel = {};
+        this.formDataModel = {};
+        this.prevState = {};
+        this.loadFormData();
+        this.loadQuestionnaires();
+      };
+
+      this.$doCheck = () => {
+        if (!this.loadingFormData && this.prevState.loadingFormData) {
+          if (this.loadFormDataError) this.error = this.loadFormDataError;
+          else this.formDataModel = {...this.formData};
+        }
+
+        if (!this.loadingQuestionnaires && this.prevState.loadingQuestionnaires) {
+          if (this.loadQuestionnairesError) this.error = this.loadQuestionnairesError;
+          else this.questionnairesModel = [...this.questionnaires]
+        }
+
+        this.prevState = {...this};
+      };
+
+      this.saveSection = section => {
+        console.log('section', section)
+        this._saveSection(section)
+      }
+
+      this.$onDestroy = () => this.unsubscribe();
+    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
         <h1>Questionnaire Editor</h1>
       </section>
       <!-- Main content -->
-      <section class="content" data-ng-init="$ctrl.findQuestionnaires()">
+      <section class="content">
         <!-- QUESTIONNAIRES TABLE -->
         <!-- Only shown for superadmin, to be implemented -->
-        <div ng-if="false" class="row">
+        <div ng-if="true" class="row">
           <div class="col-xs-12">
-            <div class="box" st-table="$ctrl.questionnairesCopy" st-safe-src="$ctrl.questionnaires">
+            <div class="box" st-table="$ctrl.questionnaires">
               <!-- Box header -->
               <div class="box-header">
                 <h3 class="box-title">Questionnaires</h3>
@@ -25,13 +100,13 @@ export default angular.module('questionnaire')
                   </div>
                 </div>
                 <!-- Error display for questionnaires -->
-                <div data-ng-show="$ctrl.questionnaireError" class="text-danger">
-                  <strong data-ng-bind="$ctrl.questionnaireError"></strong>
+                <div data-ng-show="$ctrl.error" class="text-danger">
+                  <strong data-ng-bind="$ctrl.error"></strong>
                 </div>
               </div><!-- /.box-header -->
               <!-- Box body -->
               <div class="box-body table-responsive no-padding top-buffer">
-                <form name="questionnaireForm" data-ng-submit="$ctrl.createQuestionnaire()">
+                <form name="questionnaireForm" data-ng-submit="$ctrl.saveQuestionnaire($ctrl.questionnaireModel)">
                   <!-- Table -->
                   <table class="table table-bordered table-striped">
                     <!-- Table columns -->
@@ -49,19 +124,19 @@ export default angular.module('questionnaire')
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.questionnaire.name"
+                                data-ng-model="$ctrl.questionnaireModel.name"
                                 placeholder="Questionnaire Name">
                         </td>
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.questionnaire.identifier"
+                                data-ng-model="$ctrl.questionnaireModel.identifier"
                                 placeholder="Short identifier">
                         </td>
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.questionnaire.description"
+                                data-ng-model="$ctrl.questionnaireModel.description"
                                 placeholder="Description">
                         </td>
                         <td>
@@ -70,7 +145,7 @@ export default angular.module('questionnaire')
                           </button>
                         </td>
                       </tr>
-                      <tr data-ng-repeat="questionnaire in $ctrl.questionnairesCopy | orderBy: 'name' ">
+                      <tr data-ng-repeat="questionnaire in $ctrl.questionnairesModel | orderBy: 'name' ">
                         <td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.name"></span></td>
                         <td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.identifier"></span></td>
                         <td data-ng-hide="questionnaire.showEdit"><span data-ng-bind="questionnaire.description"></span></td>
@@ -91,19 +166,19 @@ export default angular.module('questionnaire')
                         </td>
                         <td>
                           <a data-ng-hide="questionnaire.showEdit" data-ng-click="questionnaire.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                          <a data-ng-show="questionnaire.showEdit" data-ng-click="$ctrl.updateQuestionnaire(questionnaire)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-                          <a data-ng-show="questionnaire.showEdit && !questionnaire.logicReq" data-ng-click="$ctrl.removeQuestionnaire(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
-                          <a data-ng-show="questionnaire.showEdit" data-ng-click="$ctrl.findQuestionnaires(); questionnaire.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
+                          <a data-ng-show="questionnaire.showEdit" data-ng-click="$ctrl.saveQuestionnaire(questionnaire)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+                          <a data-ng-show="questionnaire.showEdit && !questionnaire.logicReq" data-ng-click="$ctrl.deleteQuestionnaire(questionnaire)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+                          <a data-ng-show="questionnaire.showEdit" data-ng-click="$ctrl.loadQuestionnaires(); questionnaire.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
                         </td>
                       </tr>
-                      <tr data-ng-if="!$ctrl.questionnaires.length">
+                      <tr data-ng-if="!$ctrl.questionnairesModel.length">
                         <td class="text-center" colspan="4">No questionnaires yet.</td>
                       </tr>
                     </tbody><!-- /.table-body -->
                   </table><!-- /.table -->
                 </form>
               </div><!-- /.box-body -->
-              <div class="overlay" ng-show="$ctrl.isLoading">
+              <div class="overlay" ng-show="$ctrl.initialized">
                 <i class="fa fa-refresh fa-spin"></i>
               </div>
             </div><!-- /.box -->
@@ -111,22 +186,22 @@ export default angular.module('questionnaire')
         </div><!-- /.row -->
 
         <!-- SECTIONS TABLE -->
-        <div class="row" data-ng-init="$ctrl.findSections()">
+        <div class="row">
           <div class="col-xs-12">
-            <div class="box" st-table="$ctrl.sectionsCopy" st-safe-src="$ctrl.sections">
+            <div class="box" st-table="$ctrl.formDataModel.sections">
               <!-- Box header -->
               <div class="box-header">
                 <h3 class="box-title">Sections</h3>
                 <div class="box-tools">
                 </div>
                 <!-- Error display for sections -->
-                <div data-ng-show="$ctrl.sectionError" class="text-danger">
-                  <strong data-ng-bind="$ctrl.sectionError"></strong>
+                <div data-ng-show="$ctrl.saveSectionError" class="text-danger">
+                  <strong data-ng-bind="$ctrl.saveSectionError"></strong>
                 </div>
               </div><!-- /.box-header -->
               <!-- Box body -->
               <div class="box-body table-responsive no-padding top-buffer">
-                <form name="sectionForm" data-ng-submit="$ctrl.createSection()">
+                <form name="sectionForm" data-ng-submit="$ctrl.saveSection($ctrl.sectionModel)">
                   <!-- Table -->
                   <table class="table table-bordered table-striped">
 
@@ -147,14 +222,14 @@ export default angular.module('questionnaire')
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.section.name"
+                                data-ng-model="$ctrl.sectionModel.name"
                                 placeholder="Section Name">
                                 <!-- required> -->
                         </td>
                         <td>
                           <select class="form-control"
                                   ng-options="questionnaire._id as questionnaire.name for questionnaire in $ctrl.questionnaires"
-                                  data-ng-model="$ctrl.section.questionnaire"
+                                  data-ng-model="$ctrl.sectionModel.questionnaire"
                                   required>
                             <option value="">Select Questionnaire</option>
                           </select>
@@ -162,7 +237,7 @@ export default angular.module('questionnaire')
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.section.position"
+                                data-ng-model="$ctrl.sectionModel.position"
                                 placeholder="Position">
                         </td>
                         <td>
@@ -173,7 +248,7 @@ export default angular.module('questionnaire')
                       </tr>
 
                       <!-- Rows displaying existing questionnaires, if not in edit mode  -->
-                      <tr data-ng-repeat="section in $ctrl.sectionsCopy | orderBy: ['questionnaire.name', 'position']">
+                      <tr data-ng-repeat="section in $ctrl.formDataModel.sections | orderBy: ['questionnaire.name', 'position']">
                         <td data-ng-hide="section.showEdit"><span data-ng-bind="section.name"></span></td>
                         <td data-ng-hide="section.showEdit"><span data-ng-bind="section.questionnaire.name"></span></td>
                         <td data-ng-hide="section.showEdit"><span data-ng-bind="section.position"></span></td>
@@ -198,19 +273,19 @@ export default angular.module('questionnaire')
                         </td>
                         <td>
                           <a data-ng-hide="section.showEdit" data-ng-click="section.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                          <a data-ng-show="section.showEdit" data-ng-click="$ctrl.updateSection(section)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-                          <a data-ng-show="section.showEdit  && !section.logicReq" data-ng-click="$ctrl.removeSection(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
-                          <a data-ng-show="section.showEdit" data-ng-click="$ctrl.findSections(); section.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
+                          <a data-ng-show="section.showEdit" data-ng-click="$ctrl.saveSection(section)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+                          <a data-ng-show="section.showEdit  && !section.logicReq" data-ng-click="$ctrl.deleteSection(section)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+                          <a data-ng-show="section.showEdit" data-ng-click="$ctrl.loadFormData(); section.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
                         </td>
                       </tr>
-                      <tr data-ng-if="!$ctrl.sections.length">
+                      <tr data-ng-if="!$ctrl.formDataModel.sections.length">
                         <td class="text-center" colspan="4">No sections yet.</td>
                       </tr>
                     </tbody><!-- /.table-body -->
                   </table><!-- /.table -->
                 </form>
               </div><!-- /.box-body -->
-              <div class="overlay" ng-show="$ctrl.isLoading">
+              <div class="overlay" ng-show="$ctrl.loadingFormData">
                 <i class="fa fa-refresh fa-spin"></i>
               </div>
             </div><!-- /.box -->
@@ -220,7 +295,7 @@ export default angular.module('questionnaire')
         <!-- FIELDS TABLE -->
         <div class="row" data-ng-init="$ctrl.findFields()">
           <div class="col-xs-12">
-            <div class="box" st-table="$ctrl.fieldsCopy" st-safe-src="$ctrl.fields">
+            <div class="box" st-table="$ctrl.formDataModel.fields">
               <!-- Box header -->
               <div class="box-header">
                 <h3 class="box-title">Fields</h3>
@@ -231,13 +306,13 @@ export default angular.module('questionnaire')
                   </div>
                 </div>
                 <!-- Error display for fields -->
-                <div data-ng-show="$ctrl.fieldError" class="text-danger">
-                  <strong data-ng-bind="$ctrl.fieldError"></strong>
+                <div data-ng-show="$ctrl.saveFormDataError" class="text-danger">
+                  <strong data-ng-bind="$ctrl.saveFormDateError"></strong>
                 </div>
               </div><!-- /.box-header -->
               <!-- Box body -->
               <div class="box-body table-responsive no-padding top-buffer">
-                <form name="fieldForm" data-ng-submit="$ctrl.createField()">
+                <form name="fieldForm" data-ng-submit="$ctrl.saveField($ctrl.fieldModel)">
                   <!-- Table -->
                   <table class="table table-bordered table-striped">
                     <!-- Table columns -->
@@ -259,27 +334,27 @@ export default angular.module('questionnaire')
                       <tr>
                         <td>
                           <textarea class="form-control"
-                                data-ng-model="$ctrl.field.label"
+                                data-ng-model="$ctrl.fieldModel.label"
                                 placeholder="Field Label">
                           </textarea>
                         </td>
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.field.name"
+                                data-ng-model="$ctrl.fieldModel.name"
                                 placeholder="Field Name">
                         </td>
                         <td>
                           <select class="form-control"
-                                  ng-options="section._id as section.name for section in $ctrl.sections"
-                                  data-ng-model="$ctrl.field.section"
+                                  ng-options="section._id as section.name for section in $ctrl.formDataModel.sections"
+                                  data-ng-model="$ctrl.fieldModel.section"
                               required>
                             <option value="">Select Section</option>
                           </select>
                         </td>
                         <td>
                           <select class="form-control"
-                                  data-ng-model="$ctrl.field.type">
+                                  data-ng-model="$ctrl.fieldModel.type">
                                   <option value="Text">Text</option>
                                   <option value="Textarea">Textarea</option>
                                   <option value="Date">Date</option>
@@ -293,25 +368,25 @@ export default angular.module('questionnaire')
                         <td>
                           <input class="form-control"
                                 type="text"
-                                data-ng-model="$ctrl.field.choices"
+                                data-ng-model="$ctrl.fieldModel.choices"
                                 placeholder="Choices">
                         </td>
                         <td>
                           <input class="form-control"
                                 type="number" min="1" max="20"
-                                data-ng-model="$ctrl.field.row"
+                                data-ng-model="$ctrl.fieldModel.row"
                                 placeholder="Row">
                         </td>
                         <td>
                           <input class="form-control"
                                 type="number" min="1" max="4"
-                                data-ng-model="$ctrl.field.column"
+                                data-ng-model="$ctrl.fieldModel.column"
                                 placeholder="Column">
                         </td>
                         <td>
                           <input class="form-control"
                                 type="number" min="1" max="4" value="1"
-                                data-ng-model="$ctrl.field.span"
+                                data-ng-model="$ctrl.fieldModel.span"
                                 placeholder="Span">
                         </td>
                         <td>
@@ -321,7 +396,7 @@ export default angular.module('questionnaire')
                         </td>
                       </tr>
                       <!-- Rows displaying existing sections, if not in edit mode  -->
-                      <tr data-ng-repeat="field in $ctrl.fieldsCopy | orderBy: ['section.name', 'row', 'column'] ">
+                      <tr data-ng-repeat="field in $ctrl.formDataModel.fields | orderBy: ['section.name', 'row', 'column'] ">
                         <td data-ng-hide="field.showEdit"><span data-ng-bind="field.label"></span></td>
                         <td data-ng-hide="field.showEdit"><span data-ng-bind="field.name"></span></td>
                         <td data-ng-hide="field.showEdit"><span data-ng-bind="field.section.name"></span></td>
@@ -346,7 +421,7 @@ export default angular.module('questionnaire')
                         <!-- Section data is populated by now, add ._id -->
                         <td data-ng-show="field.showEdit">
                           <select class="form-control"
-                                  ng-options="section._id as section.name for section in $ctrl.sections"
+                                  ng-options="section._id as section.name for section in $ctrl.formDataModel.sections"
                                   data-ng-model="field.section._id">
                           </select>
                         </td>
@@ -384,19 +459,19 @@ export default angular.module('questionnaire')
                         </td>
                         <td>
                           <a data-ng-hide="field.showEdit" data-ng-click="field.showEdit = true" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                          <a data-ng-show="field.showEdit" data-ng-click="$ctrl.updateField(field)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
-                          <a data-ng-show="field.showEdit && !field.logicReq" data-ng-click="$ctrl.removeField(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
-                          <a data-ng-show="field.showEdit" data-ng-click="$ctrl.findFields(); field.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
+                          <a data-ng-show="field.showEdit" data-ng-click="$ctrl.saveField(field)" class="btn btn-success btn-flat btn-xs"><i class="fa fa-download"></i> Save</a>
+                          <a data-ng-show="field.showEdit && !field.logicReq" data-ng-click="$ctrl.deleteField(field)" class="btn btn-danger btn-flat btn-xs"><i class="fa fa-trash"></i> Delete</a>
+                          <a data-ng-show="field.showEdit" data-ng-click="$ctrl.loadFormData(); field.showEdit = false" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-times"></i> Cancel</a>
                         </td>
                       </tr>
-                      <tr data-ng-if="!$ctrl.fields.length">
+                      <tr data-ng-if="!$ctrl.formDataModel.fields.length">
                         <td class="text-center" colspan="7">No fields yet.</td>
                       </tr>
                     </tbody><!-- /.table-body -->
                   </table><!-- /.table -->
                 </form>
               </div><!-- /.box-body -->
-              <div class="overlay" ng-show="$ctrl.isLoading">
+              <div class="overlay" ng-show="$ctrl.loadingFormData">
                 <i class="fa fa-refresh fa-spin"></i>
               </div>
             </div><!-- /.box -->
