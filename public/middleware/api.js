@@ -15,46 +15,25 @@ const API_ROOT = 'http://localhost:8080/api/';
  * @param {string} endpoint
  * @param {string} [method='GET']
  * @param {object} body
- * @param {any} schema
- * @param {any} responseSchema for when the api response type differs
+ * @param {any} schema to normalize the request and response
+ * @param {any} responseSchema for when the response type differs
  * @returns promise
  */
 export function callApi(endpoint, method = 'GET', body, schema, responseSchema) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
-  const headers = method === 'GET' ? null : new Headers({
-    'Content-Type': 'application/json'
-  });
-
-  if (body && schema) {
-    // renormalize body before put/post
-    // assume element types not arrays
-    const entityType = schema._key;
-    const wrappedEntity = normalize(body, schema).entities[entityType]
-    const entity = Object.keys(wrappedEntity).map(k => wrappedEntity[k])[0];
-    delete entity.__v;
-
-    // normalize or denormalize removes _id?
-    // angular.toJson omits angular specific attributes
-    body = angular.toJson({...entity, _id: entity._id || Number(entity.id)});
-  } else if (body) {
-    body = angular.toJson(body);
-  }
 
   return fetch(fullUrl, {
     method,
-    headers,
-    body,
+    headers: generateRequestHeaders(method),
+    body: formatRequestBody(body, method, schema),
     credentials: 'same-origin'
   })
     .then(response =>
       response.json().then(json => {
-        if (!response.ok) {
-          return Promise.reject(json);
-        }
-
+        if (!response.ok) return Promise.reject(json);
         if (responseSchema) return normalize(json, responseSchema);
-        else if (schema) return normalize(json, schema);
-        else return json;
+        if (schema) return normalize(json, schema);
+        return json;
       })
     );
 };
@@ -109,3 +88,34 @@ export default store => next => action => {
     }))
   );
 };
+
+function formatRequestBody(body, method, schema) {
+  if (!body) return;
+  if (schema) {
+    // renormalize body before put/post
+    const entityType = schema._key;
+    const normalized = normalize(body, schema).entities[entityType]
+    const keys = Object.keys(normalized);
+    if (keys.length !== 1) {
+      throw new Error('Expected request body to contain a single entity');
+    }
+
+    // extract the entity and remove version attribute
+    const entity = keys.map(k => normalized[k])[0];
+    delete entity.__v;
+    if (method === 'PUT' && !'_id' in entity) {
+      throw new Error('Tried to PUT but entity has no _id attribute');
+    }
+
+    // angular.toJson omits angular specific attributes
+    return angular.toJson(entity);
+  } else {
+    return angular.toJson(body);
+  }
+}
+
+function generateRequestHeaders(method) {
+  return method === 'GET' ? null : new Headers({
+    'Content-Type': 'application/json'
+  });
+}
