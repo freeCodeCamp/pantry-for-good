@@ -12,6 +12,7 @@ class NewCategory extends React.Component {
 
     onClick = () => {
         this.props.createCategory(this.state.inputFieldValue)
+        this.setState({inputFieldValue: ""})
     }
 
     render = () => (
@@ -19,11 +20,10 @@ class NewCategory extends React.Component {
             <input type="text"
                 className="form-control"
                 placeholder="Add category"
-                value={this.state.value}
+                value={this.state.inputFieldValue}
                 onChange={(e) => this.onChange(e)} />
             <span className="input-group-btn">
-                <button className="btn btn-success btn-flat"
-                    data-ng-disabled="categoryForm.$invalid"
+                <button className="btn btn-success btn-flat" disabled={this.state.inputFieldValue.trim() === ""}
                     onClick={this.onClick}>
                     <i className="fa fa-plus"></i>
                 </button>
