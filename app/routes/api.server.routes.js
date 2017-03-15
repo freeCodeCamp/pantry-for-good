@@ -11,6 +11,7 @@ var	users = require('../../app/controllers/users.server.controller'),
 		donorRoutes = require('./donor.server.routes'),
 		foodRoutes = require('./food.server.routes'),
 		mediaRoutes = require('./media.server.routes'),
+		packingRoutes = require('./packing.server.routes').default,
 		questionnaireRoutes = require('./questionnaire.server.routes'),
 		settingsRoutes = require('./settings.server.routes'),
 		usersRoutes = require('./users.server.routes'),
@@ -24,6 +25,7 @@ module.exports = apiRouter
 	.use(donorRoutes)
 	.use(foodRoutes)
 	.use(mediaRoutes)
+	.use(packingRoutes)
 	.use(questionnaireRoutes)
 	.use(settingsRoutes)
 	.use(usersRoutes)

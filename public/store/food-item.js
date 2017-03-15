@@ -79,5 +79,11 @@ export const selectors = {
   },
   getOne(id, entities) {
     return denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems;
+  },
+  saving(foodItems) {
+    return foodItems.saving;
+  },
+  saveError(foodItems) {
+    return foodItems.saveError;
   }
 }
