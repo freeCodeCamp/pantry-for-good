@@ -18,10 +18,15 @@ gulp.task('build-client', function(done) {
   });
 });
 
+gulp.task('build-server', function(done) {
+  // build server with babel
+  done();
+});
+
 gulp.task('watch-server', function() {
   nodemon({
     watch: ['server.js', 'app/**/*.js', 'config/**/*.js'],
-    exec: "node ./server.js"
+    exec: "node ./index.js"
   });
 });
 
