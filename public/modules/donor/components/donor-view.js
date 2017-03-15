@@ -12,6 +12,7 @@ const mapStateToThis = state => ({
   loadDonorsError: selectors.loadDonorsError(state),
   getDonor: selectors.getOneDonor(state),
   donorId: state.router.currentParams.donorId,
+  settings: state.settings.data
 });
 
 const mapDispatchToThis = dispatch => ({
