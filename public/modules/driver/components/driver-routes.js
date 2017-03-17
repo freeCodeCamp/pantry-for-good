@@ -1,8 +1,40 @@
 import angular from 'angular';
 
+import {selectors} from 'store';
+import {loadCustomers} from 'store/customer';
+import {loadVolunteers} from 'store/volunteer';
+
+const mapStateToThis = state => ({
+  _customers: selectors.getAllCustomers(state),
+  _drivers: selectors.getAllVolunteers(state).filter(vol =>
+    vol.driver && vol.status === 'Active'),
+  loading: selectors.loadingVolunteers(state) || selectors.loadingCustomers(state),
+  error: selectors.loadCustomersError(state) || selectors.loadVolunteersError(state)
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadCustomers : () => dispatch(loadCustomers()),
+  loadVolunteers: () => dispatch(loadVolunteers())
+});
+
 export default angular.module('driver')
   .component('driverRoutes', {
-    controller: 'DriverRouteController',
+    controller: function($ngRedux) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.loadCustomers();
+        this.loadVolunteers();
+        this.prevState = {};
+      };
+
+      this.$doCheck = () => {
+        if (!this.loading && this.prevState.loading) {
+          this.customers = [...this._customers];
+        }
+      };
+
+      this.$onDestroy = () => this.unsubscribe();
+    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
@@ -21,12 +53,12 @@ export default angular.module('driver')
               <!-- Box body -->
               <div class="box-body table-responsive no-padding">
                 <!-- Table -->
-                <table class="table table-striped table-bordered" st-table="$ctrl.customersCopy" st-safe-src="$ctrl.customers">
+                <table class="table table-striped table-bordered" st-table="$ctrl.customers">
                   <!-- Table columns -->
                   <thead>
                     <tr>
                       <th>Assigned To</th>
-                      <th st-sort="_id">Client ID</th>
+                      <th st-sort="id">Client ID</th>
                       <th>Full Address</th>
                       <th>Delivery Instructions</th>
                     </tr>
@@ -35,7 +67,7 @@ export default angular.module('driver')
                   <tbody>
                     <tr ng-class="{active: customer.isChecked}" data-ng-repeat="customer in $ctrl.customers">
                       <td><span data-ng-bind="customer.assignedTo.fullName"></span></td>
-                      <td><span data-ng-bind="customer._id"></span></td>
+                      <td><span data-ng-bind="customer.id"></span></td>
                       <td><span data-ng-bind="customer.fullAddress"></span></td>
                       <td><span data-ng-bind="customer.deliveryInstructions"></span></td>
                     </tr>

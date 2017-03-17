@@ -1,8 +1,29 @@
 import angular from 'angular';
 
+import {selectors} from 'store';
+import {loadVolunteers} from 'store/volunteer';
+
+const mapStateToThis = state => ({
+  drivers: selectors.getAllVolunteers(state).filter(vol =>
+    vol.driver && vol.status === 'Active'),
+  loading: selectors.loadingVolunteers(state)
+});
+
+const mapDispatchToThis = dispatch => ({
+  loadVolunteers: () => dispatch(loadVolunteers())
+});
+
 export default angular.module('driver')
   .component('driverAdmin', {
-    controller: 'DriverAdminController',
+    controller: function($ngRedux) {
+      this.$onInit = () => {
+        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+
+        this.loadVolunteers();
+      };
+
+      this.$onDestroy = () => this.unsubscribe();
+    },
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header">
@@ -31,7 +52,7 @@ export default angular.module('driver')
                   <!-- Table columns -->
                   <thead>
                     <tr>
-                      <th st-sort="_id">ID</th>
+                      <th st-sort="id">ID</th>
                       <th st-sort="fullName">Full Name</th>
                       <th st-sort="deliveryStatus">Delivery Status</th>
                       <th>General Notes</th>
@@ -40,7 +61,7 @@ export default angular.module('driver')
                   <!-- Table body -->
                   <tbody>
                     <tr data-ng-repeat="driver in $ctrl.driversCopy">
-                      <td><span data-ng-bind="driver._id"></span></td>
+                      <td><span data-ng-bind="driver.id"></span></td>
                       <td><span data-ng-bind="driver.fullName"></span></td>
                       <td><span class="label" data-ng-bind="driver.deliveryStatus" data-ng-class="{
                       'label-success': driver.deliveryStatus === 'Completed',
@@ -54,7 +75,7 @@ export default angular.module('driver')
                   </tbody><!-- /.table-body -->
                 </table><!-- /.table -->
               </div><!-- /.box-body -->
-              <div class="overlay" ng-show="$ctrl.isLoading">
+              <div class="overlay" ng-show="$ctrl.loading">
                 <i class="fa fa-refresh fa-spin"></i>
               </div>
             </div><!-- /.box -->

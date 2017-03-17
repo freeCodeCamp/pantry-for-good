@@ -16,9 +16,9 @@ const packSuccess = response => ({
 
 const packFailure = error => ({type: PACK_FAILURE, error});
 
-export const pack = (customerIds, items, beginWeek) => dispatch => {
+export const pack = (customerIds, items) => dispatch => {
   dispatch(packRequest());
-  callApi('admin/packing', 'PUT', {customerIds, items, beginWeek})
+  callApi('admin/packing', 'PUT', {customerIds, items})
     .then(res => {
       dispatch(packSuccess({
         entities: {
@@ -29,6 +29,19 @@ export const pack = (customerIds, items, beginWeek) => dispatch => {
     })
     .catch(err => dispatch(packFailure(err)));
 };
+
+export const deliver = customerIds => dispatch => {
+  dispatch(packRequest());
+  callApi('admin/deliver', 'PUT', {customerIds})
+    .then(res => {
+      dispatch(packSuccess({
+        entities: {
+          customers: normalize(res.customers, arrayOfCustomers).entities
+        }
+      }));
+    })
+    .catch(err => dispatch(packFailure(err)));
+}
 
 export default (state = {}, action) => {
   switch (action.type) {

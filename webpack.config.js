@@ -50,6 +50,11 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      store: path.resolve(__dirname, 'public', 'store')
+    }
+  },
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',
