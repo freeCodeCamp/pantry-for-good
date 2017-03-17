@@ -9,6 +9,7 @@ import donor, {selectors as donorSelectors} from './donor';
 import field, {selectors as fieldSelectors} from './field';
 import foodCategory, {selectors as foodCategorySelectors} from './food-category';
 import foodItem, {selectors as foodItemSelectors} from './food-item';
+import location, {selectors as locationSelectors} from './location';
 import media from './media';
 import questionnaire, {selectors as questionnaireSelectors} from './questionnaire';
 import section, {selectors as sectionSelectors} from './section';
@@ -44,6 +45,7 @@ export default combineReducers({
   field,
   foodCategory,
   foodItem,
+  location,
   media,
   questionnaire,
   router,
@@ -89,6 +91,13 @@ export const selectors = {
   loadFoodsError: state => foodCategorySelectors.loadError(state.foodCategory),
 
   getAllFoodItems: state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+
+  getAddressCoordinates: state => locationSelectors.getAddressCoordinates(state.location),
+  getUserCoordinates: state => locationSelectors.getUserCoordinates(state.location),
+  loadingAddressLocation: state => locationSelectors.loadingAddressLocation(state.location),
+  loadAddressLocationError: state => locationSelectors.loadAddressLocationError(state.location),
+  loadingUserLocation: state => locationSelectors.loadingUserLocation(state.location),
+  loadUserLocationError: state => locationSelectors.loadUserLocationError(state.location),
 
   getAllQuestionnaires: state =>
     questionnaireSelectors.getAll(state.questionnaire.ids, state.entities),

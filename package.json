@@ -61,6 +61,7 @@
     "font-awesome": "^4.7.0",
     "forever": "~0.15.2",
     "geocoder": "^0.2.2",
+    "geoposition-to-object": "^1.0.2",
     "glob": "^7.1.0",
     "grunt": "^1.0.1",
     "grunt-cli": "~1.2.0",
