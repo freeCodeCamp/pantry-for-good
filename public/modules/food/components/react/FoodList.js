@@ -12,7 +12,7 @@ export default ({ store }) => (
                     <FoodCategories />
                 </div>
                 <div className="col-xs-12 col-md-9 col-lg-10">
-                    {/*<FoodItems />*/}
+                    <FoodItems />
                 </div>
             </div>
         </section>

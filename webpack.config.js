@@ -85,5 +85,10 @@ module.exports = {
 		contentBase: '/dist',
     port: 8080
 	},
-  devtool: 'source-map'
+  devtool: 'source-map',
+  resolve: {
+    alias: {
+      store: path.resolve(__dirname, 'public', 'store')
+    }
+  }
 };

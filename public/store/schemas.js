@@ -4,7 +4,17 @@ export const customer = new schema.Entity('customers', {}, {idAttribute: '_id'})
 export const donation = new schema.Entity('donations', {}, {idAttribute: '_id'});
 export const donor = new schema.Entity('donors', {}, {idAttribute: '_id'});
 export const field = new schema.Entity('fields', {}, {idAttribute: '_id'});
-export const foodCategory = new schema.Entity('foodCategories', {}, {idAttribute: '_id'});
+export const foodCategory = new schema.Entity('foodCategories', {}, {
+  idAttribute: '_id', 
+  processStrategy: (value, parent, key) => {
+    //Add the category _id to each item in that category
+    let category = Object.assign({}, value)
+    if (category.items) {
+      category.items.forEach(item => item.categoryId = category._id)
+    }
+    return category
+  }
+});
 export const foodItem = new schema.Entity('foodItems', {}, {idAttribute: '_id'});
 export const questionnaire = new schema.Entity('questionnaires',{},  {idAttribute: '_id'});
 export const section = new schema.Entity('sections', {}, {idAttribute: '_id'});

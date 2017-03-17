@@ -48,7 +48,7 @@ export default (state = {
     case actions.SAVE_SUCCESS:
     case actions.DELETE_SUCCESS:
       // save (and delete?) returns the whole updated food category
-      const result = Object.keys(action.response.entities.foodItems);
+      const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : [];
       return {
         ...state,
         ids: action.type === actions.DELETE_SUCCESS ?

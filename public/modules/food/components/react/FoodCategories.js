@@ -1,18 +1,22 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import NewCategory from './NewCategory'
-import { selectors } from '../../../../store/index'
-import { loadFoods, saveFood, deleteFood } from '../../../../store/food-category'
+import { selectors } from 'store'
+import { loadFoods, saveFood, deleteFood } from 'store/food-category'
 import { CALL_API } from '../../../../middleware/api'
 
 class FoodCategories extends Component {
-    constructor(props) {
-        super(props)
+
+    componentWillMount = () => {
         this.props.loadFoods()
     }
 
     onItemEdit = (_id, value) => {
         let foodCategoryToUpdate = _.find(this.props.foods, {_id})
+
+        //Don't do anything if it is the same value
+        if (foodCategoryToUpdate.category === value.trim()) return
+
         foodCategoryToUpdate.category = value
         this.props.updateCategory(foodCategoryToUpdate)
     }
