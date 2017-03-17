@@ -49,7 +49,7 @@ export const crudReducer = name =>
         return {
           ...state,
           ids: action.type === `${name}/DELETE_SUCCESS` ?
-                                difference(result, state.ids) :
+                                difference(state.ids, result) :
                                 union(result, state.ids),
           fetching: false,
           saving: false

@@ -96,7 +96,7 @@ exports.createItem = function(req, res) {
 
 	item._id = mongoose.Types.ObjectId(item._id);
 
-	Food.findByIdAndUpdate(id, {$addToSet: {items: item}}, function(err, food) {
+	Food.findByIdAndUpdate(id, {$addToSet: {items: item}}, {new: true}, function(err, food) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -164,7 +164,7 @@ exports.updateItem = function(req, res) {
 exports.deleteItem = function(req, res) {
 	var id = req.food._id;
 
-	Food.findByIdAndUpdate(id, {$pull: {items: {_id: req.itemId}}}, function(err, food) {
+	Food.findByIdAndUpdate(id, {$pull: {items: {_id: req.itemId}}}, {new: true}, function(err, food) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
