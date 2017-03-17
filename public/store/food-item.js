@@ -28,8 +28,10 @@ export const saveFoodItem = (categoryId, foodItem) => {
 
 export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
-    endpoint: `admin/foods/${foodItemId}`,
+    endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
+    schema: foodItemSchema,
+    responseSchema: foodCategorySchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });
@@ -52,10 +54,16 @@ export default (state = {
       return {
         ...state,
         ids: action.type === actions.DELETE_SUCCESS ?
-                              difference(result, state.ids) :
+                              result :
                               union(result, state.ids),
         saving: false
       };
+    case foodCategoryActions.SAVE_SUCCESS:
+      return {
+        ...state,
+        ids: action.response.entities.foodItems ?
+              Object.keys(action.response.entities.foodItems) : []
+      }
     case foodCategoryActions.LOAD_ALL_SUCCESS:
       return {
         ...state,

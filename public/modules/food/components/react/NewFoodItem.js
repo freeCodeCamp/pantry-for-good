@@ -38,7 +38,7 @@ class NewFoodItem extends React.Component {
             this.state.nameInputValue.trim() &&
             this.state.categoryInputValue &&
             this.state.quantityInputValue &&
-            this.state.quantityInputValue > -1})
+            this.state.quantityInputValue >= 0})
     }
 
     render = () => (

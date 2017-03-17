@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { selectors } from 'store'
-import { saveFoodItem } from 'store/food-item'
+import { saveFoodItem, deleteFoodItem } from 'store/food-item'
 
 import NewFoodItem from './NewFoodItem'
 import FoodItem from './FoodItem'
@@ -14,7 +14,8 @@ class FoodItems extends React.Component {
                 <FoodItem key={foodItem._id} foodItem={foodItem} 
                     foodCategories={this.props.foodCategories} 
                     createSelectBox={this.createSelectBox}
-                    deleteItem={this.props.deleteFoodItem} />
+                    deleteItem={this.props.deleteFoodItem}
+                    saveItem={this.props.saveFoodItem} />
             ))
         } else {
             return (
@@ -61,7 +62,7 @@ class FoodItems extends React.Component {
                 </div>*/}
 
                 <div className="box-body table-responsive no-padding top-buffer">
-                    <form name="itemForm" data-ng-submit="$ctrl.createItem()">
+                    {/*<form name="itemForm" data-ng-submit="$ctrl.createItem()">*/}
                         <table className="table table-bordered table-striped" data-datatable='ng' data-dt-options="$ctrl.dtOptions">
                             <thead>
                                 <tr>
@@ -78,7 +79,7 @@ class FoodItems extends React.Component {
                                 {this.getTableRows()}
                             </tbody>
                         </table>
-                    </form>
+                    {/*</form>*/}
                 </div>
                 {this.props.error &&
                     <div className="alert alert-danger">{this.props.error}</div>
@@ -159,9 +160,10 @@ const mapDispatchToProps = (dispatch) => ({
     saveFoodItem: (categoryId, foodItem) => {
         dispatch(saveFoodItem(categoryId, foodItem))
     },
-    deleteFoodItem: (_id) => {
+    deleteFoodItem: (categoryId, _id) => {
         console.log('delete item ', _id)
-    }
+        dispatch(deleteFoodItem(categoryId, _id))
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodItems)
