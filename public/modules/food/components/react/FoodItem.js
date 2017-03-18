@@ -13,7 +13,7 @@ class FoodItem extends React.Component {
     }
 
     validate = () => {
-        this.setState({validated: 
+        this.setState({validated:
             this.state.nameInputValue.trim() &&
             this.state.categorySelectValue &&
             this.state.quantityInputValue &&

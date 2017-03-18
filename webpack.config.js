@@ -6,17 +6,21 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
     app: [
+      'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:8080',
+      'webpack/hot/only-dev-server',
       'whatwg-fetch',
       path.resolve(__dirname, 'public', 'application.js')
     ],
-    vendor: ['webpack-dev-server/client?http://localhost:8080', 'jquery', 'lodash', 'angular',
-            'angular-resource', 'angular-file-upload', 'angular-simple-logger', 'angular-google-maps',
+    vendor: ['react-hot-loader/patch',
+            'webpack-dev-server/client?http://localhost:8080',
+            'jquery', 'lodash', 'angular', 'angular-resource',
+            'angular-file-upload', 'angular-simple-logger', 'angular-google-maps',
             'angular-moment', 'angular-smart-table', 'angular-ui-bootstrap', 'angular-ui-router',
             'angular-datatables', 'datatables', 'datatables-tabletools', 'datatables.net',
             'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
             'bootstrap', 'moment', 'moment-recur', 'redux', 'ng-redux', 'redux-thunk', 'redux-ui-router',
-            'normalizr', 'whatwg-fetch']
+            'normalizr', 'whatwg-fetch', 'react', 'react-dom', 'react-redux', 'react-hot-loader']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),
@@ -32,7 +36,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           presets: ['es2015', 'stage-0', 'react'],
-          plugins: ['transform-object-rest-spread']
+          plugins: ['react-hot-loader/babel']
         }
       },
       {
@@ -44,9 +48,6 @@ module.exports = {
       }, {
         test: /\.(jpe?g|png|gif)$/i,
         loader: 'file?hash=sha512&digest=hex&name=media/[name]-[hash].[ext]',
-      }, {
-        test: /\.html$/,
-        loader: 'html'
       }
     ]
   },
@@ -56,6 +57,7 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -75,7 +77,8 @@ module.exports = {
     }]),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
+      __DEVELOPMENT__: process.env.NODE_ENV === 'development',
+      __TEST__: process.env.NODE_ENV === 'test'
     })
   ],
   devServer: {
@@ -90,10 +93,5 @@ module.exports = {
 		contentBase: '/dist',
     port: 8080
 	},
-  devtool: 'source-map',
-  resolve: {
-    alias: {
-      store: path.resolve(__dirname, 'public', 'store')
-    }
-  }
+  devtool: 'eval'
 };

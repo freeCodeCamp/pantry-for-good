@@ -43,7 +43,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(['$locatio
 		$ngReduxProvider.createStoreWith(
 			rootReducer,
 			['ngUiRouterMiddleware',thunk, api],
-			process.env.NODE_ENV !== 'test' ? [
+			__DEVELOPMENT__ ? [
 				window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : () => {}
 			] : null
 		);
@@ -75,7 +75,6 @@ $.ajax({
 		// set user in store
 		angular.module(ApplicationConfiguration.applicationModuleName)
 			.run($ngRedux => $ngRedux.dispatch(setUser(user)));
-
 
 		//Then init the app
 		angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
