@@ -45,11 +45,18 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 				}
 			}
 		}).
-		state('root.signin', {
-			url: 'signin',
+		state('root.signin-angular', {
+			url: 'signin-angular',
 			views: {
 				'content@': {
 					component: 'signin'
+				}
+			}
+		}).state('root.signin', {
+			url: 'signin',
+			views: {
+				'content@': {
+					component: 'signInReact'
 				}
 			}
 		}).
