@@ -4,21 +4,12 @@ import {Provider} from 'react-redux'
 import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
 
-import FoodbankLogo from '../../media/components/foodbank-logo'
-
-const Home = () =>
-  <section className="content-header">
-    <div className="row text-center">
-      <FoodbankLogo />
-    </div>
-  </section>
-
-export default Home
+import Sidebar from './sidebar/Sidebar'
 
 export const old = angular.module('core')
-  .component('home', {
+  .component('sidebar', {
     controller: function($ngRedux) {
-      render(Home)
+      render(Sidebar)
 
       function render(Component) {
         ReactDOM.render(
@@ -27,13 +18,13 @@ export const old = angular.module('core')
               <Component />
             </Provider>
           </AppContainer>,
-          document.getElementById('content-wrapper')
+          document.getElementById('sidebar')
         )
       }
 
       if (module.hot) {
-        module.hot.accept('./home', () => {
-          const Next = require('./home').default
+        module.hot.accept('./sidebar/Sidebar', () => {
+          const Next = require('./sidebar/Sidebar').default
           render(Next)
         })
       }

@@ -1,16 +1,23 @@
+import React from 'react'
+import {connect} from 'react-redux'
+import {react2angular} from 'react2angular'
 import angular from 'angular';
 
-const mapStateToThis = state => ({
+const mapStateToProps = state => ({
   settings: state.settings.data,
   media: state.media.data
 })
 
-export default angular.module('media')
-	.component('foodbankLogo', {
-		controller: ['$ngRedux', function($ngRedux) {
-      this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
-      this.$onDestroy = () => this.unsubscribe();
-    }],
-    template: `<img alt="{{$ctrl.settings.organization}}" ng-src="{{$ctrl.media.logoPath + $ctrl.media.logoFile}}">`
-	})
+const FoodbankLogoComponent = ({settings, media}) =>
+  <img
+    alt={settings && settings.organization}
+    src={media && media.logoPath + media.logoFile}
+  />
+
+const FoodbankLogo = connect(mapStateToProps)(FoodbankLogoComponent)
+
+export default FoodbankLogo
+
+export const old = angular.module('media')
+	.component('foodbankLogo', react2angular(FoodbankLogo))
 	.name;

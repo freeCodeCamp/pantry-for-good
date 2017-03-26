@@ -32,6 +32,7 @@ export default angular.module('donor')
     controller: function($ngRedux, Form) {
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.store = $ngRedux
         this.prevState = {};
         this.loadedFormData = false;
         this.initialized = false;
@@ -76,7 +77,7 @@ export default angular.module('donor')
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo />
+        <foodbank-logo store="$ctrl.store" />
         <h1>Donor Profile Creation</h1>
         <br>
         <div class="alert alert-info text-left">

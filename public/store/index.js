@@ -2,6 +2,7 @@ import {combineReducers} from 'redux';
 import {router} from 'redux-ui-router';
 import merge from 'lodash/merge';
 
+import app from './app'
 import auth from './auth';
 import customer, {selectors as customerSelectors} from './customer';
 import donation, {selectors as donationSelectors} from './donation';
@@ -38,6 +39,7 @@ const entities = (state = {
 
 export default combineReducers({
   entities,
+  app,
   auth,
   customer,
   donation,

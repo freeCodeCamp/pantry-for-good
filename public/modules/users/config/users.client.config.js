@@ -1,14 +1,5 @@
 'use strict';
 
-// Configuring the User menu
-angular.module('users').run(['Menus',
-	function(Menus) {
-		// Set sidebar menu items for users
-		Menus.addMenuItem('user', 'Apply', '/create', 'item', 'root.createREPLACETYPEUser', '', ['user'], 0);
-		Menus.addMenuItem('user', 'Edit Application', '/edit', 'item', 'root.editREPLACETYPEUser({REPLACEIDId: $ctrl.user._id})', '', ['user'], 0);
-	}
-]);
-
 // Config HTTP Error Handling
 angular.module('users').config(['$httpProvider',
 	function($httpProvider) {

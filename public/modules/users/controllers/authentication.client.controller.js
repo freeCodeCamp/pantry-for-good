@@ -32,6 +32,7 @@ function AuthenticationController($http, Authentication, $state, $timeout, $ngRe
 	var self = this;
 	this.$onInit = () => {
 		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+		this.store = $ngRedux
 		this.clearFlags();
 
 		// If user is signed in then redirect back home

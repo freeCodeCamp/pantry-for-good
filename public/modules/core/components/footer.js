@@ -1,18 +1,48 @@
-import angular from 'angular';
+import angular from 'angular'
+import React from 'react'
+import {Provider, connect} from 'react-redux'
+import ReactDOM from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
 
-const mapStateToThis = state => ({
+const mapStateToProps = state => ({
   settings: state.settings.data,
 });
 
-export default angular.module('core')
+const FooterComponent = ({settings}) => (
+  <div>
+    <strong>Copyright &copy; 2016&nbsp;
+      <a href="/#!/">{settings && settings.organization}</a>.
+    </strong>
+    &ensp;All rights reserved.
+  </div>
+)
+
+const Footer = connect(mapStateToProps)(FooterComponent)
+
+export default Footer
+
+export const old = angular.module('core')
   .component('footer', {
-    controller: ['$ngRedux', function($ngRedux) {
-      this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
-      this.$onDestroy = () => this.unsubscribe();
-    }],
-    template: `
-      <strong>Copyright &copy; 2016 <a href="/#!/">{{$ctrl.settings.organization}}</a>.</strong>
-      All rights reserved.
-    `
+    controller: function($ngRedux) {
+      render(Footer)
+
+      function render(Component) {
+        ReactDOM.render(
+          <AppContainer>
+            <Provider store={$ngRedux}>
+              <Component />
+            </Provider>
+          </AppContainer>,
+          document.getElementById('footer')
+        )
+      }
+
+      if (module.hot) {
+        module.hot.accept('./footer', () => {
+          const Next = require('./footer').default
+          render(Next)
+        })
+      }
+    }
   })
   .name;

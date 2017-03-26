@@ -2,9 +2,11 @@
     "parser": "espree",
     "parserOptions": {
         "ecmaVersion": 8,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        },
     },
-    "ecmaFeatures": {},
     "globals": {
       "angular": true,
       "_": true,

@@ -21,7 +21,7 @@ angular.module('settings').controller('ChangeMediaController', ChangeMediaContro
 function ChangeMediaController($ngRedux, FileUploader) {
 	this.$onInit = () => {
 		this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
-
+		this.store = $ngRedux
 		// If user is not signed in redirect to signin
 		if (!this.auth.user) this.push('root.signin');
 		if (!this.media) this.loadMedia();

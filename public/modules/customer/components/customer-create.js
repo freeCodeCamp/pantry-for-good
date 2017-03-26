@@ -33,6 +33,7 @@ export default angular.module('customer')
     controller: function($ngRedux, Form) {
       this.$onInit = () => {
         this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
+        this.store = $ngRedux
         this.prevState = {};
         this.loadedFormData = false;
         this.initialized = false;
@@ -97,7 +98,7 @@ export default angular.module('customer')
     template: `
       <!-- Content header (Page header) -->
       <section class="content-header text-center">
-        <foodbank-logo />
+        <foodbank-logo store="$ctrl.store" />
         <h1>Client Request for Assistance Application</h1>
         <div class="alert alert-info text-left top-buffer">
           <h4><i class="icon fa fa-warning"></i>Please fill out the following form</h4>

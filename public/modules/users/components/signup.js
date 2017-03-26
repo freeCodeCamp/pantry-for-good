@@ -13,7 +13,7 @@ export default angular.module('users')
         <div class="register-box">
           <!-- Logo -->
           <div class="register-logo">
-            <foodbank-logo />
+            <foodbank-logo store="$ctrl.store" />
           </div>
           <!-- Signup box body -->
           <div class="register-box-body">

@@ -130,6 +130,7 @@
     "karma-phantomjs-launcher": "~1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.1",
+    "react2angular": "^1.1.2",
     "should": "~11.1.0",
     "supertest": "~2.0.0"
   }

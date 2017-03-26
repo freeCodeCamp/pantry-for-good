@@ -77,7 +77,8 @@ module.exports = {
     }]),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
     new webpack.DefinePlugin({
-      __DEVELOPMENT__: process.env.NODE_ENV === 'development',
+      __DEVELOPMENT__: !process.env.NODE_ENV ||
+                        process.env.NODE_ENV === 'development',
       __TEST__: process.env.NODE_ENV === 'test'
     })
   ],
