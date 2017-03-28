@@ -7,3 +7,4 @@ import './reset-password';
 import './signin';
 import './signin-react';
 import './signup';
+import './signup-react';

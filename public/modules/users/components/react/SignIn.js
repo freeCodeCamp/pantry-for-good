@@ -30,7 +30,7 @@ class SignIn extends React.Component {
     onSubmit = (e) => {
         e.preventDefault()
         this.props.signIn(this.state.usernameInputValue, this.state.passwordInputValue)
-        this.setState(passwordInputValue = "")
+        this.setState({passwordInputValue: ""})
     }
 
     componentWillReceiveProps = (nextProps) => {
@@ -39,36 +39,43 @@ class SignIn extends React.Component {
 
     render = () =>
         <Provider store={this.props.store}>
-            <div className="login-box">
-                <div className="login-logo">
-                    <foodbank-logo><img alt="Foodbank Logo" src="media/logo.png" /></foodbank-logo>
+            <div className="box">
+                <div className="login-box">
+                    <div className="login-logo">
+                        <foodbank-logo><img alt="Foodbank Logo" src="media/logo.png" /></foodbank-logo>
+                    </div>
+                    <div className="login-box-body">
+                        <p className="login-box-msg">Sign in to start your session</p>
+                        <form name="loginForm" autoComplete="off">
+                            <div className="form-group has-feedback">
+                                <input type="text" className="form-control" placeholder="Username" value={this.state.usernameInputValue}
+                                    onChange={this.onUsernameChange} />
+                                <span className="glyphicon glyphicon-user form-control-feedback"></span>
+                            </div>
+                            <div className="form-group has-feedback">
+                                <input type="password" className="form-control" placeholder="Password" value={this.state.passwordInputValue}
+                                    onChange={this.onPasswordChange} />
+                                <span className="glyphicon glyphicon-lock form-control-feedback"></span>
+                            </div>
+                            <div className="pull-right form-group">
+                                <button className="btn btn-primary btn-flat" onClick={this.onSubmit}>Sign in</button>&nbsp; or&nbsp;
+                    <a href="/#!/signup">Sign up</a>
+                            </div>
+                            <div className="form-group">
+                                <a href="/#!/password/forgot">Forgot your password?</a>
+                            </div>
+                            <br />
+                            <div className="text-center text-danger">
+                                <strong>{this.props.auth.signinError}</strong>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div className="login-box-body">
-                    <p className="login-box-msg">Sign in to start your session</p>
-                    <form name="loginForm" autoComplete="off">
-                        <div className="form-group has-feedback">
-                            <input type="text" className="form-control" placeholder="Username" value={this.state.usernameInputValue}
-                                onChange={(e) => this.onUsernameChange(e)} />
-                            <span className="glyphicon glyphicon-user form-control-feedback"></span>
-                        </div>
-                        <div className="form-group has-feedback">
-                            <input type="password" className="form-control" placeholder="Password" value={this.state.passwordInputValue}
-                                onChange={(e) => this.onPasswordChange(e)} />
-                            <span className="glyphicon glyphicon-lock form-control-feedback"></span>
-                        </div>
-                        <div className="pull-right form-group">
-                            <button className="btn btn-primary btn-flat" onClick={(e) => this.onSubmit(e)}>Sign in</button>&nbsp; or&nbsp;
-                <a href="/#!/signup">Sign up</a>
-                        </div>
-                        <div className="form-group">
-                            <a href="/#!/password/forgot">Forgot your password?</a>
-                        </div>
-                        <br />
-                        <div className="text-center text-danger">
-                            <strong>{this.props.auth.error}</strong>
-                        </div>
-                    </form>
-                </div>
+                {this.props.auth.fetching &&
+                    <div className="overlay">
+                        <i className="fa fa-refresh fa-spin"></i>
+                    </div>
+                }
             </div>
         </Provider>
 

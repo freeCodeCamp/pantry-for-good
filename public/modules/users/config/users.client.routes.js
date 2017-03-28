@@ -37,14 +37,22 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 		// 		CurrentUser: AuthenticationProvider.requireLoggedIn
 		// 	}
 		// }).
-		state('root.signup', {
-			url: 'signup',
+		state('root.signup-angular', {
+			url: 'signup-angular',
 			views: {
 				'content@': {
 					component: 'signup'
 				}
 			}
 		}).
+		state('root.signup', {
+			url: 'signup',
+			views: {
+				'content@': {
+					component: 'signUpReact'
+				}
+			}
+		}).		
 		state('root.signin-angular', {
 			url: 'signin-angular',
 			views: {
