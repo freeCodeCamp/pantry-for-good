@@ -1,15 +1,33 @@
+import React from 'react'
+import {Provider} from 'react-redux'
+import ReactDOM from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
+
+import SignUp from './react/SignUp'
 
 export default angular.module('users')
   .component('signUpReact', {
-    bindings: {
-      media: '='
+    controller: function ($ngRedux) {
+      render(SignUp)
+
+      function render(Component) {
+        ReactDOM.render(
+          <AppContainer>
+            <Provider store={$ngRedux}>
+              <Component />
+            </Provider>
+          </AppContainer>,
+          document.getElementById('sign-up')
+        )
+      }
+      if (module.hot) {
+        module.hot.accept('../components/react/SignUp', () => {
+          const Next = require('../components/react/SignUp').default
+          render(Next)
+        })
+      }
     },
-    controller: 'SignUpControllerReact',
-    template: `
-      <section class="content">
-        <div id="singup-react"></div>
-      </section>
-    `
+    template: '<div id="sign-up"></div>'
   })
   .name;
