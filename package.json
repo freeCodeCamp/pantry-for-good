@@ -112,8 +112,10 @@
     "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.1",
     "babel-register": "^6.24.0",
     "eslint": "^3.14.1",
+    "eslint-plugin-react": "^6.10.3",
     "grunt-concurrent": "~2.3.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "~1.1.0",
