@@ -28,6 +28,7 @@
     "angular-smart-table": "^2.1.8",
     "angular-ui-bootstrap": "^2.2.0",
     "angular-ui-router": "^1.0.0-rc.1",
+    "angular2react": "^1.0.3",
     "async": "~2.1.4",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
