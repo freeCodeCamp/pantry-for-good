@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router'
-import {fill, get, set, take} from 'lodash'
+import set from 'lodash/set'
 import {utc} from 'moment'
 
 import {Form} from '../../common/services/form'

@@ -1,22 +1,34 @@
+import React from 'react'
+import {Provider} from 'react-redux'
+import ReactDOM from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
 
-const mapStateToThis = state => ({
-  settings: state.settings.data
-});
+import VolunteerCreateSuccess from './VolunteerCreateSuccess'
 
 export default angular.module('volunteer')
   .component('createVolunteerSuccess', {
-    controller: function($ngRedux) {
-      this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
-      this.store = $ngRedux
-      this.$onDestroy = () => this.unsubscribe();
-    },
-    template: `
-      <section class="row text-center">
-        <foodbank-logo store="$ctrl.store" />
-        <h3 class="col-md-12">Successfully submited. Thank you!</h3>
-        <a href="/#!/" class="col-md-12">Go to {{$ctrl.settings.organization}}'s Homepage</a>
-      </section>
-    `
+    controller: ['$ngRedux', function($ngRedux) {
+      render(VolunteerCreateSuccess)
+
+      function render(Component) {
+        ReactDOM.render(
+          <AppContainer>
+            <Provider store={$ngRedux}>
+              <Component />
+            </Provider>
+          </AppContainer>,
+          document.getElementById('volunteer-create-success')
+        )
+      }
+
+      if (module.hot) {
+        module.hot.accept('./VolunteerCreateSuccess', () => {
+          const Next = require('./VolunteerCreateSuccess').default
+          render(Next)
+        })
+      }
+    }],
+    template: '<div id="volunteer-create-success"></div>'
   })
   .name;

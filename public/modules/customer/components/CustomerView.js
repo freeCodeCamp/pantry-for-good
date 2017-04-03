@@ -73,7 +73,7 @@ class CustomerView extends Component {
     }
 
     // Tried to load customer
-    if (this.props.loadingCustomer && !loadingCustomer) {
+    if (this.props.loadingCustomers && !loadingCustomers) {
       this.setState({error: loadCustomersError})
     }
 
