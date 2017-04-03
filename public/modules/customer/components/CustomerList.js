@@ -5,7 +5,7 @@ import {Table} from 'react-bootstrap'
 import {selectors} from '../../../store';
 import {loadCustomers} from '../../../store/customer';
 
-import CustomerStatusLabel from './CustomerStatusLabel'
+import ClientStatusLabel from '../../common/components/ClientStatusLabel'
 import Page from '../../common/components/Page'
 
 const mapStateToProps = state => ({
@@ -59,7 +59,7 @@ class CustomerList extends Component {
                       <td><span>{customer.deliveryInstructions}</span></td>
                       <td><span>{customer.householdSummary}</span></td>
                       <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
-                      <td><CustomerStatusLabel customer={customer} /></td>
+                      <td><ClientStatusLabel client={customer} /></td>
                       <td>
                         <a
                           href={`/#!/admin/customers/${customer.id}`}

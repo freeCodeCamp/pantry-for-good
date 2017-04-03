@@ -59,7 +59,7 @@ class CustomerEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       savingCustomers,
-      savingCustomerError,
+      savingCustomersError,
       loadingCustomers,
       loadCustomersError,
       loadingFormData,

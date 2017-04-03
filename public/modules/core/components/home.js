@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
 
-import FoodbankLogo from '../../media/components/foodbank-logo'
+import FoodbankLogo from '../../common/components/FoodbankLogo'
 
 const Home = () =>
   <section className="content-header">
