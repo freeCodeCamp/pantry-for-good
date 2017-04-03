@@ -8,7 +8,7 @@ export const actions = crudActions('foodCategory');
 
 export const loadFoods = () => ({
   [CALL_API]: {
-    endpoint: 'admin/foods',
+    endpoint: 'foods',
     schema: arrayOfFoodCategories,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }

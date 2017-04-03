@@ -1,12 +1,11 @@
-'use strict';
+import Food from '../models/food.server.model'
+import Customer from '../models/customer.server.model'
 
 /**
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
-	Food = mongoose.model('Food'),
-	Customer = mongoose.model('Customer'),
 	_ = require('lodash'),
 	async = require('async');
 
@@ -30,7 +29,7 @@ exports.create = function(req, res) {
 /**
  * Update a Food category
  */
-exports.update = function(req, res) {
+exports.update = async function(req, res) {
 	var food = req.food;
 
 	food = _.extend(food, req.body);

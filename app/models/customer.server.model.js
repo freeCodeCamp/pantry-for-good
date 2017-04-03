@@ -204,7 +204,7 @@ var CustomerSchema = new Schema({
 	{ strict: false }
 );
 
-// Initialize geocoder options for pre save method 
+// Initialize geocoder options for pre save method
 var geocodeOptions = {
   provider: 'google',
   formatter: null
@@ -218,16 +218,22 @@ CustomerSchema.pre('save', function(next) {
 	var doc = this;
   var address = `${doc.address}, ${doc.city}, ${doc.province}`;
 
-	geocoder.geocode(address, function(err, data) {
-		if (data) {
-			var location = [];
-			location[0] = data[0].longitude;
-			location[1] = data[0].latitude;
-			doc.location = location;
-		}
+	if (process.env.NODE_ENV === 'test') {
+		doc.location = [0, 0]
+		next()
+	} else {
+		// slow for tests
+		geocoder.geocode(address, function(err, data) {
+			if (data) {
+				var location = [];
+				location[0] = data[0].longitude;
+				location[1] = data[0].latitude;
+				doc.location = location;
+			}
 
-		next();
-	});
+			next();
+		});
+	}
 });
 
 /**
@@ -269,4 +275,4 @@ CustomerSchema.virtual('householdSummary').get(function() {
  */
 CustomerSchema.set('toJSON', {virtuals: true});
 
-mongoose.model('Customer', CustomerSchema);
+export default mongoose.model('Customer', CustomerSchema);

@@ -20,4 +20,4 @@ var MediaSchema = new Schema({
 	}
 });
 
-mongoose.model('Media', MediaSchema);
+export default mongoose.model('Media', MediaSchema);

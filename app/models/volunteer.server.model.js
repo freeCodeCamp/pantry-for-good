@@ -145,4 +145,4 @@ VolunteerSchema.virtual('fullAddress').get(function() {
  */
 VolunteerSchema.set('toJSON', {virtuals: true});
 
-mongoose.model('Volunteer', VolunteerSchema);
+export default mongoose.model('Volunteer', VolunteerSchema);

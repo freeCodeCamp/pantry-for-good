@@ -105,4 +105,4 @@ DonorSchema.virtual('fullAddress').get(function() {
  */
 DonorSchema.set('toJSON', {virtuals: true});
 
-mongoose.model('Donor', DonorSchema);
+export default mongoose.model('Donor', DonorSchema);

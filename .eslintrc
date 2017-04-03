@@ -4,8 +4,17 @@
         "ecmaVersion": 8,
         "sourceType": "module",
         "ecmaFeatures": {
-            "jsx": true
-        },
+            "jsx": true,
+            "modules": true,
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "env": {
+        "es6": true,
+        "mocha": true,
+        "node": true,
+        "browser": true,
+        "commonjs": true
     },
     "globals": {
       "angular": true,
@@ -14,7 +23,12 @@
       "require": true,
       "module": true,
       "process": true,
-      "console": true
+      "console": true,
+      "expect": true,
+      "sinon": true,
+      "supertest": true,
+      "initDb": true,
+      "resetDb": true
     },
     "rules": {
         "no-alert": "off",
@@ -227,7 +241,7 @@
         "require-jsdoc": "off",
         "require-yield": "error",
         "rest-spread-spacing": "off",
-        "semi": ["warn", "always"],
+        "semi": "off",
         "semi-spacing": "off",
         "sort-keys": "off",
         "sort-imports": "off",

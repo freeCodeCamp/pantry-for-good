@@ -1,49 +1,28 @@
-'use strict';
+import passport from 'passport'
 
-/**
- * Module dependencies.
- */
-var _ = require('lodash'),
-	errorHandler = require('../errors.server.controller'),
-	mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User');
+import {User} from '../../models'
 
 /**
  * Signup
  */
-exports.signup = function(req, res) {
+exports.signup = async function(req, res) {
 	// Init Variables
-	var user = new User(req.body);
-	// Take role of newly created user from account type
-	user.roles = req.body.accountType;
-	// Security measure: role/account type admin is discarded
-	_.pull(user.roles, 'admin');
-
-	// Add missing user fields
-	user.provider = 'local';
-	user.displayName = user.firstName + ' ' + user.lastName;
-
-	// Then save the user
-	user.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			// Remove sensitive data before login
-			user.password = undefined;
-			user.salt = undefined;
-
-			req.login(user, function(err) {
-				if (err) {
-					res.status(400).send(err);
-				} else {
-					res.json(user);
-				}
-			});
-		}
+	let user = new User({
+		...req.body,
+		roles: [req.body.accountType].filter(role => role !== 'admin'),
+		provider: 'local',
+		displayName: `${req.body.firstName} ${req.body.lastName}`
 	});
+
+	await user.save()
+
+	user.password = undefined
+	user.salt = undefined
+
+	req.login(user, (err) => {
+		if (err) throw err //return res.status(400).json(err)
+	})
+	return res.json(user)
 };
 
 /**
@@ -59,11 +38,8 @@ exports.signin = function(req, res, next) {
 			user.salt = undefined;
 
 			req.login(user, function(err) {
-				if (err) {
-					res.status(400).send(err);
-				} else {
-					res.json(user);
-				}
+				if (err) throw err //return	res.status(400).json(err);
+				return res.json(user);
 			});
 		}
 	})(req, res, next);

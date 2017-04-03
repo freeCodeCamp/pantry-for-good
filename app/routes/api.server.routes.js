@@ -1,26 +1,24 @@
-'use strict';
-var express = require('express');
+import express from 'express'
 
-/**
- * Module dependencies
- */
-var	users = require('../../app/controllers/users.server.controller'),
-		role = ['admin'],
-		customerRoutes = require('./customer.server.routes'),
-		donationRoutes = require('./donation.server.routes'),
-		donorRoutes = require('./donor.server.routes'),
-		foodRoutes = require('./food.server.routes'),
-		mediaRoutes = require('./media.server.routes'),
-		packingRoutes = require('./packing.server.routes').default,
-		questionnaireRoutes = require('./questionnaire.server.routes'),
-		settingsRoutes = require('./settings.server.routes'),
-		usersRoutes = require('./users.server.routes'),
-		volunteerRoutes = require('./volunteer.server.routes');
+import * as users from '../controllers/users.server.controller'
+import customerRoutes from './customer.server.routes'
+import donationRoutes from './donation.server.routes'
+import donorRoutes from './donor.server.routes'
+import foodRoutes from './food.server.routes'
+import mediaRoutes from './media.server.routes'
+import packingRoutes from './packing.server.routes'
+import questionnaireRoutes from './questionnaire.server.routes'
+import settingsRoutes from './settings.server.routes'
+import usersRoutes from './users.server.routes'
+import volunteerRoutes from './volunteer.server.routes'
+
+const adminRole = ['admin']
 
 var apiRouter = express.Router();
 
-module.exports = apiRouter
-	.use(customerRoutes)
+export default () => apiRouter
+	.all('/admin/*', users.hasAuthorization(adminRole))
+	.use(customerRoutes())
 	.use(donationRoutes)
 	.use(donorRoutes)
 	.use(foodRoutes)
@@ -28,6 +26,5 @@ module.exports = apiRouter
 	.use(packingRoutes)
 	.use(questionnaireRoutes)
 	.use(settingsRoutes)
-	.use(usersRoutes)
+	.use(usersRoutes())
 	.use(volunteerRoutes)
-	.all('/admin/*', users.hasAuthorization(role));

@@ -1,11 +1,11 @@
 'use strict';
-
+import Media from '../models/media.server.model'
 /**
  * Module dependencies
  */
 var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
-		Media = mongoose.model('Media'),
+		// Media = mongoose.model('Media'),
 		fs = require('fs');
 
 /**
@@ -61,5 +61,5 @@ exports.uploadLogo = function(req, res) {
 		media.save();
 		res.json(media);
 	});
-};	
-	
+};
+
