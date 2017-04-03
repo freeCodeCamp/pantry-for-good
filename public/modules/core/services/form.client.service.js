@@ -1,9 +1,11 @@
 import angular from 'angular';
 
-export default angular.module('core').factory('Form', Form).name;
+export default angular.module('core').factory('Form', form).name;
+
+export const Form = form()
 
 /* @ngInject */
-function Form() {
+function form() {
 	var methods = {
 		generate: generate,
 		handleCheckbox: handleCheckbox,

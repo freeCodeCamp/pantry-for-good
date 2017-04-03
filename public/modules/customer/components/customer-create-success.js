@@ -1,22 +1,34 @@
+import React from 'react'
+import {Provider} from 'react-redux'
+import ReactDOM from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
 
-const mapStateToThis = state => ({
-  settings: state.settings.data
-});
+import CustomerCreateSuccess from './CustomerCreateSuccess'
 
 export default angular.module('customer')
   .component('customerCreateSuccess', {
     controller: ['$ngRedux', function($ngRedux) {
-      this.$onInit = () => this.unsubscribe = $ngRedux.connect(mapStateToThis)(this);
-      this.store = $ngRedux
-      this.$onDestroy = () => this.unsubscribe();
+      render(CustomerCreateSuccess)
+
+      function render(Component) {
+        ReactDOM.render(
+          <AppContainer>
+            <Provider store={$ngRedux}>
+              <Component />
+            </Provider>
+          </AppContainer>,
+          document.getElementById('customer-create-success')
+        )
+      }
+
+      if (module.hot) {
+        module.hot.accept('./CustomerCreateSuccess', () => {
+          const Next = require('./CustomerCreateSuccess').default
+          render(Next)
+        })
+      }
     }],
-    template: `
-      <section class="row text-center">
-        <foodbank-logo store="$ctrl.store" />
-        <h3 class="col-md-12">Successfully submited. Thank you!</h3>
-        <a href="/#!/" class="col-md-12">Go to {{$ctrl.settings.organization}}'s Homepage</a>
-      </section>
-    `
+    template: '<div id="customer-create-success"></div>'
   })
   .name;

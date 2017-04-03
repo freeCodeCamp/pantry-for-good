@@ -1,9 +1,11 @@
 import angular from 'angular';
 
-export default angular.module('core').factory('View', View);
+export default angular.module('core').factory('View', view);
+
+export const View = view()
 
 /* @ngInject */
-function View() {
+function view() {
 	var methods = {
 		generate: generate
 	};
@@ -108,7 +110,7 @@ function View() {
 
 				// Take value from table on view object, if it exists
 				var value = (viewObject[tableName][iRow] && viewObject[tableName][iRow][cols[iCell]]) || 0;
-				tmpRow.push('$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+				tmpRow.push('$' + Number(value).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
 			} // next cells
 
 			tmpTable.push(tmpRow);

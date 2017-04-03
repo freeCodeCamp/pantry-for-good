@@ -34,9 +34,7 @@
     "extends": ["eslint:recommended", "plugin:react/recommended"],
     "rules": {
         "arrow-parens": ["warn", "as-needed"],
-        "brace-style": ["warn", "1tbs"],
         "indent": ["warn", 2],
-        "object-curly-spacing": ["warn", "never"],
         "react/prop-types": "off",
         "semi": ["warn", "never"]
     }
