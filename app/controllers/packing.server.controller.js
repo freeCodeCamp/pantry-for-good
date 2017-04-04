@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
-
-const Customer = mongoose.model('Customer');
-const Food = mongoose.model('Food');
+import Customer from '../models/customer.server.model'
+import Food from '../models/food.server.model'
+// const Customer = mongoose.model('Customer');
+// const Food = mongoose.model('Food');
 const beginWeek = moment.utc().startOf('isoWeek');
 
 export default {

@@ -1,13 +1,7 @@
-'use strict';
+import passport from 'passport'
+import {User} from '../app/models'
+import localStrategy from './strategies/local'
 
-/**
- * Module dependencies.
- */
-var passport = require('passport'),
-	User = require('mongoose').model('User'),
-	path = require('path'),
-	config = require('./config');
-	
 /**
  * Module init function.
  */
@@ -18,16 +12,16 @@ module.exports = function() {
 	});
 
 	// Deserialize sessions
-	passport.deserializeUser(function(id, done) {
-		User.findOne({
-			_id: id
-		}, '-salt -password', function(err, user) {
-			done(err, user);
-		});
+	passport.deserializeUser(async function(id, done) {
+		try {
+			const user = await User.findById(id, '-salt -password')
+			done(null, user)
+		} catch (err) {
+			done(err)
+		}
+
 	});
 
 	// Initialize strategies
-	config.getGlobbedFiles('./config/strategies/**/*.js').forEach(function(strategy) {
-		require(path.resolve(strategy))();
-	});
+	localStrategy()
 };

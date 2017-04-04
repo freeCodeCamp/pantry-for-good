@@ -1,13 +1,15 @@
 'use strict';
-
+import Donation from '../models/donation.server.model'
+import Donor from '../models/donor.server.model'
+import Settings from '../models/settings.server.model'
 /**
  * Module dependencies
  */
 var mongoose 			= require('mongoose'),
 		errorHandler 	= require('./errors.server.controller'),
-		Donation 			= mongoose.model('Donation'),
-		Donor					= mongoose.model('Donor'),
-		Settings			= mongoose.model('Settings'),
+		// Donation 			= mongoose.model('Donation'),
+		// Donor					= mongoose.model('Donor'),
+		// Settings			= mongoose.model('Settings'),
 		async 				= require('async'),
 		mailHelper    = require('sendgrid').mail,
 		config 				= require('../../config/config'),

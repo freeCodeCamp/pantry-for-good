@@ -1,9 +1,10 @@
 'use strict';
+import {Section, Field} from '../models/questionnaire.server.model'
 
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
-	Section = mongoose.model('Section'),
-	Field = mongoose.model('Field'),
+	// Section = mongoose.model('Section'),
+	// Field = mongoose.model('Field'),
 	_ = require('lodash');
 
 // Create a section

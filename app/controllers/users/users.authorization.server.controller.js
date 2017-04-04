@@ -1,12 +1,5 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var _ = require('lodash'),
-	mongoose = require('mongoose'),
-	User = mongoose.model('User');
-
+import User from '../../models/user.server.model'
+import intersection from 'lodash/intersection'
 /**
  * User middleware
  */
@@ -30,7 +23,6 @@ exports.requiresLogin = function(req, res, next) {
 			message: 'User is not logged in'
 		});
 	}
-
 	next();
 };
 
@@ -38,11 +30,9 @@ exports.requiresLogin = function(req, res, next) {
  * User authorizations routing middleware
  */
 exports.hasAuthorization = function(roles) {
-	var _this = this;
-
-	return function(req, res, next) {
-		_this.requiresLogin(req, res, function() {
-			if (_.intersection(req.user.roles, roles).length) {
+	return (req, res, next) => {
+		this.requiresLogin(req, res, function() {
+			if (intersection(req.user.roles, roles).length) {
 				return next();
 			} else {
 				return res.status(403).send({

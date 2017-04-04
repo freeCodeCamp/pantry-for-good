@@ -20,13 +20,16 @@ module.exports = function() {
 
 	if (!environmentFiles.length) {
 		if (process.env.NODE_ENV) {
+			// eslint-disable-next-line no-console
 			console.error(chalk.red('No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead'));
 		} else {
+			// eslint-disable-next-line no-console
 			console.error(chalk.red('NODE_ENV is not defined! Using default development environment'));
 		}
 
 		process.env.NODE_ENV = 'development';
 	} else {
+		// eslint-disable-next-line no-console
 		console.log(chalk.black.bgWhite('Application loaded using the "' + process.env.NODE_ENV + '" environment configuration'));
 	}
 

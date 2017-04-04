@@ -20,7 +20,8 @@ module.exports = {
             'angular-datatables', 'datatables', 'datatables-tabletools', 'datatables.net',
             'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
             'bootstrap', 'moment', 'moment-recur', 'redux', 'ng-redux', 'redux-thunk', 'redux-ui-router',
-            'normalizr', 'whatwg-fetch', 'react', 'react-dom', 'react-redux', 'react-hot-loader']
+            'normalizr', 'whatwg-fetch', 'react', 'react-dom', 'react-redux', 'react-hot-loader',
+            'react2angular', 'angular2react', 'react-bootstrap']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),

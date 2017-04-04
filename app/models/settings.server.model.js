@@ -52,4 +52,4 @@ var SettingsSchema = new Schema({
 	}
 });
 
-mongoose.model('Settings', SettingsSchema);
+export default mongoose.model('Settings', SettingsSchema);
