@@ -7,13 +7,14 @@ const beginWeek = moment.utc().startOf('isoWeek');
 
 export default {
   pack: async function(req, res, next) {
-    const {customerIds, items} = req.body;
-
+    const {customers, items} = req.body;
     try {
       const updatedCustomers = await Promise.all(
-        customerIds.map(async id =>
-          Customer.findByIdAndUpdate(id,
-            {lastPacked: beginWeek}, {new: true})
+        customers.map(async customer =>
+          Customer.findByIdAndUpdate(Number(customer.id), {
+            lastPacked: beginWeek,
+            packingList: customer.packingList.map(item => item._id)
+          }, {new: true})
         )
       );
 
