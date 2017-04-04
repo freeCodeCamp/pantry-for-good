@@ -1,5 +1,6 @@
 'use strict';
-
+import User from '../../models/user.server.model'
+import Settings from '../../models/settings.server.model'
 /**
  * Module dependencies.
  */
@@ -7,8 +8,8 @@ var _ = require('lodash'),
 	errorHandler = require('../errors.server.controller'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User'),
-	Settings = mongoose.model('Settings'),
+	// User = mongoose.model('User'),
+	// Settings = mongoose.model('Settings'),
 	config = require('../../../config/config'),
 	async = require('async'),
 	mailHelper = require('sendgrid').mail,

@@ -1,11 +1,11 @@
 'use strict';
-
+import Settings from '../models/settings.server.model'
 /**
  * Module dependencies
  */
 var mongoose = require('mongoose'),
-		errorHandler = require('./errors.server.controller'),
-		Settings = mongoose.model('Settings');
+		errorHandler = require('./errors.server.controller')
+		// Settings = mongoose.model('Settings');
 
 /**
  * Read settings

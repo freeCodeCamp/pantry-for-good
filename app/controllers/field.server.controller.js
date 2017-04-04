@@ -1,14 +1,15 @@
 'use strict';
+import {Field} from '../models/questionnaire.server.model'
 
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	seed = require('../models/seed'),
-	Field = mongoose.model('Field'),
+	// Field = mongoose.model('Field'),
 	_ = require('lodash');
 
 
 	Field.count({}, function (err, count) {
-		if (count < 1) {
+		if (count < 1 && process.env.NODE_ENV === 'development') {
 			console.log('Seeding Fields');
 			Field.insertMany(seed.fields, function (err) {
 				if (err) throw err;

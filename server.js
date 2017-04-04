@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Module dependencies.
  */
@@ -34,7 +32,7 @@ db.once('open', function() {
 	autoIncrement.initialize(db);
 
 	// Init the express application
-	var app = require('./config/express')(db);
+	var app = require('./config/express')();
 
 	// Bootstrap passport config
 	require('./config/passport')();

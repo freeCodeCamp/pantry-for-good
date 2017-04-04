@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router'
-import {get, set} from 'lodash'
+import set from 'lodash/set'
 import {utc} from 'moment'
 
 import {Form} from '../../common/services/form'
@@ -59,7 +59,7 @@ class CustomerEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       savingCustomers,
-      savingCustomerError,
+      saveCustomersError,
       loadingCustomers,
       loadCustomersError,
       loadingFormData,
@@ -69,7 +69,7 @@ class CustomerEdit extends Component {
 
     // Tried to save customer
     if (this.props.savingCustomers && !savingCustomers) {
-      this.setState({error: savingCustomerError})
+      this.setState({error: saveCustomersError})
     }
 
     // Tried to load customer

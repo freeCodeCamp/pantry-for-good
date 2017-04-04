@@ -16,14 +16,14 @@ const packSuccess = response => ({
 
 const packFailure = error => ({type: PACK_FAILURE, error});
 
-export const pack = (customerIds, items) => dispatch => {
+export const pack = (customers, items) => dispatch => {
   dispatch(packRequest());
-  callApi('admin/packing', 'PUT', {customerIds, items})
+  callApi('admin/packing', 'PUT', {customers, items})
     .then(res => {
       dispatch(packSuccess({
         entities: {
-          customers: normalize(res.customers, arrayOfCustomers).entities,
-          items: normalize(res.items, arrayOfFoodItems).entities
+          customers: normalize(res.customers, arrayOfCustomers).entities.customers,
+          foodItems: normalize(res.items, arrayOfFoodItems).entities.foodItems
         }
       }));
     })

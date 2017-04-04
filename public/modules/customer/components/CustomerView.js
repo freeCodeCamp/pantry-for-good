@@ -17,8 +17,8 @@ import Page from '../../common/components/Page'
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  savingCustomer: state.customer.saving,
-  savingCustomerError: state.customer.saveError,
+  savingCustomers: selectors.savingCustomers(state),
+  saveCustomersError: selectors.saveCustomersError(state),
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
@@ -59,7 +59,7 @@ class CustomerView extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       savingCustomers,
-      savingCustomerError,
+      saveCustomersError,
       loadingCustomers,
       loadCustomersError,
       loadingFormData,
@@ -67,10 +67,9 @@ class CustomerView extends Component {
       getCustomer
     } = nextProps
 
-    // try setstate((prevState, prevProps) => ...)
     // Tried to save customer
     if (this.props.savingCustomers && !savingCustomers) {
-      this.setState({error: savingCustomerError})
+      this.setState({error: saveCustomersError})
     }
 
     // Tried to load customer
@@ -91,7 +90,6 @@ class CustomerView extends Component {
         ...customer,
         foodPreferences: this.getFoodPreferences(customer)
       }
-      // console.log('customerView', View.methods.generate(customerModel, this.formData, 'qClients'))
 
       this.setState({
         customerModel,

@@ -1,12 +1,13 @@
 'use strict';
-
+import Donor from '../models/donor.server.model'
+import User from '../models/user.server.model'
 /**
  * Module dependencies
  */
 var mongoose = require('mongoose'),
 		errorHandler = require('./errors.server.controller'),
-		Donor = mongoose.model('Donor'),
-		User = mongoose.model('User'),
+		// Donor = mongoose.model('Donor'),
+		// User = mongoose.model('User'),
 		_ = require('lodash');
 
 /**

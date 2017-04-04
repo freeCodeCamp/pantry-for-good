@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 /**
  * Donation Schema
  */
-var DonationSchema = new Schema({
+const DonationSchema = new Schema({
 	type: {
 		type: String,
 		enum: ['Cash', 'Cash with advantage', 'Non-cash', 'Non-cash with advantage']
@@ -69,4 +69,4 @@ DonationSchema.plugin(autoIncrement.plugin, {
 	startAt: 1
 });
 
-mongoose.model('Donation', DonationSchema);
+export default mongoose.model('Donation', DonationSchema);

@@ -1,13 +1,12 @@
 'use strict';
-
+import User from '../../models/user.server.model'
 /**
  * Module dependencies.
  */
 var _ = require('lodash'),
 	errorHandler = require('../errors.server.controller.js'),
-	mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User');
+	passport = require('passport')
+	// User = mongoose.model('User');
 
 /**
  * Update user details

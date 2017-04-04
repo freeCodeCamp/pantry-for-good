@@ -1,47 +1,35 @@
-'use strict';
+import bodyParser from 'body-parser'
+import compress from 'compression'
+import consolidate from 'consolidate'
+import cookieParser from 'cookie-parser'
+import express from 'express'
+import flash from 'connect-flash'
+import helmet from 'helmet'
+import methodOverride from 'method-override'
+import morgan from 'morgan'
+import mongoose from 'mongoose'
+import connectMongo from 'connect-mongo'
+import nunjucks from 'nunjucks'
+import passport from 'passport'
+import path from 'path'
+import session from 'express-session'
 
-/**
- * Module dependencies.
- */
-var fs = require('fs'),
-	https = require('https'),
-	express = require('express'),
-	morgan = require('morgan'),
-	bodyParser = require('body-parser'),
-	session = require('express-session'),
-	compress = require('compression'),
-	methodOverride = require('method-override'),
-	cookieParser = require('cookie-parser'),
-	helmet = require('helmet'),
-	passport = require('passport'),
-	mongoStore = require('connect-mongo')({
-		session: session
-	}),
-	flash = require('connect-flash'),
-	config = require('./config'),
-	consolidate = require('consolidate'),
-	path = require('path'),
-  nunjucks  = require('nunjucks');
+import apiRoutes from '../app/routes/api.server.routes'
+import config from './config'
+import getErrorMessage from '../app/lib/error-messages'
+import '../app/models'
 
-module.exports = function(db) {
-	// Initialize express app
-	var app = express();
+const mongoStore = connectMongo({session})
 
-	// Globbing model files
-	config.getGlobbedFiles('./app/models/**/*.js').forEach(function(modelPath) {
-		require(path.resolve(modelPath));
-	});
+module.exports = function() {
+	const app = express();
 
-	// Setting application local variables
-	app.locals.jsFiles = config.getGlobbedFiles(config.assets.lib.js, 'public/');
-	app.locals.cssFiles = config.getGlobbedFiles(config.assets.lib.css, 'public/');
-
-	// Passing the request url and title to environment locals
-	app.use(function(req, res, next) {
-		res.locals.url = req.protocol + '://' + req.headers.host + req.url;
-		res.locals.title = config.app.title;
-		next();
-	});
+	// // Passing the request url and title to environment locals
+	// app.use(function(req, res, next) {
+	// 	res.locals.url = req.protocol + '://' + req.headers.host + req.url;
+	// 	res.locals.title = config.app.title;
+	// 	next();
+	// });
 
 	// Should be placed before express.static
 	app.use(compress({
@@ -62,6 +50,7 @@ module.exports = function(db) {
     autoescape: false,
     express: app
   });
+
   env.addFilter('json', function(input, indent) {
     return JSON.stringify(input, null, indent || 0);
   });
@@ -97,7 +86,7 @@ module.exports = function(db) {
 		resave: true,
 		secret: config.sessionSecret,
 		store: new mongoStore({
-			mongooseConnection: db,
+			mongooseConnection: mongoose.connection,
 			collection: config.sessionCollection
 		})
 	}));
@@ -114,52 +103,35 @@ module.exports = function(db) {
 	app.disable('x-powered-by');
 
 	// Use api routes
-	app.use('/api', require('../app/routes/api.server.routes'));
+	app.use('/api', apiRoutes());
 
 	// Setting the app router and static folder
 	if (process.env.NODE_ENV === 'production') {
 		app.use(express.static(path.resolve('./public/dist')));
 	}
 
-	// Assume 'not found' in the error msgs is a 404. this is somewhat silly, but valid, you can do whatever you like, set properties, use instanceof etc.
+	// Error handler
 	app.use(function(err, req, res, next) {
-		// If the error object doesn't exists
 		if (!err) return next();
 
-		// Log it
-		console.error(err.stack);
+		// Dont log during testing
+		if (process.env.NODE_ENV !== 'test') {
+			// eslint-disable-next-line no-console
+			console.error(err.stack);
+		}
 
-		// Error page
-		res.status(500).render('500', {
-			error: err.stack
+		const error = getErrorMessage(err)
+		res.status(error.status).json({
+			message: error.message
 		});
 	});
 
 	// Assume 404 since no middleware responded
 	app.use(function(req, res) {
-		res.status(404).render('404', {
-			url: req.originalUrl,
-			error: 'Not Found'
-		});
+		res.status(404).json({
+			message: 'Not found'
+		})
 	});
-
-	if (process.env.NODE_ENV === 'secure') {
-		// Log SSL usage
-		console.log('Securely using https protocol');
-
-		// Load SSL key and certificate
-		var privateKey = fs.readFileSync('./config/sslcerts/key.pem', 'utf8');
-		var certificate = fs.readFileSync('./config/sslcerts/cert.pem', 'utf8');
-
-		// Create HTTPS Server
-		var httpsServer = https.createServer({
-			key: privateKey,
-			cert: certificate
-		}, app);
-
-		// Return HTTPS server instance
-		return httpsServer;
-	}
 
 	// Return Express server instance
 	return app;

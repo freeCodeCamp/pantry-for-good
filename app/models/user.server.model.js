@@ -25,7 +25,7 @@ var validateLocalStrategyPassword = function(password) {
 /**
  * User Schema
  */
-var UserSchema = new Schema({
+const UserSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
@@ -162,4 +162,4 @@ UserSchema.plugin(autoIncrement.plugin, {
 	startAt: 10000
 });
 
-mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);
