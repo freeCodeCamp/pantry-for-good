@@ -5,7 +5,7 @@ export const donation = new schema.Entity('donations', {}, {idAttribute: '_id'})
 export const donor = new schema.Entity('donors', {}, {idAttribute: '_id'});
 export const field = new schema.Entity('fields', {}, {idAttribute: '_id'});
 export const foodCategory = new schema.Entity('foodCategories', {}, {
-  idAttribute: '_id', 
+  idAttribute: '_id',
   processStrategy: (value, parent, key) => {
     //Add the category _id to each item in that category
     let category = Object.assign({}, value)
@@ -34,6 +34,7 @@ export const arrayOfVolunteers = new schema.Array(volunteer);
 
 customer.define({
   foodPreferences: arrayOfFoodItems,
+  packingList: arrayOfFoodItems,
   assignedTo: volunteer,
   _id: user
 });

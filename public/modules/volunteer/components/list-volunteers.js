@@ -1,91 +1,35 @@
+import React from 'react'
+import {Provider} from 'react-redux'
+import ReactDOM from 'react-dom'
+import {AppContainer} from 'react-hot-loader'
 import angular from 'angular';
-import {stateGo} from 'redux-ui-router';
 
-import {selectors} from '../../../store';
-import {loadVolunteers} from '../../../store/volunteer';
-
-const mapStateToThis = state => ({
-  user: state.auth.user,
-  volunteers: selectors.getAllVolunteers(state),
-  loadingVolunteers: selectors.loadingVolunteers(state),
-  loadVolunteerserror: selectors.loadVolunteersError(state),
-  settings: state.settings.data,
-});
-
-const mapDispatchToThis = dispatch => ({
-  loadVolunteers: () => dispatch(loadVolunteers()),
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
-});
+import VolunteerList from './VolunteerList'
 
 export default angular.module('volunteer')
   .component('listVolunteers', {
-    controller: function($ngRedux) {
-      this.$onInit = () => {
-        this.unsubscribe = $ngRedux.connect(mapStateToThis, mapDispatchToThis)(this);
-        this.loadVolunteers();
-      };
+    controller: ['$ngRedux', function($ngRedux) {
+      render(VolunteerList)
 
-      this.$onDestroy = () => this.unsubscribe();
-    },
-    template: `
-      <!-- Content header (Page header) -->
-      <section class="content-header">
-        <h1>Volunteer Database</h1>
-      </section>
-      <!-- Main content -->
-      <section class="content">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="box">
-              <!-- Box header -->
-              <div class="box-header">
-                <h3 class="box-title">Applications</h3>
-              </div><!-- /.box-header-->
-              <!-- Box body -->
-              <div class="box-body table-responsive">
-                <!-- Data table -->
-                <table class="table table-bordered table-striped" datatable="ng" dt-options="$ctrl.dtOptions">
-                  <!-- Table columns -->
-                  <thead>
-                  <tr role="row">
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Full Address</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                  </thead><!-- /.table columns -->
-                  <!-- Table footer -->
-                  <tfoot></tfoot><!-- /.table footer -->
-                  <!-- Table content -->
-                  <tbody role="alert" aria-live="polite" aria-relevant="all">
-                  <tr data-ng-repeat="volunteer in $ctrl.volunteers">
-                    <td><span data-ng-bind="volunteer.id"></span></td>
-                    <td><span data-ng-bind="volunteer.fullName"></span></td>
-                    <td><span data-ng-bind="volunteer.fullAddress"></span></td>
-                    <td><span data-ng-bind="volunteer.telephoneNumber"></span></td>
-                    <td><span data-ng-bind="volunteer.email"></span></td>
-                    <td><span data-ng-bind="volunteer.status" class="label"
-                              data-ng-class="{ 'label-success': volunteer.status === 'Active',
-                                              'label-danger': volunteer.status === 'Inactive' }"></span>
-                    </td>
-                    <td>
-                      <a data-ng-href="/#!/admin/volunteers/{{volunteer.id}}" class="btn btn-info btn-flat btn-xs"><i class="fa fa-eye"></i> View</a>
-                      <a data-ng-href="/#!/admin/volunteers/{{volunteer.id}}/edit" class="btn btn-primary btn-flat btn-xs"><i class="fa fa-pencil"></i> Edit</a>
-                    </td>
-                  </tr>
-                  </tbody><!-- /.table content -->
-                </table><!-- /.data table -->
-              </div><!-- /.box-body -->
-            </div><!-- /.box -->
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-        <div data-ng-show="$ctrl.loadVolunteersError" class="text-danger">
-          <strong data-ng-bind="$ctrl.loadVolunteersError"></strong>
-        </div>
-      </section><!-- /.content -->
-    `
+      function render(Component) {
+        ReactDOM.render(
+          <AppContainer>
+            <Provider store={$ngRedux}>
+              <Component />
+            </Provider>
+          </AppContainer>,
+          document.getElementById('volunteer-list')
+        )
+      }
+
+      if (module.hot) {
+        module.hot.accept('./VolunteerList', () => {
+          const Next = require('./VolunteerList').default
+          render(Next)
+        })
+      }
+    }],
+    template: '<div id="volunteer-list"></div>'
   })
   .name;
+

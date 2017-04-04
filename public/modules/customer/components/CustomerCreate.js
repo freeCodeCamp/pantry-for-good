@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router'
-import {fill, get, set, take} from 'lodash'
+import set from 'lodash/set'
 import {utc} from 'moment'
 
 import {Form} from '../../common/services/form'
@@ -14,7 +14,7 @@ import {loadSections} from '../../../store/section';
 import Page from '../../common/components/Page'
 import DynamicForm from '../../common/components/DynamicForm'
 import Household from './Household'
-import FoodbankLogo from '../../media/components/foodbank-logo'
+import FoodbankLogo from '../../common/components/FoodbankLogo'
 
 const mapStateToProps = state => ({
   user: state.auth.user,
@@ -55,7 +55,7 @@ class CustomerCreate extends Component {
   componentWillReceiveProps(nextProps) {
     const {
       savingCustomers,
-      savingCustomerError,
+      saveCustomersError,
       loadingFormData,
       loadFormDataError,
       getCustomer
@@ -63,7 +63,7 @@ class CustomerCreate extends Component {
 
     // Tried to save customer
     if (this.props.savingCustomers && !savingCustomers) {
-      this.setState({error: savingCustomerError})
+      this.setState({error: saveCustomersError})
     }
 
     // Tried to load form data
