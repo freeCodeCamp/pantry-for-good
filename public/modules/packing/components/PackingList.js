@@ -1,14 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
 import {utc} from 'moment'
 import 'moment-recur'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
-import {loadCustomers, saveCustomer} from '../../../store/customer'
+import {loadCustomers} from '../../../store/customer'
 import {loadFoods} from '../../../store/food-category'
-import {saveFoodItem} from '../../../store/food-item'
 import {pack} from '../../../store/packing'
 
 import Page from '../../common/components/Page'
@@ -61,17 +59,21 @@ class PackingList extends Component {
         const scheduledCustomers = getScheduledCustomers(allCustomers, this.beginWeek)
         const scheduledItems = getScheduledItems(allItems, this.beginWeek)
 
-        this.setState({
-          customers: scheduledCustomers,
-          items: scheduledItems
-        })
+        // generate packing lists for the customers
+        const {customers} = getPackedCustomersAndItems(
+          scheduledCustomers,
+          scheduledItems
+        )
+
+        this.setState({customers, items: scheduledItems})
       }
 		}
 	}
 
 	pack = () => {
+    // generate packing lists for selected customers and updated item counts
     const {customers, items} = getPackedCustomersAndItems(
-      this.state.customers,
+      this.state.customers.filter(customer => customer.isChecked),
       this.state.items
     )
 
@@ -160,7 +162,7 @@ class PackingList extends Component {
                         </td>
                         <td><span>{customer.id}</span></td>
                         <td><span>{customer.householdSummary}</span></td>
-                        {customer.packingList.map((item, i) =>
+                        {customer.packingList && customer.packingList.map((item, i) =>
                           <td key={i}><span>{item.name}</span></td>
                         )}
                         {items.length !== customer.packingList.length &&
