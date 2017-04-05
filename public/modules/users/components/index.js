@@ -1,4 +1,5 @@
 import './change-password';
+import './change-password-react';
 import './edit-profile';
 import './forgot-password';
 import './forgot-password-react';

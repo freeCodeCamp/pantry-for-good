@@ -15,11 +15,22 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
+		state('root.password-angular', {
+			url: 'settings/password-angular',
+			views: {
+				'content@': {
+					component: 'changePassword'
+				}
+			},
+			resolve: {
+				CurrentUser: AuthenticationProvider.requireLoggedIn
+			}
+		}).
 		state('root.password', {
 			url: 'settings/password',
 			views: {
 				'content@': {
-					component: 'changePassword'
+					component: 'changePasswordReact'
 				}
 			},
 			resolve: {
