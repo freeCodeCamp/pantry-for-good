@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import FoodbankLogo from '../../media/components/foodbank-logo'
+import FoodbankLogo from '../../common/components/FoodbankLogo'
 
 const mapStateToProps = state => ({
   settings: state.settings.data

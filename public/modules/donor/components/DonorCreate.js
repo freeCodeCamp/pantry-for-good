@@ -12,7 +12,7 @@ import {loadSections} from '../../../store/section';
 
 import Page from '../../common/components/Page'
 import DynamicForm from '../../common/components/DynamicForm'
-import FoodbankLogo from '../../media/components/foodbank-logo'
+import FoodbankLogo from '../../common/components/FoodbankLogo'
 
 const mapStateToProps = state => ({
   user: state.auth.user,

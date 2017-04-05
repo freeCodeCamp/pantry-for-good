@@ -92,7 +92,7 @@ class CustomerEdit extends Component {
           household: [
             ...customer.household.map(dependant => ({
               ...dependant,
-              dateOfBirth: utc(dependant.dateOfBirth).format('YY-MM-DD')
+              dateOfBirth: utc(dependant.dateOfBirth).format('YYYY-MM-DD')
             }))
           ]
         },
