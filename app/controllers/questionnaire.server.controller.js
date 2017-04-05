@@ -11,23 +11,23 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 	// Seed questionnaire fields
-	Questionnaire.count({}, function (err, count) {
-		if (count < 1 && process.env.NODE_ENV === 'development') {
-			console.log('Seeding Questionnaires');
-			Questionnaire.insertMany(seed.questionnaires, function (err) {
-				if (err) throw err;
-			});
-		}
-	});
+	// Questionnaire.count({}, function (err, count) {
+	// 	if (count < 1 && process.env.NODE_ENV === 'development') {
+	// 		console.log('Seeding Questionnaires');
+	// 		Questionnaire.insertMany(seed.questionnaires, function (err) {
+	// 			if (err) throw err;
+	// 		});
+	// 	}
+	// });
 
-	Section.count({}, function (err, count) {
-		if (count < 1 && process.env.NODE_ENV === 'development') {
-			console.log('Seeding Sections');
-			Section.insertMany(seed.sections, function (err) {
-				if (err) throw err;
-			});
-		}
-	});
+	// Section.count({}, function (err, count) {
+	// 	if (count < 1 && process.env.NODE_ENV === 'development') {
+	// 		console.log('Seeding Sections');
+	// 		Section.insertMany(seed.sections, function (err) {
+	// 			if (err) throw err;
+	// 		});
+	// 	}
+	// });
 
 // Create questionnaire
 exports.create = function(req, res) {

@@ -50,7 +50,7 @@ class VolunteerList extends Component {
                 </thead>
                 <tbody role="alert" aria-live="polite" aria-relevant="all">
                   {volunteers && volunteers.map(volunteer =>
-                    <tr key="volunteer.id">
+                    <tr key={volunteer.id}>
                       <td><span>{volunteer.id}</span></td>
                       <td><span>{volunteer.fullName}</span></td>
                       <td><span>{volunteer.fullAddress}</span></td>

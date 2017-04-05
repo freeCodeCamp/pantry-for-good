@@ -8,14 +8,14 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 
-	Field.count({}, function (err, count) {
-		if (count < 1 && process.env.NODE_ENV === 'development') {
-			console.log('Seeding Fields');
-			Field.insertMany(seed.fields, function (err) {
-				if (err) throw err;
-			});
-		}
-	});
+	// Field.count({}, function (err, count) {
+	// 	if (count < 1 && process.env.NODE_ENV === 'development') {
+	// 		console.log('Seeding Fields');
+	// 		Field.insertMany(seed.fields, function (err) {
+	// 			if (err) throw err;
+	// 		});
+	// 	}
+	// });
 
 
 // Create a field

@@ -18,11 +18,15 @@ import apiRoutes from '../app/routes/api.server.routes'
 import config from './config'
 import getErrorMessage from '../app/lib/error-messages'
 import '../app/models'
+import seed from '../app/lib/seed'
 
 const mongoStore = connectMongo({session})
 
 module.exports = function() {
 	const app = express();
+
+	// call with true or delete db to seed
+	seed(process.env.NODE_ENV, false)
 
 	// // Passing the request url and title to environment locals
 	// app.use(function(req, res, next) {
