@@ -26,4 +26,14 @@ angular.module('food').factory('FoodAdmin', ['$resource',
 	function($resource) {
 		return $resource('foods/', {});
 	}
+]).factory('Food', ['$resource',
+	function($resource) {
+		return $resource('admin/foods/:foodId', {
+			foodId: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
 ]);
