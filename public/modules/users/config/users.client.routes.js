@@ -4,8 +4,8 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider, Media) {
 		// Users state routing
 		$stateProvider.
-		state('root.profile', {
-			url: 'settings/profile',
+		state('root.profile-angular', {
+			url: 'settings/profile-angular',
 			views: {
 				'content@': {
 					component: 'editProfile'
@@ -14,18 +14,26 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			resolve: {
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
-		}).
-		state('root.password-angular', {
-			url: 'settings/password-angular',
+		}).		
+		state('root.profile', {
+			url: 'settings/profile',
 			views: {
 				'content@': {
-					component: 'changePassword'
+					component: 'editProfileReact'
 				}
-			},
-			resolve: {
-				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
 		}).
+		// state('root.password-angular', {
+		// 	url: 'settings/password-angular',
+		// 	views: {
+		// 		'content@': {
+		// 			component: 'changePassword'
+		// 		}
+		// 	},
+		// 	resolve: {
+		// 		CurrentUser: AuthenticationProvider.requireLoggedIn
+		// 	}
+		// }).
 		state('root.password', {
 			url: 'settings/password',
 			views: {
