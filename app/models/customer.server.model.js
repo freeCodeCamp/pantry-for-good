@@ -218,11 +218,11 @@ CustomerSchema.pre('save', function(next) {
 	var doc = this;
   var address = `${doc.address}, ${doc.city}, ${doc.province}`;
 
-	if (process.env.NODE_ENV === 'test') {
+	if (process.env.NODE_ENV !== 'production') {
 		doc.location = [0, 0]
 		next()
 	} else {
-		// slow for tests
+		// slow for tests, breaks with fake address
 		geocoder.geocode(address, function(err, data) {
 			if (data) {
 				var location = [];

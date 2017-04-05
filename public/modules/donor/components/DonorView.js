@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router';
-import moment from 'moment'
+import {utc} from 'moment'
 import set from 'lodash/set'
 import {Table} from 'react-bootstrap'
 
@@ -98,6 +98,7 @@ class DonorView extends Component {
   render() {
     const {donorModel, donationModel, error} = this.state
     if (!donorModel) return null
+    console.log('donorModel.donations', donorModel.donations)
     return (
       <Page heading={donorModel.fullName}>
         <div className="row">
@@ -128,7 +129,9 @@ class DonorView extends Component {
                   <tbody>
                     {donorModel.donations.map((donation, i) =>
                       <tr key={i}>
-                        <td><span>{donation.dateReceived}</span></td>
+                        <td><span>
+                          {utc(donation.dateReceived).format('YYYY-MM-DD')}
+                        </span></td>
                         <td><span>${donation.eligibleForTax}</span></td>
                         <td><span>{donation.type}</span></td>
                         <td><span>{donation._id}</span></td>
