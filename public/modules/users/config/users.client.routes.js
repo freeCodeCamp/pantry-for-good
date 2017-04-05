@@ -68,14 +68,22 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 				}
 			}
 		}).
-		state('root.forgot', {
-			url: 'password/forgot',
+		state('root.forgot-angular', {
+			url: 'password/forgot-angular',
 			views: {
 				'content@': {
 					component: 'forgotPassword'
 				}
 			}
 		}).
+		state('root.forgot', {
+			url: 'password/forgot',
+			views: {
+				'content@': {
+					component: 'forgotPasswordReact'
+				}
+			}
+		}).		
 		state('root.reset-invalid', {
 			url: 'password/reset/invalid',
 			views: {

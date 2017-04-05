@@ -1,6 +1,7 @@
 import './change-password';
 import './edit-profile';
 import './forgot-password';
+import './forgot-password-react';
 import './reset-password-failure';
 import './reset-password-success';
 import './reset-password';
