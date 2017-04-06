@@ -1,187 +1,100 @@
-'use strict';
+import extend from 'lodash/extend'
+
 import User from '../models/user.server.model'
 import Volunteer from '../models/volunteer.server.model'
-/**
- * Module dependencies
- */
-var mongoose = require('mongoose'),
-		errorHandler = require('./errors.server.controller'),
-		// Volunteer = mongoose.model('Volunteer'),
-		// User = mongoose.model('User'),
-		_ = require('lodash');
 
-/**
- * Create a volunteer
- */
-exports.create = function(req, res) {
-	var volunteer = new Volunteer(req.body);
-	volunteer._id = req.user.id;
+export default {
+	/**
+	 * Create a volunteer
+	 */
+	async create(req, res) {
+		let volunteer = new Volunteer(req.body);
+		volunteer._id = req.user.id;
 
-	// Update user's hasApplied property to restrict them from applying again
-	User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true }})
-		.then(function() {
-			return volunteer.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					return res.json(volunteer);
-				}
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
+		// Update user's hasApplied property to restrict them from applying again
+		await User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true }})
 
-/**
- * Show the current volunteer
- */
-exports.read = function(req, res) {
-	res.json(req.volunteer);
-};
+		const savedVolunteer = await volunteer.save()
+		res.json(savedVolunteer)
+	},
 
-/**
- * Update a volunteer
- */
-exports.update = function(req, res) {
-	var volunteer = req.volunteer;
-	volunteer = _.extend(volunteer, req.body);
+	/**
+	 * Show the current volunteer
+	 */
+	read(req, res) {
+		res.json(req.volunteer);
+	},
 
-	// Adding fields not defined in the schema
-	var schemaFields = Object.getOwnPropertyNames(Volunteer.schema.paths);
-	for (var field in req.body) {
-		if (volunteer.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
-			volunteer.set(field, req.body[field]);
+	/**
+	 * Update a volunteer
+	 */
+	async update(req, res) {
+		const volunteer = extend(req.volunteer, req.body)
+
+		const oldVolunteer = await Volunteer.findById(volunteer._id)
+		const newVolunteer = await volunteer.save()
+
+		// get the new role and update if driver or status changed
+		let role
+		if (newVolunteer.driver) role = 'driver'
+		else if (newVolunteer.status === 'Inactive') role = 'user'
+		else role = 'volunteer'
+
+		if (oldVolunteer.driver !== newVolunteer.driver ||
+				oldVolunteer.status !== newVolunteer.status) {
+			await User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: [role]}})
 		}
+
+		res.json(newVolunteer)
+	},
+
+	/**
+	 * List of volunteers
+	 */
+	async list(req, res) {
+		const volunteers = await Volunteer.find()
+			.sort('-dateReceived')
+			.populate('user', 'displayName')
+
+		res.json(volunteers)
+	},
+
+	/**
+	 * Delete volunteer
+	 */
+	async delete(req, res) {
+		const id = req.volunteer._id;
+
+		const volunteer = await Volunteer.findByIdAndRemove(id)
+		await User.findByIdAndRemove(id)
+
+		res.json(volunteer)
+	},
+
+	/**
+	 * Volunteer middleware
+	 */
+	async volunteerById(req, res, next, id) {
+		const volunteer = await Volunteer.findById(id)
+			.populate('customers')
+
+		if (!volunteer) return res.status(404).json({
+			message: 'Not found'
+		})
+
+		req.volunteer = volunteer
+		next()
+	},
+
+	/**
+	 * Volunteer authorization middleware
+	 */
+	async hasAuthorization(req, res, next) {
+		if (req.volunteer._id !== +req.user.id) {
+			return res.status(403).json({
+				message: 'User is not authorized'
+			})
+		}
+		next()
 	}
-
-	Volunteer.findOne({'_id': volunteer._id})
-		.exec()
-		.then(function(volunteerOld) {
-			// If there's a change in driver status assign the driver role to the user
-			if (volunteerOld.driver !== volunteer.driver) {
-				if (volunteer.driver) {
-					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['driver']}})
-						.then(function() {
-						})
-						.catch(function (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						});
-				}
-			}
-
-			if (volunteerOld.status !== volunteer.status) {
-				// Assign the volunteer role if volunteer is activated
-				if (volunteer.status === 'Active') {
-					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['volunteer']}})
-						.then(function() {
-						})
-						.catch(function (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						});
-				// Revoke volunteer role if the volunteer is inactive
-				} else {
-					User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: ['user']}})
-						.then(function() {
-						})
-						.catch(function (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						});
-				}
-			}
-
-			return volunteer.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					return res.json(volunteer);
-				}
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
-
-/**
- * List of volunteers
- */
-exports.list = function(req, res) {
-	return Volunteer.find()
-		.sort('-dateReceived')
-		.populate('user', 'displayName')
-		.exec()
-		.then(function(volunteers) {
-			return res.json(volunteers);
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
-
-/**
- * Delete volunteer
- */
-exports.delete = function(req, res) {
-	var id = req.volunteer._id;
-
-	return User.findByIdAndRemove(id)
-		.exec()
-		.then(function() {
-			return Volunteer.findByIdAndRemove(id)
-			.exec()
-			.then(function() {
-				return res.end();
-			});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
-
-/**
- * Volunteer middleware
- */
-exports.volunteerById = function(req, res, next, id) {
-	Volunteer.findById(id)
-		.populate('customers')
-		.exec()
-		.then(function(volunteer) {
-			if (!volunteer) return new Error('Failed to load volunteer #' + id);
-			req.volunteer = volunteer;
-		})
-		.catch(function (err) {
-			return err;
-		})
-		.asCallback(next);
-};
-
-/**
- * Volunteer authorization middleware
- */
-exports.hasAuthorization = function(req, res, next) {
-	if (req.volunteer._id !== +req.user.id) {
-		return res.status(403).send({
-			message: 'User is not authorized'
-		});
-	}
-	next();
-};
+}

@@ -27,4 +27,4 @@ export default () => apiRouter
 	.use(questionnaireRoutes)
 	.use(settingsRoutes)
 	.use(usersRoutes())
-	.use(volunteerRoutes)
+	.use(volunteerRoutes())

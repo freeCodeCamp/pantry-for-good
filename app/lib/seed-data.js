@@ -1,30 +1,32 @@
+import {utc} from 'moment'
+
 export const foodFields = [{
 	category: 'Cheese',
 	items: [
-		{name: 'Cheddar', quantity: 20, startDate: new Date('2016-03-03'), frequency: 1},
-		{name: 'Mozarella', quantity: 35, startDate: new Date('2016-03-10'), frequency: 2},
-		{name: 'Brie', quantity: 30, startDate: new Date('2016-10-15'), frequency: 4}
+		{name: 'Cheddar', quantity: 20, startDate: utc(utc('2016-03-03').format('YYYY-[W]WW')), frequency: 1},
+		{name: 'Mozarella', quantity: 35, startDate: utc(utc('2016-03-10').format('YYYY-[W]WW')), frequency: 2},
+		{name: 'Brie', quantity: 30, startDate: utc(utc('2016-10-15').format('YYYY-[W]WW')), frequency: 4}
 	]
 }, {
 	category: 'Pasta, rice etc',
 	items: [
-		{name: 'Penne pasta', quantity: 50, startDate: new Date('2017-01-05'), frequency: 1},
-		{name: 'Basmati rice', quantity: 40, startDate: new Date('2016-09-13'), frequency: 1},
-		{name: 'Fusilli pasta', quantity: 45, startDate: new Date('2016-09-13'), frequency: 2}
+		{name: 'Penne pasta', quantity: 50, startDate: utc(utc('2017-01-05').format('YYYY-[W]WW')), frequency: 1},
+		{name: 'Basmati rice', quantity: 40, startDate: utc(utc('2016-09-13').format('YYYY-[W]WW')), frequency: 1},
+		{name: 'Fusilli pasta', quantity: 45, startDate: utc(utc('2016-09-13').format('YYYY-[W]WW')), frequency: 2}
 	]
 }, {
 	category: 'Meat',
 	items: [
-		{name: 'Beef mince', quantity: 25, startDate: new Date('2016-06-03'), frequency: 2},
-		{name: 'Chicken breast', quantity: 15, startDate: new Date('2016-05-10'), frequency: 2},
-		{name: 'Pork chop', quantity: 20, startDate: new Date('2016-04-10'), frequency: 2}
+		{name: 'Beef mince', quantity: 25, startDate: utc(utc('2016-06-03').format('YYYY-[W]WW')), frequency: 2},
+		{name: 'Chicken breast', quantity: 15, startDate: utc(utc('2016-05-10').format('YYYY-[W]WW')), frequency: 2},
+		{name: 'Pork chop', quantity: 20, startDate: utc(utc('2016-04-10').format('YYYY-[W]WW')), frequency: 2}
 	]
 }, {
 	category: 'Vegetables',
 	items: [
-		{name: 'Carrots', quantity: 30, startDate: new Date('2016-07-12'), frequency: 1},
-		{name: 'Onions', quantity: 25, startDate: new Date('2016-04-12'), frequency: 2},
-		{name: 'Squash', quantity: 25, startDate: new Date('2016-03-02'), frequency: 4}
+		{name: 'Carrots', quantity: 30, startDate: utc(utc('2016-07-12').format('YYYY-[W]WW')), frequency: 1},
+		{name: 'Onions', quantity: 25, startDate: utc(utc('2016-04-12').format('YYYY-[W]WW')), frequency: 2},
+		{name: 'Squash', quantity: 25, startDate: utc(utc('2016-03-02').format('YYYY-[W]WW')), frequency: 4}
 	]
 }]
 
