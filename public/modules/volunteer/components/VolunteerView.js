@@ -1,15 +1,14 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router'
-import moment from 'moment'
-import {Table} from 'react-bootstrap'
 
-import {View} from '../../core/services/view.client.service'
-import {selectors} from '../../../store';
-import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../../../store/volunteer';
-import {loadFields} from '../../../store/field';
-import {loadFoods} from '../../../store/food-category';
-import {loadSections} from '../../../store/section';
+// import {View} from '../../core/services/view.client.service'
+import {Form} from '../../common/services/form'
+import {selectors} from '../../../store'
+import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../../../store/volunteer'
+import {loadFields} from '../../../store/field'
+import {loadFoods} from '../../../store/food-category'
+import {loadSections} from '../../../store/section'
 
 import DynamicView from '../../common/components/DynamicView'
 import Page from '../../common/components/Page'
@@ -25,19 +24,19 @@ const mapStateToProps = state => ({
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
   deleteVolunteer: volunteer => dispatch(deleteVolunteer(volunteer.id)),
   loadFormData: () => {
-    dispatch(loadFoods());
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFoods())
+    dispatch(loadFields())
+    dispatch(loadSections())
   },
   push: (route, params, options) => dispatch(stateGo(route, params, options))
-});
+})
 
 class VolunteerView extends Component {
   constructor(props) {
@@ -89,7 +88,7 @@ class VolunteerView extends Component {
 
       this.setState({
         volunteerModel,
-        volunteerView: View.methods.generate(volunteerModel, this.formData, 'qVolunteers')
+        volunteerView: Form.methods.generate(volunteerModel, this.formData, 'qVolunteers')
       })
     }
   }
@@ -120,6 +119,7 @@ class VolunteerView extends Component {
         <div className="row">
           <div className="col-xs-12">
             <DynamicView
+              model={volunteerModel}
               dynForm={volunteerView.dynForm}
               sectionNames={volunteerView.sectionNames}
             />

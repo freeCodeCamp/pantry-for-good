@@ -1,16 +1,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router';
+import {stateGo} from 'redux-ui-router'
 import moment from 'moment'
 import {Table} from 'react-bootstrap'
 
-import {View} from '../../core/services/view.client.service'
-// import {View} from '../../common/services/view'
-import {selectors} from '../../../store';
-import {loadCustomer, saveCustomer, deleteCustomer} from '../../../store/customer';
-import {loadFields} from '../../../store/field';
-import {loadFoods} from '../../../store/food-category';
-import {loadSections} from '../../../store/section';
+// import {View} from '../../core/services/view.client.service'
+import {Form} from '../../common/services/form'
+import {selectors} from '../../../store'
+import {loadCustomer, saveCustomer, deleteCustomer} from '../../../store/customer'
+import {loadFields} from '../../../store/field'
+import {loadFoods} from '../../../store/food-category'
+import {loadSections} from '../../../store/section'
 
 import DynamicView from '../../common/components/DynamicView'
 import Page from '../../common/components/Page'
@@ -26,19 +26,19 @@ const mapStateToProps = state => ({
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadCustomer: (id, admin) => dispatch(loadCustomer(id, admin)),
   saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
   deleteCustomer: id => dispatch(deleteCustomer(id)),
   loadFormData: () => {
-    dispatch(loadFoods());
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFoods())
+    dispatch(loadFields())
+    dispatch(loadSections())
   },
   push: (route, params, options) => dispatch(stateGo(route, params, options))
-});
+})
 
 class CustomerView extends Component {
   constructor(props) {
@@ -93,7 +93,7 @@ class CustomerView extends Component {
 
       this.setState({
         customerModel,
-        customerView: View.methods.generate(customerModel, this.formData, 'qClients')
+        customerView: Form.methods.generate(customerModel, this.formData, 'qClients')
       })
     }
   }
@@ -109,13 +109,12 @@ class CustomerView extends Component {
   deleteCustomer = customer => () => this.props.deleteCustomer(customer.id)
 
   getFoodPreferences = customer => {
-    const {foodPreferences, foodPreferencesOther} = customer;
+    const {foodPreferences, foodPreferencesOther} = customer
     if (Array.isArray(foodPreferences) && foodPreferences.length > 0) {
-      console.log('foodPreferences', foodPreferences)
       return `${foodPreferences.filter(item => item && item.name).map(item => item.name).join(', ')}
-              ${foodPreferencesOther ? ', ' + foodPreferencesOther : ''}`;
+              ${foodPreferencesOther ? ', ' + foodPreferencesOther : ''}`
     } else {
-      return foodPreferencesOther;
+      return foodPreferencesOther
     }
   };
 
@@ -131,6 +130,7 @@ class CustomerView extends Component {
         <div className="row">
           <div className="col-xs-12">
             <DynamicView
+              model={customerModel}
               dynForm={customerView.dynForm}
               sectionNames={customerView.sectionNames}
             />
