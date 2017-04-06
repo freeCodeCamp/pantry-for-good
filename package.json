@@ -14,7 +14,7 @@
     "dev": "gulp watch",
     "start": "node server.js",
     "test": "npm run test:server",
-    "test:server": "NODE_ENV=test mocha --require babel-register --require entry.server.test.js 'app/tests/**/*.spec.js' --watch"
+    "test:server": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require entry.server.test.js 'app/tests/**/*.spec.js' --watch"
   },
   "dependencies": {
     "admin-lte": "^2.3.8",
