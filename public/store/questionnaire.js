@@ -26,6 +26,7 @@ export const saveQuestionnaire = questionnaire => ({
   [CALL_API]: {
     endpoint: questionnaire._id ? `questionnaires/${questionnaire._id}` : `questionnaires`,
     method: questionnaire._id ? 'PUT' : 'POST',
+    body: questionnaire,
     schema: questionnaireSchema,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
