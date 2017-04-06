@@ -1,141 +1,90 @@
-'use strict';
+import extend from 'lodash/extend'
+
 import Donor from '../models/donor.server.model'
 import User from '../models/user.server.model'
-/**
- * Module dependencies
- */
-var mongoose = require('mongoose'),
-		errorHandler = require('./errors.server.controller'),
-		// Donor = mongoose.model('Donor'),
-		// User = mongoose.model('User'),
-		_ = require('lodash');
 
-/**
- * Create a donor
- */
-exports.create = function(req, res) {
-	var donor = new Donor(req.body);
-	donor._id = req.user.id;
-
-	// Update user's role to donor and mark as this user as having applied
-	User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true }})
-		.then(function() {
-			return donor.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					return res.json(donor);
-				}
-			});
+export default {
+	/**
+	 * Create a donor
+	 */
+	async create(req, res) {
+		const donor = new Donor({
+			...req.body,
+			_id: req.user.id
 		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
 
-/**
- * Show the current donor
- */
-exports.read = function(req, res) {
-	res.json(req.donor);
-};
+		const savedDonor = await donor.save()
 
-/**
- * Update a donor
- */
-exports.update = function(req, res) {
-	var donor = req.donor;
+		// Update user's role to donor and mark as this user as having applied
+		await User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true }})
 
-	donor = _.extend(donor, req.body);
+		res.json(savedDonor)
+	},
 
-	// Adding fields not defined in the schema
-	var schemaFields = Object.getOwnPropertyNames(Donor.schema.paths);
-	for (var field in req.body) {
-		if (donor.hasOwnProperty(field) && schemaFields.indexOf(field) === -1) {
-			donor.set(field, req.body[field]);
+	/**
+	 * Show the current donor
+	 */
+	read(req, res) {
+		res.json(req.donor)
+	},
+
+	/**
+	 * Update a donor
+	 */
+	async update(req, res) {
+		const donor = extend(req.donor, req.body)
+		const savedDonor = await donor.save()
+		res.json(savedDonor)
+	},
+
+	/**
+	 * List of donors
+	 */
+	async list(req, res) {
+		const donors = await Donor.find()
+			.sort('-dateReceived')
+			.populate('donations', 'eligibleForTax')
+
+		res.json(donors)
+	},
+
+	/**
+	 * Delete donor
+	 */
+	async delete(req, res) {
+		const id = req.donor._id
+
+		await User.findByIdAndRemove(id)
+		await Donor.findByIdAndRemove(id)
+
+		res.json(req.donor)
+	},
+
+	/**
+	 * Donor middleware
+	 */
+	async donorById(req, res, next, id) {
+		const donor = await Donor.findById(id)
+			.populate('donations')
+
+		if (!donor) return res.status(404).json({
+			message: 'Not found'
+		})
+
+		req.donor = donor
+		next()
+	},
+
+	/**
+	 * Donor authorization middleware
+	 */
+	hasAuthorization(req, res, next) {
+		if (req.donor._id !== +req.user.id) {
+			return res.status(403).json({
+				message: 'User is not authorized'
+			})
 		}
+
+		next()
 	}
-
-	donor.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(donor);
-		}
-	});
-};
-
-/**
- * List of donors
- */
-exports.list = function(req, res) {
-	return Donor.find()
-		.sort('-dateReceived')
-		.populate('donations', 'eligibleForTax')
-		.exec()
-		.then(function(donors) {
-			return res.json(donors);
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
-
-/**
- * Delete donor
- */
-exports.delete = function(req, res) {
-	var id = req.donor._id;
-
-	return User.findByIdAndRemove(id)
-		.exec()
-		.then(function() {
-			return Donor.findByIdAndRemove(id)
-				.exec()
-				.then(function(donor) {
-					return res.send(donor);
-				});
-		})
-		.catch(function (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		});
-};
-
-/**
- * Donor middleware
- */
-exports.donorById = function(req, res, next, id) {
-	Donor.findById(id)
-		.populate('donations')
-		.exec()
-		.then(function(donor) {
-			if (!donor) return new Error('Failed to load donor #' + id);
-			req.donor = donor;
-		})
-		.catch(function (err) {
-			return err;
-		})
-		.asCallback(next);
-};
-
-/**
- * Donor authorization middleware
- */
-exports.hasAuthorization = function(req, res, next) {
-	if (req.donor._id !== +req.user.id) {
-		return res.status(403).send({
-			message: 'User is not authorized'
-		});
-	}
-	next();
-};
+}

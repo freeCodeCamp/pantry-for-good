@@ -1,7 +1,7 @@
 import Router from 'express-promise-router'
 
 import customerController from '../controllers/customer.server.controller'
-import * as foodController from '../controllers/food.server.controller'
+import foodController from '../controllers/food.server.controller'
 import * as userController from '../controllers/users.server.controller'
 
 export default () => {

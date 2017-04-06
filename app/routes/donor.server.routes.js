@@ -1,30 +1,31 @@
-'use strict';
+import Router from 'express-promise-router'
 
-/**
- * Module dependencies
- */
-var express = require('express'),
-		donor = require('../controllers/donor.server.controller'),
-		users = require('../../app/controllers/users.server.controller');
+import donorController from '../controllers/donor.server.controller'
+import * as userController from '../controllers/users.server.controller'
 
-var donorRouter = express.Router({mergeParams: true});
+export default () => {
+	const {requiresLogin} = userController
+	const {hasAuthorization} = donorController
 
-// Donor routes for users
-donorRouter.route('/donor')
-	.post(users.requiresLogin, donor.create);
-donorRouter.route('/donor/:donorId')
-	.get(users.requiresLogin, donor.hasAuthorization, donor.read)
-	.put(users.requiresLogin, donor.hasAuthorization, donor.update);
+	const donorRouter = Router({mergeParams: true});
 
-// Donor routes for admin
-donorRouter.route('/admin/donors')
-	.get(donor.list);
-donorRouter.route('/admin/donors/:donorId')
-	.get(donor.read)
-	.put(donor.update)
-	.delete(donor.delete);
+	// Donor routes for users
+	donorRouter.route('/donor')
+		.post(requiresLogin, donorController.create);
+	donorRouter.route('/donor/:donorId')
+		.get(requiresLogin, hasAuthorization, donorController.read)
+		.put(requiresLogin, hasAuthorization, donorController.update);
 
-// Finish by binding the donor middleware
-donorRouter.param('donorId', donor.donorById);
+	// Donor routes for admin
+	donorRouter.route('/admin/donors')
+		.get(donorController.list);
+	donorRouter.route('/admin/donors/:donorId')
+		.get(donorController.read)
+		.put(donorController.update)
+		.delete(donorController.delete);
 
-module.exports = donorRouter;
+	// Finish by binding the donor middleware
+	donorRouter.param('donorId', donorController.donorById);
+
+	return donorRouter
+}
