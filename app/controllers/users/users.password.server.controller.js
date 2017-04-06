@@ -92,6 +92,9 @@ exports.forgot = function(req, res, next) {
 				if (error) {
 					console.log(error);
 					console.log(response.body.errors);
+					res.status(500).send({
+						message: "Server Error"
+					});
 				} else {
 					res.send({
 						message: 'An email has been sent to ' + user.email + ' with further instructions.'

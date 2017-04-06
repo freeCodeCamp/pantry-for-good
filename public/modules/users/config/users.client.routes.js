@@ -4,8 +4,8 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 	function($stateProvider, AuthenticationProvider, Media) {
 		// Users state routing
 		$stateProvider.
-		state('root.profile', {
-			url: 'settings/profile',
+		state('root.profile-angular', {
+			url: 'settings/profile-angular',
 			views: {
 				'content@': {
 					component: 'editProfile'
@@ -14,12 +14,31 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 			resolve: {
 				CurrentUser: AuthenticationProvider.requireLoggedIn
 			}
+		}).		
+		state('root.profile', {
+			url: 'settings/profile',
+			views: {
+				'content@': {
+					component: 'editProfileReact'
+				}
+			}
 		}).
+		// state('root.password-angular', {
+		// 	url: 'settings/password-angular',
+		// 	views: {
+		// 		'content@': {
+		// 			component: 'changePassword'
+		// 		}
+		// 	},
+		// 	resolve: {
+		// 		CurrentUser: AuthenticationProvider.requireLoggedIn
+		// 	}
+		// }).
 		state('root.password', {
 			url: 'settings/password',
 			views: {
 				'content@': {
-					component: 'changePassword'
+					component: 'changePasswordReact'
 				}
 			},
 			resolve: {
@@ -68,14 +87,22 @@ angular.module('users').config(['$stateProvider', 'AuthenticationProvider',
 				}
 			}
 		}).
-		state('root.forgot', {
-			url: 'password/forgot',
+		state('root.forgot-angular', {
+			url: 'password/forgot-angular',
 			views: {
 				'content@': {
 					component: 'forgotPassword'
 				}
 			}
 		}).
+		state('root.forgot', {
+			url: 'password/forgot',
+			views: {
+				'content@': {
+					component: 'forgotPasswordReact'
+				}
+			}
+		}).		
 		state('root.reset-invalid', {
 			url: 'password/reset/invalid',
 			views: {
