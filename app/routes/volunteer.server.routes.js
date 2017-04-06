@@ -1,29 +1,31 @@
-'use strict';
+import Router from 'express-promise-router'
 
-/**
- * Module dependencies
- */
-var express = require('express'),
-		volunteer = require('../controllers/volunteer.server.controller'),
-		users = require('../../app/controllers/users.server.controller');
+import volunteerController from '../controllers/volunteer.server.controller'
+import * as userController from '../controllers/users.server.controller'
 
-var volunteerRouter = express.Router({mergeParams: true});
-// Volunteer routes for user
-volunteerRouter.route('/volunteer')
-	.post(users.requiresLogin, volunteer.create);
-volunteerRouter.route('/volunteer/:volunteerId')
-	.get(users.requiresLogin, volunteer.hasAuthorization, volunteer.read)
-	.put(users.requiresLogin, volunteer.hasAuthorization, volunteer.update);
+export default () => {
+	const {requiresLogin} = userController
+	const {hasAuthorization} = volunteerController
 
-// Volunteer routes for admin
-volunteerRouter.route('/admin/volunteers')
-	.get(volunteer.list);
-volunteerRouter.route('/admin/volunteers/:volunteerId')
-	.get(volunteer.read)
-	.put(volunteer.update)
-	.delete(volunteer.delete);
+	const volunteerRouter = Router({mergeParams: true})
 
-// Finish by binding the volunteer middleware
-volunteerRouter.param('volunteerId', volunteer.volunteerById);
+	// Volunteer routes for user
+	volunteerRouter.route('/volunteer')
+		.post(requiresLogin, volunteerController.create);
+	volunteerRouter.route('/volunteer/:volunteerId')
+		.get(requiresLogin, hasAuthorization, volunteerController.read)
+		.put(requiresLogin, hasAuthorization, volunteerController.update);
 
-module.exports = volunteerRouter;
+	// Volunteer routes for admin
+	volunteerRouter.route('/admin/volunteers')
+		.get(volunteerController.list);
+	volunteerRouter.route('/admin/volunteers/:volunteerId')
+		.get(volunteerController.read)
+		.put(volunteerController.update)
+		.delete(volunteerController.delete);
+
+	// Finish by binding the volunteer middleware
+	volunteerRouter.param('volunteerId', volunteerController.volunteerById);
+
+	return volunteerRouter
+}
