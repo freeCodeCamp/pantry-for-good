@@ -1,32 +1,33 @@
-'use strict';
+import Router from 'express-promise-router'
 
-/**
- * Module dependencies
- */
-var express = require('express'),
-		food = require('../controllers/food.server.controller');
+import foodController from '../controllers/food.server.controller'
+import * as userController from '../controllers/users.server.controller'
 
-var foodRouter = express.Router({mergeParams: true});
+export default () => {
+	const {requiresLogin} = userController
 
-// Food routes
-foodRouter.route('/admin/foods')
-	.get(food.list)
-	.post(food.create);
-foodRouter.route('/admin/foods/:foodId')
-	.put(food.update)
-	.delete(food.delete);
-foodRouter.route('/admin/foods/:foodId/items')
-	.post(food.createItem);
-foodRouter.route('/admin/foods/:foodId/items/:itemId')
-	.put(food.updateItem)
-	.delete(food.deleteItem);
+	const foodRouter = Router({mergeParams: true})
 
-// Food routes for user
-foodRouter.route('/foods')
-	.get(food.list);
+	// Food routes
+	foodRouter.route('/admin/foods')
+		.get(foodController.list)
+		.post(foodController.create)
+	foodRouter.route('/admin/foods/:foodId')
+		.put(foodController.update)
+		.delete(foodController.delete)
+	foodRouter.route('/admin/foods/:foodId/items')
+		.post(foodController.createItem)
+	foodRouter.route('/admin/foods/:foodId/items/:itemId')
+		.put(foodController.updateItem)
+		.delete(foodController.deleteItem)
 
-// Finish by binding the food middleware
-foodRouter.param('foodId', food.foodById);
-foodRouter.param('itemId', food.itemById);
+	// Food routes for user
+	foodRouter.route('/foods')
+		.get(foodController.list)
 
-module.exports = foodRouter;
+	// Finish by binding the food middleware
+	foodRouter.param('foodId', foodController.foodById)
+	foodRouter.param('itemId', foodController.itemById)
+
+	return foodRouter
+}
