@@ -28,13 +28,6 @@ module.exports = function() {
 	// call with true or delete db to seed
 	seed(process.env.NODE_ENV, false)
 
-	// // Passing the request url and title to environment locals
-	// app.use(function(req, res, next) {
-	// 	res.locals.url = req.protocol + '://' + req.headers.host + req.url;
-	// 	res.locals.title = config.app.title;
-	// 	next();
-	// });
-
 	// Should be placed before express.static
 	app.use(compress({
 		filter: function(req, res) {
@@ -46,22 +39,11 @@ module.exports = function() {
 	// Showing stack errors
 	app.set('showStackError', true);
 
-	// Set nunjucks as the template engine
-	app.engine('server.view.html', consolidate[config.templateEngine]);
-
   // add filter from swig for backwards compatibility
   var env = nunjucks.configure('./app/views', {
     autoescape: false,
     express: app
   });
-
-  env.addFilter('json', function(input, indent) {
-    return JSON.stringify(input, null, indent || 0);
-  });
-
-	// // // Set views path and view engine
-	app.set('view engine', 'server.view.html');
-	app.set('views', './app/views');
 
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {

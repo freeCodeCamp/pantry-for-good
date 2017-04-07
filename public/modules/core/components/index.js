@@ -1,5 +1,3 @@
-import './dynamic-form';
-import './dynamic-view';
 import './footer';
 import './header';
 import './home';
