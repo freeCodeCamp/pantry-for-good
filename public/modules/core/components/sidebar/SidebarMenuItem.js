@@ -1,39 +1,38 @@
 import React from 'react'
-import {sortBy} from 'lodash'
+import {Link, NavLink} from 'react-router-dom'
 
-const SidebarMenuItem = ({item, user, route, push}) =>
+const SidebarMenuItem = ({item, route}) =>
   <div>
     {item.menuItemType === 'treeview' ?
       <div>
-        <a
-          href={`#!/${item.link}`}
-          onClick={() => push(item.uiRoute)}
+        <NavLink
+          to={`/${item.link}`}
           className="main-menuitem"
         >
           <span>{item.title}</span>
           <i className="fa fa-angle-left pull-right"></i>
-        </a>
+        </NavLink>
 
         <ul className="treeview-menu">
-          {item.items.map(subitem =>
+          {item.items.map((subitem, i) =>
             <li
-              className={route === subitem.uiRoute && 'active'}
-              key={subitem.uiRoute}
+              className={route.pathname === subitem.link && 'active'}
+              key={i}
             >
-              <a
-                href={`#!/${subitem.link}`}
+              <Link
+                to={`/${subitem.link}`}
                 className="sub-menuitem"
               >
                 {subitem.title}
-              </a>
+              </Link>
             </li>
           )}
 
         </ul>
       </div> :
-      <a href={`#!/${item.link}`} className="main-menuitem">
+      <Link to={`/${item.link}`} className="main-menuitem">
         <span>{item.title}</span>
-      </a>
+      </Link>
     }
   </div>
 

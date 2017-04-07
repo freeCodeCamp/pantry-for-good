@@ -10,18 +10,14 @@ module.exports = {
       'webpack-dev-server/client?http://localhost:8080',
       'webpack/hot/only-dev-server',
       'whatwg-fetch',
-      path.resolve(__dirname, 'public', 'application.js')
+      path.resolve(__dirname, 'public', 'app.js')
     ],
     vendor: ['react-hot-loader/patch',
             'webpack-dev-server/client?http://localhost:8080',
-            'jquery', 'lodash', 'angular', 'angular-resource',
-            'angular-file-upload', 'angular-simple-logger', 'angular-google-maps',
-            'angular-moment', 'angular-smart-table', 'angular-ui-bootstrap', 'angular-ui-router',
-            'angular-datatables', 'datatables', 'datatables-tabletools', 'datatables.net',
-            'datatables.net-bs', 'datatables.net-buttons', 'datatables.net-buttons-bs', 'admin-lte',
-            'bootstrap', 'moment', 'moment-recur', 'redux', 'ng-redux', 'redux-thunk', 'redux-ui-router',
-            'normalizr', 'whatwg-fetch', 'react', 'react-dom', 'react-redux', 'react-hot-loader',
-            'react2angular', 'angular2react', 'react-bootstrap']
+            'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
+            'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react',
+            'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
+            'react-hot-loader', 'react-bootstrap', 'jquery']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),
@@ -62,8 +58,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-      _: 'lodash'
+      'window.jQuery': 'jquery'
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
@@ -93,7 +88,10 @@ module.exports = {
 			'/api/*': 'http://localhost:3000'
 		},
 		contentBase: '/dist',
-    port: 8080
+    port: 8080,
+    historyApiFallback: {
+      index: 'http://localhost:8080/'
+    }
 	},
   devtool: 'eval'
 };

@@ -1,19 +1,20 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 const mapStateToProps = state => ({
-  stateName: state.router.currentState.name
+  route: state.router.location
 })
 
-const NavbarMenu = ({stateName}) =>
+const NavbarMenu = ({route}) =>
   <div className="navbar-custom-menu">
     <ul className="nav navbar-nav">
-      <li className={stateName === 'root.signup' && 'active'}>
-        <a href="/#!/signup">Sign Up</a>
+      <li className={route.pathname === '/signup' && 'active'}>
+        <Link to="/signup">Sign Up</Link>
       </li>
       <li className="divider-vertical"></li>
-      <li className={stateName === 'root.signin' && 'active'}>
-        <a href="/#!/signin">Sign In</a>
+      <li className={route.pathname === '/signin' && 'active'}>
+        <Link to="/signin">Sign In</Link>
       </li>
     </ul>
   </div>

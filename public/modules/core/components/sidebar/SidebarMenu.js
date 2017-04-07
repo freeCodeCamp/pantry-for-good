@@ -1,17 +1,14 @@
 import React from 'react'
-import {sortBy} from 'lodash'
-import {react2angular} from 'react2angular'
-import angular from 'angular';
 
 import SidebarMenuItem from './SidebarMenuItem'
 
 const SidebarMenu = ({menu, user, route, push}) =>
   <div>
     <ul className="sidebar-menu">
-      {menu.items && menu.items.map(item =>
+      {menu.items && menu.items.map((item, i) =>
         <li
-          className={`treeview ${item.uiRoute === route && 'active'}`}
-          key={item.uiRoute}
+          className={`treeview ${item.link === route.pathname && 'active'}`}
+          key={i}
         >
           <SidebarMenuItem
             item={item}
@@ -25,6 +22,3 @@ const SidebarMenu = ({menu, user, route, push}) =>
   </div>
 
 export default SidebarMenu
-
-export const old = angular.module('core')
-  .component('sidebarMenu', react2angular(SidebarMenu, ['menu', 'user', 'route', 'push']))

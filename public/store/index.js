@@ -1,12 +1,17 @@
-import {combineReducers} from 'redux';
-import {router} from 'redux-ui-router';
-import merge from 'lodash/merge';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
+import {
+  routerReducer as router,
+  routerMiddleware as createRouterMiddleware
+} from 'react-router-redux'
+import thunk from 'redux-thunk'
 
+import apiMiddleware from '../middleware/api'
 import app from './app'
 import auth from './auth';
 import customer, {selectors as customerSelectors} from './customer';
 import donation, {selectors as donationSelectors} from './donation';
 import donor, {selectors as donorSelectors} from './donor';
+import entities from './entities'
 import field, {selectors as fieldSelectors} from './field';
 import foodCategory, {selectors as foodCategorySelectors} from './food-category';
 import foodItem, {selectors as foodItemSelectors} from './food-item';
@@ -17,27 +22,7 @@ import section, {selectors as sectionSelectors} from './section';
 import settings from './settings';
 import volunteer, {selectors as volunteerSelectors} from './volunteer';
 
-// Updates an entity cache in response to any action with response.entities.
-const entities = (state = {
-  customers: {},
-  donations: {},
-  donors: {},
-  fields: {},
-  foodCategories: {},
-  foodItems: {},
-  questionnaires: {},
-  sections: {},
-  users: {},
-  volunteers: {}
-}, action) => {
-  if (action.response && action.response.entities) {
-    return merge({}, state, action.response.entities);
-  }
-
-  return state;
-};
-
-export default combineReducers({
+const rootReducer = combineReducers({
   entities,
   app,
   auth,
@@ -55,6 +40,23 @@ export default combineReducers({
   settings,
   volunteer
 });
+
+/**
+ * Create redux store
+ * @param {History} history
+ */
+export default history => {
+  const routerMiddleware = createRouterMiddleware(history)
+  const middleware = [thunk, routerMiddleware, apiMiddleware]
+
+  const enhancers = compose(
+      applyMiddleware(...middleware),
+      window.devToolsExtension && __DEVELOPMENT__ ?
+          window.devToolsExtension() : f => f
+  )
+
+  return createStore(rootReducer, enhancers)
+}
 
 export const selectors = {
   getFormData: state => ({

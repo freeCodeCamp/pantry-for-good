@@ -1,10 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
+import {Link} from 'react-router-dom'
 import moment from 'moment'
-import {Table} from 'react-bootstrap'
 
-// import {View} from '../../core/services/view.client.service'
 import {Form} from '../../common/services/form'
 import {selectors} from '../../../store'
 import {loadCustomer, saveCustomer, deleteCustomer} from '../../../store/customer'
@@ -22,7 +20,6 @@ const mapStateToProps = state => ({
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
-  customerId: state.router.currentParams.customerId,
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
@@ -36,14 +33,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFoods())
     dispatch(loadFields())
     dispatch(loadSections())
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 })
 
 class CustomerView extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
+
     this.state = {
       customerModel: null,
       customerView: null,
@@ -52,7 +49,8 @@ class CustomerView extends Component {
   }
 
   componentWillMount() {
-    this.props.loadCustomer(this.props.customerId, this.isAdmin)
+    const customerId = this.props.match.params.customerId
+    this.props.loadCustomer(customerId, this.isAdmin)
     this.props.loadFormData()
   }
 
@@ -84,7 +82,7 @@ class CustomerView extends Component {
     }
 
     // generate customer view
-    const customer = getCustomer(nextProps.customerId)
+    const customer = getCustomer(nextProps.match.params.customerId)
     if (customer && this.formData && !this.state.customerView) {
       const customerModel = {
         ...customer,
@@ -161,51 +159,51 @@ class CustomerView extends Component {
             </div>
             {this.isAdmin ?
               <div className="form-group">
-                <a
+                <button
                   className="btn btn-success"
                   onClick={this.saveCustomer('Accepted')}
                 >
                   Accept
-                </a>
-                <a
+                </button>
+                <button
                   className="btn btn-danger"
                   onClick={this.saveCustomer('Rejected')}
                 >
                   Reject
-                </a>
-                <a
+                </button>
+                <button
                   className="btn btn-warning"
                   onClick={this.saveCustomer('Inactive')}
                 >
                   Inactive
-                </a>
-                <a
+                </button>
+                <button
                   className="btn btn-warning"
                   onClick={this.deleteCustomer(customerModel)}
                 >
                   Delete
-                </a>
-                <a
+                </button>
+                <Link
                   className="btn btn-primary"
-                  href={`/#!/admin/customers/${customerModel.id}/edit`}
+                  to={`/customers/${customerModel.id}/edit`}
                 >
                   Edit
-                </a>
-                <a
+                </Link>
+                <Link
                   className="btn btn-primary"
-                  href="/#!/admin/customers"
+                  to="/customers"
                 >
                   Cancel
-                </a>
+                </Link>
               </div> :
               <div className="form-group">
-                <a
+                <Link
                   className="btn btn-primary"
-                  href={`/#!/customer/${customerModel.id}/edit`}
+                  to={`/customer/${customerModel.id}/edit`}
                 >
                   Edit
-                </a>
-                <a className="btn btn-primary" href="/#!/">Cancel</a>
+                </Link>
+                <Link className="btn btn-primary" to="/">Cancel</Link>
               </div>
             }
           </div>

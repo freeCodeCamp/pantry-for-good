@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
+import {push} from 'react-router-redux'
+import {Link} from 'react-router-dom'
 import set from 'lodash/set'
 import {utc} from 'moment'
 
@@ -33,7 +34,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFields());
     dispatch(loadSections());
   },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  push: route => dispatch(push(route))
 });
 
 class CustomerCreate extends Component {
@@ -109,7 +110,7 @@ class CustomerCreate extends Component {
   isChecked = (field, value) =>
     this.formMethods.isChecked(this.state.customerModel, field, value)
 
-  selectAllFoods = ev => {
+  selectAllFoods = () => {
     const foodPreferences = this.allFoodsSelected() ? [] : [...this.formData.foods]
 
     this.setState({
@@ -182,7 +183,7 @@ class CustomerCreate extends Component {
                   <button type="submit" className="btn btn-success btn-block top-buffer">Submit</button>
                 </div>
                 <div className="col-sm-6 col-md-4 col-lg-2">
-                  <a className="btn btn-primary btn-block top-buffer" href="/#!/">Cancel</a>
+                  <Link to="/" className="btn btn-primary btn-block top-buffer">Cancel</Link>
                 </div>
               </div>
               {this.state.error &&

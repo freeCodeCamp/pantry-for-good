@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
+import {Link} from 'react-router-dom'
 import set from 'lodash/set'
 import {utc} from 'moment'
 
@@ -22,7 +22,6 @@ const mapStateToProps = state => ({
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
-  customerId: state.router.currentParams.customerId,
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
@@ -52,7 +51,7 @@ class CustomerEdit extends Component {
   }
 
   componentWillMount() {
-    this.props.loadCustomer(this.props.customerId, this.isAdmin)
+    this.props.loadCustomer(this.props.match.params.customerId, this.isAdmin)
     this.props.loadFormData()
   }
 
@@ -83,7 +82,7 @@ class CustomerEdit extends Component {
       else this.formData = nextProps.formData
     }
 
-    const customer = getCustomer(nextProps.customerId)
+    const customer = getCustomer(nextProps.match.params.customerId)
     if (customer && this.formData && !this.state.customerForm) {
       this.setState({
         customerModel: {
@@ -178,12 +177,12 @@ class CustomerEdit extends Component {
                   <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
                 </div>
                 <div className="col-sm-6 col-md-4 col-lg-2">
-                  <a
+                  <Link
                     className="btn btn-primary btn-block top-buffer"
-                    href={this.isAdmin ? '/#!/admin/customers' : '/#!/'}
+                    to={this.isAdmin ? '/customers' : '/'}
                   >
                     Cancel
-                  </a>
+                  </Link>
                 </div>
               </div>
               {this.state.error &&

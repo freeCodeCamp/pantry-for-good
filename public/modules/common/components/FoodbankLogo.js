@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 const FoodbankLogo = ({settings, media}) =>
   <img
     alt={settings && settings.organization}
-    src={media && media.logoPath + media.logoFile}
+    src={`/${media && media.logoPath + media.logoFile}`}
   />
 
 export default connect(mapStateToProps)(FoodbankLogo)

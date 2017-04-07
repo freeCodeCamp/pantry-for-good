@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
@@ -61,14 +62,14 @@ class CustomerList extends Component {
                       <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
                       <td><ClientStatusLabel client={customer} /></td>
                       <td>
-                        <a
-                          href={`/#!/admin/customers/${customer.id}`}
+                        <Link
+                          to={`/customers/${customer.id}`}
                           className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</a>
-                        <a
-                          href={`/#!/admin/customers/${customer.id}/edit`}
+                        ><i className="fa fa-eye"></i> View</Link>
+                        <Link
+                          to={`/customers/${customer.id}/edit`}
                           className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</a>
+                        ><i className="fa fa-pencil"></i> Edit</Link>
                       </td>
                     </tr>
                   )}

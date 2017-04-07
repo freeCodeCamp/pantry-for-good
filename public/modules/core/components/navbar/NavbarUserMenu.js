@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const NavbarUserMenu = ({user}) =>
   <div className="navbar-custom-menu">
@@ -10,16 +11,16 @@ const NavbarUserMenu = ({user}) =>
         </a>
         <ul className="dropdown-menu">
           <li>
-            <a href="/#!/settings/profile">Edit Profile</a>
+            <Link to="/settings/profile">Edit Profile</Link>
           </li>
           {user.provider === 'local' &&
             <li>
-              <a href="/#!/settings/password">Change Password</a>
+              <Link to="/settings/password">Change Password</Link>
             </li>
           }
           <li className="divider"></li>
           <li>
-            <a href="/api/auth/signout">Signout</a>
+            <Link to="/api/auth/signout">Signout</Link>
           </li>
         </ul>
       </li>
