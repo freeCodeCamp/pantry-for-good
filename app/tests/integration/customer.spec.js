@@ -183,5 +183,37 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+
+    it('assigns customers', async function() {
+      const newAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const newCustomer = createTestUser('customer', 'customer')
+      const newVolunteer = createTestUser('driver', 'volunteer', {roles: ['volunteer', 'driver']})
+
+      const admin = await createUserSession(newAdmin)
+      const customer = await createUserSession(newCustomer)
+      const volunteer = await createUserSession(newVolunteer)
+
+      const adminReq = supertest.agent(admin.app)
+      const customerReq = supertest.agent(customer.app)
+      const volunteerReq = supertest.agent(volunteer.app)
+
+      const savedCustomer = (await customerReq.post('/api/customer')
+        .send(newCustomer)).body
+
+      const savedVolunteer = (await volunteerReq.post('/api/volunteer')
+        .send(newVolunteer)).body
+
+      return adminReq.post('/api/admin/customers/assign')
+        .send({
+          customerIds: [savedCustomer._id],
+          driverId: savedVolunteer._id
+        })
+        .expect(res => {
+          expect(res.body).to.be.an.array
+          expect(res.body).to.have.length(1)
+          expect(res.body[0]).to.have.property('assignedTo', savedVolunteer._id)
+        })
+        .expect(200)
+    })
   })
 })

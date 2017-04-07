@@ -7,6 +7,7 @@ node_modules/
 .vscode
 public/lib
 public/dist
+public/media
 app/tests/coverage/
 .bower-*/
 .idea/

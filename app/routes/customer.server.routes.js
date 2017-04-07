@@ -28,6 +28,9 @@ export default () => {
 		.put(customerController.update)
 		.delete(customerController.delete)
 
+	customerRouter.route('/admin/customers/assign')
+		.post(customerController.assign)
+
 	// Finish by binding the customer middleware
 	customerRouter.param('customerId', customerController.customerById);
 

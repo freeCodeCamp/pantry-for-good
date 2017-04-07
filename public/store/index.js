@@ -68,6 +68,11 @@ export const selectors = {
     state.field.fetchError || state.foodCategory.fetchError || state.section.fetchError,
 
   getAllCustomers: state => customerSelectors.getAll(state.customer.ids, state.entities),
+  /**
+   * Get all customers assigned to the current user
+   */
+  getAssignedCustomers: state => customerSelectors.getAll(state.customer.ids, state.entities)
+    .filter(customer => customer.assignedTo === state.auth.user._id),
   getOneCustomer: state => id => customerSelectors.getOne(id, state.entities),
   loadingCustomers: state => customerSelectors.loading(state.customer),
   loadCustomersError: state => customerSelectors.loadError(state.customer),
