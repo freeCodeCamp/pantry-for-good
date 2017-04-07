@@ -45,7 +45,7 @@ export default {
 		}
 
 		if (newCustomer.status === 'Accepted') {
-			await User.findOneAndUpdate({_id: customer._id}, {$set: {roles: ['customer']}})
+			await User.findByIdAndUpdate(customer._id, {$set: {roles: ['customer']}})
 		}
 
 		res.json(newCustomer)
@@ -72,6 +72,20 @@ export default {
 		await Customer.findByIdAndRemove(id)
 
 		res.json(req.customer)
+	},
+
+	/**
+	 * Assign customers to a driver
+	 */
+	async assign(req, res) {
+		const {customerIds, driverId} = req.body
+
+		const customers = await Promise.all(
+			customerIds.map(async id =>
+				await Customer.findByIdAndUpdate(id, {$set: {assignedTo: driverId}}, {new: true}))
+		)
+
+		res.json(customers)
 	},
 
 	/**

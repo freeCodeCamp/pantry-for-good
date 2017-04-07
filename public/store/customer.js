@@ -1,7 +1,7 @@
-import {denormalize} from 'normalizr';
+import {normalize, denormalize} from 'normalizr';
 
 import {customer as customerSchema, arrayOfCustomers} from './schemas';
-import {CALL_API} from '../middleware/api';
+import {CALL_API, callApi} from '../middleware/api';
 import {crudActions, crudReducer} from './utils';
 
 export const actions = crudActions('customer');
@@ -45,6 +45,17 @@ export const deleteCustomer = id => ({
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 });
+
+// TODO: maybe better way to do this
+export const assignCustomers = (customerIds, driverId) => dispatch => {
+  const body = {customerIds, driverId}
+  callApi('admin/customers/assign', 'POST', body, null, arrayOfCustomers)
+    .then(customers => {
+      const response = normalize(customers, arrayOfCustomers)
+      dispatch({type: actions.SAVE_SUCCESS, response})
+    })
+    .catch(error => dispatch({type: actions.SAVE_FAILURE, error}))
+}
 
 export default crudReducer('customer');
 
