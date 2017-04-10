@@ -10,7 +10,7 @@ module.exports = {
       'webpack-dev-server/client?http://localhost:8080',
       'webpack/hot/only-dev-server',
       'whatwg-fetch',
-      path.resolve(__dirname, 'public', 'app.js')
+      path.resolve(__dirname, 'client', 'app.js')
     ],
     vendor: ['react-hot-loader/patch',
             'webpack-dev-server/client?http://localhost:8080',
@@ -50,7 +50,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      store: path.resolve(__dirname, 'public', 'store')
+      store: path.resolve(__dirname, 'client', 'store')
     }
   },
   plugins: [
@@ -61,14 +61,14 @@ module.exports = {
       'window.jQuery': 'jquery'
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public', 'index.html'),
+      template: path.resolve(__dirname, 'client', 'index.html'),
       inject: 'body'
     }),
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, 'public', 'media'),
       to: path.resolve(__dirname, 'public', 'dist', 'media')
     }, {
-      from: path.resolve(__dirname, 'public', 'modules', 'core', 'img'),
+      from: path.resolve(__dirname, 'client', 'modules', 'core', 'img'),
       to: path.resolve(__dirname, 'public', 'dist', 'media')
     }]),
     new webpack.optimize.CommonsChunkPlugin("vendor", "vendor.js"),
