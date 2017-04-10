@@ -25,8 +25,8 @@ gulp.task('build-server', function(done) {
 
 gulp.task('watch-server', function() {
   nodemon({
-    watch: ['server.js', 'app/**/*.js', 'config/**/*.js'],
-    exec: "node ./index.js"
+    watch: ['server/**/*.js'],
+    exec: "node ./server/index.js"
   });
 });
 
