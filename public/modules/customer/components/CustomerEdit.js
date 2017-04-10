@@ -15,13 +15,14 @@ import Page from '../../common/components/Page'
 import DynamicForm from '../../common/components/DynamicForm'
 import Household from './Household'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   savingCustomers: selectors.savingCustomers(state),
   saveCustomersError: selectors.saveCustomersError(state),
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
+  customerId: ownProps.match.params.customerId,
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
@@ -34,8 +35,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFoods());
     dispatch(loadFields());
     dispatch(loadSections());
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 });
 
 class CustomerEdit extends Component {
@@ -51,7 +51,7 @@ class CustomerEdit extends Component {
   }
 
   componentWillMount() {
-    this.props.loadCustomer(this.props.match.params.customerId, this.isAdmin)
+    this.props.loadCustomer(this.props.customerId, this.isAdmin)
     this.props.loadFormData()
   }
 
@@ -82,7 +82,7 @@ class CustomerEdit extends Component {
       else this.formData = nextProps.formData
     }
 
-    const customer = getCustomer(nextProps.match.params.customerId)
+    const customer = getCustomer(nextProps.customerId)
     if (customer && this.formData && !this.state.customerForm) {
       this.setState({
         customerModel: {

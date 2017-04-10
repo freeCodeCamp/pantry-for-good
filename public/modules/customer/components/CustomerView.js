@@ -13,13 +13,14 @@ import {loadSections} from '../../../store/section'
 import DynamicView from '../../common/components/DynamicView'
 import Page from '../../common/components/Page'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   savingCustomers: selectors.savingCustomers(state),
   saveCustomersError: selectors.saveCustomersError(state),
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
+  customerId: ownProps.match.params.customerId,
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
@@ -49,8 +50,7 @@ class CustomerView extends Component {
   }
 
   componentWillMount() {
-    const customerId = this.props.match.params.customerId
-    this.props.loadCustomer(customerId, this.isAdmin)
+    this.props.loadCustomer(this.props.customerId, this.isAdmin)
     this.props.loadFormData()
   }
 
@@ -82,7 +82,7 @@ class CustomerView extends Component {
     }
 
     // generate customer view
-    const customer = getCustomer(nextProps.match.params.customerId)
+    const customer = getCustomer(nextProps.customerId)
     if (customer && this.formData && !this.state.customerView) {
       const customerModel = {
         ...customer,

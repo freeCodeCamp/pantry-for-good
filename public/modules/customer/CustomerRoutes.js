@@ -2,13 +2,13 @@ import React from 'react'
 import {Switch, Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 
-import CustomerList from './CustomerList'
-import CustomerView from './CustomerView'
-import CustomerEdit from './CustomerEdit'
-import CustomerCreate from './CustomerCreate'
-import CustomerCreateSuccess from './CustomerCreateSuccess'
+import CustomerList from './components/CustomerList'
+import CustomerView from './components/CustomerView'
+import CustomerEdit from './components/CustomerEdit'
+import CustomerCreate from './components/CustomerCreate'
+import CustomerCreateSuccess from './components/CustomerCreateSuccess'
 
-import '../css/customer.css'
+import './customer.css'
 
 const mapStateToProps = state => ({
   user: state.auth.user
