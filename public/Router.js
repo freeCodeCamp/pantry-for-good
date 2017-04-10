@@ -9,6 +9,7 @@ import Home from './modules/core/components/Home'
 
 import Customers from './modules/customer/CustomerRoutes'
 import Donors from './modules/donor/DonorRoutes'
+import Drivers from './modules/driver/DriverRoutes'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -19,6 +20,7 @@ const Router = ({history}) =>
         <Route exact path="/" component={Home} />
         <Route path="/customers" component={Customers} />
         <Route path="/donors" component={Donors} />
+        <Route path="/drivers" component={Drivers} />
       </div>
       <Footer />
     </div>
