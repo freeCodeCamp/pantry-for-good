@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router';
+import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
@@ -17,8 +17,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadVolunteers: () => dispatch(loadVolunteers()),
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  loadVolunteers: () => dispatch(loadVolunteers())
 });
 
 class VolunteerList extends Component {
@@ -28,7 +27,7 @@ class VolunteerList extends Component {
   }
   render() {
     const {volunteers, loadVolunteersError} = this.props
-    return (
+    const foo = (
       <Page heading="Volunteer Database">
         <div className="row">
           <div className="col-xs-12">
@@ -58,14 +57,14 @@ class VolunteerList extends Component {
                       <td><span>{volunteer.email}</span></td>
                       <td><ClientStatusLabel client={volunteer} /></td>
                       <td>
-                        <a
-                          href={`/#!/admin/volunteers/${volunteer.id}`}
+                        <Link
+                          to={`/volunteers/${volunteer.id}`}
                           className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</a>
-                        <a
-                          href={`/#!/admin/volunteers/${volunteer.id}/edit`}
+                        ><i className="fa fa-eye"></i> View</Link>
+                        <Link
+                          to={`/volunteers/${volunteer.id}/edit`}
                           className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</a>
+                        ><i className="fa fa-pencil"></i> Edit</Link>
                       </td>
                     </tr>
                   )}
@@ -81,6 +80,8 @@ class VolunteerList extends Component {
         }
       </Page>
     )
+    console.log('foo', foo)
+    return foo
   }
 }
 

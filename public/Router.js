@@ -13,6 +13,9 @@ import Drivers from './modules/driver/DriverRoutes'
 import Foods from './modules/food/FoodRoutes'
 import Media from './modules/media/MediaRouter'
 import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
+import Settings from './modules/settings/SettingsRouter'
+
+import Volunteers from './modules/volunteer/VolunteerRouter'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -27,6 +30,8 @@ const Router = ({history}) =>
         <Route path="/foods" component={Foods} />
         <Route path="/media" component={Media} />
         <Route path="/questionnaires" component={Questionnaire} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/volunteers" component={Volunteers} />
       </div>
       <Footer />
     </div>

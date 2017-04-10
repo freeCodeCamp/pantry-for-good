@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
 import set from 'lodash/set'
 import {utc} from 'moment'
+import {Link} from 'react-router-redux'
 
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store';
@@ -14,7 +14,7 @@ import {loadSections} from '../../questionnaire/section-reducer';
 import Page from '../../../components/Page'
 import DynamicForm from '../../../components/DynamicForm'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   getVolunteer: selectors.getOneVolunteer(state),
   loadingVolunteer: selectors.loadingVolunteers(state),
@@ -24,7 +24,7 @@ const mapStateToProps = state => ({
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
-  volunteerId: state.router.currentParams.volunteerId,
+  volunteerId: ownProps.match.params.volunteerId,
   settings: state.settings.data,
 });
 
@@ -35,8 +35,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFoods());
     dispatch(loadFields());
     dispatch(loadSections());
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 });
 
 class VolunteerEdit extends Component {

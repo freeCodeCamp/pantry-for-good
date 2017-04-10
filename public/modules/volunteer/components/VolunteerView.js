@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
+import {Link} from 'react-router-dom'
 
-// import {View} from '../../core/services/view.client.service'
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../../../store/volunteer'
@@ -13,14 +12,14 @@ import {loadSections} from '../../questionnaire/section-reducer'
 import DynamicView from '../../../components/DynamicView'
 import Page from '../../../components/Page'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   savingVolunteer: state.volunteer.saving,
   saveVolunteerError: state.volunteer.saveError,
   loadingVolunteers: selectors.loadingVolunteers(state),
   loadVolunteersError: selectors.loadVolunteersError(state),
   getVolunteer: selectors.getOneVolunteer(state),
-  volunteerId: state.router.currentParams.volunteerId,
+  volunteerId: ownProps.match.params.volunteerId,
   formData: selectors.getFormData(state),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
@@ -34,8 +33,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFoods())
     dispatch(loadFields())
     dispatch(loadSections())
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 })
 
 class VolunteerView extends Component {
@@ -149,32 +147,32 @@ class VolunteerView extends Component {
                 >
                   Delete
                 </a>
-                <a
+                <Link
                   className="btn btn-primary"
-                  href={`/#!/admin/volunteers/${volunteerModel.id}/edit`}
+                  to={`/volunteers/${volunteerModel.id}/edit`}
                 >
                   Edit
-                </a>
-                <a
+                </Link>
+                <Link
                   className="btn btn-danger"
-                  href="/#!/admin/volunteers"
+                  to="/volunteers"
                 >
                   Cancel
-                </a>
+                </Link>
               </div> :
               <div className="form-group">
-                <a
+                <Link
                   className="btn btn-primary"
-                  href={`/#!/volunteer/${volunteer.id}/edit`}
+                  to={`/volunteers/${volunteer.id}/edit`}
                 >
                   Edit
-                </a>
-                <a
+                </Link>
+                <Link
                   className="btn btn-danger"
-                  href="/#!/"
+                  to="/"
                 >
                   Cancel
-                </a>
+                </Link>
               </div>
             }
           </div>
