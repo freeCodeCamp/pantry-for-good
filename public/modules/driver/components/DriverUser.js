@@ -7,8 +7,8 @@ import {stateGo} from 'redux-ui-router';
 
 import {selectors} from '../../../store';
 import {locateAddress, locateUser, stopLocateUser} from 'store/location';
-import {deliver} from 'store/packing';
-import {loadVolunteer, saveVolunteer} from 'store/volunteer';
+import {deliver} from '../../food/packing-reducer';
+import {loadVolunteer, saveVolunteer} from '../../../store/volunteer';
 
 import Page from '../../../components/Page'
 

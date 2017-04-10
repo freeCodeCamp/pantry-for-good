@@ -4,9 +4,9 @@ import {stateGo} from 'redux-ui-router';
 import get from 'lodash/get'
 
 import {selectors} from '../../../store';
-import {loadQuestionnaires} from '../../../store/questionnaire';
-import {loadFields} from '../../../store/field';
-import {loadSections} from '../../../store/section';
+import {loadQuestionnaires} from '../questionnaire-reducer';
+import {loadFields} from '../field-reducer';
+import {loadSections} from '../section-reducer';
 
 import Page from '../../../components/Page'
 import QuestionnaireEditor from './QuestionnaireEditor'

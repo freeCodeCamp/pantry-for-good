@@ -6,7 +6,7 @@ import createHistory from 'history/createBrowserHistory'
 
 import createStore from './store'
 import {setUser} from './store/auth'
-import {loadMedia} from './store/media'
+import {loadMedia} from './modules/media/media-reducer'
 import {loadSettings} from './store/settings'
 
 import 'bootstrap/dist/css/bootstrap.min.css'

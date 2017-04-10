@@ -1,7 +1,7 @@
 import {normalize} from 'normalizr';
 
-import {callApi} from './middleware/api';
-import {arrayOfCustomers, arrayOfFoodItems} from './schemas';
+import {callApi} from '../../store/middleware/api';
+import {arrayOfCustomers, arrayOfFoodItems} from '../../store/schemas';
 
 const PACK_REQUEST = 'packing/PACK_REQUEST';
 const PACK_SUCCESS = 'packing/PACK_SUCCESS';

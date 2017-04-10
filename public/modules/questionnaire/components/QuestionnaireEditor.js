@@ -4,7 +4,7 @@ import {Table} from 'react-bootstrap'
 import sortBy from 'lodash/sortBy'
 
 import {selectors} from '../../../store'
-import {saveQuestionnaire, deleteQuestionnaire} from '../../../store/questionnaire'
+import {saveQuestionnaire, deleteQuestionnaire} from '../questionnaire-reducer'
 
 const mapStateToProps = state => ({
   error: selectors.loadQuestionnairesError(state),

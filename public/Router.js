@@ -11,6 +11,8 @@ import Customers from './modules/customer/CustomerRoutes'
 import Donors from './modules/donor/DonorRoutes'
 import Drivers from './modules/driver/DriverRoutes'
 import Foods from './modules/food/FoodRoutes'
+import Media from './modules/media/MediaRouter'
+import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -23,6 +25,8 @@ const Router = ({history}) =>
         <Route path="/donors" component={Donors} />
         <Route path="/drivers" component={Drivers} />
         <Route path="/foods" component={Foods} />
+        <Route path="/media" component={Media} />
+        <Route path="/questionnaires" component={Questionnaire} />
       </div>
       <Footer />
     </div>

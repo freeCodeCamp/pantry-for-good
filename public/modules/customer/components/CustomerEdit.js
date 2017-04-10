@@ -7,9 +7,9 @@ import {utc} from 'moment'
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store';
 import {loadCustomer, saveCustomer} from '../customer-reducer';
-import {loadFields} from '../../../store/field';
+import {loadFields} from '../../questionnaire/field-reducer';
 import {loadFoods} from '../../food/food-category-reducer';
-import {loadSections} from '../../../store/section';
+import {loadSections} from '../../questionnaire/section-reducer';
 
 import Page from '../../../components/Page'
 import DynamicForm from '../../../components/DynamicForm'

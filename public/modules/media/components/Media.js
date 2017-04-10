@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
-import {loadMedia, saveMedia} from '../../../store/media'
+import {loadMedia, saveMedia} from '../media-reducer'
 import FoodbankLogo from '../../../components/FoodbankLogo'
 
 const mapStateToProps = state => ({

@@ -1,8 +1,8 @@
 import {denormalize} from 'normalizr';
 
-import {section as sectionSchema, arrayOfSections} from './schemas';
-import {CALL_API} from './middleware/api';
-import {crudActions, crudReducer} from './utils';
+import {section as sectionSchema, arrayOfSections} from '../../store/schemas';
+import {CALL_API} from '../../store/middleware/api';
+import {crudActions, crudReducer} from '../../store/utils';
 
 export const actions = crudActions('section');
 

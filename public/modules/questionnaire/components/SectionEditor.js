@@ -4,7 +4,7 @@ import {Table} from 'react-bootstrap'
 import sortBy from 'lodash/sortBy'
 
 import {selectors} from '../../../store'
-import {saveSection, deleteSection} from '../../../store/section'
+import {saveSection, deleteSection} from '../section-reducer'
 
 const mapStateToProps = state => ({
   error: selectors.loadFormDataError(state) || selectors.saveSectionError(state),
