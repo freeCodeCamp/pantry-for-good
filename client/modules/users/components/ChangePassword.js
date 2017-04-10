@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { setPassword } from 'store/auth'
+
+import { setPassword } from '../auth-reducer'
 
 class ChangePassword extends React.Component {
     constructor(props) {

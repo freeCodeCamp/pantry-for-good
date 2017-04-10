@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { signUp } from 'store/auth'
+import { signUp } from '../auth-reducer'
 
 import FoodbankLogo from '../../../components/FoodbankLogo'
 

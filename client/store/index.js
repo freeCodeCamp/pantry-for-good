@@ -6,8 +6,8 @@ import {
 import thunk from 'redux-thunk'
 
 import apiMiddleware from './middleware/api'
-import app from './app'
-import auth from './auth';
+import app from '../modules/core/app-reducers'
+import auth from '../modules/users/auth-reducer';
 import customer, {selectors as customerSelectors} from '../modules/customer/customer-reducer';
 import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer';
 import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer';
@@ -15,12 +15,12 @@ import entities from './entities'
 import field, {selectors as fieldSelectors} from '../modules/questionnaire/field-reducer';
 import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer';
 import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer';
-import location, {selectors as locationSelectors} from './location';
+import location, {selectors as locationSelectors} from '../modules/driver/location-reducer';
 import media from '../modules/media/media-reducer';
 import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer';
 import section, {selectors as sectionSelectors} from '../modules/questionnaire/section-reducer';
-import settings from './settings';
-import volunteer, {selectors as volunteerSelectors} from './volunteer';
+import settings from '../modules/settings/settings-reducer';
+import volunteer, {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer';
 
 const rootReducer = combineReducers({
   entities,

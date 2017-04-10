@@ -5,7 +5,7 @@ import get from 'lodash/get'
 
 import {selectors} from '../../../store';
 import {loadCustomers, assignCustomers} from '../../customer/customer-reducer';
-import {loadVolunteers} from '../../../store/volunteer';
+import {loadVolunteers} from '../../volunteer/volunteer-reducer';
 
 import Page from '../../../components/Page'
 

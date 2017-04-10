@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { forgotPassword } from 'store/auth'
+import { forgotPassword } from '../auth-reducer'
 
 class ForgotPassword extends React.Component {
     constructor(props) {

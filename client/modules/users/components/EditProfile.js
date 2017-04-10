@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { setProfile } from 'store/auth'
+
+import { setProfile } from '../auth-reducer'
 
 class EditProfile extends React.Component {
     constructor(props) {

@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
-import {loadVolunteers} from '../../../store/volunteer';
+import {loadVolunteers} from '../volunteer-reducer';
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/Page'
 

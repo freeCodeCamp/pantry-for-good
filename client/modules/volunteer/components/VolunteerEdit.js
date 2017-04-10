@@ -6,7 +6,7 @@ import {Link} from 'react-router-redux'
 
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store';
-import {loadVolunteer, saveVolunteer} from '../../../store/volunteer';
+import {loadVolunteer, saveVolunteer} from '../volunteer-reducer';
 import {loadFields} from '../../questionnaire/field-reducer';
 import {loadFoods} from '../../food/food-category-reducer';
 import {loadSections} from '../../questionnaire/section-reducer';

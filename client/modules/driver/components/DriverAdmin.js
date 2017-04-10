@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from 'store';
-import {loadVolunteers} from 'store/volunteer';
+import {loadVolunteers} from '../../volunteer/volunteer-reducer';
 
 import Page from '../../../components/Page'
 

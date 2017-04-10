@@ -1,4 +1,4 @@
-import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../auth'
+import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/auth-reducer'
 
 export default (state, action) => {
   switch (action.type) {

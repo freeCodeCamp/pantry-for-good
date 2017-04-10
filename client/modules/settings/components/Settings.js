@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { saveSettings } from 'store/settings'
+import { saveSettings } from '../settings-reducer'
 
 class AppSettings extends React.Component {
     constructor(props) {
