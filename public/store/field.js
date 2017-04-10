@@ -1,7 +1,7 @@
 import {denormalize} from 'normalizr';
 
 import {field as fieldSchema, arrayOfFields} from './schemas';
-import {CALL_API} from '../middleware/api';
+import {CALL_API} from './middleware/api';
 import {crudActions, crudReducer} from './utils';
 
 export const actions = crudActions('field');

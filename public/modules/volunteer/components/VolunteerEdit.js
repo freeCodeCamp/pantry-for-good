@@ -4,15 +4,15 @@ import {stateGo} from 'redux-ui-router'
 import set from 'lodash/set'
 import {utc} from 'moment'
 
-import {Form} from '../../common/services/form'
+import {Form} from '../../../lib/form'
 import {selectors} from '../../../store';
 import {loadVolunteer, saveVolunteer} from '../../../store/volunteer';
 import {loadFields} from '../../../store/field';
 import {loadFoods} from '../../../store/food-category';
 import {loadSections} from '../../../store/section';
 
-import Page from '../../common/components/Page'
-import DynamicForm from '../../common/components/DynamicForm'
+import Page from '../../../components/Page'
+import DynamicForm from '../../../components/DynamicForm'
 
 const mapStateToProps = state => ({
   user: state.auth.user,

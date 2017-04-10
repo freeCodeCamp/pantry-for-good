@@ -1,6 +1,6 @@
 import React from 'react'
 
-import FoodbankLogo from '../../common/components/FoodbankLogo'
+import FoodbankLogo from '../../../components/FoodbankLogo'
 
 const Home = () =>
   <div className="content-wrapper">

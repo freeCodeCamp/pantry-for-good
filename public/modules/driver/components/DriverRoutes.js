@@ -3,11 +3,11 @@ import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 import get from 'lodash/get'
 
-import {selectors} from 'store';
-import {loadCustomers, assignCustomers} from 'store/customer';
-import {loadVolunteers} from 'store/volunteer';
+import {selectors} from '../../../store';
+import {loadCustomers, assignCustomers} from '../../customer/customer-reducer';
+import {loadVolunteers} from '../../../store/volunteer';
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),

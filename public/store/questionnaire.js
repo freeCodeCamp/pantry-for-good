@@ -1,7 +1,7 @@
 import {denormalize} from 'normalizr';
 
 import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from './schemas';
-import {CALL_API} from '../middleware/api';
+import {CALL_API} from './middleware/api';
 import {crudActions, crudReducer} from './utils';
 
 export const actions = crudActions('questionnaire');

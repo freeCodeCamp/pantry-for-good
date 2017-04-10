@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {loadMedia, saveMedia} from '../../../store/media'
-import FoodbankLogo from '../../common/components/FoodbankLogo'
+import FoodbankLogo from '../../../components/FoodbankLogo'
 
 const mapStateToProps = state => ({
 	media: state.media.data,

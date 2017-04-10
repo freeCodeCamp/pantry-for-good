@@ -3,15 +3,15 @@ import {connect} from 'react-redux'
 import {stateGo} from 'redux-ui-router'
 
 // import {View} from '../../core/services/view.client.service'
-import {Form} from '../../common/services/form'
+import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../../../store/volunteer'
 import {loadFields} from '../../../store/field'
 import {loadFoods} from '../../../store/food-category'
 import {loadSections} from '../../../store/section'
 
-import DynamicView from '../../common/components/DynamicView'
-import Page from '../../common/components/Page'
+import DynamicView from '../../../components/DynamicView'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
   user: state.auth.user,

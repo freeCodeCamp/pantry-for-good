@@ -3,15 +3,15 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 
-import {Form} from '../../common/services/form'
+import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
-import {loadCustomer, saveCustomer, deleteCustomer} from '../../../store/customer'
+import {loadCustomer, saveCustomer, deleteCustomer} from '../customer-reducer'
 import {loadFields} from '../../../store/field'
 import {loadFoods} from '../../../store/food-category'
 import {loadSections} from '../../../store/section'
 
-import DynamicView from '../../common/components/DynamicView'
-import Page from '../../common/components/Page'
+import DynamicView from '../../../components/DynamicView'
+import Page from '../../../components/Page'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,

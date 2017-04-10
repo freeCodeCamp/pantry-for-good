@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import NewCategory from './NewCategory'
 import { selectors } from 'store'
 import { loadFoods, saveFood, deleteFood } from 'store/food-category'
-import { CALL_API } from '../../../../middleware/api'
+import { CALL_API } from '../../../../store/middleware/api'
 
 class FoodCategories extends Component {
 

@@ -4,10 +4,10 @@ import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
-import {loadCustomers} from '../../../store/customer';
+import {loadCustomers} from '../customer-reducer';
 
-import ClientStatusLabel from '../../common/components/ClientStatusLabel'
-import Page from '../../common/components/Page'
+import ClientStatusLabel from '../../../components/ClientStatusLabel'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),

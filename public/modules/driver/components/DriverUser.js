@@ -10,7 +10,7 @@ import {locateAddress, locateUser, stopLocateUser} from 'store/location';
 import {deliver} from 'store/packing';
 import {loadVolunteer, saveVolunteer} from 'store/volunteer';
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 
 const beginWeek = utc().startOf('isoWeek'); // Store the date of this week's Monday
 

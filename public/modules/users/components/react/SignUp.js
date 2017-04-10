@@ -4,7 +4,7 @@ import {stateGo} from 'redux-ui-router'
 
 import { signUp } from 'store/auth'
 
-import FoodbankLogo from '../../../common/components/FoodbankLogo'
+import FoodbankLogo from '../../../../components/FoodbankLogo'
 
 class SignUp extends React.Component {
     constructor(props) {

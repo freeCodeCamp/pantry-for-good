@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Modal, Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
-import {sendReceipt} from '../../../store/donation';
+import {sendReceipt} from '../donation-reducer';
 
 const mapStateToProps = state => ({
   savingDonations: selectors.savingDonations(state),

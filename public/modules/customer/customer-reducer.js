@@ -1,8 +1,8 @@
 import {normalize, denormalize} from 'normalizr';
 
-import {customer as customerSchema, arrayOfCustomers} from './schemas';
-import {CALL_API, callApi} from '../middleware/api';
-import {crudActions, crudReducer} from './utils';
+import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas';
+import {CALL_API, callApi} from '../../store/middleware/api';
+import {crudActions, crudReducer} from '../../store/utils';
 
 export const actions = crudActions('customer');
 

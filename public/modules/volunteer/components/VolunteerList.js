@@ -5,8 +5,8 @@ import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
 import {loadVolunteers} from '../../../store/volunteer';
-import ClientStatusLabel from '../../common/components/ClientStatusLabel'
-import Page from '../../common/components/Page'
+import ClientStatusLabel from '../../../components/ClientStatusLabel'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
   user: state.auth.user,

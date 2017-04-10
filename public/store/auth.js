@@ -1,4 +1,4 @@
-import {CALL_API} from '../middleware/api';
+import {CALL_API} from './middleware/api';
 
 export const SET_USER = 'auth/SET_USER';
 export const CLEAR_USER = 'auth/CLEAR_USER';

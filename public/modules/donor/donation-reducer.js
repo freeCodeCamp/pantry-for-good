@@ -1,9 +1,9 @@
 import {denormalize} from 'normalizr';
 import union from 'lodash/union';
 
-import {donation as donationSchema, arrayOfDonations} from './schemas';
-import {callApi} from '../middleware/api';
-import {saveDonor} from './donor';
+import {donation as donationSchema, arrayOfDonations} from '../../store/schemas';
+import {callApi} from '../../store/middleware/api';
+import {saveDonor} from './donor-reducer';
 
 export const SAVE_DONATION_REQUEST = 'donation/SAVE_REQUEST';
 export const SAVE_DONATION_SUCCESS = 'donation/SAVE_SUCCESS';

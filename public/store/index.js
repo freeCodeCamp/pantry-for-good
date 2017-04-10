@@ -5,12 +5,12 @@ import {
 } from 'react-router-redux'
 import thunk from 'redux-thunk'
 
-import apiMiddleware from '../middleware/api'
+import apiMiddleware from './middleware/api'
 import app from './app'
 import auth from './auth';
-import customer, {selectors as customerSelectors} from './customer';
-import donation, {selectors as donationSelectors} from './donation';
-import donor, {selectors as donorSelectors} from './donor';
+import customer, {selectors as customerSelectors} from '../modules/customer/customer-reducer';
+import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer';
+import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer';
 import entities from './entities'
 import field, {selectors as fieldSelectors} from './field';
 import foodCategory, {selectors as foodCategorySelectors} from './food-category';

@@ -8,7 +8,7 @@ import {loadQuestionnaires} from '../../../store/questionnaire';
 import {loadFields} from '../../../store/field';
 import {loadSections} from '../../../store/section';
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 import QuestionnaireEditor from './QuestionnaireEditor'
 import SectionEditor from './SectionEditor'
 import FieldEditor from './FieldEditor'

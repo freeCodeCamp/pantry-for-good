@@ -4,9 +4,9 @@ import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
-import {loadDonors, deleteDonor} from '../../../store/donor'
+import {loadDonors, deleteDonor} from '../donor-reducer'
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
   savingDonors: selectors.savingDonors(state),

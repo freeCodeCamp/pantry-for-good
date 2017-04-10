@@ -6,9 +6,9 @@ import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
-import {loadDonor, saveDonor, deleteDonor} from '../../../store/donor'
+import {loadDonor, saveDonor, deleteDonor} from '../donor-reducer'
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 import DonationView from './DonationView'
 import DonationCreate from './DonationCreate'
 

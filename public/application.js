@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import ApplicationConfiguration from './config';
 import * as modules from './modules';
 import rootReducer from './store';
-import api from './middleware/api';
+import api from './store/middleware/api';
 import {setUser} from './store/auth';
 
 import 'bootstrap/dist/css/bootstrap.min.css'

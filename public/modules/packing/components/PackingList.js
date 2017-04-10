@@ -5,11 +5,11 @@ import 'moment-recur'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
-import {loadCustomers} from '../../../store/customer'
+import {loadCustomers} from '../../customer/customer-reducer'
 import {loadFoods} from '../../../store/food-category'
 import {pack} from '../../../store/packing'
 
-import Page from '../../common/components/Page'
+import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
 	customers: selectors.getAllCustomers(state),

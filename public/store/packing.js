@@ -1,6 +1,6 @@
 import {normalize} from 'normalizr';
 
-import {callApi} from '../middleware/api';
+import {callApi} from './middleware/api';
 import {arrayOfCustomers, arrayOfFoodItems} from './schemas';
 
 const PACK_REQUEST = 'packing/PACK_REQUEST';

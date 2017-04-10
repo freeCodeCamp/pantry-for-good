@@ -7,7 +7,7 @@ import {
   foodItem as foodItemSchema,
   arrayOfFoodItems
 } from './schemas';
-import {CALL_API} from '../middleware/api';
+import {CALL_API} from './middleware/api';
 import {actions as foodCategoryActions} from './food-category';
 import {crudActions} from './utils';
 

@@ -1,4 +1,4 @@
-import {CALL_API} from '../middleware/api';
+import {CALL_API} from './middleware/api';
 
 export const LOAD_REQUEST = 'settings/LOAD_REQUEST';
 export const LOAD_SUCCESS = 'settings/LOAD_SUCCESS';
