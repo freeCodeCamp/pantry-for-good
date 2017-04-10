@@ -21,12 +21,12 @@ const mapStateToProps = (state, ownProps) => ({
   getDonor: selectors.getOneDonor(state),
   donorId: ownProps.match.params.donorId,
   settings: state.settings.data
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadDonor: (id, admin) => dispatch(loadDonor(id, admin)),
   deleteDonor: id => dispatch(deleteDonor(id))
-});
+})
 
 class DonorView extends Component {
   constructor(props) {

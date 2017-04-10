@@ -1,10 +1,10 @@
-import {denormalize} from 'normalizr';
+import {denormalize} from 'normalizr'
 
-import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../store/schemas';
-import {CALL_API} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../store/schemas'
+import {CALL_API} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('questionnaire');
+export const actions = crudActions('questionnaire')
 
 export const loadQuestionnaires = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadQuestionnaires = () => ({
     schema: arrayOfQuestionnaires,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const loadQuestionnaire = id => ({
   [CALL_API]: {
@@ -20,7 +20,7 @@ export const loadQuestionnaire = id => ({
     schema: questionnaireSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
-});
+})
 
 export const saveQuestionnaire = questionnaire => ({
   [CALL_API]: {
@@ -30,7 +30,7 @@ export const saveQuestionnaire = questionnaire => ({
     schema: questionnaireSchema,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
-});
+})
 
 export const deleteQuestionnaire = id => ({
   [CALL_API]: {
@@ -39,27 +39,27 @@ export const deleteQuestionnaire = id => ({
     schema: questionnaireSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
-export default crudReducer('questionnaire');
+export default crudReducer('questionnaire')
 
 export const selectors = {
   getAll(questionnaires, entities) {
-    return denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires;
+    return denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires
   },
   getOne(id, entities) {
-    return denormalize({questionnaires: id}, {questionnaires: questionnaireSchema}, entities).questionnaires;
+    return denormalize({questionnaires: id}, {questionnaires: questionnaireSchema}, entities).questionnaires
   },
   loading(questionnaires) {
-    return questionnaires.fetching;
+    return questionnaires.fetching
   },
   loadError(questionnaires) {
-    return questionnaires.fetchError;
+    return questionnaires.fetchError
   },
   saving(questionnaires) {
-    return questionnaires.saving;
+    return questionnaires.saving
   },
   saveError(questionnaires) {
-    return questionnaires.saveError;
+    return questionnaires.saveError
   }
-};
+}

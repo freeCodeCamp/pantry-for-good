@@ -5,11 +5,11 @@ import {utc} from 'moment'
 import {Link} from 'react-router-redux'
 
 import {Form} from '../../../lib/form'
-import {selectors} from '../../../store';
-import {loadVolunteer, saveVolunteer} from '../volunteer-reducer';
-import {loadFields} from '../../questionnaire/field-reducer';
-import {loadFoods} from '../../food/food-category-reducer';
-import {loadSections} from '../../questionnaire/section-reducer';
+import {selectors} from '../../../store'
+import {loadVolunteer, saveVolunteer} from '../volunteer-reducer'
+import {loadFields} from '../../questionnaire/field-reducer'
+import {loadFoods} from '../../food/food-category-reducer'
+import {loadSections} from '../../questionnaire/section-reducer'
 
 import Page from '../../../components/Page'
 import DynamicForm from '../../../components/DynamicForm'
@@ -26,17 +26,17 @@ const mapStateToProps = (state, ownProps) => ({
   loadFormDataError: selectors.loadFormDataError(state),
   volunteerId: ownProps.match.params.volunteerId,
   settings: state.settings.data,
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
   loadFormData: () => {
-    dispatch(loadFoods());
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFoods())
+    dispatch(loadFields())
+    dispatch(loadSections())
   }
-});
+})
 
 class VolunteerEdit extends Component {
   constructor(props) {

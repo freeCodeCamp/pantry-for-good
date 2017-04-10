@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
-import {selectors} from '../../../store';
-import {loadQuestionnaires} from '../questionnaire-reducer';
-import {loadFields} from '../field-reducer';
-import {loadSections} from '../section-reducer';
+import {selectors} from '../../../store'
+import {loadQuestionnaires} from '../questionnaire-reducer'
+import {loadFields} from '../field-reducer'
+import {loadSections} from '../section-reducer'
 
 import Page from '../../../components/Page'
 import QuestionnaireEditor from './QuestionnaireEditor'
@@ -15,15 +15,15 @@ import FieldEditor from './FieldEditor'
 const mapStateToProps = state => ({
   user: state.auth.user,
   settings: state.settings.data,
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   loadFormData: () => {
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFields())
+    dispatch(loadSections())
   }
-});
+})
 
 class Questionnaire extends Component {
   constructor(props) {

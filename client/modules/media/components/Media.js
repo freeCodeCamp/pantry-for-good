@@ -6,13 +6,13 @@ import {loadMedia, saveMedia} from '../media-reducer'
 import FoodbankLogo from '../../../components/FoodbankLogo'
 
 const mapStateToProps = state => ({
-	media: state.media.data,
+  media: state.media.data,
 })
 
 const mapDispatchToProps = dispatch => ({
-	loadMedia: () => dispatch(loadMedia()),
+  loadMedia: () => dispatch(loadMedia()),
   saveMedia: file => dispatch(saveMedia(file)),
-	push: (route, params, options) => dispatch(stateGo(route, params, options))
+  push: (route, params, options) => dispatch(stateGo(route, params, options))
 })
 
 class Media extends Component {

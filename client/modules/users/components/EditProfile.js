@@ -4,32 +4,32 @@ import { connect } from 'react-redux'
 import { setProfile } from '../auth-reducer'
 
 class EditProfile extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            firstName: this.props.auth.user.firstName,
-            lastName: this.props.auth.user.lastName,
-            email: this.props.auth.user.email,
-            username: this.props.auth.user.username,
-        }
+  constructor(props) {
+    super(props)
+    this.state = {
+      firstName: this.props.auth.user.firstName,
+      lastName: this.props.auth.user.lastName,
+      email: this.props.auth.user.email,
+      username: this.props.auth.user.username,
     }
+  }
 
-    onFieldChange = e => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
-    }
+  onFieldChange = e => {
+    const { name, value } = e.target
+    this.setState({ [name]: value })
+  }
 
-    onSubmit = (e) => {
-        e.preventDefault()
-        this.props.setProfile({...this.props.auth.user,
-            firstName: this.state.firstName,
-            lastName: this.state.lastName,
-            email: this.state.email,
-            username: this.state.username,
-        })
-    }
+  onSubmit = e => {
+    e.preventDefault()
+    this.props.setProfile({...this.props.auth.user,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      username: this.state.username,
+    })
+  }
 
-    render = () =>
+  render = () =>
         <section className="row">
             <h3 className="col-md-12 text-center">Edit your profile</h3>
             <div className="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
@@ -71,12 +71,12 @@ class EditProfile extends React.Component {
 
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.auth,
+const mapStateToProps = state => ({
+  auth: state.auth,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-    setProfile: user => dispatch(setProfile(user))
+const mapDispatchToProps = dispatch => ({
+  setProfile: user => dispatch(setProfile(user))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile)

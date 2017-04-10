@@ -20,12 +20,12 @@ function form() {
 
   return {methods}
 
-	// Dynamically generate a form based on the questionnaire sections and fields
-	// created in the questionnaire editor, and the list of foods in the db
+  // Dynamically generate a form based on the questionnaire sections and fields
+  // created in the questionnaire editor, and the list of foods in the db
   function generate(model, formData, qIdentifier) {
     const relevantSections = sortBy(
-			formData.sections.filter(section => section.questionnaire.identifier === qIdentifier)
-		, 'position')
+      formData.sections.filter(section => section.questionnaire.identifier === qIdentifier)
+    , 'position')
 
     const dynForm = relevantSections.map(section => {
       const fields = formData.fields.filter(field => matches(field.section, section))
@@ -35,7 +35,7 @@ function form() {
 
       // sort fields in row by column and map rows into array
       const rows = Object.keys(groupedRows)
-				.map(rowNum => sortBy(groupedRows[rowNum], 'column'))
+        .map(rowNum => sortBy(groupedRows[rowNum], 'column'))
 
       return rows.map(row => {
         const firstCol = head(row)
@@ -51,10 +51,10 @@ function form() {
     }
   }
 
-	// Helper function: generate table
+  // Helper function: generate table
   function generateTableRow(model, tableDescription, tableName) {
     const [rows, cols] = tail(/ROWS:\s*(.*)COLUMNS:\s*(.*)/.exec(tableDescription))
-			.map(str => str.split(/;\s*/))
+      .map(str => str.split(/;\s*/))
 
     const tableData = {
       rows,
@@ -66,7 +66,7 @@ function form() {
       let newRow = {name: row}
 
       tableData.columnNames.forEach(colName =>
-				newRow[colName] = get(model, `${tableName}[${i}]${colName}`, 0))
+        newRow[colName] = get(model, `${tableName}[${i}]${colName}`, 0))
 
       return newRow
     })
@@ -75,19 +75,19 @@ function form() {
   }
 
   function selectAllFoods(model, checked) {
-	// Toggle selection of all food items
+  // Toggle selection of all food items
     model.foodPreferences = []
     if (!checked)
       model.foodPreferences = model.foodList.map(item => item._id)
   }
 
-	// True if model[field] contains item
+  // True if model[field] contains item
   function isChecked(model, field, item) {
     const items = get(model, field, [])
     return !!items.find(matches(item))
   }
 
-	// Toggle item in model[field]
+  // Toggle item in model[field]
   function toggleCheckbox(model, field, item) {
     const items = get(model, field, [])
 

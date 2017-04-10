@@ -1,10 +1,10 @@
-import {denormalize} from 'normalizr';
+import {denormalize} from 'normalizr'
 
-import {donor as donorSchema, arrayOfDonors} from '../../store/schemas';
-import {CALL_API} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {donor as donorSchema, arrayOfDonors} from '../../store/schemas'
+import {CALL_API} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('donor');
+export const actions = crudActions('donor')
 
 export const loadDonors = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadDonors = () => ({
     schema: arrayOfDonors,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const loadDonor = (id, admin) => ({
   [CALL_API]: {
@@ -20,10 +20,10 @@ export const loadDonor = (id, admin) => ({
     schema: donorSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
-});
+})
 
 export const saveDonor = (donor, admin) => {
-  let endpoint;
+  let endpoint
   if (admin) endpoint = donor.id ? `admin/donors/${donor.id}` : `admin/donors`
   else endpoint = donor.id ? `donor/${donor.id}` : `donor`
   return {
@@ -34,8 +34,8 @@ export const saveDonor = (donor, admin) => {
       schema: donorSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
     }
-  };
-};
+  }
+}
 
 export const deleteDonor = id => ({
   [CALL_API]: {
@@ -44,27 +44,27 @@ export const deleteDonor = id => ({
     schema: donorSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
-export default crudReducer('donor');
+export default crudReducer('donor')
 
 export const selectors = {
   getAll(donors, entities) {
-    return denormalize({donors}, {donors: arrayOfDonors}, entities).donors;
+    return denormalize({donors}, {donors: arrayOfDonors}, entities).donors
   },
   getOne(id, entities) {
-    return denormalize({donors: id}, {donors: donorSchema}, entities).donors;
+    return denormalize({donors: id}, {donors: donorSchema}, entities).donors
   },
   loading(donors) {
-    return donors.fetching;
+    return donors.fetching
   },
   loadError(donors) {
-    return donors.fetchError;
+    return donors.fetchError
   },
   saving(donors) {
-    return donors.saving;
+    return donors.saving
   },
   saveError(donors) {
-    return donors.saveError;
+    return donors.saveError
   }
 }

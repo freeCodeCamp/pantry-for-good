@@ -5,13 +5,13 @@ import {push} from 'react-router-redux'
 import SidebarMenu from './SidebarMenu'
 
 const mapStateToProps = state => ({
-	auth: state.auth,
+  auth: state.auth,
   menu: state.app.menu,
-	route: state.router.location
-});
+  route: state.router.location
+})
 
 const mapDispatchToProps = dispatch => ({
-	push: route => dispatch(push(route))
+  push: route => dispatch(push(route))
 })
 
 const Sidebar = ({

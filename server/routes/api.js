@@ -14,17 +14,17 @@ import volunteerRoutes from './volunteer'
 
 const adminRole = ['admin']
 
-var apiRouter = express.Router();
+var apiRouter = express.Router()
 
 export default () => apiRouter
-	.all('/admin/*', users.hasAuthorization(adminRole))
-	.use(customerRoutes())
-	.use(donationRoutes)
-	.use(donorRoutes())
-	.use(foodRoutes())
-	.use(mediaRoutes)
-	.use(packingRoutes)
-	.use(questionnaireRoutes)
-	.use(settingsRoutes)
-	.use(usersRoutes())
-	.use(volunteerRoutes())
+  .all('/admin/*', users.hasAuthorization(adminRole))
+  .use(customerRoutes())
+  .use(donationRoutes)
+  .use(donorRoutes())
+  .use(foodRoutes())
+  .use(mediaRoutes)
+  .use(packingRoutes)
+  .use(questionnaireRoutes)
+  .use(settingsRoutes)
+  .use(usersRoutes())
+  .use(volunteerRoutes())

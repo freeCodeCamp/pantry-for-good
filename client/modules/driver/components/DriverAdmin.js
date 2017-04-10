@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from 'store';
-import {loadVolunteers} from '../../volunteer/volunteer-reducer';
+import {selectors} from 'store'
+import {loadVolunteers} from '../../volunteer/volunteer-reducer'
 
 import Page from '../../../components/Page'
 
@@ -11,11 +11,11 @@ const mapStateToProps = state => ({
   drivers: selectors.getAllVolunteers(state).filter(vol =>
     vol.driver && vol.status === 'Active'),
   loading: selectors.loadingVolunteers(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteers: () => dispatch(loadVolunteers())
-});
+})
 
 class DriverAdmin extends Component {
   componentWillMount() {

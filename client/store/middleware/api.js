@@ -1,7 +1,7 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
-import {normalize} from 'normalizr';
+import {normalize} from 'normalizr'
 
-const API_ROOT = 'http://localhost:8080/api/';
+const API_ROOT = 'http://localhost:8080/api/'
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
@@ -19,7 +19,7 @@ const API_ROOT = 'http://localhost:8080/api/';
  * @returns promise
  */
 export function callApi(endpoint, method = 'GET', body, schema, responseSchema) {
-  const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
+  const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
 
   return fetch(fullUrl, {
     method,
@@ -29,52 +29,52 @@ export function callApi(endpoint, method = 'GET', body, schema, responseSchema) 
   })
     .then(response =>
       response.json().then(json => {
-        if (!response.ok) return Promise.reject(json);
-        if (responseSchema) return normalize(json, responseSchema);
-        if (schema) return normalize(json, schema);
-        return json;
+        if (!response.ok) return Promise.reject(json)
+        if (responseSchema) return normalize(json, responseSchema)
+        if (schema) return normalize(json, schema)
+        return json
       })
-    );
-};
+    )
+}
 
 // Action key that carries API call info interpreted by this Redux middleware.
-export const CALL_API = 'Call API';
+export const CALL_API = 'Call API'
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
 export default store => next => action => {
-  const callAPI = action[CALL_API];
+  const callAPI = action[CALL_API]
   if (typeof callAPI === 'undefined') {
-    return next(action);
+    return next(action)
   }
 
-  let { endpoint } = callAPI;
-  const { schema, responseSchema, types, method, body } = callAPI;
+  let { endpoint } = callAPI
+  const { schema, responseSchema, types, method, body } = callAPI
 
   if (typeof endpoint === 'function') {
-    endpoint = endpoint(store.getState());
+    endpoint = endpoint(store.getState())
   }
 
   if (typeof endpoint !== 'string') {
-    throw new Error('Specify a string endpoint URL.');
+    throw new Error('Specify a string endpoint URL.')
   }
 
   if (!Array.isArray(types) || types.length !== 3) {
-    throw new Error('Expected an array of three action types.');
+    throw new Error('Expected an array of three action types.')
   }
 
   if (!types.every(type => typeof type === 'string')) {
-    throw new Error('Expected action types to be strings.');
+    throw new Error('Expected action types to be strings.')
   }
 
   const actionWith = data => {
-    const finalAction = Object.assign({}, action, data);
-    delete finalAction[CALL_API];
-    return finalAction;
+    const finalAction = Object.assign({}, action, data)
+    delete finalAction[CALL_API]
+    return finalAction
   }
 
-  const [ requestType, successType, failureType ] = types;
-  next(actionWith({ type: requestType }));
+  const [ requestType, successType, failureType ] = types
+  next(actionWith({ type: requestType }))
 
   return callApi(endpoint, method, body, schema, responseSchema).then(
     response => next(actionWith({
@@ -85,36 +85,36 @@ export default store => next => action => {
       type: failureType,
       error: error.message || 'Something bad happened'
     }))
-  );
-};
+  )
+}
 
 function formatRequestBody(body, method, schema) {
-  if (!body) return;
+  if (!body) return
   if (schema) {
     // renormalize body before put/post
-    const entityType = schema._key;
+    const entityType = schema._key
     const normalized = normalize(body, schema).entities[entityType]
-    const keys = Object.keys(normalized);
+    const keys = Object.keys(normalized)
     if (keys.length !== 1) {
-      throw new Error('Expected request body to contain a single entity');
+      throw new Error('Expected request body to contain a single entity')
     }
 
     // extract the entity and remove version attribute
-    const entity = keys.map(k => normalized[k])[0];
-    delete entity.__v;
-    if (method === 'PUT' && !'_id' in entity) {
-      throw new Error('Tried to PUT but entity has no _id attribute');
+    const entity = keys.map(k => normalized[k])[0]
+    delete entity.__v
+    if (method === 'PUT' && !('_id' in entity)) {
+      throw new Error('Tried to PUT but entity has no _id attribute')
     }
 
     // angular.toJson omits angular specific attributes
-    return angular.toJson(entity);
+    return angular.toJson(entity)
   } else {
-    return angular.toJson(body);
+    return angular.toJson(body)
   }
 }
 
 function generateRequestHeaders(method) {
   return method === 'GET' ? null : new Headers({
     'Content-Type': 'application/json'
-  });
+  })
 }

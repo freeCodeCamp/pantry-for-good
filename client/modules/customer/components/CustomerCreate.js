@@ -6,11 +6,11 @@ import set from 'lodash/set'
 import {utc} from 'moment'
 
 import {Form} from '../../../lib/form'
-import {selectors} from '../../../store';
-import {saveCustomer} from '../customer-reducer';
-import {loadFields} from '../../questionnaire/field-reducer';
-import {loadFoods} from '../../food/food-category-reducer';
-import {loadSections} from '../../questionnaire/section-reducer';
+import {selectors} from '../../../store'
+import {saveCustomer} from '../customer-reducer'
+import {loadFields} from '../../questionnaire/field-reducer'
+import {loadFoods} from '../../food/food-category-reducer'
+import {loadSections} from '../../questionnaire/section-reducer'
 
 import Page from '../../../components/Page'
 import DynamicForm from '../../../components/DynamicForm'
@@ -25,17 +25,17 @@ const mapStateToProps = state => ({
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
   settings: state.settings.data,
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   saveCustomer: customer => dispatch(saveCustomer(customer)),
   loadFormData: () => {
-    dispatch(loadFoods());
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFoods())
+    dispatch(loadFields())
+    dispatch(loadSections())
   },
   push: route => dispatch(push(route))
-});
+})
 
 class CustomerCreate extends Component {
   constructor(props) {

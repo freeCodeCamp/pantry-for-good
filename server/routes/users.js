@@ -3,7 +3,7 @@ import Router from 'express-promise-router'
 // import passport from 'passport'
 import * as users from '../controllers/users'
 
-const userRouter = Router({mergeParams: true});
+const userRouter = Router({mergeParams: true})
 
 // User Routes
 // var users = require('../../app/controllers/users.server.controller');
@@ -11,24 +11,24 @@ const userRouter = Router({mergeParams: true});
 export default () => {
   // var users = require('../controllers/users.server.controller');
   // Setting up the users profile api
-  userRouter.route('/users/me').get(users.me);
-  userRouter.route('/users').put(users.update);
+  userRouter.route('/users/me').get(users.me)
+  userRouter.route('/users').put(users.update)
   // userRouter.route('/users/accounts').delete(users.removeOAuthProvider);
 
   // Setting up the users password api
-  userRouter.route('/users/password').post(users.changePassword);
-  userRouter.route('/auth/forgot').post(users.forgot);
-  userRouter.route('/auth/reset/:token').get(users.validateResetToken);
-  userRouter.route('/auth/reset/:token').post(users.reset);
+  userRouter.route('/users/password').post(users.changePassword)
+  userRouter.route('/auth/forgot').post(users.forgot)
+  userRouter.route('/auth/reset/:token').get(users.validateResetToken)
+  userRouter.route('/auth/reset/:token').post(users.reset)
 
   // Setting up the users authentication api
-  userRouter.route('/auth/signup').post(users.signup);
-  userRouter.route('/auth/signin').post(users.signin);
-  userRouter.route('/auth/signout').get(users.signout);
+  userRouter.route('/auth/signup').post(users.signup)
+  userRouter.route('/auth/signin').post(users.signin)
+  userRouter.route('/auth/signout').get(users.signout)
 
   // // Setting the facebook oauth routes
   // userRouter.route('/auth/facebook').get(passport.authenticate('facebook', {
-  // 	scope: ['email']
+  //   scope: ['email']
   // }));
   // userRouter.route('/auth/facebook/callback').get(users.oauthCallback('facebook'));
 
@@ -38,10 +38,10 @@ export default () => {
 
   // // Setting the google oauth routes
   // userRouter.route('/auth/google').get(passport.authenticate('google', {
-  // 	scope: [
-  // 		'https://www.googleapis.com/auth/userinfo.profile',
-  // 		'https://www.googleapis.com/auth/userinfo.email'
-  // 	]
+  //   scope: [
+  //     'https://www.googleapis.com/auth/userinfo.profile',
+  //     'https://www.googleapis.com/auth/userinfo.email'
+  //   ]
   // }));
   // userRouter.route('/auth/google/callback').get(users.oauthCallback('google'));
 
@@ -54,7 +54,7 @@ export default () => {
   // userRouter.route('/auth/github/callback').get(users.oauthCallback('github'));
 
   // Finish by binding the user middleware
-  userRouter.param('userId', users.userByID);
+  userRouter.param('userId', users.userByID)
 
-  return userRouter;
+  return userRouter
 }

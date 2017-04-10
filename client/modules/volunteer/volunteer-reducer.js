@@ -1,10 +1,10 @@
-import {denormalize} from 'normalizr';
+import {denormalize} from 'normalizr'
 
-import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../store/schemas';
-import {CALL_API} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../store/schemas'
+import {CALL_API} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('volunteer');
+export const actions = crudActions('volunteer')
 
 export const loadVolunteers = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadVolunteers = () => ({
     schema: arrayOfVolunteers,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const loadVolunteer = (id, admin) => ({
   [CALL_API]: {
@@ -20,10 +20,10 @@ export const loadVolunteer = (id, admin) => ({
     schema: volunteerSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
-});
+})
 
 export const saveVolunteer = (volunteer, admin) => {
-  let endpoint;
+  let endpoint
   if (admin) endpoint = volunteer.id ? `admin/volunteers/${volunteer.id}` : `admin/volunteers`
   else endpoint = volunteer.id ? `volunteer/${volunteer.id}` : `volunteer`
   return {
@@ -34,8 +34,8 @@ export const saveVolunteer = (volunteer, admin) => {
       schema: volunteerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
     }
-  };
-};
+  }
+}
 
 export const deleteVolunteer = id => ({
   [CALL_API]: {
@@ -44,27 +44,27 @@ export const deleteVolunteer = id => ({
     schema: volunteerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
-export default crudReducer('volunteer');
+export default crudReducer('volunteer')
 
 export const selectors = {
   getAll(volunteers, entities) {
-    return denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers;
+    return denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers
   },
   getOne(id, entities) {
-    return denormalize({volunteers: id}, {volunteers: volunteerSchema}, entities).volunteers;
+    return denormalize({volunteers: id}, {volunteers: volunteerSchema}, entities).volunteers
   },
   loading(volunteers) {
-    return volunteers.fetching;
+    return volunteers.fetching
   },
   loadError(volunteers) {
-    return volunteers.fetchError;
+    return volunteers.fetchError
   },
   saving(volunteers) {
-    return volunteers.saving;
+    return volunteers.saving
   },
   saveError(volunteers) {
-    return volunteers.saveError;
+    return volunteers.saveError
   }
 }

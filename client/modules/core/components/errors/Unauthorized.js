@@ -1,4 +1,4 @@
-import angular from 'angular';
+import angular from 'angular'
 import React from 'react'
 import {react2angular} from 'react2angular'
 

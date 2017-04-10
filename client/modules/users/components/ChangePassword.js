@@ -4,26 +4,26 @@ import { connect } from 'react-redux'
 import { setPassword } from '../auth-reducer'
 
 class ChangePassword extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentPassword: "",
-            newPassword: "",
-            verifyPassword: ""
-        }
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentPassword: "",
+      newPassword: "",
+      verifyPassword: ""
     }
+  }
 
-    onFieldChange = e => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
-    }
+  onFieldChange = e => {
+    const { name, value } = e.target
+    this.setState({ [name]: value })
+  }
 
-    onSubmit = e => {
-        e.preventDefault()
-        this.props.changePassword(this.state.currentPassword, this.state.newPassword, this.state.verifyPassword)
-    }
+  onSubmit = e => {
+    e.preventDefault()
+    this.props.changePassword(this.state.currentPassword, this.state.newPassword, this.state.verifyPassword)
+  }
 
-    render = () =>
+  render = () =>
         <section className="row">
             <h3 className="col-md-12 text-center">Change your password</h3>
             <div className="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
@@ -57,13 +57,13 @@ class ChangePassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth,
+  auth: state.auth,
 })
 
 const mapDispatchToProps = dispatch => ({
-    changePassword: (currentPassword, newPassword, verifyPassword) => {
-        dispatch(setPassword({ currentPassword, newPassword, verifyPassword }))
-    },
+  changePassword: (currentPassword, newPassword, verifyPassword) => {
+    dispatch(setPassword({ currentPassword, newPassword, verifyPassword }))
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword)

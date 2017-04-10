@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
 /**
  * Module dependencies
  */
-var express = require('express');
-var settings = require('../controllers/settings');
+var express = require('express')
+var settings = require('../controllers/settings')
 
-var settingsRouter = express.Router({mergeParams: true});
+var settingsRouter = express.Router({mergeParams: true})
 
 // Settings routes
 settingsRouter.route('/settings')
-	.post(settings.save);
+  .post(settings.save)
 
 settingsRouter.route('/settings')
-	.get(settings.read);
+  .get(settings.read)
 
-module.exports = settingsRouter;
+module.exports = settingsRouter

@@ -8,48 +8,48 @@ import FoodItem from './FoodItem'
 
 class FoodItems extends React.Component {
 
-    getTableRows = () => {
-        if (this.props.foodItems.length > 0) {
-            return this.props.foodItems.map((foodItem) => (
+  getTableRows = () => {
+    if (this.props.foodItems.length > 0) {
+      return this.props.foodItems.map(foodItem => (
                 <FoodItem key={foodItem._id} foodItem={foodItem}
                     foodCategories={this.props.foodCategories}
                     createSelectBox={this.createSelectBox}
                     deleteItem={this.props.deleteFoodItem}
                     saveItem={this.props.saveFoodItem} />
             ))
-        } else {
-            return (
+    } else {
+      return (
                 <tr>
                     <td className="text-center" colSpan="4">No food items yet.</td>
                 </tr>)
-        }
     }
+  }
 
     /**
      * Creates a select option box input for choosing a category
      * @param {Function} onChangeCallback callback function when the select option is changed
      * @param {String} selectedValue _id for the category to be selected by default
      */
-    createSelectBox = (onChangeCallback, selectedValue) => {
-        let options
-        if (this.props.foodCategories.length > 0) {
-            options = this.props.foodCategories.map(category =>
+  createSelectBox = (onChangeCallback, selectedValue) => {
+    let options
+    if (this.props.foodCategories.length > 0) {
+      options = this.props.foodCategories.map(category =>
                 <option key={category._id} value={category._id}>{category.category}</option>
             )
-        }
+    }
 
-        return (<select className="form-control"
-                        onChange={(e) => onChangeCallback(e)}
+    return (<select className="form-control"
+                        onChange={e => onChangeCallback(e)}
                         defaultValue={selectedValue || ""} >
             <option value="">Select category</option>
             {options}
         </select>
-        )
-    }
+    )
+  }
 
-    render = () => {
-        let $ctrl = this.getCtrl()
-        return (
+  render = () => {
+    let $ctrl = this.getCtrl()
+    return (
             <div className="box" data-st-table="$ctrl.itemsCopy" data-st-safe-src="$ctrl.items">
                 {/*<div className="box-header">
                     <h3 className="box-title">Items</h3>
@@ -90,80 +90,80 @@ class FoodItems extends React.Component {
                     </div>
                 }
             </div>
-        )
-    }
+    )
+  }
 
-    getCtrl = () => ({
-        dtOptions: {
-			dom: 'Tlrtip',
-			tableTools: {
-				sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
-				aButtons: [
-					"copy",
-					{
-						"sExtends":    "collection",
-						"sButtonText": "Save",
-						"aButtons":    [ {
-							"sExtends": "csv",
-							"sButtonText": "CSV",
-							"mColumns": [ 0, 1, 2 ],
-							"bSelectedOnly": true,
-							"sFileName": 'report.csv'
-						}, {
-							"sExtends": "xls",
-							"sButtonText": "Excel",
-							"mColumns": [ 0, 1, 2 ],
-							"bSelectedOnly": true,
-							"sFileName": 'report.xls'
-						}]
-					}
-				]
-			}
-		},
-        items: [
+  getCtrl = () => ({
+    dtOptions: {
+      dom: 'Tlrtip',
+      tableTools: {
+        sSwfPath: '/lib/datatables-tabletools/swf/copy_csv_xls.swf',
+        aButtons: [
+          "copy",
+          {
+            "sExtends":    "collection",
+            "sButtonText": "Save",
+            "aButtons":    [ {
+              "sExtends": "csv",
+              "sButtonText": "CSV",
+              "mColumns": [ 0, 1, 2 ],
+              "bSelectedOnly": true,
+              "sFileName": 'report.csv'
+            }, {
+              "sExtends": "xls",
+              "sButtonText": "Excel",
+              "mColumns": [ 0, 1, 2 ],
+              "bSelectedOnly": true,
+              "sFileName": 'report.xls'
+            }]
+          }
+        ]
+      }
+    },
+    items: [
             //array of foods in all categories
-            {
-                hashkey: 0,
-                _id: 0,
-                categoryId: 0,
-                categoryIdOld: 0,
-                categoryName: 0,
-                frequency: 0,
-                name: 0,
-                quantity: 0
-            }
-        ],
-        itemsCopy: [], //'copy of items',
-        foods: [  //array of categories
-            {
-                $$hashkey: 0,
-                __v: 0,
-                _id: 0,
-                category: "r",
-                items: []  //Array of items in that category
-            }
-        ],
-        isLoading: false
-    })
+      {
+        hashkey: 0,
+        _id: 0,
+        categoryId: 0,
+        categoryIdOld: 0,
+        categoryName: 0,
+        frequency: 0,
+        name: 0,
+        quantity: 0
+      }
+    ],
+    itemsCopy: [], //'copy of items',
+    foods: [  //array of categories
+      {
+        $$hashkey: 0,
+        __v: 0,
+        _id: 0,
+        category: "r",
+        items: []  //Array of items in that category
+      }
+    ],
+    isLoading: false
+  })
 }
 
-const mapStateToProps = (state) => {
-    return {
-        foodItems: selectors.getAllFoodItems(state),
-        foodCategories: selectors.getAllFoods(state),
-        isLoading: selectors.loadingFoods(state),
-        error: state.foodItem.saveError
-    }
+const mapStateToProps = state => {
+  return {
+    foodItems: selectors.getAllFoodItems(state),
+    foodCategories: selectors.getAllFoods(state),
+    isLoading: selectors.loadingFoods(state),
+    error: state.foodItem.saveError
+  }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    saveFoodItem: (categoryId, foodItem) => {
-        dispatch(saveFoodItem(categoryId, foodItem))
-    },
-    deleteFoodItem: (categoryId, _id) => {
-        console.log('delete item ', _id)
-        dispatch(deleteFoodItem(categoryId, _id))
-    },
+const mapDispatchToProps = dispatch => ({
+  saveFoodItem: (categoryId, foodItem) => {
+    dispatch(saveFoodItem(categoryId, foodItem))
+  },
+  deleteFoodItem: (categoryId, _id) => {
+    console.log('delete item ', _id)
+    dispatch(deleteFoodItem(categoryId, _id))
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodItems)

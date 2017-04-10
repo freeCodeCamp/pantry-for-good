@@ -3,9 +3,9 @@ import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 import get from 'lodash/get'
 
-import {selectors} from '../../../store';
-import {loadCustomers, assignCustomers} from '../../customer/customer-reducer';
-import {loadVolunteers} from '../../volunteer/volunteer-reducer';
+import {selectors} from '../../../store'
+import {loadCustomers, assignCustomers} from '../../customer/customer-reducer'
+import {loadVolunteers} from '../../volunteer/volunteer-reducer'
 
 import Page from '../../../components/Page'
 
@@ -17,13 +17,13 @@ const mapStateToProps = state => ({
   savingCustomers: selectors.savingCustomers(state),
   loading: selectors.loadingVolunteers(state) || selectors.loadingCustomers(state),
   error: selectors.loadCustomersError(state) || selectors.loadVolunteersError(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadCustomers : () => dispatch(loadCustomers()),
   loadVolunteers: () => dispatch(loadVolunteers()),
   assignCustomers: (customerIds, driverId) => dispatch(assignCustomers(customerIds, driverId))
-});
+})
 
 class DriverRoutes extends Component {
   constructor(props) {

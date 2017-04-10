@@ -1,59 +1,59 @@
 import React from 'react'
 
 class FoodItem extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            showEdit: false,
-            nameInputValue: this.props.foodItem.name,
-            categorySelectValue: this.props.foodItem.category,
-            quantityInputValue: this.props.foodItem.quantity,
-            validated: false
-        }
+  constructor(props) {
+    super(props)
+    this.state = {
+      showEdit: false,
+      nameInputValue: this.props.foodItem.name,
+      categorySelectValue: this.props.foodItem.category,
+      quantityInputValue: this.props.foodItem.quantity,
+      validated: false
     }
+  }
 
-    validate = () => {
-        this.setState({validated:
+  validate = () => {
+    this.setState({validated:
             this.state.nameInputValue.trim() &&
             this.state.categorySelectValue &&
             this.state.quantityInputValue &&
             this.state.quantityInputValue >= 0})
-    }
+  }
 
-    onClickShowEdit = () => {
-        this.setState({
-            showEdit: !this.state.showEdit,
-            nameInputValue: this.props.foodItem.name,
-            categorySelectValue: this.props.foodItem.categoryId,
-            quantityInputValue: this.props.foodItem.quantity
-        })
-    }
+  onClickShowEdit = () => {
+    this.setState({
+      showEdit: !this.state.showEdit,
+      nameInputValue: this.props.foodItem.name,
+      categorySelectValue: this.props.foodItem.categoryId,
+      quantityInputValue: this.props.foodItem.quantity
+    })
+  }
 
-    onChangeName = (e) => {
-        this.setState({ nameInputValue: e.target.value }, this.validate)
-    }
+  onChangeName = e => {
+    this.setState({ nameInputValue: e.target.value }, this.validate)
+  }
 
-    onChangeCategory = (e) => {
-        this.setState({ categorySelectValue: e.target.value }, this.validate)
-    }
+  onChangeCategory = e => {
+    this.setState({ categorySelectValue: e.target.value }, this.validate)
+  }
 
-    onChangeQuantity = (e) => {
-        this.setState({ quantityInputValue: e.target.value }, this.validate)
-    }
+  onChangeQuantity = e => {
+    this.setState({ quantityInputValue: e.target.value }, this.validate)
+  }
 
-    onClickDelete = () => {
-        this.props.deleteItem(this.props.foodItem.categoryId, this.props.foodItem._id)
-    }
+  onClickDelete = () => {
+    this.props.deleteItem(this.props.foodItem.categoryId, this.props.foodItem._id)
+  }
 
-    onClickSave = () => {
-        this.props.saveItem(this.state.categorySelectValue, {...this.props.foodItem, name: this.state.nameInputValue, categoryId: this.state.categorySelectValue, quantity: this.state.quantityInputValue})
-        this.setState({showEdit: false})
-    }
+  onClickSave = () => {
+    this.props.saveItem(this.state.categorySelectValue, {...this.props.foodItem, name: this.state.nameInputValue, categoryId: this.state.categorySelectValue, quantity: this.state.quantityInputValue})
+    this.setState({showEdit: false})
+  }
 
-    render = () => {
-        const category = _.find(this.props.foodCategories, { _id: this.props.foodItem.categoryId })
-        if (!this.state.showEdit) {
-            return (
+  render = () => {
+    const category = _.find(this.props.foodCategories, { _id: this.props.foodItem.categoryId })
+    if (!this.state.showEdit) {
+      return (
                 <tr>
                     <td className="form-control">{this.props.foodItem.name}</td>
                     <td>{category.category}</td>
@@ -63,14 +63,14 @@ class FoodItem extends React.Component {
                         <button onClick={this.onClickDelete} className="btn btn-danger btn-flat btn-xs"><i className="fa fa-trash"></i> Delete</button>
                     </td>
                 </tr>
-            )
-        } else {
-            return (
+      )
+    } else {
+      return (
                 <tr>
                     <td>
                         <input className="form-control" type="text"
                             value={this.state.nameInputValue}
-                            onChange={(e) => this.onChangeName(e)} />
+                            onChange={e => this.onChangeName(e)} />
                     </td>
                     <td>
                         {this.props.createSelectBox(this.onChangeCategory, this.state.categorySelectValue)}
@@ -78,7 +78,7 @@ class FoodItem extends React.Component {
                     <td>
                         <input className="form-control" type="number" min="0"
                             value={this.state.quantityInputValue}
-                            onChange={(e) => this.onChangeQuantity(e)} />
+                            onChange={e => this.onChangeQuantity(e)} />
                     </td>
                     <td>
                         <button onClick={this.onClickShowEdit} className="btn btn-primary btn-flat btn-xs">
@@ -89,9 +89,9 @@ class FoodItem extends React.Component {
                         </button>
                     </td>
                 </tr>
-            )
-        }
+      )
     }
+  }
 
 
 }

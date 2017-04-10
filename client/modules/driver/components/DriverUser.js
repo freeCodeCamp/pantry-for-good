@@ -1,41 +1,41 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
-import {utc} from 'moment';
-import 'moment-recur';
+import {utc} from 'moment'
+import 'moment-recur'
 
-import {selectors} from '../../../store';
-import {locateAddress, locateUser, stopLocateUser} from '../location-reducer';
-import {deliver} from '../../food/packing-reducer';
-import {loadVolunteer, saveVolunteer} from '../../volunteer/volunteer-reducer';
+import {selectors} from '../../../store'
+import {locateAddress, locateUser, stopLocateUser} from '../location-reducer'
+import {deliver} from '../../food/packing-reducer'
+import {loadVolunteer, saveVolunteer} from '../../volunteer/volunteer-reducer'
 
 import Page from '../../../components/Page'
 
-const beginWeek = utc().startOf('isoWeek'); // Store the date of this week's Monday
+const beginWeek = utc().startOf('isoWeek') // Store the date of this week's Monday
 
 const mapStateToProps = state => ({
-	auth: state.auth,
-	customers: selectors.getAssignedCustomers(state),
-	driverLocation: selectors.getUserCoordinates(state),
-	addressLocation: selectors.getAddressCoordinates(state),
-	loadingAddressLocation: selectors.loadingAddressLocation(state),
-	loadAddressLocationError: selectors.loadAddressLocationError(state),
-	loadingUserLocation: selectors.loadingUserLocation(state),
-	loadUserLocationError: selectors.loadUserLocationError(state),
-	loading: selectors.loadingVolunteers(state) || selectors.loadingCustomers(state),
-	loadError: selectors.loadVolunteersError(state) || selectors.loadCustomersError(state),
-	driver: selectors.getOneVolunteer(state)(state.auth.user._id),
-	settings: state.settings.data
-});
+  auth: state.auth,
+  customers: selectors.getAssignedCustomers(state),
+  driverLocation: selectors.getUserCoordinates(state),
+  addressLocation: selectors.getAddressCoordinates(state),
+  loadingAddressLocation: selectors.loadingAddressLocation(state),
+  loadAddressLocationError: selectors.loadAddressLocationError(state),
+  loadingUserLocation: selectors.loadingUserLocation(state),
+  loadUserLocationError: selectors.loadUserLocationError(state),
+  loading: selectors.loadingVolunteers(state) || selectors.loadingCustomers(state),
+  loadError: selectors.loadVolunteersError(state) || selectors.loadCustomersError(state),
+  driver: selectors.getOneVolunteer(state)(state.auth.user._id),
+  settings: state.settings.data
+})
 
 const mapDispatchToProps = dispatch => ({
-	loadDriver: id => dispatch(loadVolunteer(id)),
-	saveDriver: driver => dispatch(saveVolunteer(driver)),
-	locateAddress: address => dispatch(locateAddress(address)),
-	locateUser: () => dispatch(locateUser()),
-	stopLocateUser: () => dispatch(stopLocateUser()),
-	deliver: customerIds => dispatch(deliver(customerIds))
-});
+  loadDriver: id => dispatch(loadVolunteer(id)),
+  saveDriver: driver => dispatch(saveVolunteer(driver)),
+  locateAddress: address => dispatch(locateAddress(address)),
+  locateUser: () => dispatch(locateUser()),
+  stopLocateUser: () => dispatch(stopLocateUser()),
+  deliver: customerIds => dispatch(deliver(customerIds))
+})
 
 class DriverUser extends Component {
   constructor(props) {
@@ -56,17 +56,17 @@ class DriverUser extends Component {
     }
   }
 
-	// filter customers by assignedTo driver
-	// 		this.customers = this._customers.filter(customer =>
-	// 			this.driver.customers.find(c => c.id === customer.id));
+  // filter customers by assignedTo driver
+  //     this.customers = this._customers.filter(customer =>
+  //       this.driver.customers.find(c => c.id === customer.id));
 
-	// this.deliver = () => {
-	// 	const customerIds = this.customers.filter(c => c.isChecked)
-	// 		.map(c => c.id);
-	// 	this._deliver(customerIds);
-	// };
+  // this.deliver = () => {
+  //   const customerIds = this.customers.filter(c => c.isChecked)
+  //     .map(c => c.id);
+  //   this._deliver(customerIds);
+  // };
 
-	// this.updateNotes = () => this.saveDriver(this.driver);
+  // this.updateNotes = () => this.saveDriver(this.driver);
 
   handleSelectCustomer = customer => () => {
     if (this.isSelected(customer)) {

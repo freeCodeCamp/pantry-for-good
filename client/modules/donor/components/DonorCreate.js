@@ -4,11 +4,11 @@ import set from 'lodash/set'
 import {Link} from 'react-router-dom'
 
 import {Form} from '../../../lib/form'
-import {selectors} from '../../../store';
-import {saveDonor} from '../donor-reducer';
-import {loadFields} from '../../questionnaire/field-reducer';
-import {loadFoods} from '../../food/food-category-reducer';
-import {loadSections} from '../../questionnaire/section-reducer';
+import {selectors} from '../../../store'
+import {saveDonor} from '../donor-reducer'
+import {loadFields} from '../../questionnaire/field-reducer'
+import {loadFoods} from '../../food/food-category-reducer'
+import {loadSections} from '../../questionnaire/section-reducer'
 
 import Page from '../../../components/Page'
 import DynamicForm from '../../../components/DynamicForm'
@@ -22,16 +22,16 @@ const mapStateToProps = state => ({
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
   settings: state.settings.data,
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   saveDonor: donor => dispatch(saveDonor(donor)),
   loadFormData: () => {
-    dispatch(loadFoods());
-    dispatch(loadFields());
-    dispatch(loadSections());
+    dispatch(loadFoods())
+    dispatch(loadFields())
+    dispatch(loadSections())
   }
-});
+})
 
 class DonorCreate extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ class DonorCreate extends Component {
   }
 
   componentWillMount() {
-    this.props.loadFormData();
+    this.props.loadFormData()
   }
 
   componentWillReceiveProps(nextProps) {
