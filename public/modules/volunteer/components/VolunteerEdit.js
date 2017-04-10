@@ -8,7 +8,7 @@ import {Form} from '../../../lib/form'
 import {selectors} from '../../../store';
 import {loadVolunteer, saveVolunteer} from '../../../store/volunteer';
 import {loadFields} from '../../../store/field';
-import {loadFoods} from '../../../store/food-category';
+import {loadFoods} from '../../food/food-category-reducer';
 import {loadSections} from '../../../store/section';
 
 import Page from '../../../components/Page'

@@ -6,10 +6,10 @@ import {
   foodCategory as foodCategorySchema,
   foodItem as foodItemSchema,
   arrayOfFoodItems
-} from './schemas';
-import {CALL_API} from './middleware/api';
-import {actions as foodCategoryActions} from './food-category';
-import {crudActions} from './utils';
+} from '../../store/schemas';
+import {CALL_API} from '../../store/middleware/api';
+import {actions as foodCategoryActions} from './food-category-reducer';
+import {crudActions} from '../../store/utils';
 
 export const actions = crudActions('foodItem');
 

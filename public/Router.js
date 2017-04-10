@@ -10,6 +10,7 @@ import Home from './modules/core/components/Home'
 import Customers from './modules/customer/CustomerRoutes'
 import Donors from './modules/donor/DonorRoutes'
 import Drivers from './modules/driver/DriverRoutes'
+import Foods from './modules/food/FoodRoutes'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -21,6 +22,7 @@ const Router = ({history}) =>
         <Route path="/customers" component={Customers} />
         <Route path="/donors" component={Donors} />
         <Route path="/drivers" component={Drivers} />
+        <Route path="/foods" component={Foods} />
       </div>
       <Footer />
     </div>

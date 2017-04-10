@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { selectors } from 'store'
-import { saveFoodItem, deleteFoodItem } from 'store/food-item'
+import { saveFoodItem, deleteFoodItem } from '../../food-item-reducer'
 
 import NewFoodItem from './NewFoodItem'
 import FoodItem from './FoodItem'
@@ -11,8 +11,8 @@ class FoodItems extends React.Component {
     getTableRows = () => {
         if (this.props.foodItems.length > 0) {
             return this.props.foodItems.map((foodItem) => (
-                <FoodItem key={foodItem._id} foodItem={foodItem} 
-                    foodCategories={this.props.foodCategories} 
+                <FoodItem key={foodItem._id} foodItem={foodItem}
+                    foodCategories={this.props.foodCategories}
                     createSelectBox={this.createSelectBox}
                     deleteItem={this.props.deleteFoodItem}
                     saveItem={this.props.saveFoodItem} />
@@ -38,7 +38,7 @@ class FoodItems extends React.Component {
             )
         }
 
-        return (<select className="form-control" 
+        return (<select className="form-control"
                         onChange={(e) => onChangeCallback(e)}
                         defaultValue={selectedValue || ""} >
             <option value="">Select category</option>
@@ -73,8 +73,8 @@ class FoodItems extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                <NewFoodItem 
-                                    saveFoodItem={this.props.saveFoodItem} 
+                                <NewFoodItem
+                                    saveFoodItem={this.props.saveFoodItem}
                                     createSelectBox={this.createSelectBox} />
                                 {this.getTableRows()}
                             </tbody>
@@ -120,7 +120,7 @@ class FoodItems extends React.Component {
 				]
 			}
 		},
-        items: [ 
+        items: [
             //array of foods in all categories
             {
                 hashkey: 0,

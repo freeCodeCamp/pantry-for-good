@@ -1,1 +1,0 @@
-import './packing-list';

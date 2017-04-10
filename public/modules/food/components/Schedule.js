@@ -4,11 +4,11 @@ import {stateGo} from 'redux-ui-router';
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
-import {loadFoods} from '../../../store/food-category';
-import {saveFoodItem} from '../../../store/food-item';
+import {loadFoods} from '../food-category-reducer';
+import {saveFoodItem} from '../food-item-reducer';
 
 import Page from '../../../components/Page'
-import ItemRow from './ItemRow'
+import ItemRow from './schedule/ItemRow'
 
 const mapStateToProps = state => ({
 	foodItems: selectors.getAllFoodItems(state),

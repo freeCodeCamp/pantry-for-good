@@ -6,7 +6,7 @@ import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadCustomers} from '../../customer/customer-reducer'
-import {loadFoods} from '../../../store/food-category'
+import {loadFoods} from '../food-category-reducer'
 import {pack} from '../../../store/packing'
 
 import Page from '../../../components/Page'

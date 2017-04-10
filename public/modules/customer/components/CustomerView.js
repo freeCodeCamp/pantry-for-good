@@ -7,7 +7,7 @@ import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
 import {loadCustomer, saveCustomer, deleteCustomer} from '../customer-reducer'
 import {loadFields} from '../../../store/field'
-import {loadFoods} from '../../../store/food-category'
+import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../../store/section'
 
 import DynamicView from '../../../components/DynamicView'

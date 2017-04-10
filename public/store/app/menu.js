@@ -45,13 +45,13 @@ function getAdminMenuItems() {
       link: 'customers',
     }, {
       title: 'Food Schedule',
-      link: 'schedules',
+      link: 'foods/schedule',
     }, {
       title: 'Packing List',
-      link: 'packing',
+      link: 'foods/packing',
     }, {
       title: 'Inventory',
-      link: 'foods-react',
+      link: 'foods/inventory',
     }, {
       title: 'Drivers and Route Assignment',
       link: 'drivers',

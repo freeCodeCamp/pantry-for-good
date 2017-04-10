@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import NewCategory from './NewCategory'
 import { selectors } from 'store'
-import { loadFoods, saveFood, deleteFood } from 'store/food-category'
+import { loadFoods, saveFood, deleteFood } from '../../food-category-reducer'
 import { CALL_API } from '../../../../store/middleware/api'
 
 class FoodCategories extends Component {
@@ -61,7 +61,7 @@ class FoodCategories extends Component {
                         <div className="text-center text-danger">
                             <strong>{this.props.foodCategory.saveError}</strong>
                         </div>
-                    }                    
+                    }
                     {this.props.foodCategory.fetchError &&
                         <div className="text-center text-danger">
                             <strong>{this.props.foodCategory.fetchError}</strong>
@@ -88,16 +88,16 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     loadFoods: () => dispatch(loadFoods()),
-    createCategory: (category) => dispatch(saveFood({ category: category })), 
+    createCategory: (category) => dispatch(saveFood({ category: category })),
     updateCategory: (foodCategory) => {
         let action = saveFood(foodCategory)
         //If the schema is present then callAPI will not include the complete
         //food objects in the request and it will fail. However the schema
-        //is needed to process the response      
+        //is needed to process the response
         action[CALL_API].responseSchema = action[CALL_API].schema
         delete action[CALL_API].schema
         dispatch(action)
-    }, 
+    },
     deleteCategory: (id) => dispatch(deleteFood(id))
 })
 

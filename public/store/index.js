@@ -13,8 +13,8 @@ import donation, {selectors as donationSelectors} from '../modules/donor/donatio
 import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer';
 import entities from './entities'
 import field, {selectors as fieldSelectors} from './field';
-import foodCategory, {selectors as foodCategorySelectors} from './food-category';
-import foodItem, {selectors as foodItemSelectors} from './food-item';
+import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer';
+import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer';
 import location, {selectors as locationSelectors} from './location';
 import media from './media';
 import questionnaire, {selectors as questionnaireSelectors} from './questionnaire';
