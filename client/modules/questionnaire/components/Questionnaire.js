@@ -45,7 +45,6 @@ class Questionnaire extends Component {
   }
 
   handleFieldChange = stateKey => field => ev => {
-    console.log('handleFieldChange: stateKey, field, value', stateKey, field, ev.target.value)
 
     this.setState({
       [stateKey]: {

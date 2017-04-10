@@ -80,7 +80,6 @@ class VolunteerList extends Component {
         }
       </Page>
     )
-    console.log('foo', foo)
     return foo
   }
 }

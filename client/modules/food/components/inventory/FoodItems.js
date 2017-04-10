@@ -161,7 +161,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(saveFoodItem(categoryId, foodItem))
   },
   deleteFoodItem: (categoryId, _id) => {
-    console.log('delete item ', _id)
     dispatch(deleteFoodItem(categoryId, _id))
   },
 })

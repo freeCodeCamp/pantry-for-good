@@ -19,7 +19,7 @@ class AppSettings extends React.Component {
 
   onFieldChange = e => {
     const { name, value } = e.target
-    this.setState({ [name]: value }, () => console.dir(this.state))
+    this.setState({ [name]: value })
   }
 
   onSubmit = e => {

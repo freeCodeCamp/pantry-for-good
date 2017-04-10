@@ -106,7 +106,6 @@ function formatRequestBody(body, method, schema) {
       throw new Error('Tried to PUT but entity has no _id attribute')
     }
 
-    // angular.toJson omits angular specific attributes
     return JSON.stringify(entity)
   } else {
     return JSON.stringify(body)
