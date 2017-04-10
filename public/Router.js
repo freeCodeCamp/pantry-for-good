@@ -14,7 +14,7 @@ import Foods from './modules/food/FoodRoutes'
 import Media from './modules/media/MediaRouter'
 import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
 import Settings from './modules/settings/SettingsRouter'
-
+import Users from './modules/users/UserRouter'
 import Volunteers from './modules/volunteer/VolunteerRouter'
 
 const Router = ({history}) =>
@@ -31,6 +31,7 @@ const Router = ({history}) =>
         <Route path="/media" component={Media} />
         <Route path="/questionnaires" component={Questionnaire} />
         <Route path="/settings" component={Settings} />
+        <Route path="/users" component={Users} />
         <Route path="/volunteers" component={Volunteers} />
       </div>
       <Footer />

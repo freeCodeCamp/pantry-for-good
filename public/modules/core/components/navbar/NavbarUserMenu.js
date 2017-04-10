@@ -11,16 +11,16 @@ const NavbarUserMenu = ({user}) =>
         </a>
         <ul className="dropdown-menu">
           <li>
-            <Link to="/settings/profile">Edit Profile</Link>
+            <Link to="/users/profile">Edit Profile</Link>
           </li>
           {user.provider === 'local' &&
             <li>
-              <Link to="/settings/password">Change Password</Link>
+              <Link to="/users/change-password">Change Password</Link>
             </li>
           }
           <li className="divider"></li>
           <li>
-            <Link to="/api/auth/signout">Signout</Link>
+            <a href="/api/auth/signout">Signout</a>
           </li>
         </ul>
       </li>
