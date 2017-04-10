@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store';
-import {loadCustomers} from '../customer-reducer';
+import {selectors} from '../../../store'
+import {loadCustomers} from '../customer-reducer'
 
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/Page'
@@ -13,11 +13,11 @@ const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),
   loadingCustomers: selectors.loadingCustomers(state),
   loadCustomersError: selectors.loadCustomersError(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadCustomers: () => dispatch(loadCustomers())
-});
+})
 
 class CustomerList extends Component {
   componentWillMount() {

@@ -6,47 +6,47 @@ import { signUp } from '../auth-reducer'
 import FoodbankLogo from '../../../components/FoodbankLogo'
 
 class SignUp extends React.Component {
-    constructor(props) {
-        super(props)
-        this.redirectIfAlreadySignedIn(this.props)
-        this.state = {
-            accountType: undefined,
-            firstName: "",
-            lastName: "",
-            email: "",
-            username: "",
-            password: ""
-        }
+  constructor(props) {
+    super(props)
+    this.redirectIfAlreadySignedIn(this.props)
+    this.state = {
+      accountType: undefined,
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: ""
     }
+  }
 
-    redirectIfAlreadySignedIn(props) {
-        if (props.auth && props.auth.user && props.auth.user._id) {
-            props.push('root')
-        }
+  redirectIfAlreadySignedIn(props) {
+    if (props.auth && props.auth.user && props.auth.user._id) {
+      props.push('root')
     }
+  }
 
-    onFieldChange = e => {
-        const {name, value} = e.target
-        this.setState({ [name]: value })
-    }
+  onFieldChange = e => {
+    const {name, value} = e.target
+    this.setState({ [name]: value })
+  }
 
-    onSubmit = (e) => {
-        e.preventDefault()
-        this.props.signUp({
-            "accountType": this.state.accountType,
-            "firstName": this.state.firstName,
-            "lastName": this.state.lastName,
-            "email": this.state.email,
-            "username": this.state.username,
-            "password": this.state.password
-        })
-    }
+  onSubmit = e => {
+    e.preventDefault()
+    this.props.signUp({
+      "accountType": this.state.accountType,
+      "firstName": this.state.firstName,
+      "lastName": this.state.lastName,
+      "email": this.state.email,
+      "username": this.state.username,
+      "password": this.state.password
+    })
+  }
 
-    componentWillReceiveProps = (nextProps) => {
-        this.redirectIfAlreadySignedIn(nextProps)
-    }
+  componentWillReceiveProps = nextProps => {
+    this.redirectIfAlreadySignedIn(nextProps)
+  }
 
-    render = () =>
+  render = () =>
     <section className="content">
         <div className="register-box">
             <div className="register-logo">
@@ -104,14 +104,14 @@ class SignUp extends React.Component {
         </section>
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.auth
+const mapStateToProps = state => ({
+  auth: state.auth
 })
 
-const mapDispatchToProps = (dispatch) => ({
-    signUp: (user) => {
-        dispatch(signUp(user))
-    }
+const mapDispatchToProps = dispatch => ({
+  signUp: user => {
+    dispatch(signUp(user))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

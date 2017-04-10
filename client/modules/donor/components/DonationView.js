@@ -2,18 +2,18 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Modal, Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store';
-import {sendReceipt} from '../donation-reducer';
+import {selectors} from '../../../store'
+import {sendReceipt} from '../donation-reducer'
 
 const mapStateToProps = state => ({
   savingDonations: selectors.savingDonations(state),
   saveDonationsError: selectors.saveDonationsError(state),
   settings: state.settings.data
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   sendReceipt: (donation, donorId) => () => dispatch(sendReceipt(donation, donorId)),
-});
+})
 
 const DonationView = ({
   savingDonations,

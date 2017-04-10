@@ -5,12 +5,12 @@ import {connect} from 'react-redux'
 import Navbar from './navbar/Navbar'
 
 const mapStateToProps = state => ({
-	auth: state.auth,
+  auth: state.auth,
   settings: state.settings.data,
   fetchingSettings: state.settings.fetching,
   media: state.media.data,
   fetchingMedia: state.media.fetching
-});
+})
 
 const Header = ({settings, auth}) =>
   <div className="main-header">

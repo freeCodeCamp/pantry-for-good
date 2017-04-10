@@ -1,27 +1,27 @@
 import React from 'react'
 
 class NewCategory extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {inputFieldValue: ""}
-    }
+  constructor(props) {
+    super(props)
+    this.state = {inputFieldValue: ""}
+  }
 
-    onChange = (e) => {
-        this.setState({inputFieldValue: e.target.value})
-    }
+  onChange = e => {
+    this.setState({inputFieldValue: e.target.value})
+  }
 
-    onClick = () => {
-        this.props.createCategory(this.state.inputFieldValue)
-        this.setState({inputFieldValue: ""})
-    }
+  onClick = () => {
+    this.props.createCategory(this.state.inputFieldValue)
+    this.setState({inputFieldValue: ""})
+  }
 
-    render = () => (
+  render = () => (
         <div className="input-group">
             <input type="text"
                 className="form-control"
                 placeholder="Add category"
                 value={this.state.inputFieldValue}
-                onChange={(e) => this.onChange(e)} />
+                onChange={e => this.onChange(e)} />
             <span className="input-group-btn">
                 <button className="btn btn-success btn-flat" disabled={this.state.inputFieldValue.trim() === ""}
                     onClick={this.onClick}>

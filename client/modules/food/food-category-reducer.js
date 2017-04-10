@@ -1,10 +1,10 @@
-import {denormalize} from 'normalizr';
+import {denormalize} from 'normalizr'
 
-import {foodCategory, arrayOfFoodCategories} from '../../store/schemas';
-import {CALL_API} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {foodCategory, arrayOfFoodCategories} from '../../store/schemas'
+import {CALL_API} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('foodCategory');
+export const actions = crudActions('foodCategory')
 
 export const loadFoods = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadFoods = () => ({
     schema: arrayOfFoodCategories,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const saveFood = food => ({
   [CALL_API]: {
@@ -22,7 +22,7 @@ export const saveFood = food => ({
     schema: foodCategory,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
-});
+})
 
 export const deleteFood = id => ({
   [CALL_API]: {
@@ -31,21 +31,21 @@ export const deleteFood = id => ({
     schema: foodCategory,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
-export default crudReducer('foodCategory');
+export default crudReducer('foodCategory')
 
 export const selectors = {
   getAll(foodCategories, entities) {
-    return denormalize({foodCategories}, {foodCategories: arrayOfFoodCategories}, entities).foodCategories;
+    return denormalize({foodCategories}, {foodCategories: arrayOfFoodCategories}, entities).foodCategories
   },
   getOne(id, entities) {
-    return denormalize({foodCategories: id}, {foodCategories: foodCategory}, entities).foodCategories;
+    return denormalize({foodCategories: id}, {foodCategories: foodCategory}, entities).foodCategories
   },
   loading(foodCategory) {
-    return foodCategory.fetching;
+    return foodCategory.fetching
   },
   loadError(foodCategory) {
-    return foodCategory.fetchError;
+    return foodCategory.fetchError
   }
 }

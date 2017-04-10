@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store';
-import {loadVolunteers} from '../volunteer-reducer';
+import {selectors} from '../../../store'
+import {loadVolunteers} from '../volunteer-reducer'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/Page'
 
@@ -14,11 +14,11 @@ const mapStateToProps = state => ({
   loadingVolunteers: selectors.loadingVolunteers(state),
   loadVolunteersError: selectors.loadVolunteersError(state),
   settings: state.settings.data,
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteers: () => dispatch(loadVolunteers())
-});
+})
 
 class VolunteerList extends Component {
   componentWillMount() {

@@ -1,10 +1,10 @@
-import {normalize, denormalize} from 'normalizr';
+import {normalize, denormalize} from 'normalizr'
 
-import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas';
-import {CALL_API, callApi} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
+import {CALL_API, callApi} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('customer');
+export const actions = crudActions('customer')
 
 export const loadCustomers = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadCustomers = () => ({
     schema: arrayOfCustomers,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const loadCustomer = (id, admin) => ({
   [CALL_API]: {
@@ -20,10 +20,10 @@ export const loadCustomer = (id, admin) => ({
     schema: customerSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
-});
+})
 
 export const saveCustomer = (customer, admin) => {
-  let endpoint;
+  let endpoint
   if (admin) endpoint = customer.id ? `admin/customers/${customer.id}` : `admin/customers`
   else endpoint = customer.id ? `customer/${customer.id}` : `customer`
   return {
@@ -34,8 +34,8 @@ export const saveCustomer = (customer, admin) => {
       schema: customerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
     }
-  };
-};
+  }
+}
 
 export const deleteCustomer = id => ({
   [CALL_API]: {
@@ -44,7 +44,7 @@ export const deleteCustomer = id => ({
     schema: customerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
 // TODO: maybe better way to do this
 export const assignCustomers = (customerIds, driverId) => dispatch => {
@@ -57,25 +57,25 @@ export const assignCustomers = (customerIds, driverId) => dispatch => {
     .catch(error => dispatch({type: actions.SAVE_FAILURE, error}))
 }
 
-export default crudReducer('customer');
+export default crudReducer('customer')
 
 export const selectors = {
   getAll(customers, entities) {
-    return denormalize({customers}, {customers: arrayOfCustomers}, entities).customers;
+    return denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
   },
   getOne(id, entities) {
-    return denormalize({customers: id}, {customers: customerSchema}, entities).customers;
+    return denormalize({customers: id}, {customers: customerSchema}, entities).customers
   },
   loading(customers) {
-    return customers.fetching;
+    return customers.fetching
   },
   loadError(customers) {
-    return customers.fetchError;
+    return customers.fetchError
   },
   saving(customers) {
-    return customers.saving;
+    return customers.saving
   },
   saveError(customers) {
-    return customers.saveError;
+    return customers.saveError
   }
 }

@@ -12,18 +12,18 @@ import {pack} from '../packing-reducer'
 import Page from '../../../components/Page'
 
 const mapStateToProps = state => ({
-	customers: selectors.getAllCustomers(state),
-	items: selectors.getAllFoodItems(state),
+  customers: selectors.getAllCustomers(state),
+  items: selectors.getAllFoodItems(state),
   loading: selectors.loadingCustomers(state) ||
-						selectors.loadingFoods(state),
+            selectors.loadingFoods(state),
   loadCustomersError: selectors.loadCustomersError(state),
-	loadFoodsError: selectors.loadFoodsError(state)
+  loadFoodsError: selectors.loadFoodsError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-	loadCustomers: () => dispatch(loadCustomers()),
-	loadFoods: () => dispatch(loadFoods()),
-	pack: (customers, items) => dispatch(pack(customers, items))
+  loadCustomers: () => dispatch(loadCustomers()),
+  loadFoods: () => dispatch(loadFoods()),
+  pack: (customers, items) => dispatch(pack(customers, items))
 })
 
 class PackingList extends Component {
@@ -39,11 +39,11 @@ class PackingList extends Component {
   }
 
   componentWillMount() {
-		this.props.loadCustomers()
-		this.props.loadFoods()
-	}
+    this.props.loadCustomers()
+    this.props.loadFoods()
+  }
 
-	componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     const allCustomers = nextProps.customers
     const allItems = nextProps.items
     const {
@@ -52,9 +52,9 @@ class PackingList extends Component {
       loadFoodsError
     } = nextProps
 
-		if (!loading && this.props.loading) {
-			if (loadFoodsError) this.setState({error: loadFoodsError})
-			else if (loadCustomersError) this.setState({error: loadCustomersError})
+    if (!loading && this.props.loading) {
+      if (loadFoodsError) this.setState({error: loadFoodsError})
+      else if (loadCustomersError) this.setState({error: loadCustomersError})
       else {
         const scheduledCustomers = getScheduledCustomers(allCustomers, this.beginWeek)
         const scheduledItems = getScheduledItems(allItems, this.beginWeek)
@@ -67,10 +67,10 @@ class PackingList extends Component {
 
         this.setState({customers, items: scheduledItems})
       }
-		}
-	}
+    }
+  }
 
-	pack = () => {
+  pack = () => {
     // generate packing lists for selected customers and updated item counts
     const {customers, items} = getPackedCustomersAndItems(
       this.state.customers.filter(customer => customer.isChecked),
@@ -80,24 +80,24 @@ class PackingList extends Component {
     this.props.pack(customers, items)
   }
 
-	// Determine column span of empty cells
-	getColSpan = customer => {
-		if (this.state.items && customer.packingList) {
-			return this.state.items.length - customer.packingList.length;
-		}
-		return 1;
-	};
+  // Determine column span of empty cells
+  getColSpan = customer => {
+    if (this.state.items && customer.packingList) {
+      return this.state.items.length - customer.packingList.length
+    }
+    return 1
+  };
 
-	// Select all checkboxes
-	selectAll = () => {
-		this.setState({
+  // Select all checkboxes
+  selectAll = () => {
+    this.setState({
       customers: this.state.customers.map(customer => ({
-			  ...customer,
+        ...customer,
         isChecked: !this.state.allSelected
-		  })),
+      })),
       allSelected: !this.state.allSelected
     })
-	}
+  }
 
   // toggle selected for customer with id
   handleSelect = id => () =>
@@ -105,9 +105,9 @@ class PackingList extends Component {
       customers: selectCustomer(this.state.customers, id)
     })
 
-	// Enable submit button if any of the checkboxes are checked
-	isDisabled = () =>
-		!this.state.customers || !this.state.customers.find(customer => customer.isChecked)
+  // Enable submit button if any of the checkboxes are checked
+  isDisabled = () =>
+    !this.state.customers || !this.state.customers.find(customer => customer.isChecked)
 
   render() {
     const {customers, items, error, allSelected} = this.state
@@ -228,11 +228,11 @@ function getScheduledItems(items, beginWeek) {
     if (item.frequency) {
       // Construct a moment recurring object based on the starting date and frequency from schedule
       const interval = utc(item.startDate).recur()
-        .every(item.frequency).days();
+        .every(item.frequency).days()
       // Return true only if the current week matches one of the recurring dates
-      return interval.matches(beginWeek);
+      return interval.matches(beginWeek)
     }
-  });
+  })
 }
 
 // 3. Find a list of customers and filter based on status and last packed date
@@ -242,12 +242,12 @@ function getScheduledCustomers(customers, beginWeek) {
   return customers.filter(customer =>
     !utc(customer.lastPacked).isSame(beginWeek) &&
       (customer.status === 'Accepted')
-  );
+  )
 }
 
 // 4. Figure out which food items should be in the packing list
 function getPackedCustomersAndItems(scheduledCustomers, scheduledItems) {
-  let itemCounts = scheduledItems.map(item => item.quantity);
+  let itemCounts = scheduledItems.map(item => item.quantity)
 
   // generate a packing list for each customer
   const customers = scheduledCustomers.map(customer => ({
@@ -256,19 +256,19 @@ function getPackedCustomersAndItems(scheduledCustomers, scheduledItems) {
       // If the item is in the customer's food preferences and in stock
       // add it to customers packing list and decrement its count
       if (customer.foodPreferences.find(equalIds(item)) && itemCounts[i] > 0) {
-        itemCounts[i]--;
-        return item;
+        itemCounts[i]--
+        return item
       }
     }).filter(exists)
-  }));
+  }))
 
   // generate a list of updated items after packing
   const items = scheduledItems.map((item, i) => ({
     ...item,
     quantity: itemCounts[i]
-  }));
+  }))
 
-  return {customers, items};
+  return {customers, items}
 }
 
 // get a list of ids of checked customers
@@ -291,7 +291,7 @@ function selectCustomer(customers, id) {
 }
 
 function equalIds(thing) {
-  return (other) => thing && other && thing._id === other._id
+  return other => thing && other && thing._id === other._id
 }
 
 function exists(thing) {

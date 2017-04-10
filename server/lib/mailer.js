@@ -22,16 +22,16 @@ export default {
    */
   async send(to, subject, template, bindings = null) {
     const content = await renderTemplate(template, bindings)
-    const from_email = new mailHelper.Email(config.mailer.from);
-    const to_email = new mailHelper.Email(to);
-    const sgContent = new mailHelper.Content('text/html', content);
-    const mail = new mailHelper.Mail(from_email, subject, to_email, sgContent);
+    const from_email = new mailHelper.Email(config.mailer.from)
+    const to_email = new mailHelper.Email(to)
+    const sgContent = new mailHelper.Content('text/html', content)
+    const mail = new mailHelper.Mail(from_email, subject, to_email, sgContent)
 
     const request = sg.emptyRequest({
       method: 'POST',
       path: '/v3/mail/send',
       body: mail.toJSON()
-    });
+    })
 
     try {
       await sgApi(request)
@@ -100,7 +100,7 @@ function handleSendgridError(err) {
       .filter(errMsg => errMsg)
       .join(', ')
     // eslint-disable-next-line no-console
-    console.error('sendgrid error %d:', err.statusCode, message);
+    console.error('sendgrid error %d:', err.statusCode, message)
   } else {
     // eslint-disable-next-line no-console
     console.error('sendgrid error', err.statusCode)

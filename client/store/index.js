@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux'
 import {
   routerReducer as router,
   routerMiddleware as createRouterMiddleware
@@ -7,20 +7,20 @@ import thunk from 'redux-thunk'
 
 import apiMiddleware from './middleware/api'
 import app from '../modules/core/app-reducers'
-import auth from '../modules/users/auth-reducer';
-import customer, {selectors as customerSelectors} from '../modules/customer/customer-reducer';
-import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer';
-import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer';
+import auth from '../modules/users/auth-reducer'
+import customer, {selectors as customerSelectors} from '../modules/customer/customer-reducer'
+import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer'
+import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer'
 import entities from './entities'
-import field, {selectors as fieldSelectors} from '../modules/questionnaire/field-reducer';
-import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer';
-import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer';
-import location, {selectors as locationSelectors} from '../modules/driver/location-reducer';
-import media from '../modules/media/media-reducer';
-import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer';
-import section, {selectors as sectionSelectors} from '../modules/questionnaire/section-reducer';
-import settings from '../modules/settings/settings-reducer';
-import volunteer, {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer';
+import field, {selectors as fieldSelectors} from '../modules/questionnaire/field-reducer'
+import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer'
+import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
+import location, {selectors as locationSelectors} from '../modules/driver/location-reducer'
+import media from '../modules/media/media-reducer'
+import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer'
+import section, {selectors as sectionSelectors} from '../modules/questionnaire/section-reducer'
+import settings from '../modules/settings/settings-reducer'
+import volunteer, {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer'
 
 const rootReducer = combineReducers({
   entities,
@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
   section,
   settings,
   volunteer
-});
+})
 
 /**
  * Create redux store
@@ -131,4 +131,4 @@ export const selectors = {
   loadVolunteersError: state => volunteerSelectors.loadError(state.volunteer),
   savingVolunteers: state => volunteerSelectors.saving(state.volunteer),
   saveVolunteersError: state => volunteerSelectors.saveError(state.volunteer),
-};
+}

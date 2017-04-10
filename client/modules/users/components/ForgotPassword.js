@@ -4,35 +4,35 @@ import { connect } from 'react-redux'
 import { forgotPassword } from '../auth-reducer'
 
 class ForgotPassword extends React.Component {
-    constructor(props) {
-        super(props)
-        this.redirectIfAlreadySignedIn(this.props)
-        this.state = {
-            username: ""
-        }
+  constructor(props) {
+    super(props)
+    this.redirectIfAlreadySignedIn(this.props)
+    this.state = {
+      username: ""
     }
+  }
 
-    redirectIfAlreadySignedIn(props) {
-        if (props.auth && props.auth.user && props.auth.user._id) {
-            props.push('root')
-        }
+  redirectIfAlreadySignedIn(props) {
+    if (props.auth && props.auth.user && props.auth.user._id) {
+      props.push('root')
     }
+  }
 
-    onFieldChange = e => {
-        const { name, value } = e.target
-        this.setState({ [name]: value })
-    }
+  onFieldChange = e => {
+    const { name, value } = e.target
+    this.setState({ [name]: value })
+  }
 
-    onSubmit = e => {
-        e.preventDefault()
-        this.props.resetPassword(this.state.username)
-    }
+  onSubmit = e => {
+    e.preventDefault()
+    this.props.resetPassword(this.state.username)
+  }
 
-    componentWillReceiveProps = nextProps => {
-        this.redirectIfAlreadySignedIn(nextProps)
-    }
+  componentWillReceiveProps = nextProps => {
+    this.redirectIfAlreadySignedIn(nextProps)
+  }
 
-    render = () =>
+  render = () =>
         <section className="row">
             <h3 className="col-md-12 text-center">Restore your password</h3>
             <p className="small text-center">Enter your account username.</p>
@@ -58,11 +58,11 @@ class ForgotPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth
+  auth: state.auth
 })
 
 const mapDispatchToProps = dispatch => ({
-    resetPassword: username => dispatch(forgotPassword({ username }))
+  resetPassword: username => dispatch(forgotPassword({ username }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword)

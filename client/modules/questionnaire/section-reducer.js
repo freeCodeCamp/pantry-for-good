@@ -1,10 +1,10 @@
-import {denormalize} from 'normalizr';
+import {denormalize} from 'normalizr'
 
-import {section as sectionSchema, arrayOfSections} from '../../store/schemas';
-import {CALL_API} from '../../store/middleware/api';
-import {crudActions, crudReducer} from '../../store/utils';
+import {section as sectionSchema, arrayOfSections} from '../../store/schemas'
+import {CALL_API} from '../../store/middleware/api'
+import {crudActions, crudReducer} from '../../store/utils'
 
-export const actions = crudActions('section');
+export const actions = crudActions('section')
 
 export const loadSections = () => ({
   [CALL_API]: {
@@ -12,7 +12,7 @@ export const loadSections = () => ({
     schema: arrayOfSections,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
-});
+})
 
 export const loadSection = id => ({
   [CALL_API]: {
@@ -20,7 +20,7 @@ export const loadSection = id => ({
     schema: sectionSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
-});
+})
 
 export const saveSection = section => ({
   [CALL_API]: {
@@ -30,7 +30,7 @@ export const saveSection = section => ({
     schema: sectionSchema,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
-});
+})
 
 export const deleteSection = id => ({
   [CALL_API]: {
@@ -39,21 +39,21 @@ export const deleteSection = id => ({
     schema: sectionSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
-});
+})
 
-export default crudReducer('section');
+export default crudReducer('section')
 
 export const selectors = {
   getAll(sections, entities) {
-    return denormalize({sections}, {sections: arrayOfSections}, entities).sections;
+    return denormalize({sections}, {sections: arrayOfSections}, entities).sections
   },
   getOne(id, entities) {
-    return denormalize({sections: id}, {sections: sectionSchema}, entities).sections;
+    return denormalize({sections: id}, {sections: sectionSchema}, entities).sections
   },
   saving(section) {
-    return section.saving;
+    return section.saving
   },
   saveError(section) {
-    return section.saveError;
+    return section.saveError
   }
-};
+}

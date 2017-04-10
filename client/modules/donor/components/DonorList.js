@@ -14,12 +14,12 @@ const mapStateToProps = state => ({
   loadingDonors: selectors.loadingDonors(state),
   loadDonorsError: selectors.loadDonorsError(state),
   donors: selectors.getAllDonors(state),
-});
+})
 
 const mapDispatchToProps = dispatch => ({
   loadDonors: () => dispatch(loadDonors()),
   deleteDonor: donor => dispatch(deleteDonor(donor.id))
-});
+})
 
 class DonorList extends Component {
   componentWillMount() {
