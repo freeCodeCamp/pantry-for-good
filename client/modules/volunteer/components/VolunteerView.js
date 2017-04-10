@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
+import {Col, Row} from 'react-bootstrap'
 
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
@@ -113,9 +114,12 @@ class VolunteerView extends Component {
     const {volunteerModel, volunteerView, error} = this.state
     if (!volunteerModel || !volunteerView) return null
     return (
-      <Page heading={volunteerModel.fullName}>
-        <div className="row">
-          <div className="col-xs-12">
+      <Page
+        heading={volunteerModel.fullName}
+        error={error}
+      >
+        <Row>
+          <Col xs={12}>
             <DynamicView
               model={volunteerModel}
               dynForm={volunteerView.dynForm}
@@ -163,7 +167,7 @@ class VolunteerView extends Component {
               <div className="form-group">
                 <Link
                   className="btn btn-primary"
-                  to={`/volunteers/${volunteer.id}/edit`}
+                  to={`/volunteers/${volunteerModel.id}/edit`}
                 >
                   Edit
                 </Link>
@@ -175,13 +179,8 @@ class VolunteerView extends Component {
                 </Link>
               </div>
             }
-          </div>
-        </div>
-        {error &&
-          <div className="text-danger">
-            <strong>{error}</strong>
-          </div>
-        }
+          </Col>
+        </Row>
       </Page>
     )
   }

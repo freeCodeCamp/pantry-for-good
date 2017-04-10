@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import set from 'lodash/set'
-import {utc} from 'moment'
-import {Link} from 'react-router-redux'
+import {Link} from 'react-router-dom'
+import {Row, Col} from 'react-bootstrap'
 
 import {Form} from '../../../lib/form'
 import {selectors} from '../../../store'
@@ -25,7 +25,7 @@ const mapStateToProps = (state, ownProps) => ({
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
   volunteerId: ownProps.match.params.volunteerId,
-  settings: state.settings.data,
+  settings: state.settings.data
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -112,9 +112,12 @@ class VolunteerEdit extends Component {
     const {volunteerForm, volunteerModel, error} = this.state
     if (!volunteerModel || !volunteerForm) return null
     return (
-      <Page heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}>
-        <div className="row">
-          <div className="col-xs-12">
+      <Page
+        heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}
+        error={error}
+      >
+        <Row>
+          <Col xs={12}>
             <form name="volunteerForm" onSubmit={this.saveVolunteer}>
               <DynamicForm
                 sectionNames={volunteerForm.sectionNames}
@@ -122,25 +125,20 @@ class VolunteerEdit extends Component {
                 dynType={volunteerModel}
                 handleFieldChange={this.handleFieldChange}
               />
-              <div className="row">
-                <div className="col-sm-6 col-md-4 col-lg-2">
+              <Row>
+                <Col sm={6} md={4} lg={2}>
                   <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
-                </div>
-                <div className="col-sm-6 col-md-4 col-lg-2">
-                  <a
+                </Col>
+                <Col sm={6} md={4} lg={2}>
+                  <Link
                     className="btn btn-primary btn-block top-buffer"
-                    href={this.isAdmin ? "/#!/admin/volunteers" : "/#!/"}
-                  >Cancel</a>
-                </div>
-              </div>
-              {error &&
-                <div className="text-danger">
-                  <strong>{error}</strong>
-                </div>
-              }
+                    to={this.isAdmin ? "/volunteers" : "/"}
+                  >Cancel</Link>
+                </Col>
+              </Row>
             </form>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </Page>
     )
   }

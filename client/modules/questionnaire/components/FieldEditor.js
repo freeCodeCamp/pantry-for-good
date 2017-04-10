@@ -1,10 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Table} from 'react-bootstrap'
 import sortBy from 'lodash/sortBy'
+import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {saveField, deleteField} from '../field-reducer'
+
+import Loadable from '../../../components/Loadable'
 
 const mapStateToProps = state => ({
   error: selectors.loadFormDataError(state) || selectors.saveFieldError(state),
@@ -50,7 +52,10 @@ const FieldEditor = ({
               </div>
             }
           </div>
-          <div className="box-body table-responsive no-padding top-buffer">
+          <Loadable
+            loading={loading}
+            className="box-body table-responsive no-padding top-buffer"
+          >
             <form name="fieldForm" onSubmit={editing ? noop : onSave(model)}>
               <Table responsive striped>
                 <thead>
@@ -182,12 +187,12 @@ const FieldEditor = ({
                 </tbody>
               </Table>
             </form>
-          </div>
-          {loading &&
+          </Loadable>
+          {/*{loading &&
             <div className="overlay">
               <i className="fa fa-refresh fa-spin"></i>
             </div>
-          }
+          }*/}
         </div>
       </div>
     </div>

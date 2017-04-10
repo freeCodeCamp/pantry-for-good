@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Table} from 'react-bootstrap'
+import {Col, Row, Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadVolunteers} from '../volunteer-reducer'
+
+import Box from '../../../components/Box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/Page'
 
@@ -13,7 +15,7 @@ const mapStateToProps = state => ({
   volunteers: selectors.getAllVolunteers(state),
   loadingVolunteers: selectors.loadingVolunteers(state),
   loadVolunteersError: selectors.loadVolunteersError(state),
-  settings: state.settings.data,
+  settings: state.settings.data
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -27,14 +29,14 @@ class VolunteerList extends Component {
   }
   render() {
     const {volunteers, loadVolunteersError} = this.props
-    const foo = (
-      <Page heading="Volunteer Database">
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title">Applications</h3>
-              </div>
+    return (
+      <Page
+        heading="Volunteer Database"
+        error={loadVolunteersError}
+      >
+        <Row>
+          <Col xs={12}>
+            <Box heading="Applications">
               <Table responsive>
                 <thead>
                   <tr>
@@ -70,17 +72,11 @@ class VolunteerList extends Component {
                   )}
                 </tbody>
               </Table>
-            </div>
-          </div>
-        </div>
-        {loadVolunteersError &&
-          <div className="text-danger">
-            <strong>{loadVolunteersError}</strong>
-          </div>
-        }
+            </Box>
+          </Col>
+        </Row>
       </Page>
     )
-    return foo
   }
 }
 
