@@ -1,34 +1,31 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router';
 import {utc} from 'moment'
 import set from 'lodash/set'
+import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
-import {View} from '../../core/services/view.client.service'
 import {selectors} from '../../../store'
 import {loadDonor, saveDonor, deleteDonor} from '../../../store/donor'
 
-import DynamicView from '../../common/components/DynamicView'
 import Page from '../../common/components/Page'
 import DonationView from './DonationView'
 import DonationCreate from './DonationCreate'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   savingDonor: state.donor.saving,
   savingDonorError: state.donor.saveError,
   loadingDonors: selectors.loadingDonors(state),
   loadDonorsError: selectors.loadDonorsError(state),
   getDonor: selectors.getOneDonor(state),
-  donorId: state.router.currentParams.donorId,
+  donorId: ownProps.match.params.donorId,
   settings: state.settings.data
 });
 
 const mapDispatchToProps = dispatch => ({
   loadDonor: (id, admin) => dispatch(loadDonor(id, admin)),
-  deleteDonor: id => dispatch(deleteDonor(id)),
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  deleteDonor: id => dispatch(deleteDonor(id))
 });
 
 class DonorView extends Component {
@@ -59,7 +56,7 @@ class DonorView extends Component {
 
     // Tried to save donor
     if (!savingDonors && this.props.savingDonors) {
-      this.setState({error: savingDonorError})
+      this.setState({error: saveDonorsError})
     }
 
     // Tried to load donor
@@ -98,7 +95,6 @@ class DonorView extends Component {
   render() {
     const {donorModel, donationModel, error} = this.state
     if (!donorModel) return null
-    console.log('donorModel.donations', donorModel.donations)
     return (
       <Page heading={donorModel.fullName}>
         <div className="row">
@@ -108,7 +104,7 @@ class DonorView extends Component {
                 <h3 className="box-title">Donations</h3>
                 <div className="box-tools">
                   <button
-                    className="btn btn-success btn-flat"
+                    className="btn btn-success btn-flat btn-xs"
                     onClick={this.toggleNewDonationModal}
                   >
                     <i className="fa fa-plus"></i> Add Donation
@@ -136,16 +132,16 @@ class DonorView extends Component {
                         <td><span>{donation.type}</span></td>
                         <td><span>{donation._id}</span></td>
                         <td>
-                          <a
+                          <button
                             className="btn btn-info btn-flat btn-xs"
                             onClick={this.toggleViewDonationModal(donation)}
-                          ><i className="fa fa-eye"></i> View</a>
+                          ><i className="fa fa-eye"></i> View</button>
                         </td>
                       </tr>
                     )}
                     {!donorModel.donations.length &&
                       <tr>
-                        <td className="text-center" colspan="5">This donor hasn't made any donations yet.</td>
+                        <td className="text-center" colSpan="5">This donor hasn't made any donations yet.</td>
                       </tr>
                     }
                   </tbody>

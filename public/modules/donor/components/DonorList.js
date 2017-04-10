@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
+import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
@@ -18,8 +18,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadDonors: () => dispatch(loadDonors()),
-  deleteDonor: donor => dispatch(deleteDonor(donor.id)),
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  deleteDonor: donor => dispatch(deleteDonor(donor.id))
 });
 
 class DonorList extends Component {
@@ -67,18 +66,18 @@ class DonorList extends Component {
                         <td><span>{donor.telephoneNumber}</span></td>
                         <td><span>{donor.email}</span></td>
                         <td>
-                          <a
-                            href={`/#!/admin/donors/${donor.id}`}
+                          <Link
+                            to={`/donors/${donor.id}`}
                             className="btn btn-info btn-flat btn-xs"
-                          ><i className="fa fa-eye"></i> View</a>
-                          <a
-                            href={`/#!/admin/donors/${donor.id}/edit`}
+                          ><i className="fa fa-eye"></i> View</Link>
+                          <Link
+                            to={`/donors/${donor.id}/edit`}
                             className="btn btn-primary btn-flat btn-xs"
-                          ><i className="fa fa-pencil"></i> Edit</a>
-                          <a
-                            onClick={this.deleteDonor(donor)}
+                          ><i className="fa fa-pencil"></i> Edit</Link>
+                          <button
                             className="btn btn-danger btn-flat btn-xs"
-                          ><i className="fa fa-trash-o"></i> Delete</a>
+                            onClick={this.deleteDonor(donor)}
+                          ><i className="fa fa-trash-o"></i> Delete</button>
                         </td>
                       </tr>
                     )}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router'
 import set from 'lodash/set'
+import {Link} from 'react-router-dom'
 
 import {Form} from '../../common/services/form'
 import {selectors} from '../../../store';
@@ -30,8 +30,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadFoods());
     dispatch(loadFields());
     dispatch(loadSections());
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 });
 
 class DonorCreate extends Component {
@@ -128,7 +127,7 @@ class DonorCreate extends Component {
                     <button type="submit" className="btn btn-success btn-block top-buffer">Submit</button>
                   </div>
                   <div className="col-sm-6 col-md-4 col-lg-2">
-                    <a className="btn btn-primary btn-block top-buffer" href="/#!/">Cancel</a>
+                    <Link className="btn btn-primary btn-block top-buffer" to="/">Cancel</Link>
                   </div>
                 </div>
                 {error &&

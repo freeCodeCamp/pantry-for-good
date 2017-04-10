@@ -7,7 +7,8 @@ import Header from './modules/core/components/Header'
 import Footer from './modules/core/components/Footer'
 import Home from './modules/core/components/Home'
 
-import Customers from './modules/customer/components/Customers'
+import Customers from './modules/customer/CustomerRoutes'
+import Donors from './modules/donor/DonorRoutes'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -17,6 +18,7 @@ const Router = ({history}) =>
       <div className="content-wrapper">
         <Route exact path="/" component={Home} />
         <Route path="/customers" component={Customers} />
+        <Route path="/donors" component={Donors} />
       </div>
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Modal, Table} from 'react-bootstrap'
+import {Modal} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
 import {saveDonation} from '../../../store/donation';
