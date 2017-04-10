@@ -107,9 +107,9 @@ function formatRequestBody(body, method, schema) {
     }
 
     // angular.toJson omits angular specific attributes
-    return angular.toJson(entity)
+    return JSON.stringify(entity)
   } else {
-    return angular.toJson(body)
+    return JSON.stringify(body)
   }
 }
 
