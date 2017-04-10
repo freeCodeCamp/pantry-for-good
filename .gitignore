@@ -5,7 +5,6 @@ heroku_5svv90mx
 npm-debug.log
 node_modules/
 .vscode
-public/lib
 public/dist
 public/media
 app/tests/coverage/
