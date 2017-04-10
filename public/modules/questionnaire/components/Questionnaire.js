@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router';
 import get from 'lodash/get'
 
 import {selectors} from '../../../store';
@@ -23,8 +22,7 @@ const mapDispatchToProps = dispatch => ({
   loadFormData: () => {
     dispatch(loadFields());
     dispatch(loadSections());
-  },
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  }
 });
 
 class Questionnaire extends Component {

@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {stateGo} from 'redux-ui-router'
 
 import { signUp } from 'store/auth'
 
@@ -106,14 +105,13 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    auth: state.auth,
+    auth: state.auth
 })
 
 const mapDispatchToProps = (dispatch) => ({
     signUp: (user) => {
         dispatch(signUp(user))
-    },
-    push: route => dispatch(stateGo(route))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

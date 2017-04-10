@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {stateGo} from 'redux-ui-router'
 
 import { signIn } from 'store/auth'
 
@@ -83,14 +82,13 @@ class SignIn extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    auth: state.auth,
+    auth: state.auth
 })
 
 const mapDispatchToProps = (dispatch) => ({
     signIn: (username, password) => {
         dispatch(signIn({ username, password }))
-    },
-    push: route => dispatch(stateGo(route))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn)

@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { stateGo } from 'redux-ui-router'
 
 import { forgotPassword } from 'store/auth'
 
@@ -59,12 +58,11 @@ class ForgotPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth,
+    auth: state.auth
 })
 
 const mapDispatchToProps = dispatch => ({
-    resetPassword: username => dispatch(forgotPassword({ username })),
-    push: route => dispatch(stateGo(route))
+    resetPassword: username => dispatch(forgotPassword({ username }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword)

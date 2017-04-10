@@ -1,6 +1,5 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
 import {normalize} from 'normalizr';
-import angular from 'angular';
 
 const API_ROOT = 'http://localhost:8080/api/';
 

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {stateGo} from 'redux-ui-router';
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store';
@@ -19,8 +18,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadFoods: () => dispatch(loadFoods()),
-  saveFood: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
-	push: (route, params, options) => dispatch(stateGo(route, params, options))
+  saveFood: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem))
 });
 
 class Schedule extends Component {

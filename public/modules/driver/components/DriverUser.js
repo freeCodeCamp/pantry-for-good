@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 import {utc} from 'moment';
 import 'moment-recur';
-import {stateGo} from 'redux-ui-router';
 
 import {selectors} from '../../../store';
 import {locateAddress, locateUser, stopLocateUser} from 'store/location';
@@ -35,8 +34,7 @@ const mapDispatchToProps = dispatch => ({
 	locateAddress: address => dispatch(locateAddress(address)),
 	locateUser: () => dispatch(locateUser()),
 	stopLocateUser: () => dispatch(stopLocateUser()),
-	deliver: customerIds => dispatch(deliver(customerIds)),
-	push: (route, params, options) => dispatch(stateGo(route, params, options))
+	deliver: customerIds => dispatch(deliver(customerIds))
 });
 
 class DriverUser extends Component {
