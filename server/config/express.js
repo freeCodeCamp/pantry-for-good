@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser'
 import compress from 'compression'
-import consolidate from 'consolidate'
 import cookieParser from 'cookie-parser'
 import express from 'express'
 import flash from 'connect-flash'
@@ -19,6 +18,10 @@ import config from './config'
 import getErrorMessage from '../lib/error-messages'
 import '../models'
 import seed from '../lib/seed'
+
+// set api delay and failure probablility for testing
+const API_DELAY = 0
+const API_FAILURE_RATE = 0
 
 const mongoStore = connectMongo({session})
 
@@ -89,7 +92,7 @@ module.exports = function() {
   app.disable('x-powered-by')
 
   // Use api routes
-  app.use('/api', apiRoutes())
+  app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
   // Setting the app router and static folder
   if (process.env.NODE_ENV === 'production') {
