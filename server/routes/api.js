@@ -16,7 +16,8 @@ const adminRole = ['admin']
 
 var apiRouter = express.Router()
 
-export default () => apiRouter
+export default delay => apiRouter
+  .use(loadingSimulator(delay))
   .all('/admin/*', users.hasAuthorization(adminRole))
   .use(customerRoutes())
   .use(donationRoutes)
@@ -28,3 +29,9 @@ export default () => apiRouter
   .use(settingsRoutes)
   .use(usersRoutes())
   .use(volunteerRoutes())
+
+function loadingSimulator(time = 0) {
+  return (req, res, next) => {
+    setTimeout(next, time)
+  }
+}

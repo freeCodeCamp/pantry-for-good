@@ -79,19 +79,22 @@ module.exports = {
     })
   ],
   devServer: {
-		hot: true,
-		stats: {
-			colors: true,
-			chunks: false
-		},
-		proxy: {
-			'/api/*': 'http://localhost:3000'
-		},
-		contentBase: '/dist',
+    hot: true,
+    stats: {
+      colors: true,
+      chunks: false
+    },
+    proxy: {
+      '/api/*': {
+        target: 'http://localhost:3000',
+        proxyTimeout: 3000
+      }
+    },
+    contentBase: '/dist',
     port: 8080,
     historyApiFallback: {
       index: 'http://localhost:8080/'
     }
-	},
+  },
   devtool: 'eval'
 };
