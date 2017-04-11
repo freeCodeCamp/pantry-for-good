@@ -2,11 +2,18 @@ import React from 'react'
 
 import Error from './Error'
 
-const PageBody = ({children, error, errorTop, errorBottom}) => {
+const Errorable = ({
+  children,
+  error,
+  errorTop,
+  errorBottom,
+  ...props
+}) => {
   // if error position not specified, render top and bottom
   const errorPos = errorTop || errorBottom
+
   return (
-    <section className="content">
+    <div {...props}>
       {errorTop || !errorPos &&
         <Error error={error} />
       }
@@ -14,8 +21,8 @@ const PageBody = ({children, error, errorTop, errorBottom}) => {
       {errorBottom || !errorPos &&
         <Error error={error} />
       }
-    </section>
+    </div>
   )
 }
 
-export default PageBody
+export default Errorable

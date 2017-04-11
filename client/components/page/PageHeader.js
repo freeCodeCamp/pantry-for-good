@@ -1,6 +1,6 @@
 import React from 'react'
 
-import FoodbankLogo from './FoodbankLogo'
+import FoodbankLogo from '../FoodbankLogo'
 
 const PageHeader = ({heading, showLogo, center}) =>
   <section className={`content-header ${center ? 'text-center' : ''}`}>

@@ -6,7 +6,7 @@ import {Table} from 'react-bootstrap'
 import {selectors} from '../../../store'
 import {saveField, deleteField} from '../field-reducer'
 
-import Loadable from '../../../components/Loadable'
+import {Box, BoxBody, BoxHeader, BoxTools} from '../../../components/box'
 
 const mapStateToProps = state => ({
   error: selectors.loadFormDataError(state) || selectors.saveFieldError(state),
@@ -35,167 +35,150 @@ const FieldEditor = ({
   const fields = sortBy(formData.fields, ['section', 'row', 'column'])
   const sections = sortBy(formData.sections, ['questionnaire', 'position'])
   return (
-    <div className="row">
-      <div className="col-xs-12">
-        <div className="box">
-          <div className="box-header">
-            <h3 className="box-title">Fields</h3>
-            <div className="box-tools">
-              <div className="form-group has-feedback">
-                <input className="form-control" type="search" placeholder="Search" />
-                <span className="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-            </div>
-            {error &&
-              <div className="text-danger">
-                <strong>{error}</strong>
-              </div>
-            }
-          </div>
-          <Loadable
-            loading={loading}
-            className="box-body table-responsive no-padding top-buffer"
-          >
-            <form name="fieldForm" onSubmit={editing ? noop : onSave(model)}>
-              <Table responsive striped>
-                <thead>
-                  <tr>
-                    <th>Label</th>
-                    <th>Name</th>
-                    <th>Section</th>
-                    <th>Type</th>
-                    <th>Choices</th>
-                    <th>Row</th>
-                    <th>Column</th>
-                    <th>Span</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <textarea
-                        className="form-control"
-                        value={editing || !model ? '' : model.label}
-                        onChange={onFieldChange('label')}
-                        placeholder="Field Label"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="text"
-                        value={editing || !model ? '' : model.name}
-                        onChange={onFieldChange('name')}
-                        placeholder="Field Name"
-                      />
-                    </td>
-                    <td>
-                      <select
-                        className="form-control"
-                        value={editing || !model ? '' : model.section}
-                        onChange={onFieldChange('section')}
-                        required
-                      >
-                        <option value="">Select Section</option>
-                        {sections && sections.map(section =>
-                          <option key={section._id} value={section._id}>
-                            {section.name}
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td>
-                      <select
-                        className="form-control"
-                        value={editing || !model ? '' : model.type}
-                        onChange={onFieldChange('type')}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="Text">Text</option>
-                        <option value="Textarea">Textarea</option>
-                        <option value="Date">Date</option>
-                        <option value="Radio Buttons">Radio Buttons</option>
-                        <option value="Checkboxes">Checkboxes</option>
-                        <option value="Lookup">Lookup</option>
-                        <option value="Table">Table</option>
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="text"
-                        value={editing || !model ? '' : model.choices}
-                        onChange={onFieldChange('choices')}
-                        placeholder="Choices"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="number" min="1" max="20"
-                        value={editing || !model ? '' : model.row}
-                        onChange={onFieldChange('row')}
-                        placeholder="Row"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="number" min="1" max="4"
-                        value={editing || !model ? '' : model.column}
-                        onChange={onFieldChange('column')}
-                        placeholder="Column"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="number" min="1" max="4"
-                        value={editing || !model ? '' : model.span}
-                        onChange={onFieldChange('span')}
-                        placeholder="Span"
-                      />
-                    </td>
-                    <td>
-                      <button className="btn btn-success btn-flat" type="submit">
-                        <i className="fa fa-plus"></i> Add Item
-                      </button>
-                    </td>
-                  </tr>
+    <Box>
+      <BoxHeader heading="Fields">
+        <BoxTools icon="search">
+            <input
+              className="form-control"
+              type="search"
+              placeholder="Search"
+            />
+        </BoxTools>
+      </BoxHeader>
+      <BoxBody loading={loading} error={error}>
+        <form name="fieldForm" onSubmit={editing ? noop : onSave(model)}>
+          <Table responsive striped>
+            <thead>
+              <tr>
+                <th>Label</th>
+                <th>Name</th>
+                <th>Section</th>
+                <th>Type</th>
+                <th>Choices</th>
+                <th>Row</th>
+                <th>Column</th>
+                <th>Span</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <textarea
+                    className="form-control"
+                    value={editing || !model ? '' : model.label}
+                    onChange={onFieldChange('label')}
+                    placeholder="Field Label"
+                  />
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={editing || !model ? '' : model.name}
+                    onChange={onFieldChange('name')}
+                    placeholder="Field Name"
+                  />
+                </td>
+                <td>
+                  <select
+                    className="form-control"
+                    value={editing || !model ? '' : model.section}
+                    onChange={onFieldChange('section')}
+                    required
+                  >
+                    <option value="">Select Section</option>
+                    {sections && sections.map(section =>
+                      <option key={section._id} value={section._id}>
+                        {section.name}
+                      </option>
+                    )}
+                  </select>
+                </td>
+                <td>
+                  <select
+                    className="form-control"
+                    value={editing || !model ? '' : model.type}
+                    onChange={onFieldChange('type')}
+                  >
+                    <option value="">Select Type</option>
+                    <option value="Text">Text</option>
+                    <option value="Textarea">Textarea</option>
+                    <option value="Date">Date</option>
+                    <option value="Radio Buttons">Radio Buttons</option>
+                    <option value="Checkboxes">Checkboxes</option>
+                    <option value="Lookup">Lookup</option>
+                    <option value="Table">Table</option>
+                  </select>
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={editing || !model ? '' : model.choices}
+                    onChange={onFieldChange('choices')}
+                    placeholder="Choices"
+                  />
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="number" min="1" max="20"
+                    value={editing || !model ? '' : model.row}
+                    onChange={onFieldChange('row')}
+                    placeholder="Row"
+                  />
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="number" min="1" max="4"
+                    value={editing || !model ? '' : model.column}
+                    onChange={onFieldChange('column')}
+                    placeholder="Column"
+                  />
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="number" min="1" max="4"
+                    value={editing || !model ? '' : model.span}
+                    onChange={onFieldChange('span')}
+                    placeholder="Span"
+                  />
+                </td>
+                <td>
+                  <button className="btn btn-success btn-flat" type="submit">
+                    <i className="fa fa-plus"></i> Add Item
+                  </button>
+                </td>
+              </tr>
 
-                  {fields && fields.map((field, i) =>
-                    <FieldRow
-                      key={i}
-                      editing={editing}
-                      field={field}
-                      sections={sections}
-                      questionnaires={questionnaires}
-                      model={model}
-                      onFieldChange={onFieldChange}
-                      onSave={onSave}
-                      onDelete={onDelete}
-                      onShowEdit={onShowEdit}
-                    />
-                  )}
+              {fields && fields.map((field, i) =>
+                <FieldRow
+                  key={i}
+                  editing={editing}
+                  field={field}
+                  sections={sections}
+                  questionnaires={questionnaires}
+                  model={model}
+                  onFieldChange={onFieldChange}
+                  onSave={onSave}
+                  onDelete={onDelete}
+                  onShowEdit={onShowEdit}
+                />
+              )}
 
-                  {!fields || !fields.length &&
-                    <tr>
-                      <td className="text-center" colSpan="7">No fields yet.</td>
-                    </tr>
-                  }
-                </tbody>
-              </Table>
-            </form>
-          </Loadable>
-          {/*{loading &&
-            <div className="overlay">
-              <i className="fa fa-refresh fa-spin"></i>
-            </div>
-          }*/}
-        </div>
-      </div>
-    </div>
+              {!fields || !fields.length &&
+                <tr>
+                  <td className="text-center" colSpan="7">No fields yet.</td>
+                </tr>
+              }
+            </tbody>
+          </Table>
+        </form>
+      </BoxBody>
+    </Box>
   )
 }
 
@@ -235,12 +218,6 @@ function FieldRow({
           {/*disabled="field.logicReq">*/}
       </td>
       <td>
-        {/*<select
-          className="form-control"
-                ng-options="section._id as section.name for section in $ctrl.formDataModel.sections"
-                data-ng-model="field.section._id">
-
-        </select>*/}
         <select
           className="form-control"
           value={model.section}
@@ -296,7 +273,7 @@ function FieldRow({
       <td>
         <input
           className="form-control"
-          type="number" min="1" max="4" value="1"
+          type="number" min="1" max="4"
           value={model.span}
           onChange={onFieldChange('span')}
         />

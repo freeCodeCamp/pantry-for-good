@@ -1,7 +1,7 @@
 import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 
-import Box from '../../../components/Box'
+import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import FieldGroup from '../../../components/FieldGroup'
 
 const heading =
@@ -15,65 +15,65 @@ const heading =
   </div>
 
 const VolunteerWaiver = ({settings, model, onFieldChange, isMinor}) =>
-  <Box
-    type="primary"
-    heading={heading}
-  >
-    <span>{settings.mission}</span>
-    <ol>
-      {getSections(settings).map((section, i) =>
-        <li key={i}>{section}</li>
-      )}
-      <p>
-        <strong>
-          {`I HAVE READ THIS WAIVER AND RELEASE OF LIABILITY, FULLY UNDERSTAND ITS TERMS, UNDERSTAND THAT I HAVE ASSUMED SIGNIFICANT RISKS AND GIVEN UP SUBSTANTIAL RIGHTS BY SIGNING IT, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.`}
-        </strong>
-      </p>
-      <Row>
-        <Col xs={4} md={6} lg={4}>
-          <FieldGroup
-            id="disclaimerAgree"
-            label="I agree"
-            type="checkbox"
-            value={model.disclaimerAgree}
-            onChange={onFieldChange('disclaimerAgree')}
-            required
-          />
-        </Col>
-        <Col xs={8} md={6} lg={4}>
-          <FieldGroup
-            id="disclaimerSign"
-            label="Sign here"
-            disabled={!model.disclaimerAgree}
-            value={model.disclaimerSign}
-            onChange={onFieldChange('disclaimerSign')}
-            placeholder="Sign here"
-            required
-          />
-        </Col>
-      </Row>
-      {isMinor &&
+  <Box solid>
+    <BoxHeader heading={heading} />
+    <BoxBody>
+      <span>{settings.mission}</span>
+      <ol>
+        {getSections(settings).map((section, i) =>
+          <li key={i}>{section}</li>
+        )}
+        <p>
+          <strong>
+            {`I HAVE READ THIS WAIVER AND RELEASE OF LIABILITY, FULLY UNDERSTAND ITS TERMS, UNDERSTAND THAT I HAVE ASSUMED SIGNIFICANT RISKS AND GIVEN UP SUBSTANTIAL RIGHTS BY SIGNING IT, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.`}
+          </strong>
+        </p>
         <Row>
-          <Col md={6} lg={4}>
+          <Col xs={4} md={6} lg={4}>
             <FieldGroup
-              id="disclaimerSignGuardian"
-              label="Parent/Guardian Signature"
-              value={model.disclaimerSignGuardian}
-              onChange={onFieldChange('disclaimerSignGuardian')}
+              id="disclaimerAgree"
+              label="I agree"
+              type="checkbox"
+              value={model.disclaimerAgree}
+              onChange={onFieldChange('disclaimerAgree')}
+              required
             />
           </Col>
-          <Col md={6} lg={4}>
+          <Col xs={8} md={6} lg={4}>
             <FieldGroup
-              id="disclaimerGuardianEmail"
-              label="Parent/Guardian Email"
-              type="email"
-              value={model.disclaimerGuardianEmail}
-              onChange={onFieldChange('disclaimerGuardianEmail')}
+              id="disclaimerSign"
+              label="Sign here"
+              disabled={!model.disclaimerAgree}
+              value={model.disclaimerSign}
+              onChange={onFieldChange('disclaimerSign')}
+              placeholder="Sign here"
+              required
             />
           </Col>
         </Row>
-      }
-    </ol>
+        {isMinor &&
+          <Row>
+            <Col md={6} lg={4}>
+              <FieldGroup
+                id="disclaimerSignGuardian"
+                label="Parent/Guardian Signature"
+                value={model.disclaimerSignGuardian}
+                onChange={onFieldChange('disclaimerSignGuardian')}
+              />
+            </Col>
+            <Col md={6} lg={4}>
+              <FieldGroup
+                id="disclaimerGuardianEmail"
+                label="Parent/Guardian Email"
+                type="email"
+                value={model.disclaimerGuardianEmail}
+                onChange={onFieldChange('disclaimerGuardianEmail')}
+              />
+            </Col>
+          </Row>
+        }
+      </ol>
+    </BoxBody>
   </Box>
 
 export default VolunteerWaiver

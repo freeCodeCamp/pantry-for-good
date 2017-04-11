@@ -7,7 +7,7 @@ import {selectors} from '../../../store'
 import {loadCustomers, assignCustomers} from '../../customer/customer-reducer'
 import {loadVolunteers} from '../../volunteer/volunteer-reducer'
 
-import Page from '../../../components/PageBody'
+import Page from '../../../components/page/PageBody'
 
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),

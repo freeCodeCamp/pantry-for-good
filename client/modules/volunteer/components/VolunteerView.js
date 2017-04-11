@@ -11,8 +11,7 @@ import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
 import DynamicView from '../../../components/DynamicView'
-import PageBody from '../../../components/PageBody'
-import PageHeader from '../../../components/PageHeader'
+import {Page, PageBody, PageHeader} from '../../../components/page'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
@@ -115,7 +114,7 @@ class VolunteerView extends Component {
     const {volunteerModel, volunteerView, error} = this.state
     if (!volunteerModel || !volunteerView) return null
     return (
-      <div>
+      <Page>
         <PageHeader heading={volunteerModel.fullName} />
         <PageBody error={error}>
           <Row>
@@ -182,7 +181,7 @@ class VolunteerView extends Component {
             </Col>
           </Row>
         </PageBody>
-      </div>
+      </Page>
     )
   }
 }

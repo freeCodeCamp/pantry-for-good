@@ -6,6 +6,8 @@ import sortBy from 'lodash/sortBy'
 import {selectors} from '../../../store'
 import {saveSection, deleteSection} from '../section-reducer'
 
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
+
 const mapStateToProps = state => ({
   error: selectors.loadFormDataError(state) || selectors.saveSectionError(state),
   loading: selectors.loadingFormData(state),
@@ -32,103 +34,86 @@ const SectionEditor = ({
 }) => {
   const sections = sortBy(formData.sections, ['questionnaire', 'position'])
   return (
-    <div className="row">
-      <div className="col-xs-12">
-        <div className="box">
-          <div className="box-header">
-            <h3 className="box-title">Sections</h3>
-            <div className="box-tools">
-            </div>
-            {error &&
-              <div className="text-danger">
-                <strong>{error}</strong>
-              </div>
-            }
-          </div>
-          <div className="box-body table-responsive no-padding top-buffer">
-            <form name="sectionForm" onSubmit={editing ? noop : onSave(model)}>
-              <Table responsive striped>
-                <thead>
-                  <tr>
-                    <th>Section Name</th>
-                    <th>Questionnaire</th>
-                    <th>Position</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="text"
-                        value={editing || !model ? '' : model.name}
-                        onChange={onFieldChange('name')}
-                        placeholder="Section Name"
-                        disabled={editing}
-                      />
-                    </td>
-                    <td>
-                      <select
-                        className="form-control"
-                        value={editing || !model ? '' : model.questionnaire}
-                        onChange={onFieldChange('questionnaire')}
-                        disabled={editing}
-                        required
-                      >
-                        <option value="">Select Questionnaire</option>
-                        {questionnaires.map(questionnaire =>
-                          <option key={questionnaire._id} value={questionnaire._id}>
-                            {questionnaire.name}
-                          </option>
-                        )}
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        className="form-control"
-                        type="text"
-                        value={editing || !model ? '' : model.position}
-                        onChange={onFieldChange('position')}
-                        placeholder="Position"
-                      />
-                    </td>
-                    <td>
-                      <button className="btn btn-success btn-flat" type="submit">
-                        <i className="fa fa-plus"></i> Add Item
-                      </button>
-                    </td>
-                  </tr>
-                  {sections && sections.map((section, i) =>
-                    <SectionRow
-                      key={i}
-                      editing={editing}
-                      section={section}
-                      questionnaires={questionnaires}
-                      model={model}
-                      onFieldChange={onFieldChange}
-                      onSave={onSave}
-                      onDelete={onDelete}
-                      onShowEdit={onShowEdit}
-                    />
-                  )}
-                  {!sections || !sections.length &&
-                    <tr>
-                      <td className="text-center" colSpan="4">No sections yet.</td>
-                    </tr>
-                  }
-                </tbody>
-              </Table>
-            </form>
-          </div>
-          {loading &&
-            <div className="overlay">
-              <i className="fa fa-refresh fa-spin"></i>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
+    <Box>
+      <BoxHeader heading="Sections" />
+
+      <BoxBody loading={loading} error={error}>
+        <form name="sectionForm" onSubmit={editing ? noop : onSave(model)}>
+          <Table responsive striped>
+            <thead>
+              <tr>
+                <th>Section Name</th>
+                <th>Questionnaire</th>
+                <th>Position</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={editing || !model ? '' : model.name}
+                    onChange={onFieldChange('name')}
+                    placeholder="Section Name"
+                    disabled={editing}
+                  />
+                </td>
+                <td>
+                  <select
+                    className="form-control"
+                    value={editing || !model ? '' : model.questionnaire}
+                    onChange={onFieldChange('questionnaire')}
+                    disabled={editing}
+                    required
+                  >
+                    <option value="">Select Questionnaire</option>
+                    {questionnaires.map(questionnaire =>
+                      <option key={questionnaire._id} value={questionnaire._id}>
+                        {questionnaire.name}
+                      </option>
+                    )}
+                  </select>
+                </td>
+                <td>
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={editing || !model ? '' : model.position}
+                    onChange={onFieldChange('position')}
+                    placeholder="Position"
+                  />
+                </td>
+                <td>
+                  <button className="btn btn-success btn-flat" type="submit">
+                    <i className="fa fa-plus"></i> Add Item
+                  </button>
+                </td>
+              </tr>
+              {sections && sections.map((section, i) =>
+                <SectionRow
+                  key={i}
+                  editing={editing}
+                  section={section}
+                  questionnaires={questionnaires}
+                  model={model}
+                  onFieldChange={onFieldChange}
+                  onSave={onSave}
+                  onDelete={onDelete}
+                  onShowEdit={onShowEdit}
+                />
+              )}
+              {!sections || !sections.length &&
+                <tr>
+                  <td className="text-center" colSpan="4">No sections yet.</td>
+                </tr>
+              }
+            </tbody>
+          </Table>
+        </form>
+      </BoxBody>
+    </Box>
   )
 }
 

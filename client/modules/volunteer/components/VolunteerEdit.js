@@ -11,8 +11,7 @@ import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
-import PageBody from '../../../components/PageBody'
-import PageHeader from '../../../components/PageHeader'
+import {Page, PageBody, PageHeader} from '../../../components/page'
 import DynamicForm from '../../../components/DynamicForm'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -113,7 +112,7 @@ class VolunteerEdit extends Component {
     const {volunteerForm, volunteerModel, error} = this.state
     if (!volunteerModel || !volunteerForm) return null
     return (
-      <div>
+      <Page>
         <PageHeader
           heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}
         />
@@ -142,7 +141,7 @@ class VolunteerEdit extends Component {
             </Col>
           </Row>
         </PageBody>
-      </div>
+      </Page>
     )
   }
 }

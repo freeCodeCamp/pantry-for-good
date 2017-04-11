@@ -14,8 +14,7 @@ import {loadSections} from '../../questionnaire/section-reducer'
 
 import AssistanceInfo from '../../../components/AssistanceInfo'
 import DynamicForm from '../../../components/DynamicForm'
-import PageBody from '../../../components/PageBody'
-import PageHeader from '../../../components/PageHeader'
+import {Page, PageBody, PageHeader} from '../../../components/page'
 import VolunteerWaiver from './VolunteerWaiver'
 
 const mapStateToProps = state => ({
@@ -108,7 +107,7 @@ class VolunteerCreate extends Component {
     const {settings} = this.props
     if (!settings || !volunteerForm) return null
     return (
-      <div>
+      <Page>
         <PageHeader
           showLogo
           center
@@ -145,7 +144,7 @@ class VolunteerCreate extends Component {
             </Col>
           </Row>
         </PageBody>
-      </div>
+      </Page>
     )
   }
 }

@@ -11,7 +11,7 @@ import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
 import DynamicView from '../../../components/DynamicView'
-import Page from '../../../components/PageBody'
+import Page from '../../../components/page/PageBody'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
