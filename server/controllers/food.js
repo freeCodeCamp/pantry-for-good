@@ -100,10 +100,15 @@ export default {
     const savedFood = await Food.findByIdAndUpdate(
       id,
       {$pull: {items: {_id: req.itemId}}},
-      {new: true}
-    )
+    ).lean()
 
-    res.json(savedFood)
+    const deletedItem = savedFood.items.filter(item =>
+      item._id.toString() === req.itemId)
+
+    res.json({
+      ...savedFood,
+      items: deletedItem
+    })
   },
 
   /**
