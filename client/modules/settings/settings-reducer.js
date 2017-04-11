@@ -25,29 +25,29 @@ export const saveSettings = settings => ({
 
 export default (state = {}, action) => {
   switch (action.type) {
-  case LOAD_REQUEST:
-  case SAVE_REQUEST:
-    return {
-      ...state,
-      fetching: true,
-      error: null,
-      success: null
-    }
-  case LOAD_SUCCESS:
-  case SAVE_SUCCESS:
-    return {
-      ...state,
-      data: action.response,
-      fetching: false,
-      success: true
-    }
-  case LOAD_FAILURE:
-  case SAVE_FAILURE:
-    return {
-      ...state,
-      fetching: false,
-      error: action.error
-    }
-  default: return state
+    case LOAD_REQUEST:
+    case SAVE_REQUEST:
+      return {
+        ...state,
+        fetching: true,
+        error: null,
+        success: null
+      }
+    case LOAD_SUCCESS:
+    case SAVE_SUCCESS:
+      return {
+        ...state,
+        data: action.response,
+        fetching: false,
+        success: true
+      }
+    case LOAD_FAILURE:
+    case SAVE_FAILURE:
+      return {
+        ...state,
+        fetching: false,
+        error: action.error
+      }
+    default: return state
   }
 }

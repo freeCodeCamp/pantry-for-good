@@ -55,7 +55,7 @@ export const sendReceipt = (donation, donorId) =>
   dispatch => {
     dispatch(receiptDonationRequest())
     callApi(`admin/donations/${donorId}`, 'PUT', donation)
-      .then(res => dispatch(receiptDonationSuccess()))
+      .then(() => dispatch(receiptDonationSuccess()))
       .catch(err => dispatch(receiptDonationFailure(err)))
   }
 
@@ -63,32 +63,32 @@ export default (state = {
   ids: []
 }, action) => {
   switch (action.type) {
-  case SAVE_DONATION_REQUEST:
-  case RECEIPT_DONATION_REQUEST:
-    return {
-      ...state,
-      saving: true,
-      saveError: null
-    }
-  case SAVE_DONATION_SUCCESS:
-    return {
-      ...state,
-      saving: false,
-      ids: union([action.response.result], state.ids)
-    }
-  case RECEIPT_DONATION_SUCCESS:
-    return {
-      ...state,
-      saving: false,
-    }
-  case SAVE_DONATION_FAILURE:
-  case RECEIPT_DONATION_FAILURE:
-    return {
-      ...state,
-      saving: false,
-      saveError: action.error
-    }
-  default: return state
+    case SAVE_DONATION_REQUEST:
+    case RECEIPT_DONATION_REQUEST:
+      return {
+        ...state,
+        saving: true,
+        saveError: null
+      }
+    case SAVE_DONATION_SUCCESS:
+      return {
+        ...state,
+        saving: false,
+        ids: union([action.response.result], state.ids)
+      }
+    case RECEIPT_DONATION_SUCCESS:
+      return {
+        ...state,
+        saving: false,
+      }
+    case SAVE_DONATION_FAILURE:
+    case RECEIPT_DONATION_FAILURE:
+      return {
+        ...state,
+        saving: false,
+        saveError: action.error
+      }
+    default: return state
   }
 }
 

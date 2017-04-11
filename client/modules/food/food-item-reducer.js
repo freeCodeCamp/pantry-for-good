@@ -40,44 +40,45 @@ export default (state = {
   ids: []
 }, action) => {
   switch (action.type) {
-  case actions.SAVE_REQUEST:
-  case actions.DELETE_REQUEST:
-    return {
-      ...state,
-      saving: true,
-      saveError: null
-    }
-  case actions.SAVE_SUCCESS:
-  case actions.DELETE_SUCCESS:
+    case actions.SAVE_REQUEST:
+    case actions.DELETE_REQUEST:
+      return {
+        ...state,
+        saving: true,
+        saveError: null
+      }
+    case actions.SAVE_SUCCESS:
+    case actions.DELETE_SUCCESS: {
       // save (and delete?) returns the whole updated food category
-    const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
-    return {
-      ...state,
-      ids: action.type === actions.DELETE_SUCCESS ?
+      const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
+      return {
+        ...state,
+        ids: action.type === actions.DELETE_SUCCESS ?
                               result :
                               union(result, state.ids),
-      saving: false
+        saving: false
+      }
     }
-  case foodCategoryActions.SAVE_SUCCESS:
-    return {
-      ...state,
-      ids: action.response.entities.foodItems ?
+    case foodCategoryActions.SAVE_SUCCESS:
+      return {
+        ...state,
+        ids: action.response.entities.foodItems ?
               Object.keys(action.response.entities.foodItems) : []
-    }
-  case foodCategoryActions.LOAD_ALL_SUCCESS:
-    return {
-      ...state,
-      ids: action.response.entities.foodItems ?
+      }
+    case foodCategoryActions.LOAD_ALL_SUCCESS:
+      return {
+        ...state,
+        ids: action.response.entities.foodItems ?
               Object.keys(action.response.entities.foodItems) : []
-    }
-  case actions.SAVE_FAILURE:
-  case actions.DELETE_FAILURE:
-    return {
-      ...state,
-      saving: false,
-      saveError: action.error
-    }
-  default: return state
+      }
+    case actions.SAVE_FAILURE:
+    case actions.DELETE_FAILURE:
+      return {
+        ...state,
+        saving: false,
+        saveError: action.error
+      }
+    default: return state
   }
 }
 

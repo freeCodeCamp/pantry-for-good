@@ -66,43 +66,43 @@ export const stopLocateUser = () => navigator.geolocation.clearWatch(watch)
 
 export default (state = {}, action) => {
   switch (action.type) {
-  case LOCATE_ADDRESS_REQUEST:
-    return {
-      ...state,
-      fetchingAddress: true,
-      errorAddress: null
-    }
-  case LOCATE_USER_REQUEST:
-    return {
-      ...state,
-      fetchingUser: true,
-      errorUser: null
-    }
-  case LOCATE_ADDRESS_SUCCESS:
-    return {
-      ...state,
-      fetchingAddress: false,
-      address: action.address
-    }
-  case LOCATE_USER_SUCCESS:
-    return {
-      ...state,
-      fetchingUser: false,
-      user: action.user
-    }
-  case LOCATE_ADDRESS_FAILURE:
-    return {
-      ...state,
-      fetchingAddress: false,
-      errorAddress: action.error
-    }
-  case LOCATE_USER_FAILURE:
-    return {
-      ...state,
-      fetchingUser: false,
-      errorUser: action.error
-    }
-  default: return state
+    case LOCATE_ADDRESS_REQUEST:
+      return {
+        ...state,
+        fetchingAddress: true,
+        errorAddress: null
+      }
+    case LOCATE_USER_REQUEST:
+      return {
+        ...state,
+        fetchingUser: true,
+        errorUser: null
+      }
+    case LOCATE_ADDRESS_SUCCESS:
+      return {
+        ...state,
+        fetchingAddress: false,
+        address: action.address
+      }
+    case LOCATE_USER_SUCCESS:
+      return {
+        ...state,
+        fetchingUser: false,
+        user: action.user
+      }
+    case LOCATE_ADDRESS_FAILURE:
+      return {
+        ...state,
+        fetchingAddress: false,
+        errorAddress: action.error
+      }
+    case LOCATE_USER_FAILURE:
+      return {
+        ...state,
+        fetchingUser: false,
+        errorUser: action.error
+      }
+    default: return state
   }
 }
 
