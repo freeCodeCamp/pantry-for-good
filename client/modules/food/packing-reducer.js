@@ -45,24 +45,24 @@ export const deliver = customerIds => dispatch => {
 
 export default (state = {}, action) => {
   switch (action.type) {
-  case PACK_REQUEST:
-    return {
-      ...state,
-      fetching: true,
-      error: null
-    }
-  case PACK_SUCCESS:
-    return {
-      ...state,
-      fetching: false,
-      error: null
-    }
-  case PACK_FAILURE:
-    return {
-      ...state,
-      fetching: false,
-      error: action.error
-    }
-  default: return state
+    case PACK_REQUEST:
+      return {
+        ...state,
+        fetching: true,
+        error: null
+      }
+    case PACK_SUCCESS:
+      return {
+        ...state,
+        fetching: false,
+        error: null
+      }
+    case PACK_FAILURE:
+      return {
+        ...state,
+        fetching: false,
+        error: action.error
+      }
+    default: return state
   }
 }
