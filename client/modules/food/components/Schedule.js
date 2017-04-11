@@ -6,7 +6,7 @@ import {selectors} from '../../../store'
 import {loadFoods} from '../food-category-reducer'
 import {saveFoodItem} from '../food-item-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/page/PageBody'
 import ItemRow from './schedule/ItemRow'
 
 const mapStateToProps = state => ({

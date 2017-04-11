@@ -6,7 +6,7 @@ import DonorList from './components/DonorList'
 import DonorView from './components/DonorView'
 import DonorEdit from './components/DonorEdit'
 import DonorCreate from './components/DonorCreate'
-import DonorCreateSuccess from './components/DonorCreateSuccess'
+import ClientCreateSuccess from '../../components/ClientCreateSuccess'
 
 import './donor.css'
 
@@ -19,7 +19,7 @@ const DonorRoutes = ({match, user}) =>
     {user && user.roles.find(role => role === 'admin') &&
       <Route path={`${match.url}`} exact component={DonorList} />
     }
-    <Route path={`${match.url}/create/success`} component={DonorCreateSuccess} />
+    <Route path={`${match.url}/create/success`} component={ClientCreateSuccess} />
     <Route path={`${match.url}/create`} component={DonorCreate} />
     <Route path={`${match.url}/:donorId/edit`} component={DonorEdit} />
     <Route path={`${match.url}/:donorId`} component={DonorView} />

@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
-import FoodbankLogo from '../../../components/FoodbankLogo'
+import FoodbankLogo from './FoodbankLogo'
 
 const mapStateToProps = state => ({
   settings: state.settings.data

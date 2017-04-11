@@ -9,7 +9,7 @@ import {locateAddress, locateUser, stopLocateUser} from '../location-reducer'
 import {deliver} from '../../food/packing-reducer'
 import {loadVolunteer, saveVolunteer} from '../../volunteer/volunteer-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/page/PageBody'
 
 const beginWeek = utc().startOf('isoWeek') // Store the date of this week's Monday
 

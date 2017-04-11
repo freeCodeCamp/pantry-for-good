@@ -7,10 +7,12 @@ import {loadQuestionnaires} from '../questionnaire-reducer'
 import {loadFields} from '../field-reducer'
 import {loadSections} from '../section-reducer'
 
-import Page from '../../../components/Page'
+import FieldEditor from './FieldEditor'
+import PageBody from '../../../components/page/PageBody'
+import PageHeader from '../../../components/page/PageHeader'
 import QuestionnaireEditor from './QuestionnaireEditor'
 import SectionEditor from './SectionEditor'
-import FieldEditor from './FieldEditor'
+
 
 const mapStateToProps = state => ({
   user: state.auth.user,
@@ -71,26 +73,29 @@ class Questionnaire extends Component {
     } = this.state
 
     return (
-      <Page heading="Questionnaire Editor">
-        <QuestionnaireEditor
-          model={questionnaireModel}
-          onFieldChange={this.handleFieldChange('questionnaireModel')}
-          onShowEdit={this.handleShowEdit('questionnaireEdit', 'questionnaireModel')}
-          editing={questionnaireEdit}
-        />
-        <SectionEditor
-          model={sectionModel}
-          onFieldChange={this.handleFieldChange('sectionModel')}
-          onShowEdit={this.handleShowEdit('sectionEdit', 'sectionModel')}
-          editing={sectionEdit}
-        />
-        <FieldEditor
-          model={fieldModel}
-          onFieldChange={this.handleFieldChange('fieldModel')}
-          onShowEdit={this.handleShowEdit('fieldEdit', 'fieldModel')}
-          editing={fieldEdit}
-        />
-      </Page>
+      <div>
+        <PageHeader heading="Questionnaire Editor" />
+        <PageBody>
+          <QuestionnaireEditor
+            model={questionnaireModel}
+            onFieldChange={this.handleFieldChange('questionnaireModel')}
+            onShowEdit={this.handleShowEdit('questionnaireEdit', 'questionnaireModel')}
+            editing={questionnaireEdit}
+          />
+          <SectionEditor
+            model={sectionModel}
+            onFieldChange={this.handleFieldChange('sectionModel')}
+            onShowEdit={this.handleShowEdit('sectionEdit', 'sectionModel')}
+            editing={sectionEdit}
+          />
+          <FieldEditor
+            model={fieldModel}
+            onFieldChange={this.handleFieldChange('fieldModel')}
+            onShowEdit={this.handleShowEdit('fieldEdit', 'fieldModel')}
+            editing={fieldEdit}
+          />
+        </PageBody>
+      </div>
     )
   }
 }

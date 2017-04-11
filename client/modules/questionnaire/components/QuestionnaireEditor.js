@@ -1,14 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
-import sortBy from 'lodash/sortBy'
 
 import {selectors} from '../../../store'
 import {saveQuestionnaire, deleteQuestionnaire} from '../questionnaire-reducer'
 
+import {Box, BoxBody, BoxHeader, BoxTools} from '../../../components/box'
+
 const mapStateToProps = state => ({
-  error: selectors.loadQuestionnairesError(state),
-  loading: selectors.loadingQuestionnaires(state),
+  error: selectors.loadQuestionnairesError(state) ||
+    selectors.saveQuestionnairesError(state),
+  loading: selectors.loadingQuestionnaires(state) ||
+    selectors.savingQuestionnaires(state),
   questionnaires: selectors.getAllQuestionnaires(state),
 })
 
@@ -28,105 +31,91 @@ const QuestionnaireEditor = ({
   onDelete,
   questionnaires
 }) =>
-  <div className="row">
-    <div className="col-xs-12">
-      <div className="box">
-        <div className="box-header">
-          <h3 className="box-title">Questionnaires</h3>
-          <div className="box-tools">
-            <div className="form-group has-feedback">
-              <input
-                className="form-control"
-                type="search"
-                placeholder="Search"
+  <Box>
+    <BoxHeader heading="Questionnaires">
+      <BoxTools icon="search">
+        <input
+          className="form-control"
+          type="search"
+          placeholder="Search"
+        />
+      </BoxTools>
+    </BoxHeader>
+    <BoxBody
+      loading={loading}
+      error={error}
+    >
+      <form name="questionnaireForm" onSubmit={editing ? noop : onSave(model)}>
+        <Table responsive striped>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Identifier</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input
+                  style={{width: '150px'}}
+                  className="form-control"
+                  type="text"
+                  value={editing || !model ? '' : model.name}
+                  onChange={onFieldChange('name')}
+                  placeholder="Questionnaire Name"
+                  disabled={editing}
+                />
+              </td>
+              <td>
+                <input
+                  className="form-control"
+                  type="text"
+                  value={editing || !model ? '' : model.identifier}
+                  onChange={onFieldChange('identifier')}
+                  placeholder="Short identifier"
+                  disabled={editing}
+                />
+              </td>
+              <td>
+                <input
+                  className="form-control"
+                  type="text"
+                  value={editing || !model ? '' : model.description}
+                  onChange={onFieldChange('description')}
+                  placeholder="Description"
+                  disabled={editing}
+                />
+              </td>
+              <td>
+                <button className="btn btn-success btn-flat" type="submit">
+                  <i className="fa fa-plus"></i> Add Item
+                </button>
+              </td>
+            </tr>
+            {questionnaires && questionnaires.map((questionnaire, i) =>
+              <QuestionnaireRow
+                key={i}
+                editing={editing}
+                questionnaire={questionnaire}
+                model={model}
+                onFieldChange={onFieldChange}
+                onSave={onSave}
+                onDelete={onDelete}
+                onShowEdit={onShowEdit}
               />
-              <span className="glyphicon glyphicon-search form-control-feedback"></span>
-            </div>
-          </div>
-          {error &&
-            <div className="text-danger">
-              <strong>{error}</strong>
-            </div>
-          }
-        </div>
-        <div className="box-body table-responsive no-padding top-buffer">
-          <form name="questionnaireForm" onSubmit={editing ? noop : onSave(model)}>
-            <Table responsive striped>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Identifier</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={editing || !model ? '' : model.name}
-                      onChange={onFieldChange('name')}
-                      placeholder="Questionnaire Name"
-                      disabled={editing}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={editing || !model ? '' : model.identifier}
-                      onChange={onFieldChange('identifier')}
-                      placeholder="Short identifier"
-                      disabled={editing}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={editing || !model ? '' : model.description}
-                      onChange={onFieldChange('description')}
-                      placeholder="Description"
-                      disabled={editing}
-                    />
-                  </td>
-                  <td>
-                    <button className="btn btn-success btn-flat" type="submit">
-                      <i className="fa fa-plus"></i> Add Item
-                    </button>
-                  </td>
-                </tr>
-                {questionnaires && questionnaires.map((questionnaire, i) =>
-                  <QuestionnaireRow
-                    key={i}
-                    editing={editing}
-                    questionnaire={questionnaire}
-                    model={model}
-                    onFieldChange={onFieldChange}
-                    onSave={onSave}
-                    onDelete={onDelete}
-                    onShowEdit={onShowEdit}
-                  />
-                )}
-                {!questionnaires.length &&
-                  <tr>
-                    <td className="text-center" colSpan="4">No questionnaires yet.</td>
-                  </tr>
-                }
-              </tbody>
-            </Table>
-          </form>
-        </div>
-        {loading &&
-          <div className="overlay">
-            <i className="fa fa-refresh fa-spin"></i>
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+            )}
+            {!questionnaires.length &&
+              <tr>
+                <td className="text-center" colSpan="4">No questionnaires yet.</td>
+              </tr>
+            }
+          </tbody>
+        </Table>
+      </form>
+    </BoxBody>
+  </Box>
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireEditor)
 

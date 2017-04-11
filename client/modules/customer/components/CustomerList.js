@@ -7,7 +7,7 @@ import {selectors} from '../../../store'
 import {loadCustomers} from '../customer-reducer'
 
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
-import Page from '../../../components/Page'
+import Page from '../../../components/page/PageBody'
 
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),

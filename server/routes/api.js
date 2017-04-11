@@ -16,15 +16,36 @@ const adminRole = ['admin']
 
 var apiRouter = express.Router()
 
-export default () => apiRouter
+export default (delay, errorProb) => apiRouter
+  // delay api requests
+  .use(loadingSimulator(delay))
   .all('/admin/*', users.hasAuthorization(adminRole))
+  // uncomment to also test core components
+  // .use(errorSimulator(errorProb))
+  .use(usersRoutes())
+  .use(mediaRoutes)
+  .use(settingsRoutes)
+  // for testing non-core components
+  .use(errorSimulator(errorProb))
   .use(customerRoutes())
   .use(donationRoutes)
   .use(donorRoutes())
   .use(foodRoutes())
-  .use(mediaRoutes)
   .use(packingRoutes)
   .use(questionnaireRoutes)
-  .use(settingsRoutes)
-  .use(usersRoutes())
   .use(volunteerRoutes())
+
+function loadingSimulator(time = 0) {
+  return (req, res, next) => {
+    setTimeout(next, time)
+  }
+}
+
+function errorSimulator(chance = 0) {
+  return (req, res, next) => {
+    if (Math.random() < chance) {
+      throw new Error('boom')
+    }
+    next()
+  }
+}

@@ -1,19 +1,21 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Table} from 'react-bootstrap'
+import {Col, Row, Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadVolunteers} from '../volunteer-reducer'
+
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
-import Page from '../../../components/Page'
+import {Page, PageBody, PageHeader} from '../../../components/page'
 
 const mapStateToProps = state => ({
   user: state.auth.user,
   volunteers: selectors.getAllVolunteers(state),
   loadingVolunteers: selectors.loadingVolunteers(state),
   loadVolunteersError: selectors.loadVolunteersError(state),
-  settings: state.settings.data,
+  settings: state.settings.data
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -27,14 +29,13 @@ class VolunteerList extends Component {
   }
   render() {
     const {volunteers, loadVolunteersError} = this.props
-    const foo = (
-      <Page heading="Volunteer Database">
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title">Applications</h3>
-              </div>
+    return (
+      <Page>
+        <PageHeader heading="Volunteer Database" />
+        <PageBody error={loadVolunteersError}>
+          <Box>
+            <BoxHeader heading="Applications" />
+            <BoxBody>
               <Table responsive>
                 <thead>
                   <tr>
@@ -70,17 +71,11 @@ class VolunteerList extends Component {
                   )}
                 </tbody>
               </Table>
-            </div>
-          </div>
-        </div>
-        {loadVolunteersError &&
-          <div className="text-danger">
-            <strong>{loadVolunteersError}</strong>
-          </div>
-        }
+            </BoxBody>
+          </Box>
+        </PageBody>
       </Page>
     )
-    return foo
   }
 }
 

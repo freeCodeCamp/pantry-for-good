@@ -5,7 +5,7 @@ import {Table} from 'react-bootstrap'
 import {selectors} from 'store'
 import {loadVolunteers} from '../../volunteer/volunteer-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/page/PageBody'
 
 const mapStateToProps = state => ({
   drivers: selectors.getAllVolunteers(state).filter(vol =>
