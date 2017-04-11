@@ -14,7 +14,8 @@ import {loadSections} from '../../questionnaire/section-reducer'
 
 import AssistanceInfo from '../../../components/AssistanceInfo'
 import DynamicForm from '../../../components/DynamicForm'
-import Page from '../../../components/Page'
+import PageBody from '../../../components/PageBody'
+import PageHeader from '../../../components/PageHeader'
 import VolunteerWaiver from './VolunteerWaiver'
 
 const mapStateToProps = state => ({
@@ -107,40 +108,44 @@ class VolunteerCreate extends Component {
     const {settings} = this.props
     if (!settings || !volunteerForm) return null
     return (
-      <Page
-        showLogo
-        center
-        heading="Volunteer Application"
-        error={error}
-      >
-        <AssistanceInfo supportNumber={settings.supportNumber} />
-        <Row>
-          <Col xs={12}>
-            <form name="volunteerForm" onSubmit={this.saveVolunteer}>
-              <DynamicForm
-                sectionNames={volunteerForm.sectionNames}
-                dynForm={volunteerForm.dynForm}
-                dynType={volunteerModel}
-                handleFieldChange={this.handleFieldChange}
-              />
-              <VolunteerWaiver
-                settings={settings}
-                model={volunteerModel}
-                onFieldChange={this.handleFieldChange}
-                isMinor={this.isMinor()}
-              />
-              <Row>
-                <Col sm={6} md={4} lg={2}>
-                  <button type="submit" className="btn btn-success btn-block top-buffer">Submit</button>
-                </Col>
-                <Col sm={6} md={4} lg={2}>
-                  <Link className="btn btn-primary btn-block top-buffer" to="/">Cancel</Link>
-                </Col>
-              </Row>
-            </form>
-          </Col>
-        </Row>
-      </Page>
+      <div>
+        <PageHeader
+          showLogo
+          center
+          heading="Volunteer Application"
+        />
+        <PageBody
+          error={error}
+        >
+          <AssistanceInfo supportNumber={settings.supportNumber} />
+          <Row>
+            <Col xs={12}>
+              <form name="volunteerForm" onSubmit={this.saveVolunteer}>
+                <DynamicForm
+                  sectionNames={volunteerForm.sectionNames}
+                  dynForm={volunteerForm.dynForm}
+                  dynType={volunteerModel}
+                  handleFieldChange={this.handleFieldChange}
+                />
+                <VolunteerWaiver
+                  settings={settings}
+                  model={volunteerModel}
+                  onFieldChange={this.handleFieldChange}
+                  isMinor={this.isMinor()}
+                />
+                <Row>
+                  <Col sm={6} md={4} lg={2}>
+                    <button type="submit" className="btn btn-success btn-block top-buffer">Submit</button>
+                  </Col>
+                  <Col sm={6} md={4} lg={2}>
+                    <Link className="btn btn-primary btn-block top-buffer" to="/">Cancel</Link>
+                  </Col>
+                </Row>
+              </form>
+            </Col>
+          </Row>
+        </PageBody>
+      </div>
     )
   }
 }

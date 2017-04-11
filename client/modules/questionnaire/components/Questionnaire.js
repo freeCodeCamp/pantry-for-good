@@ -7,7 +7,7 @@ import {loadQuestionnaires} from '../questionnaire-reducer'
 import {loadFields} from '../field-reducer'
 import {loadSections} from '../section-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/PageBody'
 import QuestionnaireEditor from './QuestionnaireEditor'
 import SectionEditor from './SectionEditor'
 import FieldEditor from './FieldEditor'

@@ -11,7 +11,8 @@ import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
 import DynamicView from '../../../components/DynamicView'
-import Page from '../../../components/Page'
+import PageBody from '../../../components/PageBody'
+import PageHeader from '../../../components/PageHeader'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
@@ -114,74 +115,74 @@ class VolunteerView extends Component {
     const {volunteerModel, volunteerView, error} = this.state
     if (!volunteerModel || !volunteerView) return null
     return (
-      <Page
-        heading={volunteerModel.fullName}
-        error={error}
-      >
-        <Row>
-          <Col xs={12}>
-            <DynamicView
-              model={volunteerModel}
-              dynForm={volunteerView.dynForm}
-              sectionNames={volunteerView.sectionNames}
-            />
-            {this.isAdmin ?
-              <div className="form-group">
-                <a
-                  className="btn btn-info"
-                  onClick={this.saveVolunteer('Driver')}
-                >
-                  Driver
-                </a>
-                <a
-                  className="btn btn-success"
-                  onClick={this.saveVolunteer('Active')}
-                >
-                  Active
-                </a>
-                <a
-                  className="btn btn-warning"
-                  onClick={this.saveVolunteer('Inactive')}
-                >
-                  Inactive
-                </a>
-                <a
-                  className="btn btn-danger"
-                  onClick={this.deleteVolunteer(volunteerModel)}
-                >
-                  Delete
-                </a>
-                <Link
-                  className="btn btn-primary"
-                  to={`/volunteers/${volunteerModel.id}/edit`}
-                >
-                  Edit
-                </Link>
-                <Link
-                  className="btn btn-danger"
-                  to="/volunteers"
-                >
-                  Cancel
-                </Link>
-              </div> :
-              <div className="form-group">
-                <Link
-                  className="btn btn-primary"
-                  to={`/volunteers/${volunteerModel.id}/edit`}
-                >
-                  Edit
-                </Link>
-                <Link
-                  className="btn btn-danger"
-                  to="/"
-                >
-                  Cancel
-                </Link>
-              </div>
-            }
-          </Col>
-        </Row>
-      </Page>
+      <div>
+        <PageHeader heading={volunteerModel.fullName} />
+        <PageBody error={error}>
+          <Row>
+            <Col xs={12}>
+              <DynamicView
+                model={volunteerModel}
+                dynForm={volunteerView.dynForm}
+                sectionNames={volunteerView.sectionNames}
+              />
+              {this.isAdmin ?
+                <div className="form-group">
+                  <a
+                    className="btn btn-info"
+                    onClick={this.saveVolunteer('Driver')}
+                  >
+                    Driver
+                  </a>
+                  <a
+                    className="btn btn-success"
+                    onClick={this.saveVolunteer('Active')}
+                  >
+                    Active
+                  </a>
+                  <a
+                    className="btn btn-warning"
+                    onClick={this.saveVolunteer('Inactive')}
+                  >
+                    Inactive
+                  </a>
+                  <a
+                    className="btn btn-danger"
+                    onClick={this.deleteVolunteer(volunteerModel)}
+                  >
+                    Delete
+                  </a>
+                  <Link
+                    className="btn btn-primary"
+                    to={`/volunteers/${volunteerModel.id}/edit`}
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    className="btn btn-danger"
+                    to="/volunteers"
+                  >
+                    Cancel
+                  </Link>
+                </div> :
+                <div className="form-group">
+                  <Link
+                    className="btn btn-primary"
+                    to={`/volunteers/${volunteerModel.id}/edit`}
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    className="btn btn-danger"
+                    to="/"
+                  >
+                    Cancel
+                  </Link>
+                </div>
+              }
+            </Col>
+          </Row>
+        </PageBody>
+      </div>
     )
   }
 }

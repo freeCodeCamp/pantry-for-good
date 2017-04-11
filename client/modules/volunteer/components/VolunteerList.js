@@ -8,7 +8,8 @@ import {loadVolunteers} from '../volunteer-reducer'
 
 import Box from '../../../components/Box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
-import Page from '../../../components/Page'
+import PageBody from '../../../components/PageBody'
+import PageHeader from '../../../components/PageHeader'
 
 const mapStateToProps = state => ({
   user: state.auth.user,
@@ -30,52 +31,52 @@ class VolunteerList extends Component {
   render() {
     const {volunteers, loadVolunteersError} = this.props
     return (
-      <Page
-        heading="Volunteer Database"
-        error={loadVolunteersError}
-      >
-        <Row>
-          <Col xs={12}>
-            <Box heading="Applications">
-              <Table responsive>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Full Address</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody role="alert" aria-live="polite" aria-relevant="all">
-                  {volunteers && volunteers.map(volunteer =>
-                    <tr key={volunteer.id}>
-                      <td><span>{volunteer.id}</span></td>
-                      <td><span>{volunteer.fullName}</span></td>
-                      <td><span>{volunteer.fullAddress}</span></td>
-                      <td><span>{volunteer.telephoneNumber}</span></td>
-                      <td><span>{volunteer.email}</span></td>
-                      <td><ClientStatusLabel client={volunteer} /></td>
-                      <td>
-                        <Link
-                          to={`/volunteers/${volunteer.id}`}
-                          className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</Link>
-                        <Link
-                          to={`/volunteers/${volunteer.id}/edit`}
-                          className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</Link>
-                      </td>
+      <div>
+        <PageHeader heading="Volunteer Database" />
+        <PageBody error={loadVolunteersError}>
+          <Row>
+            <Col xs={12}>
+              <Box heading="Applications">
+                <Table responsive>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Full Name</th>
+                      <th>Full Address</th>
+                      <th>Phone Number</th>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
-                  )}
-                </tbody>
-              </Table>
-            </Box>
-          </Col>
-        </Row>
-      </Page>
+                  </thead>
+                  <tbody role="alert" aria-live="polite" aria-relevant="all">
+                    {volunteers && volunteers.map(volunteer =>
+                      <tr key={volunteer.id}>
+                        <td><span>{volunteer.id}</span></td>
+                        <td><span>{volunteer.fullName}</span></td>
+                        <td><span>{volunteer.fullAddress}</span></td>
+                        <td><span>{volunteer.telephoneNumber}</span></td>
+                        <td><span>{volunteer.email}</span></td>
+                        <td><ClientStatusLabel client={volunteer} /></td>
+                        <td>
+                          <Link
+                            to={`/volunteers/${volunteer.id}`}
+                            className="btn btn-info btn-flat btn-xs"
+                          ><i className="fa fa-eye"></i> View</Link>
+                          <Link
+                            to={`/volunteers/${volunteer.id}/edit`}
+                            className="btn btn-primary btn-flat btn-xs"
+                          ><i className="fa fa-pencil"></i> Edit</Link>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </Box>
+            </Col>
+          </Row>
+        </PageBody>
+      </div>
     )
   }
 }

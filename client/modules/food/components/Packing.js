@@ -9,7 +9,7 @@ import {loadCustomers} from '../../customer/customer-reducer'
 import {loadFoods} from '../food-category-reducer'
 import {pack} from '../packing-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/PageBody'
 
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),

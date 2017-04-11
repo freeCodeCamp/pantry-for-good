@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Box = ({children, heading, type}) => {
-  let boxClass = 'box'
+  let boxClass = 'box box-solid'
   if (type) boxClass += ` box-${type}`
 
   return (

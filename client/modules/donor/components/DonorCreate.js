@@ -10,7 +10,7 @@ import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/PageBody'
 import DynamicForm from '../../../components/DynamicForm'
 import FoodbankLogo from '../../../components/FoodbankLogo'
 

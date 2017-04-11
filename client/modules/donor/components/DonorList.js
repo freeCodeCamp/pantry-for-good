@@ -6,7 +6,7 @@ import {Table} from 'react-bootstrap'
 import {selectors} from '../../../store'
 import {loadDonors, deleteDonor} from '../donor-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/PageBody'
 
 const mapStateToProps = state => ({
   savingDonors: selectors.savingDonors(state),

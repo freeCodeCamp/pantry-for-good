@@ -11,7 +11,8 @@ import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
 import {loadSections} from '../../questionnaire/section-reducer'
 
-import Page from '../../../components/Page'
+import PageBody from '../../../components/PageBody'
+import PageHeader from '../../../components/PageHeader'
 import DynamicForm from '../../../components/DynamicForm'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -112,34 +113,36 @@ class VolunteerEdit extends Component {
     const {volunteerForm, volunteerModel, error} = this.state
     if (!volunteerModel || !volunteerForm) return null
     return (
-      <Page
-        heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}
-        error={error}
-      >
-        <Row>
-          <Col xs={12}>
-            <form name="volunteerForm" onSubmit={this.saveVolunteer}>
-              <DynamicForm
-                sectionNames={volunteerForm.sectionNames}
-                dynForm={volunteerForm.dynForm}
-                dynType={volunteerModel}
-                handleFieldChange={this.handleFieldChange}
-              />
-              <Row>
-                <Col sm={6} md={4} lg={2}>
-                  <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
-                </Col>
-                <Col sm={6} md={4} lg={2}>
-                  <Link
-                    className="btn btn-primary btn-block top-buffer"
-                    to={this.isAdmin ? "/volunteers" : "/"}
-                  >Cancel</Link>
-                </Col>
-              </Row>
-            </form>
-          </Col>
-        </Row>
-      </Page>
+      <div>
+        <PageHeader
+          heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}
+        />
+        <PageBody error={error}>
+          <Row>
+            <Col xs={12}>
+              <form name="volunteerForm" onSubmit={this.saveVolunteer}>
+                <DynamicForm
+                  sectionNames={volunteerForm.sectionNames}
+                  dynForm={volunteerForm.dynForm}
+                  dynType={volunteerModel}
+                  handleFieldChange={this.handleFieldChange}
+                />
+                <Row>
+                  <Col sm={6} md={4} lg={2}>
+                    <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
+                  </Col>
+                  <Col sm={6} md={4} lg={2}>
+                    <Link
+                      className="btn btn-primary btn-block top-buffer"
+                      to={this.isAdmin ? "/volunteers" : "/"}
+                    >Cancel</Link>
+                  </Col>
+                </Row>
+              </form>
+            </Col>
+          </Row>
+        </PageBody>
+      </div>
     )
   }
 }

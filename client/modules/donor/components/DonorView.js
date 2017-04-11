@@ -8,7 +8,7 @@ import {Table} from 'react-bootstrap'
 import {selectors} from '../../../store'
 import {loadDonor, saveDonor, deleteDonor} from '../donor-reducer'
 
-import Page from '../../../components/Page'
+import Page from '../../../components/PageBody'
 import DonationView from './DonationView'
 import DonationCreate from './DonationCreate'
 
