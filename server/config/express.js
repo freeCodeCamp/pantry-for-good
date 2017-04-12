@@ -20,7 +20,7 @@ import '../models'
 import seed from '../lib/seed'
 
 // set api delay and failure probablility for testing
-const API_DELAY = 2000
+const API_DELAY = 0
 const API_FAILURE_RATE = 0
 
 const mongoStore = connectMongo({session})
