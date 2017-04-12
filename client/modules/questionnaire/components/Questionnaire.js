@@ -36,7 +36,8 @@ class Questionnaire extends Component {
       questionnaireEdit: null,
       sectionModel: null,
       sectionEdit: null,
-      fieldModel: null,
+      newFieldModel: {},
+      editFieldModel: null,
       fieldEdit: null
     }
   }
@@ -47,7 +48,6 @@ class Questionnaire extends Component {
   }
 
   handleFieldChange = stateKey => field => ev => {
-
     this.setState({
       [stateKey]: {
         ...get(this.state, stateKey),
@@ -68,7 +68,8 @@ class Questionnaire extends Component {
       questionnaireEdit,
       sectionModel,
       sectionEdit,
-      fieldModel,
+      newFieldModel,
+      editFieldModel,
       fieldEdit,
     } = this.state
 
@@ -89,9 +90,11 @@ class Questionnaire extends Component {
             editing={sectionEdit}
           />
           <FieldEditor
-            model={fieldModel}
-            onFieldChange={this.handleFieldChange('fieldModel')}
-            onShowEdit={this.handleShowEdit('fieldEdit', 'fieldModel')}
+            newModel={newFieldModel}
+            editModel={editFieldModel}
+            onNewFieldChange={this.handleFieldChange('newFieldModel')}
+            onEditFieldChange={this.handleFieldChange('editFieldModel')}
+            onShowEdit={this.handleShowEdit('fieldEdit', 'editFieldModel')}
             editing={fieldEdit}
           />
         </PageBody>
