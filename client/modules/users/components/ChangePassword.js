@@ -1,7 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
+import {Col, Row} from 'react-bootstrap'
 
-import { setPassword } from '../auth-reducer'
+import {setPassword, clearFlags} from '../auth-reducer'
+
+import FieldGroup from '../../../components/FieldGroup'
+import LoadingWrapper from '../../../components/LoadingWrapper'
 
 class ChangePassword extends React.Component {
   constructor(props) {
@@ -11,6 +15,10 @@ class ChangePassword extends React.Component {
       newPassword: "",
       verifyPassword: ""
     }
+  }
+
+  componentWillMount() {
+    this.props.clearFlags()
   }
 
   onFieldChange = e => {
@@ -24,36 +32,58 @@ class ChangePassword extends React.Component {
   }
 
   render = () =>
-        <section className="row">
-            <h3 className="col-md-12 text-center">Change your password</h3>
-            <div className="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-                <form className="signin form-horizontal" autoComplete="off">
-                    <fieldset>
-                        <div className="form-group">
-                            <label htmlFor="currentPassword">Current Password</label>
-                            <input type="password" onChange={this.onFieldChange} value={this.state.currentPassword} id="currentPassword" name="currentPassword" className="form-control" placeholder="Current Password" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newPassword">New Password</label>
-                            <input type="password" onChange={this.onFieldChange} value={this.state.newPassword} id="newPassword" name="newPassword" className="form-control" placeholder="New Password" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="verifyPassword">Verify Password</label>
-                            <input type="password" onChange={this.onFieldChange} value={this.state.verifyPassword} id="verifyPassword" name="verifyPassword" className="form-control" placeholder="Verify Password" />
-                        </div>
-                        <div className="text-center form-group">
-                            <button onClick={this.onSubmit} className="btn btn-large btn-primary">Save Password</button>
-                        </div>
-                        <div className="text-center text-success">
-                            <strong>{this.props.auth && this.props.auth.success && this.props.auth.success.message}</strong>
-                        </div>
-                        <div className="text-center text-danger">
-                            <strong>{this.props.auth && this.props.auth.error}</strong>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </section>
+    <section>
+      <Row>
+        <Col md={12}>
+          <h3 className="col-md-12 text-center">Change your password</h3>
+        </Col>
+        <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+          <LoadingWrapper loading={this.props.auth.fetching}>
+            <form className="signin form-horizontal" autoComplete="off">
+              <fieldset>
+                <FieldGroup
+                  name="currentPassword"
+                  type="password"
+                  label="Current Password"
+                  onChange={this.onFieldChange}
+                  value={this.state.currentPassword}
+                  placeholder="Current Password"
+                />
+                <FieldGroup
+                  name="newPassword"
+                  type="password"
+                  label="New Password"
+                  onChange={this.onFieldChange}
+                  value={this.state.newPassword}
+                  placeholder="New Password"
+                />
+                <FieldGroup
+                  name="verifyPassword"
+                  type="password"
+                  label="Verify Password"
+                  onChange={this.onFieldChange}
+                  value={this.state.verifyPassword}
+                  placeholder="Verify Password"
+                />
+                <div className="text-center form-group">
+                  <button onClick={this.onSubmit} className="btn btn-large btn-primary">Save Password</button>
+                </div>
+                {this.props.auth.success &&
+                  <div className="text-center text-success">
+                    <strong>{this.props.auth.success.message}</strong>
+                  </div>
+                }
+                {this.props.auth.error &&
+                  <div className="text-center text-danger">
+                    <strong>{this.props.auth.error}</strong>
+                  </div>
+                }
+              </fieldset>
+            </form>
+          </LoadingWrapper>
+        </Col>
+      </Row>
+    </section>
 }
 
 const mapStateToProps = state => ({
@@ -64,6 +94,7 @@ const mapDispatchToProps = dispatch => ({
   changePassword: (currentPassword, newPassword, verifyPassword) => {
     dispatch(setPassword({ currentPassword, newPassword, verifyPassword }))
   },
+  clearFlags: () => dispatch(clearFlags())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword)

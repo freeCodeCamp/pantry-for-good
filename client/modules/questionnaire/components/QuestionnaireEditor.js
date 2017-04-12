@@ -5,7 +5,8 @@ import {Table} from 'react-bootstrap'
 import {selectors} from '../../../store'
 import {saveQuestionnaire, deleteQuestionnaire} from '../questionnaire-reducer'
 
-import {Box, BoxBody, BoxHeader, BoxTools} from '../../../components/box'
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
+import FieldGroup from '../../../components/FieldGroup'
 
 const mapStateToProps = state => ({
   error: selectors.loadQuestionnairesError(state) ||
@@ -33,18 +34,15 @@ const QuestionnaireEditor = ({
 }) =>
   <Box>
     <BoxHeader heading="Questionnaires">
-      <BoxTools icon="search">
-        <input
-          className="form-control"
-          type="search"
-          placeholder="Search"
-        />
-      </BoxTools>
+      <FieldGroup
+        name="search"
+        type="search"
+        placeholder="Search"
+        icon="search"
+        formGroupClass="box-tools"
+      />
     </BoxHeader>
-    <BoxBody
-      loading={loading}
-      error={error}
-    >
+    <BoxBody loading={loading} error={error}>
       <form name="questionnaireForm" onSubmit={editing ? noop : onSave(model)}>
         <Table responsive striped>
           <thead>

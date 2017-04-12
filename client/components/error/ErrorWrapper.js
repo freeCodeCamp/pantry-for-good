@@ -2,7 +2,7 @@ import React from 'react'
 
 import Error from './Error'
 
-const Errorable = ({
+const ErrorWrapper = ({
   children,
   error,
   errorTop,
@@ -14,15 +14,15 @@ const Errorable = ({
 
   return (
     <div {...props}>
-      {errorTop || !errorPos &&
+      {(errorTop || !errorPos) &&
         <Error error={error} />
       }
       {children}
-      {errorBottom || !errorPos &&
+      {(errorBottom || !errorPos) &&
         <Error error={error} />
       }
     </div>
   )
 }
 
-export default Errorable
+export default ErrorWrapper
