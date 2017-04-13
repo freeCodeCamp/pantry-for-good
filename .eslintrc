@@ -18,7 +18,6 @@
     "globals": {
         "$": true,
         "_": true,
-        "angular": true,
         "console": true,
         "expect": true,
         "initDb": true,
@@ -34,7 +33,7 @@
     "extends": ["eslint:recommended", "plugin:react/recommended"],
     "rules": {
         "arrow-parens": ["warn", "as-needed"],
-        "indent": ["warn", 2],
+        "indent": [2, 2, {"SwitchCase": 1}],
         "react/prop-types": "off",
         "semi": ["warn", "never"]
     }
