@@ -1,7 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
+import {Col, Row} from 'react-bootstrap'
 
-import { setProfile } from '../auth-reducer'
+import {setProfile, clearFlags} from '../auth-reducer'
+
+import FieldGroup from '../../../components/FieldGroup'
+import LoadingWrapper from '../../../components/LoadingWrapper'
 
 class EditProfile extends React.Component {
   constructor(props) {
@@ -10,8 +14,12 @@ class EditProfile extends React.Component {
       firstName: this.props.auth.user.firstName,
       lastName: this.props.auth.user.lastName,
       email: this.props.auth.user.email,
-      username: this.props.auth.user.username,
+      username: this.props.auth.user.username
     }
+  }
+
+  componentWillMount() {
+    this.props.clearFlags()
   }
 
   onFieldChange = e => {
@@ -30,44 +38,63 @@ class EditProfile extends React.Component {
   }
 
   render = () =>
-        <section className="row">
-            <h3 className="col-md-12 text-center">Edit your profile</h3>
-            <div className="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-                <form name="userForm" className="signin form-horizontal" autoComplete="off">
-                    <fieldset>
-                        <div className="form-group">
-                            <label htmlFor="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" value={this.state.firstName} onChange={this.onFieldChange} className="form-control" placeholder="First Name" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" value={this.state.lastName} onChange={this.onFieldChange} className="form-control" data-ng-model="$ctrl.user.lastName" placeholder="Last Name" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
-                            <input type="email" id="email" name="email" value={this.state.email} onChange={this.onFieldChange} className="form-control" placeholder="Email" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
-                            <input type="text" id="username" name="username" value={this.state.username} onChange={this.onFieldChange} className="form-control" placeholder="Username" />
-                        </div>
-                        <div className="text-center form-group">
-                            <button onClick={this.onSubmit} type="submit" className="btn btn-large btn-primary">Save Profile</button>
-                        </div>
-                        { this.props.auth.success &&
-                            <div className="text-center text-success">
-                                <strong>Profile Saved Successfully</strong>
-                            </div>
-                        }
-                        { this.props.auth.error &&
-                            <div className="text-center text-danger">
-                                <strong>{this.props.auth.error}</strong>
-                            </div>
-                        }
-                    </fieldset>
-                </form>
-            </div>
-        </section>
+    <section>
+      <Row>
+        <Col md={12}>
+          <h3 className="col-md-12 text-center">Edit your profile</h3>
+        </Col>
+        <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+          <LoadingWrapper loading={this.props.auth.fetching}>
+            <form name="userForm" className="signin form-horizontal" autoComplete="off">
+              <fieldset>
+                <FieldGroup
+                  name="firstName"
+                  label="First Name"
+                  onChange={this.onFieldChange}
+                  value={this.state.firstName}
+                  placeholder="First Name"
+                />
+                <FieldGroup
+                  name="lastName"
+                  label="Last Name"
+                  onChange={this.onFieldChange}
+                  value={this.state.lastName}
+                  placeholder="Last Name"
+                />
+                <FieldGroup
+                  name="email"
+                  label="Email"
+                  onChange={this.onFieldChange}
+                  value={this.state.email}
+                  placeholder="Email"
+                />
+                <FieldGroup
+                  name="userName"
+                  label="User Name"
+                  onChange={this.onFieldChange}
+                  value={this.state.userName}
+                  placeholder="User Name"
+                />
+
+                <div className="text-center form-group">
+                  <button onClick={this.onSubmit} type="submit" className="btn btn-large btn-primary">Save Profile</button>
+                </div>
+                {this.props.auth.success &&
+                  <div className="text-center text-success">
+                    <strong>Profile Saved Successfully</strong>
+                  </div>
+                }
+                {this.props.auth.error &&
+                  <div className="text-center text-danger">
+                    <strong>{this.props.auth.error}</strong>
+                  </div>
+                }
+              </fieldset>
+            </form>
+          </LoadingWrapper>
+        </Col>
+      </Row>
+    </section>
 
 }
 
@@ -76,7 +103,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setProfile: user => dispatch(setProfile(user))
+  setProfile: user => dispatch(setProfile(user)),
+  clearFlags: () => dispatch(clearFlags())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile)

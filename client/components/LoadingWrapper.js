@@ -1,10 +1,20 @@
 import React from 'react'
 
+import './loading-wrapper.css'
+
 const Loadable = ({loading, children, ...props}) =>
-  loading ?
-    <div className="overlay">
-      <i className="fa fa-refresh fa-spin"></i>
-    </div> :
-    <div {...props}>{children}</div>
+  <div>
+    <div
+      className={loading ? 'overlay' : ''}
+      {...props}
+    >
+      {children}
+    </div>
+    {loading &&
+      <div className="spinner">
+        <i className="fa fa-2x fa-refresh fa-spin"></i>
+      </div>
+    }
+  </div>
 
 export default Loadable

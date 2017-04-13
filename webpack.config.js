@@ -17,7 +17,8 @@ module.exports = {
             'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
             'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react',
             'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
-            'react-hot-loader', 'react-bootstrap', 'jquery']
+            'react-hot-loader', 'react-bootstrap', 'jquery', 'redux-form',
+            'reselect', 'recompose']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),

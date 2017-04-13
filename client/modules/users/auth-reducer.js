@@ -100,29 +100,19 @@ export default (state = {user: null}, action) => {
         ...state,
         success: null,
         error: null,
-        signinError: null,
-        signupError: null,
         fetching: false
       }
     case SET_PROFILE_REQUEST:
     case SET_PASSWORD_REQUEST:
     case FORGOT_PASSWORD_REQUEST:
     case RESET_PASSWORD_REQUEST:
+    case SIGNUP_REQUEST:
+    case SIGNIN_REQUEST:
       return {
         ...state,
         success: null,
         error: null,
-        signinError: null,
-        signupError: null,
         fetching: true
-      }
-    case SIGNUP_REQUEST:
-    case SIGNIN_REQUEST:
-      return {
-        fetching: true,
-        error: null,
-        signinError: null,
-        signupError: null,
       }
     case SET_PROFILE_SUCCESS:
     case SIGNUP_SUCCESS:
@@ -131,10 +121,8 @@ export default (state = {user: null}, action) => {
         ...state,
         fetching: false,
         success: true,
-        user: action.response,
-        error: null,
-        signinError: null,
-        signupError: null,
+        user: action.response || state.user,
+        error: null
       }
     case SET_PASSWORD_SUCCESS:
     case FORGOT_PASSWORD_SUCCESS:
@@ -143,39 +131,19 @@ export default (state = {user: null}, action) => {
         ...state,
         fetching: false,
         success: action.response,
-        error: null,
-        signinError: null,
-        signupError: null,
+        error: null
       }
     case SET_PROFILE_FAILURE:
     case SET_PASSWORD_FAILURE:
     case FORGOT_PASSWORD_FAILURE:
     case RESET_PASSWORD_FAILURE:
-      return {
-        ...state,
-        fetching: false,
-        success: null,
-        error: action.error,
-        signinError: null,
-        signupError: null,
-      }
     case SIGNUP_FAILURE:
-      return {
-        ...state,
-        fetching: false,
-        success: null,
-        error: null,
-        singinError: null,
-        signupError: action.error
-      }    
     case SIGNIN_FAILURE:
       return {
         ...state,
         fetching: false,
         success: null,
-        error: null,
-        signinError: action.error,
-        signupError: null
+        error: action.error
       }
     default: return state
   }

@@ -55,5 +55,11 @@ export const selectors = {
   },
   saveError(section) {
     return section.saveError
+  },
+  loading(section) {
+    return section.fetching
+  },
+  loadError(section) {
+    return section.fetchError
   }
 }
