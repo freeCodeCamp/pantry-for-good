@@ -4,6 +4,8 @@ import {
   routerMiddleware as createRouterMiddleware
 } from 'react-router-redux'
 import thunk from 'redux-thunk'
+import {reducer as form} from 'redux-form'
+import {createSelector} from 'reselect'
 
 import apiMiddleware from './middleware/api'
 import app from '../modules/core/app-reducers'
@@ -32,6 +34,7 @@ const rootReducer = combineReducers({
   field,
   foodCategory,
   foodItem,
+  form,
   location,
   media,
   questionnaire,
@@ -59,11 +62,19 @@ export default history => {
 }
 
 export const selectors = {
-  getFormData: state => ({
-    fields: fieldSelectors.getAll(state.field.ids, state.entities),
-    foods: foodItemSelectors.getAll(state.foodItem.ids, state.entities),
-    sections: sectionSelectors.getAll(state.section.ids, state.entities)
-  }),
+  // TODO: figure out how to memoize getFoo selectors
+  // probably fooSelectors need to be memoized too
+  getFormData: createSelector(
+    state => fieldSelectors.getAll(state.field.ids, state.entities),
+    state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+    state => sectionSelectors.getAll(state.section.ids, state.entities),
+    (fields, foods, sections) => ({fields, foods, sections})
+  ),
+  // state => ({
+  //   fields: fieldSelectors.getAll(state.field.ids, state.entities),
+  //   foods: foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+  //   sections: sectionSelectors.getAll(state.section.ids, state.entities)
+  // }),
   loadingFormData: state =>
     state.field.fetching || state.foodCategory.fetching || state.section.fetching,
   loadFormDataError: state =>
@@ -91,8 +102,10 @@ export const selectors = {
   savingDonors: state => donorSelectors.saving(state.donor),
   saveDonorsError: state => donorSelectors.saveError(state.donor),
 
-  savingField: state => fieldSelectors.saving(state.field),
-  saveFieldError: state => fieldSelectors.saveError(state.field),
+  loadingFields: state => fieldSelectors.loading(state.field),
+  loadFieldsError: state => fieldSelectors.loadError(state.field),
+  savingFields: state => fieldSelectors.saving(state.field),
+  saveFieldsError: state => fieldSelectors.saveError(state.field),
 
   getAllFoods: state =>
     foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
@@ -108,8 +121,10 @@ export const selectors = {
   loadingUserLocation: state => locationSelectors.loadingUserLocation(state.location),
   loadUserLocationError: state => locationSelectors.loadUserLocationError(state.location),
 
-  getAllQuestionnaires: state =>
-    questionnaireSelectors.getAll(state.questionnaire.ids, state.entities),
+  getAllQuestionnaires: createSelector(
+    state => questionnaireSelectors.getAll(state.questionnaire.ids, state.entities),
+    questionnaires => questionnaires
+  ),
   getOneQuestionnaire: state =>
     id => questionnaireSelectors.getOne(id, state.entities),
   loadingQuestionnaires: state =>
@@ -121,8 +136,10 @@ export const selectors = {
   saveQuestionnairesError: state =>
     questionnaireSelectors.saveError(state.questionnaire),
 
-  savingSection: state => sectionSelectors.saving(state.section),
-  saveSectionError: state => sectionSelectors.saveError(state.section),
+  loadingSections: state => sectionSelectors.loading(state.section),
+  loadSectionsError: state => sectionSelectors.loadError(state.section),
+  savingSections: state => sectionSelectors.saving(state.section),
+  saveSectionsError: state => sectionSelectors.saveError(state.section),
 
   getAllVolunteers: state =>
     volunteerSelectors.getAll(state.volunteer.ids, state.entities),
