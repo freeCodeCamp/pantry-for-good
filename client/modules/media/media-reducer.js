@@ -40,46 +40,46 @@ export const saveMedia = file => dispatch => {
 
 export default (state = {}, action) => {
   switch (action.type) {
-  case LOAD_REQUEST:
-    return {
-      ...state,
-      fetching: true,
-      error: null,
-      success: null
-    }
-  case LOAD_SUCCESS:
-    return {
-      ...state,
-      fetching: false,
-      success: true,
-      data: action.response
-    }
-  case LOAD_FAILURE:
-    return {
-      ...state,
-      fetching: false,
-      error: action.error
-    }
-  case SAVE_REQUEST:
-    return {
-      ...state,
-      fetching: true,
-      error: null,
-      success: null
-    }
-  case SAVE_SUCCESS:
-    return {
-      ...state,
-      fetching: false,
-      success: true,
-      data: action.response
-    }
-  case SAVE_FAILURE:
-    return {
-      ...state,
-      fetching: false,
-      error: action.error
-    }
-  default: return state
+    case LOAD_REQUEST:
+      return {
+        ...state,
+        fetching: true,
+        error: null,
+        success: null
+      }
+    case LOAD_SUCCESS:
+      return {
+        ...state,
+        fetching: false,
+        success: true,
+        data: action.response
+      }
+    case LOAD_FAILURE:
+      return {
+        ...state,
+        fetching: false,
+        error: action.error
+      }
+    case SAVE_REQUEST:
+      return {
+        ...state,
+        fetching: true,
+        error: null,
+        success: null
+      }
+    case SAVE_SUCCESS:
+      return {
+        ...state,
+        fetching: false,
+        success: true,
+        data: action.response
+      }
+    case SAVE_FAILURE:
+      return {
+        ...state,
+        fetching: false,
+        error: action.error
+      }
+    default: return state
   }
 }

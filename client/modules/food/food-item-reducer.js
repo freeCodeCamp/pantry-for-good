@@ -30,7 +30,6 @@ export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
     endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
-    schema: foodItemSchema,
     responseSchema: foodCategorySchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
@@ -40,44 +39,39 @@ export default (state = {
   ids: []
 }, action) => {
   switch (action.type) {
-  case actions.SAVE_REQUEST:
-  case actions.DELETE_REQUEST:
-    return {
-      ...state,
-      saving: true,
-      saveError: null
-    }
-  case actions.SAVE_SUCCESS:
-  case actions.DELETE_SUCCESS:
+    case actions.SAVE_REQUEST:
+    case actions.DELETE_REQUEST:
+      return {
+        ...state,
+        saving: true,
+        saveError: null
+      }
+    case actions.SAVE_SUCCESS:
+    case actions.DELETE_SUCCESS:
       // save (and delete?) returns the whole updated food category
-    const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
-    return {
-      ...state,
-      ids: action.type === actions.DELETE_SUCCESS ?
-                              result :
+      const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
+
+      return {
+        ...state,
+        ids: action.type === actions.DELETE_SUCCESS ?
+                              difference(state.ids, result) :
                               union(result, state.ids),
-      saving: false
-    }
-  case foodCategoryActions.SAVE_SUCCESS:
-    return {
-      ...state,
-      ids: action.response.entities.foodItems ?
+        saving: false
+      }
+    case foodCategoryActions.LOAD_ALL_SUCCESS:
+      return {
+        ...state,
+        ids: action.response.entities.foodItems ?
               Object.keys(action.response.entities.foodItems) : []
-    }
-  case foodCategoryActions.LOAD_ALL_SUCCESS:
-    return {
-      ...state,
-      ids: action.response.entities.foodItems ?
-              Object.keys(action.response.entities.foodItems) : []
-    }
-  case actions.SAVE_FAILURE:
-  case actions.DELETE_FAILURE:
-    return {
-      ...state,
-      saving: false,
-      saveError: action.error
-    }
-  default: return state
+      }
+    case actions.SAVE_FAILURE:
+    case actions.DELETE_FAILURE:
+      return {
+        ...state,
+        saving: false,
+        saveError: action.error
+      }
+    default: return state
   }
 }
 

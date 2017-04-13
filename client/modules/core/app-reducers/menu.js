@@ -2,13 +2,13 @@ import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/
 
 export default (state, action) => {
   switch (action.type) {
-  case SET_USER:
-    return getMenu(action.user)
-  case CLEAR_USER:
-  case SIGNIN_SUCCESS:
-  case SIGNUP_SUCCESS:
-    return getMenu(action.response)
-  default: return state
+    case SET_USER:
+      return getMenu(action.user)
+    case CLEAR_USER:
+    case SIGNIN_SUCCESS:
+    case SIGNUP_SUCCESS:
+      return getMenu(action.response)
+    default: return state
   }
 }
 
@@ -21,7 +21,8 @@ function getMenu(user) {
 }
 
 function getUserMenuItems(user) {
-  const userType = user.roles[0]
+  // The url paths are 'customers', 'donors' and 'volunteers' so need to add 's' at the end
+  const userType = user.roles[0] + 's'
   if (!user.hasApplied)
     return [
       {
