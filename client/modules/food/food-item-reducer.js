@@ -55,7 +55,7 @@ export default (state = {
         ...state,
         ids: action.type === actions.DELETE_SUCCESS ?
                               difference(state.ids, result) :
-                              union(result, state.ids),
+                              union(state.ids, result),
         saving: false
       }
     case foodCategoryActions.LOAD_ALL_SUCCESS:

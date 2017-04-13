@@ -74,7 +74,7 @@ export default (state = {
       return {
         ...state,
         saving: false,
-        ids: union([action.response.result], state.ids)
+        ids: union(state.ids, [action.response.result])
       }
     case RECEIPT_DONATION_SUCCESS:
       return {
