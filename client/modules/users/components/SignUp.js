@@ -7,7 +7,7 @@ import {ControlLabel, FormGroup} from 'react-bootstrap'
 
 import {signUp, clearFlags} from '../auth-reducer'
 
-import FieldGroup from '../../../components/FieldGroup'
+import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
 
 import './signup.css'

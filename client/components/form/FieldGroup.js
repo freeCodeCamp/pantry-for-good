@@ -11,29 +11,47 @@ import {
 
 const FieldGroup = ({
   name,
+  type,
   label,
   help,
   icon,
   valid,
+  errorMessage,
   formGroupClass,
+  required,
+  children,
   ...props
 }) => {
   let controlGroup
 
-  if (props.type === 'checkbox') {
-    controlGroup = <Checkbox name={name} {...props}>{label}</Checkbox>
-  } else if (props.type === 'radio') {
-    controlGroup = <Radio name={name} {...props}>{label}</Radio>
+  if (type === 'checkbox') {
+    controlGroup = <Checkbox name={name} type={type} {...props}>{label}</Checkbox>
+  } else if (type === 'radio') {
+    controlGroup = <Radio name={name} type={type} {...props}>{label}</Radio>
   } else {
+    const component = (type === 'select' || type === 'textarea') && type
+
     controlGroup = (
       <div>
-        {label && <ControlLabel>{label}</ControlLabel>}
-        <FormControl name={name} {...props} />
+        {label &&
+          <ControlLabel>
+            {required ? `${label} *` : label}
+          </ControlLabel>
+        }
+
+        {component ?
+          <FormControl name={name} componentClass={component} {...props}>
+            {children}
+          </FormControl> :
+          <FormControl name={name} type={type} {...props} />
+        }
+
         {icon &&
           <FormControl.Feedback>
             <Glyphicon glyph={icon} />
           </FormControl.Feedback>
         }
+        {errorMessage && <HelpBlock>{errorMessage}</HelpBlock>}
         {help && <HelpBlock>{help}</HelpBlock>}
       </div>
     )

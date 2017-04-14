@@ -5,7 +5,7 @@ import {reset} from 'redux-form'
 import {Table} from 'react-bootstrap'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
-import FieldGroup from '../../../components/FieldGroup'
+import FieldGroup from '../../../components/form/FieldGroup'
 import EditableRow from './EditableRow'
 import TableRow from './TableRow'
 

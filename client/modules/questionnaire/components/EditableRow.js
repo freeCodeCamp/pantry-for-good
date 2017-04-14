@@ -1,7 +1,8 @@
 import React from 'react'
-import {Field, reduxForm} from 'redux-form'
+import {reduxForm} from 'redux-form'
 
 import RowActions from './RowActions'
+import {RFInput, RFSelect} from '../../../components/form'
 
 const EditableRow = ({
   columns,
@@ -15,8 +16,8 @@ const EditableRow = ({
     {columns.map((column, i) =>
       <td key={i}>
         {column.type === 'select' ?
-          <Select column={column} /> :
-          <Input column={column} />
+          <RFSelect {...column} /> :
+          <RFInput {...column} />
         }
       </td>
     )}
@@ -31,30 +32,3 @@ const EditableRow = ({
   </tr>
 
 export default reduxForm()(EditableRow)
-
-function Input({column}) {
-  const component = column.type === 'textarea' ? 'textarea' : 'input'
-  return (
-    <Field
-      name={column.name}
-      type={column.type}
-      placeholder={column.placeholder}
-      component={component}
-      className="form-control"
-    />
-  )
-}
-
-function Select({column}) {
-  return (
-    <Field
-      name={column.name}
-      component="select"
-      className="form-control"
-    >
-      {column.options && column.options.map((option, i) =>
-        <option key={i} value={option.value}>{option.label}</option>
-      )}
-    </Field>
-  )
-}

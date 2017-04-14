@@ -2,7 +2,7 @@ import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
-import FieldGroup from '../../../components/FieldGroup'
+import FieldGroup from '../../../components/form/FieldGroup'
 
 const heading =
   <div>
