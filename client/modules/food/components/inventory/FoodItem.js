@@ -46,7 +46,7 @@ class FoodItem extends React.Component {
   }
 
   onClickSave = () => {
-    this.props.saveItem(this.state.categorySelectValue, {...this.props.foodItem, name: this.state.nameInputValue, categoryId: this.state.categorySelectValue, quantity: this.state.quantityInputValue})
+    this.props.saveItem(this.props.foodItem.categoryId, {...this.props.foodItem, name: this.state.nameInputValue, categoryId: this.state.categorySelectValue, quantity: this.state.quantityInputValue})
     this.setState({showEdit: false})
   }
 
