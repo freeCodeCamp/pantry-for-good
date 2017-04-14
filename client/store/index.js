@@ -19,6 +19,7 @@ import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/
 import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
 import location, {selectors as locationSelectors} from '../modules/driver/location-reducer'
 import media from '../modules/media/media-reducer'
+import packing from '../modules/food/packing-reducer'
 import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer'
 import section, {selectors as sectionSelectors} from '../modules/questionnaire/section-reducer'
 import settings from '../modules/settings/settings-reducer'
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   form,
   location,
   media,
+  packing,
   questionnaire,
   router,
   section,
