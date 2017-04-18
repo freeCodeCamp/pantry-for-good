@@ -72,31 +72,32 @@ export default {
    * Update a food item
    */
   async updateItem(req, res) {
+    const foodItemId = req.params.itemId
+    const orginalCategoryId = req.params.foodId
     const updatedItem = req.body
     let savedFood    
-    if (req.params.foodId === updatedItem.categoryId) {
+    if (updatedItem.categoryId === orginalCategoryId) {
       // same food category so just update the item in that category
       savedFood = await Food.findOneAndUpdate(
-        { _id: req.params.foodId, 'items._id': req.params.itemId },
+        { _id: orginalCategoryId, 'items._id': foodItemId },
         { $set: { 'items.$': updatedItem } },
         { new: true }
       )
     } else {
       // new food category so need to delete from old category items and add to new category items
       const deletedFoodCategory = await Food.findByIdAndUpdate(
-        req.params.foodId, 
-        { $pull: { items: { _id: req.params.itemId } } },
+        orginalCategoryId, 
+        { $pull: { items: { _id: foodItemId } } },
         { new: true }
       )
       if (!deletedFoodCategory) {
-        return res.status(500).send('Database error removing foodItem from original category')
+        return res.status(500).json({error: 'Database error removing foodItem from original category'})
       }
       savedFood = await Food.findByIdAndUpdate(
         updatedItem.categoryId,
         { $addToSet: { items: updatedItem } },
         { new: true }
       )
-
     }
 
     res.json(savedFood)

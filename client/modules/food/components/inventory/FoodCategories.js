@@ -69,7 +69,7 @@ class FoodCategories extends Component {
                     }
                 </div>
 
-                {this.props.foodCategory.fetching &&
+                {(this.props.foodCategory.fetching || this.props.foodCategory.saving) &&
                     <div className="overlay">
                         <i className="fa fa-refresh fa-spin"></i>
                     </div>

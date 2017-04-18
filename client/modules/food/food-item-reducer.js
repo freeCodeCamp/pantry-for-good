@@ -12,6 +12,9 @@ import {actions as foodCategoryActions} from './food-category-reducer'
 import {crudActions} from '../../store/utils'
 
 export const actions = crudActions('foodItem')
+export const CLEAR_FLAGS = 'foodItem/CLEAR_FLAGS'
+
+export const clearFlags = () => ({type: CLEAR_FLAGS})
 
 export const saveFoodItem = (categoryId, foodItem) => {
   return {
@@ -70,6 +73,12 @@ export default (state = {
         ...state,
         saving: false,
         saveError: action.error
+      }
+    case CLEAR_FLAGS:
+      return {
+        ...state,
+        saving: false,
+        saveError: null,
       }
     default: return state
   }
