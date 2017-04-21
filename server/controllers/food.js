@@ -55,52 +55,50 @@ export default {
    * Create a food item
    */
   async createItem(req, res) {
-    const id = req.food._id
     const item = req.body
+    item.name = item.name.trim()
 
-    const savedFood = await Food.findByIdAndUpdate(id,
-        {$addToSet: {items: item}}, {new: true})
+    //Check to see if an item with the same name already exists in a category
+    let categoryWithExistingItem = await Food.findOne({ 'items.name': { $regex: `^${item.name}$`, $options: "i" } }, { 'items.$': 1 }).lean()
 
-    // Add item to every customer's food preferences
-    // TODO: test this
-    await Customer.update({}, {$addToSet: {foodPreferences: item._id}}, {multi: true})
+    if (categoryWithExistingItem) {
+      const existingFoodItem = categoryWithExistingItem.items[0]
+      existingFoodItem.categoryId = item.categoryId
+      existingFoodItem.quantity += Number(item.quantity)
 
-    res.json(savedFood)
+      try {
+        const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
+        res.json(updatedCategory)
+      } catch (err) {
+        res.status(500).json({ error: err.message })
+      }
+    } else {
+      try {
+        const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })
+        res.json(savedFood)
+      } catch (err) {
+        res.status(500).json({ error: err.message })
+      }
+
+      // Add item to every customer's food preferences
+      // TODO: test this
+      await Customer.update({}, { $addToSet: { foodPreferences: item._id } }, { multi: true })
+    }
   },
 
   /**
    * Update a food item
    */
   async updateItem(req, res) {
-    const foodItemId = req.params.itemId
-    const orginalCategoryId = req.params.foodId
+    const originalCategoryId = req.params.foodId
     const updatedItem = req.body
-    let savedFood    
-    if (updatedItem.categoryId === orginalCategoryId) {
-      // same food category so just update the item in that category
-      savedFood = await Food.findOneAndUpdate(
-        { _id: orginalCategoryId, 'items._id': foodItemId },
-        { $set: { 'items.$': updatedItem } },
-        { new: true }
-      )
-    } else {
-      // new food category so need to delete from old category items and add to new category items
-      const deletedFoodCategory = await Food.findByIdAndUpdate(
-        orginalCategoryId, 
-        { $pull: { items: { _id: foodItemId } } },
-        { new: true }
-      )
-      if (!deletedFoodCategory) {
-        return res.status(500).json({error: 'Database error removing foodItem from original category'})
-      }
-      savedFood = await Food.findByIdAndUpdate(
-        updatedItem.categoryId,
-        { $addToSet: { items: updatedItem } },
-        { new: true }
-      )
-    }
 
-    res.json(savedFood)
+    try {
+      const updatedCategory = await updateItemHelper(originalCategoryId, updatedItem)
+      res.json(updatedCategory)
+    } catch (err) {
+      res.status(500).json({ error: err.message })
+    }
   },
 
   /**
@@ -111,7 +109,7 @@ export default {
 
     const savedFood = await Food.findByIdAndUpdate(
       id,
-      {$pull: {items: {_id: req.itemId}}},
+      { $pull: { items: { _id: req.itemId } } },
     ).lean()
 
     const deletedItem = savedFood.items.filter(item =>
@@ -141,4 +139,46 @@ export default {
     req.itemId = id
     next()
   }
+}
+
+/**
+ * Common functionality used by createItem and UpdateItem to update a food item
+ */
+function updateItemHelper(originalCategoryId, updatedItem) {
+  if (updatedItem.categoryId === originalCategoryId) {
+    return updateFoodItemWithoutCategoryChange(updatedItem)
+  } else {
+    return updateFoodItemWithCategoryChange(originalCategoryId, updatedItem)
+  }
+}
+
+function updateFoodItemWithoutCategoryChange(updatedItem) {
+  // same food category so just update the item in that category
+  return Food.findOneAndUpdate(
+    { _id: updatedItem.categoryId, 'items._id': updatedItem._id },
+    { $set: { 'items.$': updatedItem } },
+    { new: true }
+  )
+}
+
+function updateFoodItemWithCategoryChange(originalCategoryId, updatedItem) {
+  return new Promise((resolve, reject) => {
+    // first delete from the old category items colletion with $pull
+    Food.findByIdAndUpdate(originalCategoryId, { $pull: { items: { _id: updatedItem._id } } }, { new: true })
+    .catch(() => {
+      reject(new Error('Database error removing foodItem from original category'))
+    })
+    .then(() => {
+      // Add the item to the new category items collection
+      Food.findByIdAndUpdate(updatedItem.categoryId, { $addToSet: { items: updatedItem } }, { new: true })
+      .then(result => {
+        if (result) {
+            resolve(result)
+          } else {
+            reject(new Error('Could not update database'))
+        }
+      })
+      .catch(err => reject(err))
+    })
+  })
 }
