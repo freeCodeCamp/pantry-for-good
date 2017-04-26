@@ -33,6 +33,7 @@ export const arrayOfUsers = new schema.Array(user)
 export const arrayOfVolunteers = new schema.Array(volunteer)
 
 customer.define({
+  fields: [{meta: field}],
   foodPreferences: arrayOfFoodItems,
   packingList: arrayOfFoodItems,
   assignedTo: volunteer,
@@ -44,13 +45,13 @@ donor.define({
   _id: user
 })
 
-field.define({section})
-
 foodCategory.define({
   items: arrayOfFoodItems
 })
 
-section.define({questionnaire})
+questionnaire.define({sections: arrayOfSections})
+
+section.define({fields: arrayOfFields})
 
 volunteer.define({
   customers: arrayOfCustomers,

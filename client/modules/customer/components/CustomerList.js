@@ -5,6 +5,7 @@ import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadCustomers} from '../customer-reducer'
+import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
 
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/page/PageBody'
@@ -16,13 +17,16 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadCustomers: () => dispatch(loadCustomers())
+  loadCustomers: () => dispatch(loadCustomers()),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires())
 })
 
 class CustomerList extends Component {
   componentWillMount() {
-    if (!this.props.loadingCustomers && !this.props.loadCustomersError)
+    if (!this.props.loadingCustomers && !this.props.loadCustomersError) {
       this.props.loadCustomers()
+      this.props.loadQuestionnaires()
+    }
   }
   render() {
     const {customers, loadCustomersError} = this.props
@@ -38,11 +42,9 @@ class CustomerList extends Component {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Full Address</th>
-                    <th>Telephone Number</th>
+                    <th>Name</th>
+                    <th>Address</th>
                     <th>Email</th>
-                    <th>Delivery Instructions</th>
                     <th>Household</th>
                     <th>Assigned Driver</th>
                     <th>Status</th>
@@ -54,10 +56,12 @@ class CustomerList extends Component {
                     <tr key={customer.id}>
                       <td><span>{customer.id}</span></td>
                       <td><span>{customer.fullName}</span></td>
-                      <td><span>{customer.fullAddress}</span></td>
-                      <td><span>{customer.telephoneNumber}</span></td>
+                      <td><span>{customer.fields
+                        .filter(field => field.meta.type === 'Address')
+                        .map(field => field.value)
+                        .join(', ')
+                      }</span></td>
                       <td><span>{customer.email}</span></td>
-                      <td><span>{customer.deliveryInstructions}</span></td>
                       <td><span>{customer.householdSummary}</span></td>
                       <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
                       <td><ClientStatusLabel client={customer} /></td>

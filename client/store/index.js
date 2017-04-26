@@ -14,14 +14,12 @@ import customer, {selectors as customerSelectors} from '../modules/customer/cust
 import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer'
 import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer'
 import entities from './entities'
-import field, {selectors as fieldSelectors} from '../modules/questionnaire/field-reducer'
 import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer'
 import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
 import location, {selectors as locationSelectors} from '../modules/driver/location-reducer'
 import media from '../modules/media/media-reducer'
 import packing from '../modules/food/packing-reducer'
 import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer'
-import section, {selectors as sectionSelectors} from '../modules/questionnaire/section-reducer'
 import settings from '../modules/settings/settings-reducer'
 import volunteer, {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer'
 
@@ -32,7 +30,6 @@ const rootReducer = combineReducers({
   customer,
   donation,
   donor,
-  field,
   foodCategory,
   foodItem,
   form,
@@ -41,7 +38,6 @@ const rootReducer = combineReducers({
   packing,
   questionnaire,
   router,
-  section,
   settings,
   volunteer
 })
@@ -66,21 +62,20 @@ export default history => {
 export const selectors = {
   // TODO: figure out how to memoize getFoo selectors
   // probably fooSelectors need to be memoized too
-  getFormData: createSelector(
-    state => fieldSelectors.getAll(state.field.ids, state.entities),
-    state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
-    state => sectionSelectors.getAll(state.section.ids, state.entities),
-    (fields, foods, sections) => ({fields, foods, sections})
-  ),
-  // state => ({
-  //   fields: fieldSelectors.getAll(state.field.ids, state.entities),
-  //   foods: foodItemSelectors.getAll(state.foodItem.ids, state.entities),
-  //   sections: sectionSelectors.getAll(state.section.ids, state.entities)
-  // }),
+  // getFormData: createSelector(
+  //   state => fieldSelectors.getAll(state.field.ids, state.entities),
+  //   state => foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+  //   state => sectionSelectors.getAll(state.section.ids, state.entities),
+  //   (fields, foods, sections) => ({fields, foods, sections})
+  // ),
+  getFormData: (state, questionnaireIdentifier) => ({
+    foods: foodItemSelectors.getAll(state.foodItem.ids, state.entities),
+    questionnaire: questionnaireSelectors.getOne(questionnaireIdentifier, state.entities)
+  }),
   loadingFormData: state =>
-    state.field.fetching || state.foodCategory.fetching || state.section.fetching,
+    state.questionnaire.fetching || state.foodCategory.fetching,
   loadFormDataError: state =>
-    state.field.fetchError || state.foodCategory.fetchError || state.section.fetchError,
+    state.questionnaire.fetchError || state.foodCategory.fetchError,
 
   getAllCustomers: state => customerSelectors.getAll(state.customer.ids, state.entities),
   /**
@@ -104,11 +99,6 @@ export const selectors = {
   savingDonors: state => donorSelectors.saving(state.donor),
   saveDonorsError: state => donorSelectors.saveError(state.donor),
 
-  loadingFields: state => fieldSelectors.loading(state.field),
-  loadFieldsError: state => fieldSelectors.loadError(state.field),
-  savingFields: state => fieldSelectors.saving(state.field),
-  saveFieldsError: state => fieldSelectors.saveError(state.field),
-
   getAllFoods: state =>
     foodCategorySelectors.getAll(state.foodCategory.ids, state.entities),
   loadingFoods: state => foodCategorySelectors.loading(state.foodCategory),
@@ -128,7 +118,7 @@ export const selectors = {
     questionnaires => questionnaires
   ),
   getOneQuestionnaire: state =>
-    id => questionnaireSelectors.getOne(id, state.entities),
+    identifier => questionnaireSelectors.getOne(identifier, state.entities),
   loadingQuestionnaires: state =>
     questionnaireSelectors.loading(state.questionnaire),
   loadQuestionnairesError: state =>
@@ -137,11 +127,6 @@ export const selectors = {
     questionnaireSelectors.saving(state.questionnaire),
   saveQuestionnairesError: state =>
     questionnaireSelectors.saveError(state.questionnaire),
-
-  loadingSections: state => sectionSelectors.loading(state.section),
-  loadSectionsError: state => sectionSelectors.loadError(state.section),
-  savingSections: state => sectionSelectors.saving(state.section),
-  saveSectionsError: state => sectionSelectors.saveError(state.section),
 
   getAllVolunteers: state =>
     volunteerSelectors.getAll(state.volunteer.ids, state.entities),

@@ -1,27 +1,26 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {push} from 'react-router-redux'
-import {Link} from 'react-router-dom'
+import {submit} from 'redux-form'
 import set from 'lodash/set'
-import {utc} from 'moment'
+import {Link} from 'react-router-dom'
+import {Button} from 'react-bootstrap'
 
-import {Form} from '../../../lib/form'
+import {fromForm, toForm} from '../../../lib/fields-adapter'
 import {selectors} from '../../../store'
 import {saveCustomer} from '../customer-reducer'
-import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadSections} from '../../questionnaire/section-reducer'
+import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
 
-import Page from '../../../components/page/PageBody'
-import DynamicForm from '../../../components/DynamicForm'
-import Household from './Household'
-import FoodbankLogo from '../../../components/FoodbankLogo'
+import {Page, PageHeader, PageBody} from '../../../components/page'
+import {Questionnaire} from '../../../components/questionnaire'
+
+const FORM_NAME = 'questionnaireForm'
 
 const mapStateToProps = state => ({
   user: state.auth.user,
   savingCustomers: selectors.savingCustomers(state),
   saveCustomersError: selectors.saveCustomersError(state),
-  formData: selectors.getFormData(state),
+  formData: selectors.getFormData(state, 'qCustomers'),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
   settings: state.settings.data,
@@ -31,69 +30,36 @@ const mapDispatchToProps = dispatch => ({
   saveCustomer: customer => dispatch(saveCustomer(customer)),
   loadFormData: () => {
     dispatch(loadFoods())
-    dispatch(loadFields())
-    dispatch(loadSections())
+    dispatch(loadQuestionnaires())
   },
-  push: route => dispatch(push(route))
+  submit: form => dispatch(submit(form))
 })
 
 class CustomerCreate extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.formMethods = Form.methods
-    this.state = {
-      customerModel: {},
-      customerForm: null,
-      error: null,
-    }
+    this.state = {customerModel: {
+      ...this.props.user,
+      household: [{
+        name: this.props.user.displayName,
+        relationship: 'Applicant'
+      }],
+      foodPreferences: [],
+      fields: []
+    }}
   }
+
+  isAdmin = this.props.user.roles.find(r => r === 'admin')
 
   componentWillMount() {
     this.props.loadFormData()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {
-      savingCustomers,
-      saveCustomersError,
-      loadingFormData,
-      loadFormDataError,
-      getCustomer
-    } = nextProps
-
-    // Tried to save customer
-    if (this.props.savingCustomers && !savingCustomers) {
-      this.setState({error: saveCustomersError})
-    }
-
-    // Tried to load form data
-    if (this.props.loadingFormData && !loadingFormData) {
-      if (loadFormDataError) this.setState({error: loadFormDataError})
-      else this.formData = nextProps.formData
-    }
-
-    if (this.formData && !this.state.customerForm) {
-      const customerModel = {
-        ...this.props.user,
-        household: [{
-          name: this.props.user.displayName,
-          relationship: 'Applicant'
-        }],
-        foodPreferences: []
-      }
-
-      this.setState({
-        customerModel,
-        customerForm: Form.methods.generate(customerModel, this.formData, 'qClients')
-      })
-    }
-  }
-
-  saveCustomer = ev => {
-    ev.preventDefault()
-    if (!this.state.customerModel) return
-    this.props.saveCustomer(this.state.customerModel, this.isAdmin)
+  saveCustomer = fields => {
+    this.props.saveCustomer({
+      ...this.state.customerModel,
+      fields: fromForm(fields)
+    }, this.isAdmin)
   }
 
   handleFieldChange = (field, value) => ev => {
@@ -139,63 +105,59 @@ class CustomerCreate extends Component {
 
   render() {
     const {settings} = this.props
-    const {customerForm, customerModel} = this.state
-    if (!customerModel || !customerForm) return null
-    return (
-      <div>
-      <section className="content-header text-center">
-        <FoodbankLogo />
-        <h1>Client Request for Assistance Application</h1>
-        <div className="alert alert-info text-left top-buffer">
-          <h4><i className="icon fa fa-warning"></i>Please fill out the following form</h4>
-          Once submitted, your application will be reviewed and you will be contacted directly.
-          To check on your application status, you may call our client intake line at {settings.clientIntakeNumber}.
-          For assistance with this application, please contact our support line at {settings.supportNumber}.
-        </div>
-      </section>
-      <section className="content">
-        <div className="row">
-          <div className="col-xs-12">
-            <form name="customerForm" onSubmit={this.saveCustomer} noValidate>
-              <DynamicForm
-                sectionNames={customerForm.sectionNames}
-                dynForm={customerForm.dynForm}
-                dynType={customerModel}
-                foodList={customerForm.foodList}
-                handleFieldChange={this.handleFieldChange}
-                isChecked={this.isChecked}
-                selectAllFoods={this.selectAllFoods}
-                allFoodsSelected={this.allFoodsSelected}
-              />
-              <Household
-                numberOfDependants={customerModel.household.length}
-                dependants={customerModel.household}
-                setDependantList={this.setDependantList}
-                handleFieldChange={this.handleFieldChange}
-              />
+    const {customerModel} = this.state
+    const {foods, questionnaire} = this.props.formData || null
 
-              {/*<waiver
-                customer="$ctrl.customerModel"
-                organization="$ctrl.settings.organization"
-              ></waiver>*/}
-              <div className="row">
-                <div className="col-sm-6 col-md-4 col-lg-2">
-                  <button type="submit" className="btn btn-success btn-block top-buffer">Submit</button>
-                </div>
-                <div className="col-sm-6 col-md-4 col-lg-2">
-                  <Link to="/" className="btn btn-primary btn-block top-buffer">Cancel</Link>
-                </div>
-              </div>
-              {this.state.error &&
-                <div className="text-danger">
-                  <strong>{this.state.error}</strong>
-                </div>
-              }
-            </form>
-          </div>
-        </div>
-      </section>
-      </div>
+    const error = this.props.loadFormDataError || this.props.saveCustomersError
+    const loading = this.props.loadingFormData || this.props.savingCustomers
+
+    return (
+      <Page loading={!settings}>
+        <PageHeader
+          heading="Client Request for Assistance Application"
+          showLogo
+          center
+        >
+          {settings &&
+            <div className="alert alert-info text-left top-buffer">
+              <h4><i className="icon fa fa-warning"></i>Please fill out the following form</h4>
+              <p>Once submitted, your application will be reviewed and you will be contacted directly.</p>
+              <p>To check on your application status, you may call our client intake line at {settings.clientIntakeNumber.replace(/ /g, "\u00a0")}. For assistance with this application, please contact our support line at {settings.supportNumber.replace(/ /g, "\u00a0")}.</p>
+            </div>
+          }
+        </PageHeader>
+        <PageBody>
+          <form onSubmit={this.saveCustomer}>
+            {customerModel && questionnaire &&
+              <Questionnaire
+                form={FORM_NAME}
+                model={customerModel}
+                foods={foods}
+                questionnaire={questionnaire}
+                loading={loading}
+                onSubmit={this.saveCustomer}
+                initialValues={toForm(customerModel, questionnaire)}
+              />
+            }
+            <div className="text-right">
+              <Button
+                type="button"
+                onClick={() => this.props.submit(FORM_NAME)}
+                bsStyle="success"
+              >
+                Submit
+              </Button>
+              {' '}
+              <Link
+                to="/"
+                className="btn btn-primary"
+              >
+                Cancel
+              </Link>
+            </div>
+          </form>
+        </PageBody>
+      </Page>
     )
   }
 }

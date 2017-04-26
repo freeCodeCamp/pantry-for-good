@@ -47,8 +47,11 @@ export const selectors = {
   getAll(questionnaires, entities) {
     return denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires
   },
-  getOne(id, entities) {
-    return denormalize({questionnaires: id}, {questionnaires: questionnaireSchema}, entities).questionnaires
+  getOne(identifier, entities) {
+    const ids = Object.keys(entities.questionnaires).filter(id =>
+      entities.questionnaires[id].identifier === identifier)
+    if (!ids.length) return
+    return denormalize({questionnaires: ids[0]}, {questionnaires: questionnaireSchema}, entities).questionnaires
   },
   loading(questionnaires) {
     return questionnaires.fetching

@@ -3,9 +3,9 @@ import {Switch, Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 
 import VolunteerList from './components/VolunteerList'
-import VolunteerView from './components/VolunteerView'
-import VolunteerEdit from './components/VolunteerEdit'
-import VolunteerCreate from './components/VolunteerCreate'
+// import VolunteerView from './components/VolunteerView'
+// import VolunteerEdit from './components/VolunteerEdit'
+// import VolunteerCreate from './components/VolunteerCreate'
 import ClientCreateSuccess from '../../components/ClientCreateSuccess'
 
 const mapStateToProps = state => ({
@@ -18,9 +18,9 @@ const Volunteers = ({match, user}) =>
       <Route path={`${match.url}`} exact component={VolunteerList} />
     }
     <Route path={`${match.url}/create/success`} component={ClientCreateSuccess} />
-    <Route path={`${match.url}/create`} component={VolunteerCreate} />
-    <Route path={`${match.url}/:volunteerId/edit`} component={VolunteerEdit} />
-    <Route path={`${match.url}/:volunteerId`} component={VolunteerView} />
+    {/*<Route path={`${match.url}/create`} component={VolunteerCreate} />*/}
+    {/*<Route path={`${match.url}/:volunteerId/edit`} component={VolunteerEdit} />*/}
+    {/*<Route path={`${match.url}/:volunteerId`} component={VolunteerView} />*/}
   </Switch>
 
 export default connect(mapStateToProps)(Volunteers)

@@ -2,7 +2,8 @@ import React from 'react'
 import {Switch, Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 
-import Questionnaire from './components/Questionnaire'
+// import Questionnaire from './components/Questionnaire'
+const Questionnaire = null
 
 const mapStateToProps = state => ({
   user: state.auth.user
