@@ -86,7 +86,7 @@ export default {
 
 async function renderTemplate(template, bindings) {
   const tconfig = await Settings.findOne()
-  const path = `templates/${template}.server.view.html`
+  const path = `templates/${template}.html`
   return await render(path, {tconfig, ...bindings})
 }
 
