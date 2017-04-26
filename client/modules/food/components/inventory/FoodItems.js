@@ -1,20 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
-import { BootstrapTable, TableHeaderColumn, InsertButton } from 'react-bootstrap-table'
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import Autosuggest from 'react-bootstrap-autosuggest'
 
 import { selectors } from 'store'
 import { saveFoodItem, deleteFoodItem, clearFlags } from '../../food-item-reducer'
-
-import NewFoodItem from './NewFoodItem'
-import FoodItem from './FoodItem'
 
 class FoodItems extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      // showModal can be false, "Add" or "Edit"
       showModal: false,
+      // editModalFood is the food being edited in the edit modal
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false
@@ -22,25 +22,25 @@ class FoodItems extends React.Component {
   }
 
   componentWillReceiveProps = nextProps => {
-    // If the edit modal is open and a save is complete, close the modal
+    // If the modal is open and a save is complete, close the modal
     if (this.state.showModal &&
-      this.props.savingFoodItem &&
-      !nextProps.savingFoodItem &&
-      !nextProps.foodItemSaveError) {
-      this.closeFoodAddEditModal()
+        this.props.savingFoodItem &&
+        !nextProps.savingFoodItem &&
+        !nextProps.foodItemSaveError) {
+      this.closeModal()
     }
   }
 
-  openFoodAddEditModal = _id => {
+  openModal = _id => {
     if (typeof _id !== 'string') {
-      // Open as an add modal
+      // Open the modal in 'add' mode
       this.setState({
         showModal: 'Add',
         editModalFood: undefined,
         modalInputFields: { name: "", categoryId: "", quantity: "" }
       })
     } else {
-      // Open as an edit modal
+      // Open the modal in 'edit' mode
       const food = this.props.foodItems.find(food => food._id === _id)
       this.setState({
         showModal: 'Edit',
@@ -54,7 +54,7 @@ class FoodItems extends React.Component {
     }
   }
 
-  closeFoodAddEditModal = () => {
+  closeModal = () => {
     this.setState({
       showModal: false,
       editModalFood: undefined,
@@ -63,7 +63,6 @@ class FoodItems extends React.Component {
     })
     this.props.clearFlags()
   }
-
 
   /**
    * Used by react-bootstrap-table to get the category name column values
@@ -77,7 +76,7 @@ class FoodItems extends React.Component {
    * Used by react-bootstrap-table to get the food item edit buttons
    */
   getEditButton = (cell, row, formatExtraData, rowIdx) => (
-    <button onClick={() => { this.openFoodAddEditModal(row._id) }} className="btn btn-primary btn-flat btn-xs"><i className="fa fa-pencil"></i>Edit</button>
+    <button onClick={() => { this.openModal(row._id) }} className="btn btn-primary btn-flat btn-xs"><i className="fa fa-pencil"></i>Edit</button>
   )
 
   /**
@@ -101,7 +100,7 @@ class FoodItems extends React.Component {
           <h3 className='box-title'>Foods</h3>
         </div>
         <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
-          <Button onClick={this.openFoodAddEditModal} className='btn-success' style={{ color: 'white', width: '100px' }}>New</Button>
+          <Button onClick={this.openModal} className='btn-success' disabled={this.props.foodCategories.length === 0} style={{ color: 'white', width: '200px' }}>Add to Inventory</Button>
         </div>
         <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
           {props.components.searchPanel}
@@ -136,8 +135,18 @@ class FoodItems extends React.Component {
    * functions to handle any changes of user input fields in the add/edit modal
    */
   handleChange = {
-    foodName: e =>
-      this.setState({ modalInputFields: { ...this.state.modalInputFields, name: e.target.value } }, this.validate),
+    foodName: value => {
+      if (typeof value === 'string') {
+        // The user entered a food name that does not exist yet
+        this.setState({ modalInputFields: { ...this.state.modalInputFields, name: value, categoryId:"" } }, this.validate)
+      } else {
+        // The user entered an existing food name and autosuggest provided the object for that food
+        this.setState({ modalInputFields: { ...this.state.modalInputFields, 
+                                            name: value ? value.name : "",
+                                            categoryId: value ? value.categoryId : ""
+                                          } }, this.validate)
+      }
+    },
     foodQuantity: e =>
       this.setState({ modalInputFields: { ...this.state.modalInputFields, quantity: e.target.value } }, this.validate),
     foodCategory: e =>
@@ -167,17 +176,23 @@ class FoodItems extends React.Component {
     }
   }
 
-
   render = () => {
+    // set options for react-bootstrap-table
     const tableOptions = {
+      // toolBar specifies the function to create the table header
       toolBar: this.createCustomToolBar,
       defaultSortName: 'name',
-      defaultSortOrder: 'asc'
+      defaultSortOrder: 'asc',
+      noDataText: (this.props.foodCategories.length === 0)
+        ? 'No foods in inventory. Add a category prior to adding a food' 
+        : 'No foods in inventory matching ' + this.state.searchText,
+      // afterSearch specifies a function to call when the user changes the search box text
+      afterSearch: searchText => this.setState({searchText})
     }
     return (
       <div className="box">
 
-        <BootstrapTable data={this.props.foodItems} keyField='_id' options={tableOptions} striped search>
+        <BootstrapTable data={this.props.foodItems} pagination keyField='_id' options={tableOptions} striped search>
           <TableHeaderColumn dataField="name" width='33%' dataSort>Name</TableHeaderColumn>
           <TableHeaderColumn dataField="categoryId" width='33%' dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
           <TableHeaderColumn dataField="quantity" width='15%' dataSort>Qty</TableHeaderColumn>
@@ -185,7 +200,7 @@ class FoodItems extends React.Component {
           <TableHeaderColumn width='5%' dataAlign='center' dataFormat={this.getDeleteButton}></TableHeaderColumn>
         </BootstrapTable>
 
-        <Modal show={!!this.state.showModal} onHide={this.closeFoodAddEditModal}>
+        <Modal show={!!this.state.showModal} onHide={this.closeModal}>
           <div className="box">
             <Modal.Header closeButton>
               <Modal.Title>{this.state.showModal} Food</Modal.Title>
@@ -194,11 +209,14 @@ class FoodItems extends React.Component {
               <form>
                 <FormGroup controlId="foodName" validationState={this.getValidationState.foodName()} >
                   <ControlLabel>Food Name</ControlLabel>
-                  <FormControl
-                    type="text"
+                  <Autosuggest
                     value={this.state.modalInputFields.name}
+                    datalist={this.props.foodItems}
                     placeholder="Food Name"
-                    onChange={this.handleChange.foodName}
+                    itemValuePropName='name'
+                    itemReactKeyPropName='name'
+                    itemSortKeyPropName='nameLowerCased'
+                    onSelect={this.handleChange.foodName}
                   />
                 </FormGroup>
 
@@ -206,7 +224,7 @@ class FoodItems extends React.Component {
                   <ControlLabel>Category</ControlLabel>
                   <FormControl componentClass="select" placeholder="select category"
                     onChange={this.handleChange.foodCategory}
-                    defaultValue={this.state.modalInputFields.categoryId} >
+                    value={this.state.modalInputFields.categoryId} >
                     {(this.state.showModal === 'Add') &&
                       <option value="">Select Category</option>
                     }
@@ -230,8 +248,12 @@ class FoodItems extends React.Component {
               </form>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.closeFoodAddEditModal}>Cancel</Button>
-              <Button className={this.state.validInput && 'btn-success'} onClick={this.saveFood} disabled={!this.state.validInput || this.props.savingFoodItem}>Save</Button>
+              <Button onClick={this.closeModal}>Cancel</Button>
+              <Button className={this.state.validInput && 'btn-success'} 
+                      onClick={this.saveFood} 
+                      disabled={!this.state.validInput || this.props.savingFoodItem}>
+                        {this.state.showModal === 'Add' ? 'Add' : 'Update'}
+              </Button>
             </Modal.Footer>
             {this.props.foodItemSaveError &&
               <div className="alert alert-danger">{this.props.foodItemSaveError}</div>
@@ -259,7 +281,8 @@ class FoodItems extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  foodItems: selectors.getAllFoodItems(state),
+  // Add a nameLowerCased property with the name in lower case to use for sorting in autosuggest
+  foodItems: selectors.getAllFoodItems(state).map(item => ({...item, nameLowerCased: item.name.toLowerCase()})),
   foodCategories: selectors.getAllFoods(state),
   fetching: state.foodCategory.fetching,
   savingFoodItem: state.foodItem.saving,
