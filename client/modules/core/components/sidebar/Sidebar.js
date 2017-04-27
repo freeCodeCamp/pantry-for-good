@@ -19,17 +19,21 @@ const Sidebar = ({
   menu,
   route,
   push
-}) => (
-  <div className="main-sidebar">
-    <section className="sidebar">
-      <SidebarMenu
-        user={auth.user}
-        menu={menu}
-        route={route}
-        push={push}
-      />
-    </section>
-  </div>
-)
+}) => {
+  const path = route.pathname.split('/').filter(s => s.length)[0]
+
+  return (
+    <div className="main-sidebar">
+      <section className="sidebar">
+        <SidebarMenu
+          user={auth.user}
+          menu={menu}
+          path={path}
+          push={push}
+        />
+      </section>
+    </div>
+  )
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
