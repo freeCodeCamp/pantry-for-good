@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {sortBy} from 'lodash'
 import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
@@ -13,7 +14,8 @@ import Page from '../../../components/page/PageBody'
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),
   loadingCustomers: selectors.loadingCustomers(state),
-  loadCustomersError: selectors.loadCustomersError(state)
+  loadCustomersError: selectors.loadCustomersError(state),
+  questionnaire: selectors.getOneQuestionnaire(state, 'qCustomers')
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -29,7 +31,9 @@ class CustomerList extends Component {
     }
   }
   render() {
-    const {customers, loadCustomersError} = this.props
+    const {customers, loadCustomersError, questionnaire} = this.props
+    if (!questionnaire) return null
+
     return (
       <Page heading="Client Database">
         <div className="row">
@@ -52,15 +56,11 @@ class CustomerList extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {customers && customers.map(customer =>
+                  {customers && questionnaire && customers.map(customer =>
                     <tr key={customer.id}>
                       <td><span>{customer.id}</span></td>
                       <td><span>{customer.fullName}</span></td>
-                      <td><span>{customer.fields
-                        .filter(field => field.meta.type === 'Address')
-                        .map(field => field.value)
-                        .join(', ')
-                      }</span></td>
+                      <td><span>{getAddress(customer)}</span></td>
                       <td><span>{customer.email}</span></td>
                       <td><span>{customer.householdSummary}</span></td>
                       <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
@@ -93,3 +93,10 @@ class CustomerList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerList)
+
+function getAddress(client) {
+  return client && sortBy(client.fields.filter(f =>
+      f.meta && f.meta.type === 'address'), 'position')
+    .map(f => f.value)
+    .join(', ')
+}

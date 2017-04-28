@@ -5,7 +5,7 @@ const FoodPreferencesView = ({model}) =>
     <div>
       <strong>Food Preferences:</strong>
     </div>
-    {model.foodPreferences.map(food => food.name).join(', ')}
+    {model.foodPreferences.map(food => food && food.name).join(', ')}
   </div>
 
 export default FoodPreferencesView

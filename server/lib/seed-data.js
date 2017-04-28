@@ -90,10 +90,10 @@ export const donorQuestionnaire = {
     name: 'General Info',
     position: 0,
     fields: [
-      {type: 'text', position: 0, label: 'Street', required:true},
-      {type: 'text', position: 1, label: 'Town/City', required:true},
-      {type: 'text', position: 2, label: 'State/Province', required:true},
-      {type: 'text', position: 3, label: 'Zip/Post Code', required:true},
+      {type: 'address', position: 0, label: 'Street', required:true},
+      {type: 'address', position: 1, label: 'Town/City', required:true},
+      {type: 'address', position: 2, label: 'State/Province', required:true},
+      {type: 'address', position: 3, label: 'Zip/Post Code', required:true},
       {type: 'text', position: 4, label: 'Telephone Number', required:true},
       {type: 'textarea', position: 5,label: 'How did you hear about us?'}
     ]
@@ -107,10 +107,10 @@ export const volunteerQuestionnaire = {
     name: 'General Info',
     position: 0,
     fields: [
-      {type: 'text', position: 0, label: 'Street', required:true},
-      {type: 'text', position: 1, label: 'Town/City', required:true},
-      {type: 'text', position: 2, label: 'State/Province', required:true},
-      {type: 'text', position: 3, label: 'Zip/Post Code', required:true},
+      {type: 'address', position: 0, label: 'Street', required:true},
+      {type: 'address', position: 1, label: 'Town/City', required:true},
+      {type: 'address', position: 2, label: 'State/Province', required:true},
+      {type: 'address', position: 3, label: 'Zip/Post Code', required:true},
       {type: 'text', position: 4, label: 'Telephone Number', required:true},
       {type: 'date', position: 5, label: 'Date of Birth', required:true},
       {type: 'radio', choices: 'Phone, Email', position: 6, label: 'Best way to contact'},

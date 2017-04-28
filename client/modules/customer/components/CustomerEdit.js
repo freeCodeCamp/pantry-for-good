@@ -68,6 +68,8 @@ class CustomerEdit extends Component {
     }, this.isAdmin)
   }
 
+  submit = () => this.props.submit(FORM_NAME)
+
   render() {
     const {customerModel} = this.state
     const {foods, questionnaire} = this.props.formData || null
@@ -95,7 +97,7 @@ class CustomerEdit extends Component {
             <div className="text-right">
               <Button
                 type="button"
-                onClick={() => this.props.submit(FORM_NAME)}
+                onClick={this.submit}
                 bsStyle="success"
               >
                 Update

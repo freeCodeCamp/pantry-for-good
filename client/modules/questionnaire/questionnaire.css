@@ -1,0 +1,6 @@
+.nav-stacked.bs-default-nav > li.active > a,
+.nav-stacked.bs-default-nav > li.active > a:hover {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+}

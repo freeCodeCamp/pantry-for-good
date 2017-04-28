@@ -1,33 +1,6 @@
-'use strict'
-import {Questionnaire, Section} from '../models/questionnaire'
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  errorHandler = require('./errors'),
-  seed = require('../models/seed'),
-  // Questionnaire = mongoose.model('Questionnaire'),
-  // Section = mongoose.model('Section'),
-  _ = require('lodash')
-
-  // Seed questionnaire fields
-  // Questionnaire.count({}, function (err, count) {
-  //   if (count < 1 && process.env.NODE_ENV === 'development') {
-  //     console.log('Seeding Questionnaires');
-  //     Questionnaire.insertMany(seed.questionnaires, function (err) {
-  //       if (err) throw err;
-  //     });
-  //   }
-  // });
-
-  // Section.count({}, function (err, count) {
-  //   if (count < 1 && process.env.NODE_ENV === 'development') {
-  //     console.log('Seeding Sections');
-  //     Section.insertMany(seed.sections, function (err) {
-  //       if (err) throw err;
-  //     });
-  //   }
-  // });
+import {extend} from 'lodash'
+import {Questionnaire} from '../models/questionnaire'
+import errorHandler from './errors'
 
 // Create questionnaire
 exports.create = function(req, res) {
@@ -47,7 +20,11 @@ exports.create = function(req, res) {
 // Update a questionnaire
 exports.update = function(req, res) {
   var questionnaire = req.questionnaire
-  questionnaire = _.extend(questionnaire, req.body)
+  questionnaire = extend(questionnaire, req.body)
+  delete questionnaire.__v
+
+  console.log('questionnaire', questionnaire)
+
 
   questionnaire.save(function(err) {
     if (err) {
@@ -65,13 +42,11 @@ exports.delete = function(req, res) {
   var questionnaire = req.questionnaire
 
   // Prevent remove if there are sections for the questionnaire
-  Section.count({ questionnaire: questionnaire._id }, function (err, count) {
-    if (count > 0) {
-      return res.status(400).send({
-        message: 'Questionnaire must not contain any sections before deleting'
-      })
-    }
-  })
+  if (questionnaire.sections.length) {
+    return res.status(400).send({
+      message: 'Questionnaire must not contain any sections before deleting'
+    })
+  }
 
   questionnaire.remove(function(err) {
     if (err) {

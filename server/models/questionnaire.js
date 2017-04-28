@@ -40,11 +40,7 @@ const SectionSchema = new Schema({
     type: Number,
     required: 'Position is required'
   },
-  fields: [FieldSchema],
-  logicReq: {
-    type: Boolean,
-    default: false
-  }
+  fields: [FieldSchema]
 })
 
 const QuestionnaireSchema = new Schema({
@@ -60,15 +56,7 @@ const QuestionnaireSchema = new Schema({
     required: 'Please fill in a short identifier',
     trim: true
   },
-  description: {
-    type: String,
-    trim: true
-  },
-  sections: [SectionSchema],
-  logicReq: {
-    type: Boolean,
-    default: false
-  }
+  sections: [SectionSchema]
 })
 
 export const Questionnaire = mongoose.model('Questionnaire', QuestionnaireSchema)
