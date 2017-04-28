@@ -1,27 +1,29 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import set from 'lodash/set'
+import {submit} from 'redux-form'
+import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
-import {Row, Col} from 'react-bootstrap'
+import {Button, Col, Row} from 'react-bootstrap'
 
-import {Form} from '../../../lib/form'
+import {toForm, fromForm} from '../../../lib/fields-adapter'
 import {selectors} from '../../../store'
 import {loadVolunteer, saveVolunteer} from '../volunteer-reducer'
-import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadSections} from '../../questionnaire/section-reducer'
+import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
 
 import {Page, PageBody, PageHeader} from '../../../components/page'
-import DynamicForm from '../../../components/DynamicForm'
+import {Questionnaire} from '../../../components/questionnaire'
+
+const FORM_NAME = 'volunteerForm'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
   getVolunteer: selectors.getOneVolunteer(state),
   loadingVolunteer: selectors.loadingVolunteers(state),
   loadVolunteerError: selectors.loadVolunteersError(state),
-  savingVolunteer: selectors.savingVolunteers(state),
-  saveVolunteerError: selectors.saveVolunteersError(state),
-  formData: selectors.getFormData(state),
+  savingVolunteers: selectors.savingVolunteers(state),
+  saveVolunteersError: selectors.saveVolunteersError(state),
+  formData: selectors.getFormData(state, 'qVolunteers'),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state),
   volunteerId: ownProps.match.params.volunteerId,
@@ -33,21 +35,17 @@ const mapDispatchToProps = dispatch => ({
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
   loadFormData: () => {
     dispatch(loadFoods())
-    dispatch(loadFields())
-    dispatch(loadSections())
-  }
+    dispatch(loadQuestionnaires())
+  },
+  push: route => dispatch(push(route)),
+  submit: form => dispatch(submit(form))
 })
 
 class VolunteerEdit extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.formMethods = Form.methods
-    this.state = {
-      volunteerModel: null,
-      volunteerForm: null,
-      error: null,
-    }
+    this.state = {volunteerModel: null}
   }
 
   componentWillMount() {
@@ -57,89 +55,71 @@ class VolunteerEdit extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {
-      savingVolunteer,
-      savingVolunteerError,
-      loadingVolunteer,
-      loadVolunteerError,
-      loadingFormData,
-      loadFormDataError,
-      getVolunteer
+      savingVolunteers,
+      saveVolunteersError,
+      formData
     } = nextProps
 
-    // Tried to save volunteer
-    if (this.props.savingVolunteer && !savingVolunteer) {
-      this.setState({error: savingVolunteerError})
+    if (!savingVolunteers && this.props.savingVolunteers && !saveVolunteersError) {
+      this.props.push(this.isAdmin ? '/volunteers' : '/')
     }
 
-    // Tried to load volunteer
-    if (this.props.loadingVolunteer && !loadingVolunteer) {
-      this.setState({error: loadVolunteerError})
-    }
-
-    // Tried to load form data
-    if (this.props.loadingFormData && !loadingFormData) {
-      if (loadFormDataError) this.setState({error: loadFormDataError})
-      else this.formData = nextProps.formData
-    }
-
-    const volunteer = getVolunteer(nextProps.volunteerId)
-    if (volunteer && this.formData && !this.state.volunteerForm) {
+    const volunteer = nextProps.getVolunteer(nextProps.volunteerId)
+    if (volunteer && !this.state.volunteerModel && formData.questionnaire) {
       this.setState({
-        volunteerModel: {...volunteer},
-        volunteerForm: Form.methods.generate(volunteer, this.formData, 'qVolunteers')
+        volunteerModel: {...volunteer}
       })
     }
   }
 
-  saveVolunteer = ev => {
-    ev.preventDefault()
+  saveVolunteer = fields => {
     if (!this.state.volunteerModel) return
-    this.props.saveVolunteer(this.state.volunteerModel, this.isAdmin)
+    this.props.saveVolunteer({
+      ...this.state.volunteerModel,
+      fields: fromForm(fields)
+    }, this.isAdmin)
   }
 
-  handleFieldChange = (field, value) => ev => {
-    if (!value) value = ev.target.value
-    let items
-
-    if (ev.target.type === 'checkbox')
-      items = this.formMethods.toggleCheckbox(this.state.volunteerModel, field, value)
-
-    const volunteerModel = set({...this.state.volunteerModel}, field, items || value)
-    this.setState({volunteerModel})
-  }
+  submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {volunteerForm, volunteerModel, error} = this.state
-    if (!volunteerModel || !volunteerForm) return null
+    const {volunteerModel} = this.state
+    const {foods, questionnaire} = this.props.formData || null
+
+    const error = this.props.loadVolunteerError || this.props.saveVolunteerError || this.props.loadFormDataError
+    const loading = this.props.loadingVolunteers || this.props.savingVolunteers || this.props.loadingFormData
+
     return (
       <Page>
         <PageHeader
-          heading={`${volunteerModel.firstName} ${volunteerModel.lastName}`}
+          heading={volunteerModel && volunteerModel.fullName}
         />
         <PageBody error={error}>
-          <Row>
-            <Col xs={12}>
-              <form name="volunteerForm" onSubmit={this.saveVolunteer}>
-                <DynamicForm
-                  sectionNames={volunteerForm.sectionNames}
-                  dynForm={volunteerForm.dynForm}
-                  dynType={volunteerModel}
-                  handleFieldChange={this.handleFieldChange}
-                />
-                <Row>
-                  <Col sm={6} md={4} lg={2}>
-                    <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
-                  </Col>
-                  <Col sm={6} md={4} lg={2}>
-                    <Link
-                      className="btn btn-primary btn-block top-buffer"
-                      to={this.isAdmin ? "/volunteers" : "/"}
-                    >Cancel</Link>
-                  </Col>
-                </Row>
-              </form>
-            </Col>
-          </Row>
+          <form onSubmit={this.saveVolunteer}>
+            {volunteerModel && questionnaire &&
+              <Questionnaire
+                form={FORM_NAME}
+                model={volunteerModel}
+                foods={foods}
+                questionnaire={questionnaire}
+                loading={loading}
+                onSubmit={this.saveVolunteer}
+                initialValues={toForm(volunteerModel, questionnaire)}
+              />
+            }
+            <div className="text-right">
+              <Button
+                type="button"
+                bsStyle="success"
+                onClick={this.submit}
+              >Update</Button>
+              {' '}
+              <Link
+                className="btn btn-primary"
+                to={this.isAdmin ? "/volunteers" : "/"}
+              >Cancel</Link>
+            </div>
+          </form>
         </PageBody>
       </Page>
     )

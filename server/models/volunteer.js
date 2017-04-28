@@ -1,16 +1,16 @@
-'use strict'
+import mongoose from 'mongoose'
+import {flatMap} from 'lodash'
 
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import {Questionnaire} from './questionnaire'
+import validate from '../../common/validators'
 
-/**
- * Volunteer Schema
- */
+const {Schema} = mongoose
 
 var VolunteerSchema = new Schema({
+  _id: {
+    type: Number,
+    ref: 'User'
+  },
   lastName: {
     type: String,
     trim: true
@@ -19,62 +19,29 @@ var VolunteerSchema = new Schema({
     type: String,
     trim: true
   },
-  middleName: {
-    type: String,
-    trim: true
-  },
-  address: {
-    type: String,
-    trim: true
-  },
-  apartmentNumber: {
-    type: String,
-    trim: true
-  },
-  buzzNumber: {
-    type: Number
-  },
-  city: {
-    type: String,
-    trim: true
-  },
-  province: {
-    type: String,
-    trim: true
-  },
-  postalCode: {
-    type: String,
-    trim: true
-  },
-  telephoneNumber: {
-    type: String,
-    trim: true
-  },
-  mobileNumber: {
-    type: String,
-    trim: true
-  },
-  dateOfBirth: {
-    type: Date
-  },
   email: {
     type: String,
     trim: true
   },
-  contactPreference: {
+  accountType: [String],
+  status: {
     type: String,
-    trim: true
-  },
-  referredBy: {
-    type: String,
-    trim: true
-  },
-  volunteerReason: {
-    type: String,
-    trim: true
+    enum: ['Active', 'Inactive'],
+    default: 'Inactive'
   },
   disclaimerAgree: {
     type: Boolean
+  },
+  driver: {
+    type: Boolean
+  },
+  customers: [{
+    type: Number,
+    ref: 'Customer'
+  }],
+  generalNotes: {
+    type: String,
+    trim: true
   },
   disclaimerSign: {
     type: String,
@@ -88,37 +55,34 @@ var VolunteerSchema = new Schema({
     type: String,
     trim: true
   },
-  // Driver and delivery information
-  driver: {
-    type: Boolean
-  },
-  customers: [{
-    type: Number,
-    ref: 'Customer'
+  fields: [{
+    meta: {
+      type: Schema.Types.ObjectId,
+      required: true
+    },
+    value: String
   }],
-  generalNotes: {
-    type: String,
-    trim: true
-  },
-  // Application specific information
-  _id: {
-    type: Number,
-    ref: 'User'
-  },
   dateReceived: {
     type: Date,
     default: Date.now
   },
-  status: {
-    type: String,
-    enum: ['Active', 'Inactive'],
-    default: 'Inactive'
-  }
-},
-  // Mongoose options
-  { strict: false }
-)
 
+})
+
+VolunteerSchema.path('fields').validate(async function(fields) {
+  const questionnaire = await Questionnaire.findOne({'identifier': 'qVolunteers'})
+  const qFields = flatMap(questionnaire.sections, section => section.fields)
+
+  return fields.reduce((valid, field) => {
+    if (!valid) return false
+
+    const qField = qFields.find(f => String(f._id) === String(field.meta))
+    if (!qField) return false
+
+    const error = validate(field.value, qField)
+    return !Object.keys(error).length
+  }, true)
+}, 'Invalid field')
 
 /**
  * Virtual getters & setters
