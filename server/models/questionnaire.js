@@ -1,60 +1,36 @@
-'use strict'
+import mongoose from 'mongoose'
 
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+const {Schema} = mongoose
 
-/**
- * Questionnaire Schema with references to section and field
- */
-var FieldSchema = new Schema({
+const FieldSchema = new Schema({
   label: {
     type: String,
     required: 'Please fill in a field label',
     trim: true
   },
-  name: {
-    type: String,
-    required: 'Please fill in a field name',
-    trim: true
-  },
   type: {
     type: String,
     required: 'Please select a field type',
-    enum: ['Text', 'Textarea', 'Date', 'Radio Buttons', 'Checkboxes', 'Lookup', 'Table'],
+    enum: ['text', 'address', 'textarea', 'date', 'radio', 'checkbox', 'foodPreferences', 'household', 'table'],
     trim: true
   },
   choices: {
     type: String,
     trim: true
   },
-  row: {
+  position: {
     type: Number,
-    required: 'Row is required'
+    required: 'Position is required'
   },
-  column: {
-    type: Number,
-    required: 'Column is required'
-  },
-  span: {
-    type: Number,
-    default: 1,
-    required: 'Span is required'
-  },
-  section: {
-    type: Schema.Types.ObjectId,
-    ref: 'Section'
-  },
-  logicReq: {
+  rows: [String],
+  columns: [String],
+  required: {
     type: Boolean,
     default: false
   }
-}
-)
+})
 
-var SectionSchema = new Schema({
+const SectionSchema = new Schema({
   name: {
     type: String,
     required: 'Please fill in a section name',
@@ -64,17 +40,10 @@ var SectionSchema = new Schema({
     type: Number,
     required: 'Position is required'
   },
-  questionnaire: {
-    type: Schema.Types.ObjectId,
-    ref: 'Questionnaire'
-  },
-  logicReq: {
-    type: Boolean,
-    default: false
-  }
+  fields: [FieldSchema]
 })
 
-var QuestionnaireSchema = new Schema({
+const QuestionnaireSchema = new Schema({
   name: {
     type: String,
     unique: true,
@@ -87,16 +56,7 @@ var QuestionnaireSchema = new Schema({
     required: 'Please fill in a short identifier',
     trim: true
   },
-  description: {
-    type: String,
-    trim: true
-  },
-  logicReq: {
-    type: Boolean,
-    default: false
-  }
+  sections: [SectionSchema]
 })
 
 export const Questionnaire = mongoose.model('Questionnaire', QuestionnaireSchema)
-export const Section = mongoose.model('Section', SectionSchema)
-export const Field = mongoose.model('Field', FieldSchema)

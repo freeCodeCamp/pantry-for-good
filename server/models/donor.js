@@ -1,14 +1,10 @@
-'use strict'
+import mongoose from 'mongoose'
+import {flatMap} from 'lodash'
 
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+import {Questionnaire} from './questionnaire'
+import validate from '../../common/validators'
 
-/**
- * Donor Schema
- */
+const {Schema} = mongoose
 
 var DonorSchema = new Schema({
   _id: {
@@ -23,61 +19,42 @@ var DonorSchema = new Schema({
     type: String,
     trim: true
   },
-  middleName: {
-    type: String,
-    trim: true
-  },
-  address: {
-    type: String,
-    trim: true
-  },
-  apartmentNumber: {
-    type: String,
-    trim: true
-  },
-  buzzNumber: {
-    type: Number
-  },
-  city: {
-    type: String,
-    trim: true
-  },
-  province: {
-    type: String,
-    trim: true
-  },
-  postalCode: {
-    type: String,
-    trim: true
-  },
-  telephoneNumber: {
-    type: String,
-    trim: true
-  },
-  mobileNumber: {
-    type: String,
-    trim: true
-  },
   email: {
     type: String,
     trim: true
   },
-  referredBy: {
-    type: String,
-    trim: true
-  },
-  dateReceived: {
-    type: Date,
-    default: Date.now
-  },
+  accountType: [String],
   donations: [{
     type: Number,
     ref: 'Donation'
-  }]
-},
-  // Mongoose options
-  { strict: false }
-)
+  }],
+  fields: [{
+    meta: {
+      type: Schema.Types.ObjectId,
+      required: true
+    },
+    value: String
+  }],
+  dateReceived: {
+    type: Date,
+    default: Date.now
+  }
+})
+
+DonorSchema.path('fields').validate(async function(fields) {
+  const questionnaire = await Questionnaire.findOne({'identifier': 'qDonors'})
+  const qFields = flatMap(questionnaire.sections, section => section.fields)
+
+  return fields.reduce((valid, field) => {
+    if (!valid) return false
+
+    const qField = qFields.find(f => String(f._id) === String(field.meta))
+    if (!qField) return false
+
+    const error = validate(field.value, qField)
+    return !Object.keys(error).length
+  }, true)
+}, 'Invalid field')
 
 
 /**
@@ -90,19 +67,6 @@ DonorSchema.virtual('fullName').get(function() {
   return fullName
 })
 
-DonorSchema.virtual('fullAddress').get(function() {
-  var fullAddress = this.address ? this.address + ' ' : ''
-  fullAddress += this.apartmentNumber ? 'APT ' + this.apartmentNumber + ' ' : ''
-  fullAddress += this.city ? this.city + ' ' : ''
-  fullAddress += this.province ? this.province + ' ' : ''
-  fullAddress += this.postalCode ? this.postalCode + ' ' : ''
-  fullAddress += this.buzzNumber ? '#' + this.buzzNumber : ''
-  return fullAddress
-})
-
-/**
- * Schema options
- */
 DonorSchema.set('toJSON', {virtuals: true})
 
 export default mongoose.model('Donor', DonorSchema)

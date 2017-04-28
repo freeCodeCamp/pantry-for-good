@@ -4,18 +4,17 @@ import extend from 'lodash/extend'
 import random from 'lodash/random'
 import range from 'lodash/range'
 import faker from 'faker'
+import {utc} from 'moment'
 
 const User = mongoose.model('User')
-const Customer = mongoose.model('Customer')
-const Donor = mongoose.model('Donor')
 const Donation = mongoose.model('Donation')
-const Volunteer = mongoose.model('Volunteer')
 const Food = mongoose.model('Food')
+const Questionnaire = mongoose.model('Questionnaire')
 
 const clientTypes = ['customer', 'volunteer', 'donor']
 
 export default async function seedClients() {
-  clientTypes.map(async type => {
+  await clientTypes.map(async type => {
     const Model = mongoose.model(capitalize(type))
     const count = await Model.count()
     if (count) return
@@ -26,9 +25,9 @@ export default async function seedClients() {
     await Promise.all(
       users.map(async user => {
         const client = new Model(user.toObject())
-        const populatedClient = await populateClientFields(client)
+        const seededClient = await seedClientFields(client)
 
-        await populatedClient.save()
+        await seededClient.save()
         await User.findOneAndUpdate({_id: client._id}, {$set: {hasApplied: true }})
       })
     )
@@ -36,66 +35,113 @@ export default async function seedClients() {
 }
 
 /**
- * Populate client fields
+ * Seed client fields
  *
  * @param {mongoose.Document} client
  * @returns {Promise<mongoose.Document>}
  */
-async function populateClientFields(client) {
-  let fields = {}
+async function seedClientFields(client) {
+  const dynamicFields = await seedDynamicFields(client)
+  const staticFields = await seedStaticFields(client, dynamicFields[0].value)
 
-  // General fields
-  fields.dateOfBirth = new Date(
-    random(1950, 2000),
-    random(1, 13),
-    random(1, 28)
-  )
+  return extend(client, staticFields, {fields: dynamicFields})
+}
 
-  fields.apartmentNumber = random(1, 350)
-  fields.buzzNumber = random(1,8)
-  fields.address = faker.address.streetName()
-  fields.city = faker.address.city()
-  fields.province = faker.address.state()
-  fields.postalCode = faker.address.zipCode()
-  fields.telephoneNumber = faker.phone.phoneNumber()
-  fields.gender = randomIn({'Male': 0.5, 'Female': 0.5})
+/**
+ * Seed client dynamic fields
+ *
+ * @param {object} client
+ * @returns {array}
+ */
+async function seedDynamicFields(client) {
+  const identifier = `q${capitalize(client.accountType)}s`
+  const questionnaire = await Questionnaire
+    .findOne({identifier})
+    .lean()
 
-  // Driver fields
-  if (client.firstName === 'driver') {
-    fields.driver = true
-  }
+  const generalInfoFields = questionnaire.sections[0].fields
+
+  const addressFields = generalInfoFields.filter(field => field.type === 'address')
+  const dateOfBirthField = generalInfoFields.find(field => field.label === 'Date of Birth')
+// console.log('client', client)
+
+  if (dateOfBirthField)
+    return [{
+      meta: dateOfBirthField,
+      value: randomDate('1950-01-01', '2000-12-31')
+    }, {
+      meta: addressFields[0],
+      value: `${random(1,350)} ${faker.address.streetName()}`
+    }, {
+      meta: addressFields[1],
+      value: faker.address.city()
+    }, {
+      meta: addressFields[2],
+      value: faker.address.state()
+    }, {
+      meta: addressFields[3],
+      value: faker.address.zipCode()
+    }]
+
+  return [{
+    meta: addressFields[0],
+    value: `${random(1,350)} ${faker.address.streetName()}`
+  }, {
+    meta: addressFields[1],
+    value: faker.address.city()
+  }, {
+    meta: addressFields[2],
+    value: faker.address.state()
+  }, {
+    meta: addressFields[3],
+    value: faker.address.zipCode()
+  }]
+
+}
+
+/**
+ * Seed client static fields
+ *
+ * @param {object} client
+ * @param {string} dateOfBirth
+ * @returns {object}
+ */
+async function seedStaticFields(client, dateOfBirth) {
+  let properties = {}
 
   if (client.accountType.find(type => type === 'volunteer')) {
-    fields.status = randomIn({
+    properties.status = randomIn({
       'Active': 0.8,
       'Inactive': 0.2
     })
+
+    if (client.firstName === 'driver') {
+      properties.driver = true
+    }
   }
 
   if (client.accountType.find(type => type === 'donor')) {
-    fields = {
-      ...fields,
+    properties = {
+      ...properties,
       ...await populateDonorFields(client)
     }
   }
 
-  // Customer fields
   if (client.accountType.find(type => type === 'customer')) {
-    fields = {
-      ...fields,
-      ...await populateCustomerFields(client, fields)
+    properties = {
+      ...properties,
+      ...await populateCustomerFields(client, dateOfBirth)
     }
   }
 
-  return extend(client, fields)
+  return properties
 }
 
 /**
  * return extra fields specific to donors
  *
  * @param {object} client
- * @param {object} fields
- * @returns
+ * @returns {object}
  */
 async function populateDonorFields(client) {
   const donations = range(10).map(() => {
@@ -106,11 +152,7 @@ async function populateDonorFields(client) {
       'Non-cash with advantage': 0.25
     })
 
-    const dateReceived = new Date(
-      random(2006, 2016),
-      random(1, 13),
-      random(1, 28)
-    )
+    const dateReceived = randomDate('2015-01-01')
 
     return {
       type,
@@ -127,12 +169,12 @@ async function populateDonorFields(client) {
  * return extra fields specific to customers
  *
  * @param {object} client
- * @param {object} fields
- * @returns
+ * @param {string} dateOfBirth
+ * @returns {object}
  */
-async function populateCustomerFields(client, fields) {
+async function populateCustomerFields(client, dateOfBirth) {
   // get a random sample of foods for foodPreferences
-  const foods = (await Food.aggregate(
+  const foodPreferences = (await Food.aggregate(
       {$unwind: '$items'},
       {$sample: {size: random(4, 10)}}))
     .map(res => res.items._id)
@@ -140,13 +182,8 @@ async function populateCustomerFields(client, fields) {
   const household = [{
     name: `${client.firstName} ${client.lastName}`,
     relationship: 'Applicant',
-    dateOfBirth: fields.dateOfBirth
+    dateOfBirth
   }]
-
-  const financialAssessment = {
-    income: [],
-    expenses: []
-  }
 
   const status = randomIn({
     'Accepted': 0.8,
@@ -156,9 +193,8 @@ async function populateCustomerFields(client, fields) {
   })
 
   return {
-    foodPreferences: foods,
+    foodPreferences,
     household,
-    financialAssessment,
     status
   }
 }
@@ -182,4 +218,17 @@ function randomIn(choices) {
     if (rand < a.acc) return {key}
     else return a
   }, {acc: 0}).key
+}
+
+/**
+ * Generate a random date
+ *
+ * @param {string} fromDate
+ * @param {string} [toDate=null]
+ * @returns {string}
+ */
+function randomDate(fromDate, toDate = null) {
+  const fromTime = new Date(fromDate).getTime()
+  const toTime = new Date(toDate || Date.now()).getTime()
+  return new Date(random(fromTime, toTime)).toISOString()
 }

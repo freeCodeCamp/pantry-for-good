@@ -1,150 +1,37 @@
-'use strict'
+import mongoose from 'mongoose'
+import nodeGeocoder from 'node-geocoder'
+import moment from 'moment'
+import {head, flatMap} from 'lodash'
 
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  nodeGeocoder = require('node-geocoder'),
-  moment = require('moment')
+import {Questionnaire} from './questionnaire'
+import validate from '../../common/validators'
 
-/**
- * Customer Schema
- */
-var CustomerSchema = new Schema({
-  // Section A - Identification and general information
-  language: {
-    type: String
-  },
-  lastName: {
-    type: String,
-    trim: true
+const {Schema} = mongoose
+
+const CustomerSchema = new Schema({
+  _id: {
+    type: Number,
+    ref: 'User'
   },
   firstName: {
     type: String,
-    trim: true
+    required: true
   },
-  middleName: {
+  lastName: {
     type: String,
-    trim: true
-  },
-  address: {
-    type: String,
-    trim: true
-  },
-  apartmentNumber: {
-    type: String,
-    trim: true
-  },
-  buzzNumber: {
-    type: Number
-  },
-  city: {
-    type: String,
-    trim: true
-  },
-  province: {
-    type: String,
-    trim: true
-  },
-  postalCode: {
-    type: String,
-    trim: true
-  },
-  telephoneNumber: {
-    type: String,
-    trim: true
-  },
-  mobileNumber: {
-    type: String,
-    trim: true
+    required: true
   },
   email: {
     type: String,
-    trim: true
+    required: true
   },
-  contactPreference: {
+  accountType: [String],
+  location: [Number],
+  status: {
     type: String,
-    trim: true
+    enum: ['Accepted', 'Rejected', 'Pending', 'Inactive'],
+    default: 'Pending'
   },
-  dateOfBirth: {
-    type: Date
-  },
-  gender: {
-    type: String
-  },
-  accommodationType: {
-    type: String,
-    trim: true
-  },
-  accommodationTypeOther: {
-    type: String,
-    trim: true
-  },
-  deliveryInstructions: {
-    type: String,
-    trim: true
-  },
-  jewish: {
-    type: Boolean
-  },
-  jewishMovement: {
-    type: String,
-    trim: true
-  },
-  synagogue: {
-    type: Boolean
-  },
-  synagogueName: {
-    type: String,
-    trim: true
-  },
-  kosher: {
-    type: Boolean
-  },
-  assistanceInformation: {
-    type: String,
-    trim: true
-  },
-  dietaryRequest: {
-    type: String,
-    trim: true
-  },
-  generalNotes: {
-    type: String,
-    trim: true
-  },
-
-  // Section B - Employment
-  employment: {
-    workStatus: {
-      type: String
-    },
-    hoursPerWeek: {
-      type: Number
-    },
-    jobTitle: {
-      type: String,
-      trim: true
-    }
-  },
-
-  // Section C - Food preferences
-  foodPreferences: [
-    Schema.Types.ObjectId
-  ],
-  foodPreferencesOther: {
-    type: String,
-    trim: true
-  },
-
-  // Section D - Financial assessment
-  financialAssessment: {
-    income: [],
-    expenses: []
-  },
-
-  // Section E - Dependants and people in household
   household: [{
     name: {
       type: String,
@@ -158,8 +45,6 @@ var CustomerSchema = new Schema({
       type: Date
     }
   }],
-
-  // Liability waiver agreement and signature
   disclaimerAgree: {
     type: Boolean
   },
@@ -167,21 +52,13 @@ var CustomerSchema = new Schema({
     type: String,
     trim: true
   },
-
-  // Geolocation
-  location: [Number],
-
-  // Current status of application
-  status: {
-    type: String,
-    enum: ['Accepted', 'Rejected', 'Pending', 'Inactive'],
-    default: 'Pending'
-  },
-
-  // Food package and delivery information
   lastPacked: {
     type: Date
   },
+  packingList: [{
+    type: Schema.Types.ObjectId,
+    ref: 'FoodItem'
+  }],
   lastDelivered: {
     type: Date
   },
@@ -189,27 +66,40 @@ var CustomerSchema = new Schema({
     type: Number,
     ref: 'Volunteer'
   },
-
-  // Application specific information
-  _id: {
-    type: Number,
-    ref: 'User'
-  },
+  foodPreferences: [Schema.Types.ObjectId],
+  fields: [{
+    meta: {
+      type: Schema.Types.ObjectId,
+      required: true
+    },
+    value: String
+  }],
   dateReceived: {
     type: Date,
     default: Date.now
-  },
-},
-  // Mongoose options
-  { strict: false }
-)
+  }
+})
+
+CustomerSchema.path('fields').validate(async function(fields) {
+  const questionnaire = await Questionnaire.findOne({'identifier': 'qCustomers'})
+  const qFields = flatMap(questionnaire.sections, section => section.fields)
+
+  return fields.reduce((valid, field) => {
+    if (!valid) return false
+
+    const qField = qFields.find(f => String(f._id) === String(field.meta))
+    if (!qField) return false
+
+    const error = validate(field.value, qField)
+    return !Object.keys(error).length
+  }, true)
+}, 'Invalid field')
 
 // Initialize geocoder options for pre save method
-var geocodeOptions = {
+const geocoder = nodeGeocoder({
   provider: 'google',
   formatter: null
-}
-var geocoder = nodeGeocoder(geocodeOptions)
+})
 
 /**
  * Hook a pre save method to construct the geolocation of the address
@@ -224,12 +114,10 @@ CustomerSchema.pre('save', function(next) {
   } else {
     // slow for tests, breaks with fake address
     geocoder.geocode(address, function(err, data) {
-      if (data) {
-        var location = []
-        location[0] = data[0].longitude
-        location[1] = data[0].latitude
-        doc.location = location
-      }
+      if (!data) return next()
+
+      const {latitude, longitude} = head(data)
+      doc.location = [longitude, latitude]
 
       next()
     })

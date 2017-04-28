@@ -1,19 +1,19 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {submit} from 'redux-form'
 import {Link} from 'react-router-dom'
-import set from 'lodash/set'
-import {utc} from 'moment'
+import {Button} from 'react-bootstrap'
 
-import {Form} from '../../../lib/form'
+import {toForm, fromForm} from '../../../lib/fields-adapter'
 import {selectors} from '../../../store'
 import {loadCustomer, saveCustomer} from '../customer-reducer'
-import {loadFields} from '../../questionnaire/field-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadSections} from '../../questionnaire/section-reducer'
+import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
 
-import Page from '../../../components/page/PageBody'
-import DynamicForm from '../../../components/DynamicForm'
-import Household from './Household'
+import {Page, PageHeader, PageBody} from '../../../components/page'
+import {Questionnaire} from '../../../components/questionnaire'
+
+const FORM_NAME = 'questionnaireForm'
 
 const mapStateToProps = (state, ownProps) => ({
   user: state.auth.user,
@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
   loadCustomersError: selectors.loadCustomersError(state),
   getCustomer: selectors.getOneCustomer(state),
   customerId: ownProps.match.params.customerId,
-  formData: selectors.getFormData(state),
+  formData: selectors.getFormData(state, 'qCustomers'),
   loadingFormData: selectors.loadingFormData(state),
   loadFormDataError: selectors.loadFormDataError(state)
 })
@@ -33,21 +33,16 @@ const mapDispatchToProps = dispatch => ({
   saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
   loadFormData: () => {
     dispatch(loadFoods())
-    dispatch(loadFields())
-    dispatch(loadSections())
-  }
+    dispatch(loadQuestionnaires())
+  },
+  submit: form => dispatch(submit(form))
 })
 
 class CustomerEdit extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.formMethods = Form.methods
-    this.state = {
-      customerModel: null,
-      customerForm: null,
-      error: null,
-    }
+    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.state = {customerModel: null}
   }
 
   componentWillMount() {
@@ -56,143 +51,67 @@ class CustomerEdit extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      savingCustomers,
-      saveCustomersError,
-      loadingCustomers,
-      loadCustomersError,
-      loadingFormData,
-      loadFormDataError,
-      getCustomer
-    } = nextProps
-
-    // Tried to save customer
-    if (this.props.savingCustomers && !savingCustomers) {
-      this.setState({error: saveCustomersError})
-    }
-
-    // Tried to load customer
-    if (this.props.loadingCustomers && !loadingCustomers) {
-      this.setState({error: loadCustomersError})
-    }
-
-    // Tried to load form data
-    if (this.props.loadingFormData && !loadingFormData) {
-      if (loadFormDataError) this.setState({error: loadFormDataError})
-      else this.formData = nextProps.formData
-    }
-
-    const customer = getCustomer(nextProps.customerId)
-    if (customer && this.formData && !this.state.customerForm) {
+    const customer = nextProps.getCustomer(nextProps.customerId)
+    if (customer && !this.state.customerModel && nextProps.formData.questionnaire) {
       this.setState({
-        customerModel: {
-          ...customer,
-          dateOfBirth: utc(customer.dateOfBirth).format('YYYY-MM-DD'),
-          household: [
-            ...customer.household.map(dependant => ({
-              ...dependant,
-              dateOfBirth: utc(dependant.dateOfBirth).format('YYYY-MM-DD')
-            }))
-          ]
-        },
-        customerForm: Form.methods.generate(customer, this.formData, 'qClients')
+        customerModel: {...customer}
       })
     }
   }
 
-  saveCustomer = ev => {
-    ev.preventDefault()
+  saveCustomer = fields => {
     if (!this.state.customerModel) return
-    this.props.saveCustomer(this.state.customerModel, this.isAdmin)
+
+    this.props.saveCustomer({
+      ...this.state.customerModel,
+      fields: fromForm(fields)
+    }, this.isAdmin)
   }
 
-  handleFieldChange = (field, value) => ev => {
-    if (!value) value = ev.target.value
-    let items
-
-    if (ev.target.type === 'checkbox')
-      items = this.formMethods.toggleCheckbox(this.state.customerModel, field, value)
-
-    const customerModel = set({...this.state.customerModel}, field, items || value)
-    this.setState({customerModel})
-  }
-
-  isChecked = (field, value) =>
-    this.formMethods.isChecked(this.state.customerModel, field, value)
-
-  selectAllFoods = ev => {
-    const foodPreferences = this.allFoodsSelected() ? [] : [...this.formData.foods]
-
-    this.setState({
-      customerModel: {
-        ...this.state.customerModel,
-        foodPreferences
-      }
-    })
-  }
-
-  allFoodsSelected = () => {
-    return this.formData.foods.length === this.state.customerModel.foodPreferences.length
-  }
-
-  setDependantList = ev => {
-    const newHousehold = this.formMethods.setDependentList(this.state.customerModel,
-      ev.target.value)
-
-    this.setState({
-      customerModel: {
-        ...this.state.customerModel,
-        household: newHousehold
-      }
-    })
-  }
+  submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {customerForm, customerModel} = this.state
-    if (!customerModel || !customerForm) return null
+    const {customerModel} = this.state
+    const {foods, questionnaire} = this.props.formData || null
+
+    const error = this.props.loadCustomersError ||
+      this.props.saveCustomersError || this.props.loadFormDataError
+    const loading = this.props.loadingCustomers || this.props.loadingFormData
+
     return (
-      <Page heading={customerModel.fullName}>
-        <div className="row">
-          <div className="col-xs-12">
-            {/*maybe get a ref to form and use checkValidity before saving*/}
-            <form name="dynTypeForm" onSubmit={this.saveCustomer}>
-              <DynamicForm
-                sectionNames={customerForm.sectionNames}
-                dynForm={customerForm.dynForm}
-                dynType={customerModel}
-                foodList={customerForm.foodList}
-                handleFieldChange={this.handleFieldChange}
-                isChecked={this.isChecked}
-                selectAllFoods={this.selectAllFoods}
-                allFoodsSelected={this.allFoodsSelected}
+      <Page loading={loading}>
+        <PageHeader heading={customerModel && customerModel.fullName} />
+        <PageBody error={error}>
+          <form onSubmit={this.saveCustomer}>
+            {customerModel && questionnaire &&
+              <Questionnaire
+                form={FORM_NAME}
+                model={customerModel}
+                foods={foods}
+                questionnaire={questionnaire}
+                loading={this.props.savingCustomers}
+                onSubmit={this.saveCustomer}
+                initialValues={toForm(customerModel, questionnaire)}
               />
-              <Household
-                numberOfDependants={customerModel.household.length}
-                dependants={customerModel.household}
-                setDependantList={this.setDependantList}
-                handleFieldChange={this.handleFieldChange}
-              />
-              <div className="row">
-                <div className="col-sm-6 col-md-4 col-lg-2">
-                  <button type="submit" className="btn btn-success btn-block top-buffer">Update</button>
-                </div>
-                <div className="col-sm-6 col-md-4 col-lg-2">
-                  <Link
-                    className="btn btn-primary btn-block top-buffer"
-                    to={this.isAdmin ? '/customers' : '/'}
-                  >
-                    Cancel
-                  </Link>
-                </div>
-              </div>
-              {this.state.error &&
-                <div className="text-danger">
-                  <strong>{this.state.error}</strong>
-                </div>
-              }
-            </form>
-          </div>
-        </div>
+            }
+            <div className="text-right">
+              <Button
+                type="button"
+                onClick={this.submit}
+                bsStyle="success"
+              >
+                Update
+              </Button>
+              {' '}
+              <Link
+                className="btn btn-primary"
+                to={this.isAdmin ? '/customers' : '/'}
+              >
+                Cancel
+              </Link>
+            </div>
+          </form>
+        </PageBody>
       </Page>
     )
   }

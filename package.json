@@ -58,7 +58,7 @@
     "method-override": "~2.3.0",
     "moment": "^2.10.2",
     "moment-recur": "^1.0.5",
-    "mongoose": "~4.7.1",
+    "mongoose": "^4.9.5",
     "mongoose-auto-increment": "^5.0.1",
     "morgan": "~1.7.0",
     "multer": "^1.2.0",

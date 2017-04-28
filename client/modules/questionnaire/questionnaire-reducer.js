@@ -27,7 +27,7 @@ export const saveQuestionnaire = questionnaire => ({
     endpoint: questionnaire._id ? `questionnaires/${questionnaire._id}` : `questionnaires`,
     method: questionnaire._id ? 'PUT' : 'POST',
     body: questionnaire,
-    schema: questionnaireSchema,
+    responseSchema: questionnaireSchema,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
 })
@@ -47,8 +47,11 @@ export const selectors = {
   getAll(questionnaires, entities) {
     return denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires
   },
-  getOne(id, entities) {
-    return denormalize({questionnaires: id}, {questionnaires: questionnaireSchema}, entities).questionnaires
+  getOne(identifier, entities) {
+    const ids = Object.keys(entities.questionnaires).filter(id =>
+      entities.questionnaires[id].identifier === identifier)
+    if (!ids.length) return
+    return denormalize({questionnaires: ids[0]}, {questionnaires: questionnaireSchema}, entities).questionnaires
   },
   loading(questionnaires) {
     return questionnaires.fetching

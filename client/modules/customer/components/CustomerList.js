@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {sortBy} from 'lodash'
 import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadCustomers} from '../customer-reducer'
+import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
 
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/page/PageBody'
@@ -12,20 +14,26 @@ import Page from '../../../components/page/PageBody'
 const mapStateToProps = state => ({
   customers: selectors.getAllCustomers(state),
   loadingCustomers: selectors.loadingCustomers(state),
-  loadCustomersError: selectors.loadCustomersError(state)
+  loadCustomersError: selectors.loadCustomersError(state),
+  questionnaire: selectors.getOneQuestionnaire(state, 'qCustomers')
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadCustomers: () => dispatch(loadCustomers())
+  loadCustomers: () => dispatch(loadCustomers()),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires())
 })
 
 class CustomerList extends Component {
   componentWillMount() {
-    if (!this.props.loadingCustomers && !this.props.loadCustomersError)
+    if (!this.props.loadingCustomers && !this.props.loadCustomersError) {
       this.props.loadCustomers()
+      this.props.loadQuestionnaires()
+    }
   }
   render() {
-    const {customers, loadCustomersError} = this.props
+    const {customers, loadCustomersError, questionnaire} = this.props
+    if (!questionnaire) return null
+
     return (
       <Page heading="Client Database">
         <div className="row">
@@ -38,11 +46,9 @@ class CustomerList extends Component {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Full Address</th>
-                    <th>Telephone Number</th>
+                    <th>Name</th>
+                    <th>Address</th>
                     <th>Email</th>
-                    <th>Delivery Instructions</th>
                     <th>Household</th>
                     <th>Assigned Driver</th>
                     <th>Status</th>
@@ -50,14 +56,12 @@ class CustomerList extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {customers && customers.map(customer =>
+                  {customers && questionnaire && customers.map(customer =>
                     <tr key={customer.id}>
                       <td><span>{customer.id}</span></td>
                       <td><span>{customer.fullName}</span></td>
-                      <td><span>{customer.fullAddress}</span></td>
-                      <td><span>{customer.telephoneNumber}</span></td>
+                      <td><span>{getAddress(customer)}</span></td>
                       <td><span>{customer.email}</span></td>
-                      <td><span>{customer.deliveryInstructions}</span></td>
                       <td><span>{customer.householdSummary}</span></td>
                       <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
                       <td><ClientStatusLabel client={customer} /></td>
@@ -89,3 +93,10 @@ class CustomerList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerList)
+
+function getAddress(client) {
+  return client && sortBy(client.fields.filter(f =>
+      f.meta && f.meta.type === 'address'), 'position')
+    .map(f => f.value)
+    .join(', ')
+}

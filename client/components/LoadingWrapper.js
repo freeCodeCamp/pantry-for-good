@@ -2,7 +2,7 @@ import React from 'react'
 
 import './loading-wrapper.css'
 
-const Loadable = ({loading, children, ...props}) =>
+const LoadingWrapper = ({loading, children, ...props}) =>
   <div>
     <div
       className={loading ? 'overlay' : ''}
@@ -17,4 +17,4 @@ const Loadable = ({loading, children, ...props}) =>
     }
   </div>
 
-export default Loadable
+export default LoadingWrapper

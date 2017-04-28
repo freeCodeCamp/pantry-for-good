@@ -1,8 +1,10 @@
 import React from 'react'
 
-const Page = ({children}) =>
-  <div>
-    {children}
-  </div>
+const Page = ({loading, children}) =>
+  loading ?
+    null :
+    <div>
+      {children}
+    </div>
 
 export default Page

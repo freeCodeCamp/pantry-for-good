@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, NavLink} from 'react-router-dom'
 
-const SidebarMenuItem = ({item, route}) =>
+const SidebarMenuItem = ({item, path}) =>
   <div>
     {item.menuItemType === 'treeview' ?
       <div>
@@ -16,7 +16,7 @@ const SidebarMenuItem = ({item, route}) =>
         <ul className="treeview-menu">
           {item.items.map((subitem, i) =>
             <li
-              className={route.pathname === subitem.link && 'active'}
+              className={subitem.link === path && 'active'}
               key={i}
             >
               <Link

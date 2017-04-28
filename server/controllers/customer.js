@@ -4,6 +4,7 @@ import config from '../config/config'
 import mailer from '../lib/mailer'
 import Customer from '../models/customer'
 import User from '../models/user'
+import mongoose from 'mongoose'
 
 export default {
   /**

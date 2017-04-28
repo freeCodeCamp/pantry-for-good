@@ -12,62 +12,98 @@ import {
 const FieldGroup = ({
   name,
   type,
+  fieldType,
   label,
   help,
   icon,
   valid,
+  touched,
   errorMessage,
   formGroupClass,
   required,
-  children,
   ...props
-}) => {
-  let controlGroup
+}) =>
+  <FormGroup
+    controlId={name}
+    validationState={valid}
+    className={formGroupClass}
+  >
+    {label &&
+      <ControlLabel>
+        {required ? `${label} *` : label}
+      </ControlLabel>
+    }
 
-  if (type === 'checkbox') {
-    controlGroup = <Checkbox name={name} type={type} {...props}>{label}</Checkbox>
-  } else if (type === 'radio') {
-    controlGroup = <Radio name={name} type={type} {...props}>{label}</Radio>
-  } else {
-    const component = (type === 'select' || type === 'textarea') && type
+    {renderField(type || fieldType, name, props)}
 
-    controlGroup = (
-      <div>
-        {label &&
-          <ControlLabel>
-            {required ? `${label} *` : label}
-          </ControlLabel>
-        }
+    {icon &&
+      <FormControl.Feedback>
+        <Glyphicon glyph={icon} />
+      </FormControl.Feedback>
+    }
+    {(touched && errorMessage) && <HelpBlock>{errorMessage}</HelpBlock>}
+    {help && <HelpBlock>{help}</HelpBlock>}
+  </FormGroup>
 
-        {component ?
-          <FormControl name={name} componentClass={component} {...props}>
-            {children}
-          </FormControl> :
-          <FormControl name={name} type={type} {...props} />
-        }
+export default FieldGroup
 
-        {icon &&
-          <FormControl.Feedback>
-            <Glyphicon glyph={icon} />
-          </FormControl.Feedback>
-        }
-        {errorMessage && <HelpBlock>{errorMessage}</HelpBlock>}
-        {help && <HelpBlock>{help}</HelpBlock>}
-      </div>
+function renderField(type, name, props) {
+  const {options, inline, children, ...rest} = props
+
+  if (type === 'checkbox') return renderCheckbox(options, inline, rest)
+  if (type === 'radio') return renderRadio(options, inline, rest)
+
+  if (type === 'select' || type === 'textarea') {
+    return (
+      <FormControl name={name} componentClass={type} {...rest}>
+        {children}
+      </FormControl>
     )
   }
 
-  if (props.inline) return controlGroup
-
   return (
-    <FormGroup
-      controlId={name}
-      validationState={valid}
-      className={formGroupClass}
-    >
-      {controlGroup}
-    </FormGroup>
+    <FormControl name={name} type={type} {...rest} />
   )
 }
 
-export default FieldGroup
+function renderRadio(options, inline, props) {
+  return (
+    <div>
+      {options.map((option, i) =>
+        <Radio
+          key={i}
+          {...props}
+          value={option}
+          checked={option === props.value}
+          inline={inline}
+        >
+          {option}
+        </Radio>
+      )}
+    </div>
+  )
+}
+
+function renderCheckbox(options, inline, props) {
+  return (
+    <div>
+      {options.map((option, i) =>
+        <Checkbox
+          key={i}
+          {...props}
+          value={option}
+          onChange={() => props.onChange(option)}
+          checked={isChecked(props.value, option)}
+          inline={inline}
+        >
+          {option}
+        </Checkbox>
+      )}
+    </div>
+  )
+}
+
+function isChecked(value, option) {
+  if (!Array.isArray(value)) return false
+  return typeof(value.find(val => val === option)) !== 'undefined'
+}

@@ -30,75 +30,92 @@ export const foodFields = [{
   ]
 }]
 
-export const customerFields = [
-  // Section A, General Info
-  {'type':'Radio Buttons','name':'language','section':0,'choices':'English, Other','row':1,'column':1,'span':1,'label':'Preferred language','logicReq':true},
-  {'type':'Text','name':'lastName','section':0,'row':2,'column':1,'choices':[],'span':1,'label':'Last Name','logicReq':true},
-  {'type':'Text','name':'firstName','section':0,'row':2,'column':2,'choices':[],'span':1,'label':'First Name','logicReq':true},
-  {'type':'Text','name':'middleName','section':0,'row':2,'column':3,'choices':[],'span':1,'label':'Middle Initials'},
-  {'name':'address','section':0,'type':'Text','row':2,'column':4,'choices':[],'span':1,'label':'Primary Mailing Address','logicReq':true},
-  {'name':'apartmentNumber','section':0,'type':'Text','row':3,'column':1,'choices':[],'span':1,'label':'Appartment Number'},
-  {'type':'Text','name':'city','section':0,'row':3,'column':3,'choices':[],'span':1,'label':'City','logicReq':true},
-  {'type':'Text','name':'buzzNumber','section':0,'row':3,'column':2,'span':1,'label':'Buzz Number'},
-  {'name':'province','section':0,'type':'Text','row':3,'column':4,'span':1,'label':'Province'},
-  {'name':'postalCode','section':0,'type':'Text','row':4,'column':1,'span':1,'label':'Postal Code','logicReq':true},
-  {'name':'telephoneNumber','section':0,'type':'Text','row':4,'column':2,'span':1,'label':'Telephone Number','logicReq':true},
-  {'name':'mobileNumber','section':0,'type':'Text','row':4,'column':3,'span':1,'label':'Mobile Number'},
-  {'name':'email','section':0,'type':'Text','row':4,'column':4,'span':1,'label':'Email Address','logicReq':true},
-  {'name':'dateOfBirth','section':0,'type':'Date','row':5,'column':1,'span':1,'label':'Date of Birth','logicReq':true},
-  {'name':'gender','section':0,'type':'Radio Buttons','choices':'Male, Female','row':5,'column':2,'span':1,'label':'Gender','logicReq':true},
-  {'name':'accommodationType','section':0,'type':'Radio Buttons','choices':'Rental, Own, Subsidized, Other','row':5,'column':3,'span':1,'label':'Accommodation Type','logicReq':true},
-  {'name':'contactPreference','section':0,'type':'Radio Buttons','choices':'Phone, Email','row':5,'column':4,'span':1,'label':'Best way to contact','logicReq':true},
-  {'name':'deliveryInstructions','section':0,'type':'Textarea','row':6,'column':1,'span':2,'label':'Box delivery instructions'},
-  {'name':'assistanceInformation','section':0,'type':'Textarea','row':6,'column':3,'span':2,'label':'Please name all of the organizations you are currently receiving assistance from'},
-  {'name':'generalNotes','section':0,'type':'Textarea','row':7,'column':1,'span':2,'label':'General Notes'},
+export const customerQuestionnaire = {
+  name: 'Customer Application',
+  identifier: 'qCustomers',
+  sections: [{
+    name: 'General Info',
+    position: 0,
+    fields: [
+      {type: 'address', position: 0, label: 'Street', required: true},
+      {type: 'address', position: 1, label: 'Town/City', required: true},
+      {type: 'address', position: 2, label: 'State/Province', required: true},
+      {type: 'address', position: 3, label: 'Zip/Post Code', required: true},
+      {type: 'text', position: 4, label: 'Telephone Number', required: true},
+      {type: 'date', position: 5, label: 'Date of Birth', required: true},
+      {type: 'radio', choices: 'Male, Female', position: 6, label: 'Gender', required: true},
+      {type: 'radio', choices: 'Rental, Own, Subsidized, Other', position: 7,label: 'Accommodation Type'},
+      {type:'radio', choices: 'Phone, Email', position: 8, label: 'Best way to contact'},
+      {type: 'textarea', position: 9, label: 'Delivery instructions', required: true},
+      {type: 'textarea', position: 10, label: 'Other organizations you are currently receiving assistance from'},
+      {type: 'checkbox', choices: 'Foo, Bar', position: 11, label: 'foo'}
+    ]
+  }, {
+    name: 'Employment',
+    position: 1,
+    fields: [
+      {type: 'radio', position: 1, choices: 'Employed, Unemployed, Laid-off, Retired, Disabled, Student', label: 'Current work status'},
+      {type: 'text', position: 2, label: 'Hours per week'},
+      {type: 'text', position: 3, label: 'Job title'},
+    ]
+  }, {
+    name: 'Food Preferences',
+    position: 2,
+    fields: [
+      {type:'foodPreferences', position: 1, label: 'Please select the foods you are interested in'},
+      {type:'textarea',position: 2, label: 'Please list any food allergies or sensitivities'},
+      {type: 'textarea', position: 3, label: 'Other food preferences'},
+    ]
+  }, {
+    name: 'Financial Assessment',
+    position: 3,
+    fields: [
+      {label:'Monthly Gross Income', rows: ['Employment Income', 'Employment Insurance Benefits', 'Social Assistance', 'Spousal/Child Support', 'Self Employment', 'Pension Income (eg. Employer Plan)', 'Disability Income', 'Pension Plan', 'Child Tax Benefits', 'Income from Rental Property', 'Severance/Termination Pay', 'Other income not listed above'], columns: ['Self', 'Other'], type: 'table', position: 1},
+      {label: 'Monthly Living Expenses', rows: ['Rent, mortgage or room and board', 'Food', 'Utilities (phone, internet, water, heat/hydro)', 'Transportation, parking and other personal supports', 'Dependant Care (eg. day care)', 'Disability Needs', 'Spousal/Child support', 'Loans', 'Leases', 'Insurance', 'Credit card debt', 'Property taxes', 'Other costs not listed above'], columns: ['Household'], type: 'table', position: 2}
+    ]
+  }, {
+    name: 'Household',
+    position: 4,
+    fields: [
+      {type: 'household', position: 0, label: 'Household'}
+    ]
+  }]
+}
 
-  // Section B, Employment
-  {'type':'Radio Buttons','name':'empWorkStatus','section':1,'choices':'Employed, Unemployed, Laid-off, Retired, Disabled, Student','row':1,'column':1,'span':2,'label':'Current work status','logicReq':true},
-  {'label':'Hours per week','name':'hoursPerWeek','section':1,'type':'Text','row':1,'column':3,'span':1,'logicReq':true},
-  {'label':'Job title','name':'jobTitle','section':1,'type':'Text','row':1,'column':4,'span':1,'logicReq':true},
 
-  // Section C, Food Preferences
-  {'name':'foodPreferences','section':2,'type':'Lookup','row':1,'column':1,'span':4,'label':'Please select all food preferences that apply for you','logicReq':true},
-  {'name':'dietaryRequest','section':2,'type':'Textarea','row':2,'column':1,'span':2,'label':'Please list any food allergies or sensitivities'},
-  {'name':'foodPreferencesOther','section':2,'type':'Textarea','row':2,'column':3,'span':2,'label':'Other food preferences'},
+export const donorQuestionnaire = {
+  name: 'Donor Application',
+  identifier: 'qDonors',
+  sections: [{
+    name: 'General Info',
+    position: 0,
+    fields: [
+      {type: 'address', position: 0, label: 'Street', required:true},
+      {type: 'address', position: 1, label: 'Town/City', required:true},
+      {type: 'address', position: 2, label: 'State/Province', required:true},
+      {type: 'address', position: 3, label: 'Zip/Post Code', required:true},
+      {type: 'text', position: 4, label: 'Telephone Number', required:true},
+      {type: 'textarea', position: 5,label: 'How did you hear about us?'}
+    ]
+  }]
+}
 
-  // Section D, Financial Assessment
-  {'label' : 'ROWS: Rent, mortgage or room and board; Food; Utilities (phone, internet, water, heat/hydro); Transportation, parking and other personal supports; Dependant Care (eg. day care); Disability Needs; Spousal/Child support; Loans; Leases; Insurance; Credit card debt; Property taxes; Other costs not listed above COLUMNS: PART 2 - MONTHLY LIVING EXPENSES; Household', 'name' : 'financialAssessment.expenses', 'section' : 3, 'type' : 'Table', 'row' : 2, 'column' : 1, 'span' : 1},
-  {'label' : 'ROWS: Employment Income; Employment Insurance Benefits; Social Assistance; Spousal/Child Support; Self Employment; Pension Income (eg. Employer Plan); Disability Income; Workplace Safety and Insurance Board (WSIB) Benefits; Pension Plan; Child Tax Benefits; Income from Rental Property; Severance/Termination Pay;Any other source of income not listed above  COLUMNS: PART 1 - MONTHLY GROSS INCOME; Self; Other', 'name' : 'financialAssessment.income', 'section' : 3, 'type' : 'Table', 'row' : 1, 'column' : 1, 'span' : 1}
-]
-
-export const donorFields = [
-  {"type":"Text","name":"lastName","section":0,"row":1,"column":1,"choices":[],"span":1,"label":"Last Name","logicReq":true},
-  {"type":"Text","name":"firstName","section":0,"row":1,"column":2,"choices":[],"span":1,"label":"First Name","logicReq":true},
-  {"type":"Text","name":"middleName","section":0,"row":1,"column":3,"choices":[],"span":1,"label":"Middle Initials"},
-  {"name":"address","section":0,"type":"Text","row":1,"column":4,"choices":[],"span":1,"label":"Primary Mailing Address","logicReq":true},
-  {"name":"apartmentNumber","section":0,"type":"Text","row":2,"column":1,"choices":[],"span":1,"label":"Appartment Number"},
-  {"type":"Text","name":"city","section":0,"row":2,"column":3,"choices":[],"span":1,"label":"City","logicReq":true},
-  {"type":"Text","name":"buzzNumber","section":0,"row":2,"column":2,"span":1,"label":"Buzz Number"},
-  {"name":"province","section":0,"type":"Text","row":2,"column":4,"span":1,"label":"Province"},
-  {"name":"postalCode","section":0,"type":"Text","row":3,"column":1,"span":1,"label":"Postal Code","logicReq":true},
-  {"name":"telephoneNumber","section":0,"type":"Text","row":3,"column":2,"span":1,"label":"Telephone Number","logicReq":true},
-  {"name":"mobileNumber","section":0,"type":"Text","row":3,"column":3,"span":1,"label":"Mobile Number"},
-  {"name":"email","section":0,"type":"Text","row":3,"column":4,"span":1,"label":"Email Address","logicReq":true},
-  {"name":"referredBy","section":0,"type":"Textarea","row":4,"column":1,"span":2,"label":"How did you hear about us?"}
-]
-
-export const volunteerFields = [
-  {"type":"Text","name":"lastName","section":0,"row":1,"column":1,"choices":[],"span":1,"label":"Last Name","logicReq":true},
-  {"type":"Text","name":"firstName","section":0,"row":1,"column":2,"choices":[],"span":1,"label":"First Name","logicReq":true},
-  {"type":"Text","name":"middleName","section":0,"row":1,"column":3,"choices":[],"span":1,"label":"Middle Initials"},
-  {"name":"address","section":0,"type":"Text","row":1,"column":4,"choices":[],"span":1,"label":"Primary Mailing Address","logicReq":true},
-  {"name":"apartmentNumber","section":0,"type":"Text","row":2,"column":1,"choices":[],"span":1,"label":"Appartment Number"},
-  {"type":"Text","name":"city","section":0,"row":2,"column":3,"choices":[],"span":1,"label":"City","logicReq":true},
-  {"type":"Text","name":"buzzNumber","section":0,"row":2,"column":2,"span":1,"label":"Buzz Number"},
-  {"name":"province","section":0,"type":"Text","row":2,"column":4,"span":1,"label":"Province"},
-  {"name":"postalCode","section":0,"type":"Text","row":3,"column":1,"span":1,"label":"Postal Code","logicReq":true},
-  {"name":"telephoneNumber","section":0,"type":"Text","row":3,"column":2,"span":1,"label":"Telephone Number","logicReq":true},
-  {"name":"mobileNumber","section":0,"type":"Text","row":3,"column":3,"span":1,"label":"Mobile Number"},
-  {"name":"email","section":0,"type":"Text","row":3,"column":4,"span":1,"label":"Email Address","logicReq":true},
-  {"name":"dateOfBirth","section":0,"type":"Date","row":4,"column":1,"span":1,"label":"Date of Birth","logicReq":true},
-  {"name":"contactPreference","section":0,"type":"Radio Buttons","choices":"Phone, Email","row":4,"column":2,"span":1,"label":"Best way to contact","logicReq":true},
-  {"name":"referredBy","section":0,"type":"Textarea","row":5,"column":1,"span":2,"label":"How did you hear about us?"},
-  {"name":"volunteerReason","section":0,"type":"Textarea","row":5,"column":3,"span":2,"label":"Why do you want to volunteer with us?"}
-]
+export const volunteerQuestionnaire = {
+  name: 'Volunteer Application',
+  identifier: 'qVolunteers',
+  sections: [{
+    name: 'General Info',
+    position: 0,
+    fields: [
+      {type: 'address', position: 0, label: 'Street', required:true},
+      {type: 'address', position: 1, label: 'Town/City', required:true},
+      {type: 'address', position: 2, label: 'State/Province', required:true},
+      {type: 'address', position: 3, label: 'Zip/Post Code', required:true},
+      {type: 'text', position: 4, label: 'Telephone Number', required:true},
+      {type: 'date', position: 5, label: 'Date of Birth', required:true},
+      {type: 'radio', choices: 'Phone, Email', position: 6, label: 'Best way to contact'},
+      {type: 'textarea', position: 7, label: 'How did you hear about us?'},
+      {type: 'textarea', position: 8, label: 'Why do you want to volunteer with us?'}
+    ]
+  }]
+}
