@@ -63,11 +63,27 @@ async function seedDynamicFields(client) {
 
   const addressFields = generalInfoFields.filter(field => field.type === 'address')
   const dateOfBirthField = generalInfoFields.find(field => field.label === 'Date of Birth')
+// console.log('client', client)
+
+  if (dateOfBirthField)
+    return [{
+      meta: dateOfBirthField,
+      value: randomDate('1950-01-01', '2000-12-31')
+    }, {
+      meta: addressFields[0],
+      value: `${random(1,350)} ${faker.address.streetName()}`
+    }, {
+      meta: addressFields[1],
+      value: faker.address.city()
+    }, {
+      meta: addressFields[2],
+      value: faker.address.state()
+    }, {
+      meta: addressFields[3],
+      value: faker.address.zipCode()
+    }]
 
   return [{
-    meta: dateOfBirthField,
-    value: randomDate('1950-01-01', '2000-12-31')
-  }, {
     meta: addressFields[0],
     value: `${random(1,350)} ${faker.address.streetName()}`
   }, {
@@ -80,6 +96,7 @@ async function seedDynamicFields(client) {
     meta: addressFields[3],
     value: faker.address.zipCode()
   }]
+
 }
 
 /**
@@ -92,15 +109,15 @@ async function seedDynamicFields(client) {
 async function seedStaticFields(client, dateOfBirth) {
   let properties = {}
 
-  if (client.firstName === 'driver') {
-    properties.driver = true
-  }
-
   if (client.accountType.find(type => type === 'volunteer')) {
     properties.status = randomIn({
       'Active': 0.8,
       'Inactive': 0.2
     })
+
+    if (client.firstName === 'driver') {
+      properties.driver = true
+    }
   }
 
   if (client.accountType.find(type => type === 'donor')) {

@@ -6,7 +6,7 @@ export const donor = new schema.Entity('donors', {}, {idAttribute: '_id'})
 export const field = new schema.Entity('fields', {}, {idAttribute: '_id'})
 export const foodCategory = new schema.Entity('foodCategories', {}, {
   idAttribute: '_id',
-  processStrategy: (value, parent, key) => {
+  processStrategy: value => {
     //Add the category _id to each item in that category
     let category = Object.assign({}, value)
     if (category.items) {
@@ -41,19 +41,22 @@ customer.define({
 })
 
 donor.define({
+  fields: [{meta: field}],
   donations: arrayOfDonations,
   _id: user
-})
-
-foodCategory.define({
-  items: arrayOfFoodItems
 })
 
 questionnaire.define({sections: arrayOfSections})
 
 section.define({fields: arrayOfFields})
 
+
+foodCategory.define({
+  items: arrayOfFoodItems
+})
+
 volunteer.define({
+  fields: [{meta: field}],
   customers: arrayOfCustomers,
   _id: user
 })

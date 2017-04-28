@@ -103,6 +103,8 @@ class CustomerCreate extends Component {
     })
   }
 
+  submit = () => this.props.submit(FORM_NAME)
+
   render() {
     const {settings} = this.props
     const {customerModel} = this.state
@@ -142,7 +144,7 @@ class CustomerCreate extends Component {
             <div className="text-right">
               <Button
                 type="button"
-                onClick={() => this.props.submit(FORM_NAME)}
+                onClick={this.submit}
                 bsStyle="success"
               >
                 Submit
