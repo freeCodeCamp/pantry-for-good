@@ -1,0 +1,66 @@
+.undecorated-link:hover {
+  text-decoration: none;
+}
+
+td .tools {
+  display: none;
+  float: right;
+}
+
+td .tools>.fa,td .tools>.glyphicon,td .tools>.ion {
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+td:hover .tools {
+  display: inline-block;
+}
+
+.top-buffer {
+  margin-top: 10px;
+}
+
+.headline {
+  margin-top: -20px;
+}
+
+@media print {
+  .table-responsive {
+    overflow: visible;
+  }
+}
+
+textarea {
+  resize: none;
+}
+
+.modal-content>.invoice-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gm-style-iw {
+  text-align: center;
+}
+
+.gm-style-iw+div {
+  display: noneÏ;
+}
+
+@media (min-width:992px) {
+Ï
+  .nav-users {
+    position: fixed;
+  }
+}
+
+.remove-account-container {
+  display: inline-block;
+  position: relative;
+}
+
+.btn-remove-account {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}

@@ -14,7 +14,7 @@ import 'font-awesome/css/font-awesome.css'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/skin-blue.min.css'
 
-import './application.min.css'
+import './application.css'
 import './modules/core/css/core.css'
 
 import Router from './Router'
