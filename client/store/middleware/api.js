@@ -81,10 +81,23 @@ export default store => next => action => {
       response,
       type: successType
     })),
-    error => next(actionWith({
+    error => { 
+      let errorMessage = ""
+      if (error.error && error.error.errors) {
+          errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
+            return acc + " " + val[1].message + "\n"
+          }, "")
+          console.log(errorMessage)
+      } else if (error.message) {
+        errorMessage = error.message
+      } else {
+        errorMessage = "The server responded with an error"
+      }
+
+      return next(actionWith({
       type: failureType,
-      error: error.message || 'Something bad happened'
-    }))
+      error: errorMessage
+    }))}
   )
 }
 

@@ -45,7 +45,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     trim: true,
-    default: '',
+    unique: true,
     validate: [validateLocalStrategyProperty, 'Please fill in your email'],
     match: [/.+\@.+\..+/, 'Please fill a valid email address']
   },
