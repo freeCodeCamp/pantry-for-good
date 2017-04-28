@@ -17,7 +17,8 @@ class FoodItems extends React.Component {
       // editModalFood is the food being edited in the edit modal
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
-      validInput: false
+      validInput: false,
+      searchText: ""
     }
   }
 
