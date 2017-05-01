@@ -23,11 +23,9 @@ export default history => {
   const routerMiddleware = createRouterMiddleware(history)
   const middleware = [thunk, routerMiddleware, apiMiddleware]
 
-  const enhancers = compose(
-      applyMiddleware(...middleware),
-      window.devToolsExtension && __DEVELOPMENT__ ?
-          window.devToolsExtension() : f => f
-  )
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+  const enhancers = composeEnhancers(applyMiddleware(...middleware))
 
   const store = createStore(reducer, enhancers)
 
@@ -35,9 +33,6 @@ export default history => {
     module.hot.accept('./reducer', () => {
       const nextReducer = require('./reducer').default
       store.replaceReducer(nextReducer)
-      if (window.devToolsExtension) {
-        window.devToolsExtension.updateStore(store)
-      }
     })
   }
 
