@@ -7,3 +7,6 @@
 .form-group-no-margin {
   margin-bottom: 0;
 }
+div > .list-group-item:focus {
+  outline: none;
+}
