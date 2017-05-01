@@ -4,3 +4,6 @@
   color: #fff;
   border: none;
 }
+.form-group-no-margin {
+  margin-bottom: 0;
+}

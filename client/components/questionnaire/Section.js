@@ -1,5 +1,5 @@
 import React from 'react'
-import {sortBy, take, takeRight} from 'lodash'
+import {take, takeRight} from 'lodash'
 import {Col} from 'react-bootstrap'
 
 import {RFFieldGroup} from '../form'
@@ -7,7 +7,7 @@ import Household from './widgets/Household'
 
 // eslint-disable-next-line no-unused-vars
 const Section = ({section, model, onSubmit}) => {
-  const fields = sortBy(section.fields, 'position')
+  const fields = section.fields
   const numFields = fields.length
 
   const left = take(fields, Math.ceil(numFields / 2))

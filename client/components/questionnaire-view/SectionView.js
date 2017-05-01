@@ -1,5 +1,5 @@
 import React from 'react'
-import {sortBy, take, takeRight} from 'lodash'
+import {take, takeRight} from 'lodash'
 import {utc} from 'moment'
 import {Col, Row} from 'react-bootstrap'
 
@@ -7,7 +7,7 @@ import HouseholdView from './widgets/HouseholdView'
 import FoodPreferencesView from './widgets/FoodPreferencesView'
 
 const SectionView = ({section, model}) => {
-  const fields = sortBy(section.fields, 'position')
+  const fields = section.fields
   const numFields = fields.length
 
   if (!numFields) return null

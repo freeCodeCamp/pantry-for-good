@@ -1,36 +1,124 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {Nav, NavItem} from 'react-bootstrap'
 
-const SectionForm = ({sections, selectedSection, onSelect}) =>
-  <div>
-    <h4>Sections</h4>
-    <Nav
-      bsStyle="pills"
-      stacked
-      className="bs-default-nav"
-      activeKey={selectedSection}
-      onSelect={onSelect}
-    >
-      {sections.map(section =>
-        <NavItem
-          key={section.position}
-          eventKey={section.position}
-        >
-          <div style={{
+import {selectors} from '../../../store'
+import {
+  editSection,
+  deleteSection,
+  addSection,
+  updateSection,
+  selectSection
+} from '../reducers/questionnaire-editor'
+
+import SectionView from './SectionView'
+import SectionEdit from './SectionEdit'
+
+const mapStateToProps = state => ({
+  sectionIds: selectors.getSectionIds(state),
+  getSection: selectors.getSectionById(state),
+  editing: selectors.getEditingSection(state),
+  selected: selectors.getSelectedSection(state)
+})
+
+const mapDispatchToProps = dispatch => ({
+  editSection: id => dispatch(editSection(id)),
+  selectSection: id => dispatch(selectSection(id)),
+  deleteSection: id => dispatch(deleteSection(id)),
+  addSection: section => dispatch(addSection(section)),
+  updateSection: section => dispatch(updateSection(section))
+})
+
+class SectionForm extends Component {
+  handleEdit = id => () => this.props.editSection(id)
+
+  handleDelete = id => () => this.props.deleteSection(id)
+
+  handleCancel = section => () => {
+    this.props.editSection()
+    if (!section.name.trim().length)
+      this.props.deleteSection(section._id)
+  }
+
+  handleSelect = section => {
+    if (this.props.editing !== section._id)
+      this.props.editSection()
+    this.props.selectSection(section)
+  }
+
+  handleUpdate = section => () => {
+    this.props.updateSection(section)
+    this.props.editSection()
+  }
+
+  handleKeyUp = (oldSection, newSection, valid) => ev => {
+    if (ev.keyCode === 13 && valid)
+      this.handleUpdate(newSection)()
+    if (ev.keyCode === 27)
+      this.handleCancel(oldSection)()
+  }
+
+  render() {
+    const {
+      sectionIds,
+      getSection,
+      editing,
+      selected,
+      addSection
+    } = this.props
+
+    return (
+      <div>
+        <div
+          style={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            {section.name}
-            <span>
-              <i className="fa fa-edit text-blue" onClick={() => {}}></i>{' '}
-              <i className="fa fa-trash-o text-red" onClick={() => {}}></i>
-            </span>
-          </div>
-        </NavItem>
-      )}
-    </Nav>
-  </div>
+            margin: '10px 0'
+          }}
+        >
+          <h4>Sections</h4>
+          <button
+            className="btn btn-success"
+            onClick={addSection}
+            disabled={editing}
+          >
+            Add Section
+          </button>
+        </div>
+        <Nav
+          bsStyle="pills"
+          stacked
+          className="bs-default-nav"
+          activeKey={selected}
+          onSelect={this.handleSelect}
+        >
+          {sectionIds.map((id, idx) =>
+            <NavItem
+              key={id}
+              eventKey={id}
+            >
+              {id === editing ?
+                <SectionEdit
+                  id={id}
+                  onCancel={this.handleCancel}
+                  onSave={this.handleUpdate}
+                  onKeyUp={this.handleKeyUp}
+                /> :
+                <SectionView
+                  idx={idx}
+                  section={getSection(id)}
+                  onEdit={this.handleEdit(id)}
+                  onDelete={this.handleDelete(id)}
+                />
+              }
+            </NavItem>
+          )}
+        </Nav>
 
-export default SectionForm
+      </div>
+    )
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionForm)
 

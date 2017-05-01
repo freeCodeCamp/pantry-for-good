@@ -1,71 +1,147 @@
 import React from 'react'
-import {
-  Button,
-  ButtonToolbar,
-  Dropdown,
-  Glyphicon,
-  ListGroupItem,
-  MenuItem,
-  Row
-} from 'react-bootstrap'
+import {compose} from 'recompose'
+import {connect} from 'react-redux'
+import {reduxForm, formValueSelector} from 'redux-form'
+import {ButtonToolbar, Button, ListGroupItem} from 'react-bootstrap'
 
-import {FieldGroup} from '../../../components/form'
+import {RFFieldGroup} from '../../../components/form'
 
-const FieldEdit = ({field, description, onChange, onKeyUp}) =>
-  <ListGroupItem onKeyUp={onKeyUp} style={{border: 'none'}}>
-    <Row style={{display: 'flex', margin: '0'}}>
-      <div style={{flexGrow: 10, margin: '0 10px 0 0'}}>
-        <FieldGroup
+const selector = formValueSelector('fieldForm')
+const mapStateToProps = state => ({
+  fieldType: selector(state, 'type')
+})
+
+const FieldEdit = ({onSubmit, handleSubmit, onEdit, onKeyUp, fieldType}) =>
+  <ListGroupItem
+    onKeyUp={onKeyUp}
+    style={{
+      border: 'none'
+    }}
+  >
+    <div style={{display: 'flex', flexWrap: 'wrap'}}>
+      <div style={{display: 'flex', flexGrow: 1, flexBasis: '100%'}}>
+        <RFFieldGroup
           type="text"
           name="label"
           placeholder="Question Label"
-          value={field.label}
-          onChange={onChange(field._id)}
+          required
           autoFocus
+          style={{flexGrow: 1, paddingRight: '10px'}}
         />
-      </div>
-      <ButtonToolbar>
-        <Dropdown
-          pullRight
-          onSelect={mapEventKey(onChange(field._id))}
-          id="fieldType"
+        <RFFieldGroup
+          type="select"
+          name="type"
         >
-          <Dropdown.Toggle>
-            {description}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <MenuItem eventKey="text" active={field.type === 'text'}>Text</MenuItem>
-            <MenuItem eventKey="address" active={field.type === 'address'}>Address</MenuItem>
-            <MenuItem eventKey="textarea" active={field.type === 'textarea'}>Long Text</MenuItem>
-            <MenuItem eventKey="date" active={field.type === 'date'}>Date</MenuItem>
-            <MenuItem eventKey="radio" active={field.type === 'radio'}>Radio Buttons</MenuItem>
-            <MenuItem eventKey="checkbox" active={field.type === 'checkbox'}>Checkbox</MenuItem>
-            <MenuItem divider />
-            <MenuItem header>Widgets</MenuItem>
-            <MenuItem eventKey="foodPreferences" active={field.type === 'foodPreferences'}>Food Preferences</MenuItem>
-            <MenuItem eventKey="household" active={field.type === 'household'}>Household</MenuItem>
-            <MenuItem eventKey="table" active={field.type === 'table'}>Table</MenuItem>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Button name="moveUp" onClick={onChange(field._id)}>
-          <Glyphicon glyph="arrow-up" />
+          <option value="text">Text</option>
+          <option value="address">Address</option>
+          <option value="textarea">Long Text</option>
+          <option value="date">Date</option>
+          <option value="radio">Radio Buttons</option>
+          <option value="checkbox">Checkboxes</option>
+          <option disabled style={{fontSize: '1px'}}>{' '}</option>
+          <option disabled style={{fontSize: '12px', color: '#aaa'}}>{String.fromCharCode('00A0')}Widgets</option>
+          <option value="foodPreferences">Food Preferences</option>
+          <option value="household">Household</option>
+          <option value="table">Table</option>
+        </RFFieldGroup>
+      </div>
+      <div style={{display: 'flex', flexGrow: 1, padding: '0 10px'}}>
+        <RFFieldGroup
+          type="checkbox"
+          name="required"
+          options={['Required']}
+          style={{paddingRight: '10px'}}
+        />
+        {(fieldType === 'radio' || fieldType === 'checkbox') &&
+          <RFFieldGroup
+            type="text"
+            name="choices"
+            placeholder="Option 1, Option 2..."
+            required
+            style={{flexGrow: 1, paddingRight: '10px'}}
+          />
+        }
+        {fieldType === 'table' &&
+          <RFFieldGroup
+            type="text"
+            name="rows"
+            placeholder="Row 1, Row 2..."
+            required
+            style={{flexGrow: 1, paddingRight: '10px'}}
+          />
+        }
+        {fieldType === 'table' &&
+          <RFFieldGroup
+            type="text"
+            name="cols"
+            placeholder="Column 1, Column 2..."
+            required
+            style={{flexGrow: 1, paddingRight: '10px'}}
+          />
+        }
+      </div>
+      <ButtonToolbar style={{display: 'flex'}}>
+        <Button
+          onClick={handleSubmit}
+          style={{backgroundColor: '#fff', height: '45px'}}
+        >
+          <i className="fa fa-save" />
         </Button>
-        <Button name="moveDown" onClick={onChange(field._id)}>
-          <Glyphicon glyph="arrow-down" />
+        <Button
+          onClick={onEdit()}
+          style={{backgroundColor: '#fff', height: '45px'}}
+        >
+          <i className="fa fa-times" />
+        </Button>
+        <Button
+          onClick={onEdit()}
+          style={{backgroundColor: '#fff', height: '45px'}}
+        >
+          <i className="fa fa-arrow-up" />
+        </Button>
+        <Button
+          onClick={onEdit()}
+          style={{backgroundColor: '#fff', height: '45px'}}
+        >
+          <i className="fa fa-arrow-down" />
         </Button>
       </ButtonToolbar>
-    </Row>
+    </div>
   </ListGroupItem>
 
-export default FieldEdit
+export default compose(
+  reduxForm({
+    form: 'fieldForm',
+    destroyOnUnmount: false,
+    enableReinitialize: true,
+    validate
+  }),
+  connect(mapStateToProps)
+)(FieldEdit)
 
-function mapEventKey(cb) {
-  return function(key) {
-    cb({
-      target: {
-        name: 'type',
-        value: key
-      }
-    })
+
+
+function validate(fields, props) {
+  const {values} = props
+  let errors = {}
+
+  if (!fields.label.trim().length)
+    errors.label = 'Label is required'
+
+  if (fields.type === 'radio') {
+    if (typeof values.choices !== 'string' || !values.choices.trim().length)
+      errors.choices = 'Add two or more options'
+    else if (values.choices.split(',').filter(s => s.trim().length).length < 2)
+      errors.choices = 'Add options separated by commas'
   }
+
+  if (fields.type === 'table') {
+    if (!values.rows)
+      errors.rows = 'Add one or more comma-separated rows'
+    if (!values.cols)
+      errors.cols = 'Add one or more comma-separated columns'
+  }
+
+
+  return errors
 }

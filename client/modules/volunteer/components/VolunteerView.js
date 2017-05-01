@@ -6,7 +6,7 @@ import {ButtonToolbar, Button} from 'react-bootstrap'
 import {selectors} from '../../../store'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../volunteer-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageBody, PageHeader} from '../../../components/page'

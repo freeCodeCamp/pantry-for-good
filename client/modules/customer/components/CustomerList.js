@@ -6,7 +6,7 @@ import {Table} from 'react-bootstrap'
 
 import {selectors} from '../../../store'
 import {loadCustomers} from '../customer-reducer'
-import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
 
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import Page from '../../../components/page/PageBody'

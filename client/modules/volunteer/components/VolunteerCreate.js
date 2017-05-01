@@ -11,7 +11,7 @@ import {toForm, fromForm} from '../../../lib/fields-adapter'
 import {selectors} from '../../../store'
 import {saveVolunteer} from '../volunteer-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
 
 import AssistanceInfo from '../../../components/AssistanceInfo'
 import {Page, PageBody, PageHeader} from '../../../components/page'
