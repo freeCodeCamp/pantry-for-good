@@ -1,46 +1,19 @@
-import {createStore, applyMiddleware, compose, combineReducers} from 'redux'
-import {
-  routerReducer as router,
-  routerMiddleware as createRouterMiddleware
-} from 'react-router-redux'
+import {createStore, applyMiddleware, compose} from 'redux'
+import {routerMiddleware as createRouterMiddleware} from 'react-router-redux'
 import thunk from 'redux-thunk'
-import {reducer as form} from 'redux-form'
 import {createSelector} from 'reselect'
 
 import apiMiddleware from './middleware/api'
-import app from '../modules/core/app-reducers'
-import auth from '../modules/users/auth-reducer'
-import customer, {selectors as customerSelectors} from '../modules/customer/customer-reducer'
-import donation, {selectors as donationSelectors} from '../modules/donor/donation-reducer'
-import donor, {selectors as donorSelectors} from '../modules/donor/donor-reducer'
-import entities from './entities'
-import foodCategory, {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer'
-import foodItem, {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
-import location, {selectors as locationSelectors} from '../modules/driver/location-reducer'
-import media from '../modules/media/media-reducer'
-import packing from '../modules/food/packing-reducer'
-import questionnaire, {selectors as questionnaireSelectors} from '../modules/questionnaire/questionnaire-reducer'
-import settings from '../modules/settings/settings-reducer'
-import volunteer, {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer'
-
-const rootReducer = combineReducers({
-  entities,
-  app,
-  auth,
-  customer,
-  donation,
-  donor,
-  foodCategory,
-  foodItem,
-  form,
-  location,
-  media,
-  packing,
-  questionnaire,
-  router,
-  settings,
-  volunteer
-})
+import reducer from './reducer'
+import {selectors as customerSelectors} from '../modules/customer/customer-reducer'
+import {selectors as donationSelectors} from '../modules/donor/donation-reducer'
+import {selectors as donorSelectors} from '../modules/donor/donor-reducer'
+import {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer'
+import {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
+import {selectors as locationSelectors} from '../modules/driver/location-reducer'
+import {selectors as questionnaireSelectors} from '../modules/questionnaire/reducers/questionnaire-api'
+import {selectors as qEditorSelectors} from '../modules/questionnaire/reducers/questionnaire-editor'
+import {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer'
 
 /**
  * Create redux store
@@ -56,7 +29,19 @@ export default history => {
           window.devToolsExtension() : f => f
   )
 
-  return createStore(rootReducer, enhancers)
+  const store = createStore(reducer, enhancers)
+
+  if(module.hot) {
+    module.hot.accept('./reducer', () => {
+      const nextReducer = require('./reducer').default
+      store.replaceReducer(nextReducer)
+      if (window.devToolsExtension) {
+        window.devToolsExtension.updateStore(store)
+      }
+    })
+  }
+
+  return store
 }
 
 export const selectors = {
@@ -127,6 +112,16 @@ export const selectors = {
     questionnaireSelectors.saving(state.questionnaire),
   saveQuestionnairesError: state =>
     questionnaireSelectors.saveError(state.questionnaire),
+
+  getSectionIds: state => qEditorSelectors.getSectionIds(state.questionnaireEditor),
+  getFieldIds: state => sectionId => qEditorSelectors.getFieldIds(state.questionnaireEditor, sectionId),
+  getSectionById: state => id => qEditorSelectors.getSectionById(state.questionnaireEditor, id),
+  getFieldById: state => id => qEditorSelectors.getFieldById(state.questionnaireEditor, id),
+  getEditingQuestionnaire: state => qEditorSelectors.getEditingQuestionnaire(state.questionnaireEditor),
+  getEditingSection: state => qEditorSelectors.getEditingSection(state.questionnaireEditor),
+  getEditingField: state => qEditorSelectors.getEditingField(state.questionnaireEditor),
+  getSelectedSection: state => qEditorSelectors.getSelectedSection(state.questionnaireEditor),
+  getCompleteQuestionnaire: state => qEditorSelectors.getCompleteQuestionnaire(state.questionnaireEditor),
 
   getAllVolunteers: state =>
     volunteerSelectors.getAll(state.volunteer.ids, state.entities),
