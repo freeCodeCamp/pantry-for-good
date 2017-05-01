@@ -18,16 +18,23 @@ const mapDispatchToProps = dispatch => ({
 
 const fieldSource = {
   beginDrag(props) {
-    return {fieldId: props.field._id}
+    return {
+      id: props.field._id,
+      idx: props.idx
+    }
   }
 }
 
 const fieldTarget = {
   hover(props, monitor) {
-    const draggedFieldId = monitor.getItem().fieldId
+    const {id, idx} = monitor.getItem()
     const dropIndex = props.idx
 
-    props.moveField(draggedFieldId, props.sectionId, dropIndex)
+    if (idx === dropIndex) return
+
+    props.moveField(id, props.sectionId, dropIndex)
+
+    monitor.getItem().idx = dropIndex
   }
 }
 

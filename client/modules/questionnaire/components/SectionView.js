@@ -16,16 +16,23 @@ const mapDispatchToProps = dispatch => ({
 
 const sectionSource = {
   beginDrag(props) {
-    return {sectionId: props.section._id}
+    return {
+      id: props.section._id,
+      idx: props.idx
+    }
   }
 }
 
 const sectionTarget = {
   hover(props, monitor) {
-    const draggedSectionId = monitor.getItem().sectionId
+    const {id, idx} = monitor.getItem()
     const dropIndex = props.idx
 
-    props.moveSection(draggedSectionId, dropIndex)
+    if (idx === dropIndex) return
+
+    props.moveSection(id, dropIndex)
+
+    monitor.getItem().idx = dropIndex
   }
 }
 
