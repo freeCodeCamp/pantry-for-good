@@ -2,16 +2,16 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {routerMiddleware as createRouterMiddleware} from 'react-router-redux'
 import thunk from 'redux-thunk'
 import {createSelector} from 'reselect'
-import {flatMap} from 'lodash'
 
 import apiMiddleware from './middleware/api'
 import reducer from './reducer'
 import {selectors as customerSelectors} from '../modules/customer/customer-reducer'
 import {selectors as donationSelectors} from '../modules/donor/donation-reducer'
 import {selectors as donorSelectors} from '../modules/donor/donor-reducer'
+import {createSelectors as createDeliverySelectors} from '../modules/driver/reducers/delivery'
 import {selectors as foodCategorySelectors} from '../modules/food/food-category-reducer'
 import {selectors as foodItemSelectors} from '../modules/food/food-item-reducer'
-import {selectors as locationSelectors} from '../modules/driver/location-reducer'
+import {selectors as locationSelectors} from '../modules/driver/reducers/location'
 import {selectors as questionnaireSelectors} from '../modules/questionnaire/reducers/questionnaire-api'
 import {selectors as qEditorSelectors} from '../modules/questionnaire/reducers/questionnaire-editor'
 import {selectors as volunteerSelectors} from '../modules/volunteer/volunteer-reducer'
@@ -39,6 +39,8 @@ export default history => {
 
   return store
 }
+
+export const deliverySelectors = createDeliverySelectors('delivery', 'customer.ids', customerSelectors)
 
 export const selectors = {
   // TODO: figure out how to memoize getFoo selectors
