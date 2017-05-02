@@ -5,6 +5,7 @@ import random from 'lodash/random'
 import range from 'lodash/range'
 import faker from 'faker'
 import {utc} from 'moment'
+import Generator from './address-generator'
 
 const User = mongoose.model('User')
 const Donation = mongoose.model('Donation')
@@ -12,6 +13,7 @@ const Food = mongoose.model('Food')
 const Questionnaire = mongoose.model('Questionnaire')
 
 const clientTypes = ['customer', 'volunteer', 'donor']
+const addressGenerator = new Generator
 
 export default async function seedClients() {
   await clientTypes.map(async type => {
@@ -41,8 +43,9 @@ export default async function seedClients() {
  * @returns {Promise<mongoose.Document>}
  */
 async function seedClientFields(client) {
-  const dynamicFields = await seedDynamicFields(client)
-  const staticFields = await seedStaticFields(client, dynamicFields[0].value)
+  const address = addressGenerator.getAddress()
+  const dynamicFields = await seedDynamicFields(client, address)
+  const staticFields = await seedStaticFields(client, dynamicFields[0].value, address)
 
   return extend(client, staticFields, {fields: dynamicFields})
 }
@@ -53,7 +56,7 @@ async function seedClientFields(client) {
  * @param {object} client
  * @returns {array}
  */
-async function seedDynamicFields(client) {
+async function seedDynamicFields(client, address) {
   const identifier = `q${capitalize(client.accountType)}s`
   const questionnaire = await Questionnaire
     .findOne({identifier})
@@ -63,40 +66,28 @@ async function seedDynamicFields(client) {
 
   const addressFields = generalInfoFields.filter(field => field.type === 'address')
   const dateOfBirthField = generalInfoFields.find(field => field.label === 'Date of Birth')
-// console.log('client', client)
 
-  if (dateOfBirthField)
-    return [{
-      meta: dateOfBirthField,
-      value: randomDate('1950-01-01', '2000-12-31')
-    }, {
-      meta: addressFields[0],
-      value: `${random(1,350)} ${faker.address.streetName()}`
-    }, {
-      meta: addressFields[1],
-      value: faker.address.city()
-    }, {
-      meta: addressFields[2],
-      value: faker.address.state()
-    }, {
-      meta: addressFields[3],
-      value: faker.address.zipCode()
-    }]
-
-  return [{
+  let fields = [{
     meta: addressFields[0],
-    value: `${random(1,350)} ${faker.address.streetName()}`
+    value: address.street
   }, {
     meta: addressFields[1],
-    value: faker.address.city()
+    value: address.city
   }, {
     meta: addressFields[2],
-    value: faker.address.state()
+    value: address.state
   }, {
     meta: addressFields[3],
-    value: faker.address.zipCode()
+    value: address.zip
   }]
 
+  if (dateOfBirthField)
+    fields.unshift({
+      meta: dateOfBirthField,
+      value: randomDate('1950-01-01', '2000-12-31')
+    })
+
+  return fields
 }
 
 /**
@@ -106,7 +97,7 @@ async function seedDynamicFields(client) {
  * @param {string} dateOfBirth
  * @returns {object}
  */
-async function seedStaticFields(client, dateOfBirth) {
+async function seedStaticFields(client, dateOfBirth, address) {
   let properties = {}
 
   if (client.accountType.find(type => type === 'volunteer')) {
@@ -130,7 +121,7 @@ async function seedStaticFields(client, dateOfBirth) {
   if (client.accountType.find(type => type === 'customer')) {
     properties = {
       ...properties,
-      ...await populateCustomerFields(client, dateOfBirth)
+      ...await populateCustomerFields(client, dateOfBirth, address)
     }
   }
 
@@ -172,7 +163,7 @@ async function populateDonorFields(client) {
  * @param {string} dateOfBirth
  * @returns {object}
  */
-async function populateCustomerFields(client, dateOfBirth) {
+async function populateCustomerFields(client, dateOfBirth, address) {
   // get a random sample of foods for foodPreferences
   const foodPreferences = (await Food.aggregate(
       {$unwind: '$items'},
@@ -185,6 +176,8 @@ async function populateCustomerFields(client, dateOfBirth) {
     dateOfBirth
   }]
 
+  const location = [address.lat, address.lng]
+
   const status = randomIn({
     'Accepted': 0.8,
     'Rejected': 0.1,
@@ -195,6 +188,7 @@ async function populateCustomerFields(client, dateOfBirth) {
   return {
     foodPreferences,
     household,
+    location,
     status
   }
 }

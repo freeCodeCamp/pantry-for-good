@@ -1,129 +1,103 @@
 import React from 'react'
 import {reduxForm} from 'redux-form'
 import {Link} from 'react-router-dom'
+import {Button, Clearfix, Col, Row} from 'react-bootstrap'
 
 import {RFFieldGroup} from '../../../components/form'
 
 const SettingsForm = ({onSubmit, handleSubmit}) =>
   <div>
-    <div className="row">
-      <div className="col-lg-3">
-        <div className="form-group">
-          <RFFieldGroup
-            name="organization"
-            label="Organization"
-            type="text"
-            required
-          />
-        </div>
-      </div>
-      <div className="clearfix visible-sm-block visible-md-block"></div>
-      <div className="col-lg-2">
-        <div className="form-group">
-          <RFFieldGroup
-            name="url"
-            label="URL"
-            type="text"
-            required
-          />
-        </div>
-      </div>
-      <div className="clearfix visible-sm-block visible-md-block"></div>
-      <div className="col-lg-2">
-        <div className="form-group">
-          <RFFieldGroup
-            name="foodBankCity"
-            label="City"
-            type="text"
-            required
-          />
-        </div>
-      </div>
-      <div className="col-lg-2">
-        <div className="form-group">
-          <RFFieldGroup
-            name="clientIntakeNumber"
-            label="Client intake number"
-            type="text"
-            required
-          />
-        </div>
-      </div>
-      <div className="clearfix visible-sm-block visible-md-block"></div>
-      <div className="col-lg-3">
-        <div className="form-group">
-          <RFFieldGroup
-            name="supportNumber"
-            label="Support number"
-            type="text"
-            required
-          />
-        </div>
-      </div>
-    </div>
+    <Row>
+      <Col lg={3}>
+        <RFFieldGroup
+          name="organization"
+          label="Organization"
+          type="text"
+          required
+        />
+      </Col>
+      <Clearfix visibleSmBlock visibleMdBlock />
+      <Col lg={3}>
+        <RFFieldGroup
+          name="url"
+          label="URL"
+          type="text"
+          required
+        />
+      </Col>
+      <Clearfix visibleSmBlock visibleMdBlock />
+      <Col lg={3}>
+        <RFFieldGroup
+          name="clientIntakeNumber"
+          label="Client intake number"
+          type="text"
+          required
+        />
+      </Col>
+      <Clearfix visibleSmBlock visibleMdBlock />
+      <Col lg={3}>
+        <RFFieldGroup
+          name="supportNumber"
+          label="Support number"
+          type="text"
+          required
+        />
+      </Col>
+    </Row>
 
-    <div className="row">
-      <div className="col-lg-6">
-        <div className="form-group">
-          <RFFieldGroup
-            name="mission"
-            label="Mission"
-            type="textarea"
-            rows="5"
-          />
-        </div>
-      </div>
-      <div className="clearfix visible-sm-block visible-md-block"></div>
-      <div className="col-lg-6">
-        <div className="form-group">
-          <RFFieldGroup
-            name="instructions"
-            label="Instructions to clients"
-            type="textarea"
-            rows="5"
-          />
-        </div>
-      </div>
-      <div className="clearfix"></div>
-      <div className="col-lg-6">
-        <div className="form-group">
-          <RFFieldGroup
-            name="thanks"
-            label="Thank you to donors"
-            type="textarea"
-            rows="5"
-          />
-        </div>
-      </div>
-      <div className="clearfix visible-sm-block visible-md-block"></div>
-      <div className="col-lg-6">
-        <div className="form-group">
-          <RFFieldGroup
-            name="other"
-            label="Other"
-            type="textarea"
-            rows="5"
-            placeholder="For later use"
-          />
-        </div>
-      </div>
-    </div>
+    <Row>
+      <Col lg={6}>
+        <RFFieldGroup
+          name="mission"
+          label="Mission"
+          type="textarea"
+          rows="5"
+        />
+      </Col>
+      <Clearfix visibleSmBlock visibleMdBlock />
+      <Col lg={6}>
+        <RFFieldGroup
+          name="instructions"
+          label="Instructions to clients"
+          type="textarea"
+          rows="5"
+        />
+      </Col>
+      <Clearfix />
+      <Col lg={6}>
+        <RFFieldGroup
+          name="thanks"
+          label="Thank you to donors"
+          type="textarea"
+          rows="5"
+        />
+      </Col>
+      <Clearfix visibleSmBlock visibleMdBlock />
+      <Col lg={6}>
+        <RFFieldGroup
+          name="foodBankAddress"
+          label="Address"
+          type="textarea"
+          rows="5"
+        />
+      </Col>
+    </Row>
 
-    <div className="row">
-      <div className="col-sm-6 col-md-4 col-lg-2">
-        <button
+    <Row>
+      <Col sm={6} md={4} lg={2}>
+        <Button
           onClick={handleSubmit}
-          className="btn btn-success btn-block top-buffer"
+          bsStyle="success"
         >
           Save Changes
-        </button>
-      </div>
-      <div className="col-sm-6 col-md-4 col-lg-2">
+        </Button>
+      </Col>
+      <Col sm={6} md={4} lg={2}>
         <Link to="/" className="btn btn-primary btn-block top-buffer">
           Cancel
         </Link>
-      </div>
-    </div>
+      </Col>
+    </Row>
   </div>
 
 export default reduxForm({
@@ -143,8 +117,8 @@ function validate(values) {
     errors.url = 'URL is required'
   }
 
-  if (!values.foodBankCity) {
-    errors.foodBankCity = 'City is required'
+  if (!values.foodBankAddress) {
+    errors.foodBankAddress = 'Address is required'
   }
 
   if (!values.clientIntakeNumber) {

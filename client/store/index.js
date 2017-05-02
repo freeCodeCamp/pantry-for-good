@@ -2,6 +2,7 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {routerMiddleware as createRouterMiddleware} from 'react-router-redux'
 import thunk from 'redux-thunk'
 import {createSelector} from 'reselect'
+import {flatMap} from 'lodash'
 
 import apiMiddleware from './middleware/api'
 import reducer from './reducer'
@@ -121,8 +122,12 @@ export const selectors = {
   getAllVolunteers: state =>
     volunteerSelectors.getAll(state.volunteer.ids, state.entities),
   getOneVolunteer: state => id => volunteerSelectors.getOne(id, state.entities),
+  getAllDrivers: createSelector(
+    state => volunteerSelectors.getAll(state.volunteer.ids, state.entities),
+    volunteers => volunteers.filter(v => v.driver && v.status === 'Active')
+  ),
   loadingVolunteers: state => volunteerSelectors.loading(state.volunteer),
   loadVolunteersError: state => volunteerSelectors.loadError(state.volunteer),
   savingVolunteers: state => volunteerSelectors.saving(state.volunteer),
-  saveVolunteersError: state => volunteerSelectors.saveError(state.volunteer),
+  saveVolunteersError: state => volunteerSelectors.saveError(state.volunteer)
 }

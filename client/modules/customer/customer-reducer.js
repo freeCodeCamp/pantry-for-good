@@ -50,8 +50,7 @@ export const deleteCustomer = id => ({
 export const assignCustomers = (customerIds, driverId) => dispatch => {
   const body = {customerIds, driverId}
   callApi('admin/customers/assign', 'POST', body, null, arrayOfCustomers)
-    .then(customers => {
-      const response = normalize(customers, arrayOfCustomers)
+    .then(response => {
       dispatch({type: actions.SAVE_SUCCESS, response})
     })
     .catch(error => dispatch({type: actions.SAVE_FAILURE, error}))

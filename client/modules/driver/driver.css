@@ -7,5 +7,6 @@
 }
 
 .googleMap{
-	height:285px;
+	height: 100vh;
+	padding-bottom: 75px;
 }
