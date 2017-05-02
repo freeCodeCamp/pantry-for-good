@@ -13,12 +13,13 @@ module.exports = {
       path.resolve(__dirname, 'client', 'app.js')
     ],
     vendor: ['react-hot-loader/patch',
-            'webpack-dev-server/client?http://localhost:8080',
-            'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
-            'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react',
-            'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
-            'react-hot-loader', 'react-bootstrap', 'jquery', 'redux-form',
-            'reselect', 'recompose']
+      'webpack-dev-server/client?http://localhost:8080',
+      'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
+      'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react',
+      'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
+      'react-hot-loader', 'react-bootstrap', 'react-bootstrap-autosuggest',
+      'react-bootstrap-table', 'jquery', 'redux-form', 'reselect', 'recompose',
+      'react-dnd', 'react-dnd-html5-backend']
   },
   output: {
     path: path.resolve(__dirname, 'public', 'dist'),

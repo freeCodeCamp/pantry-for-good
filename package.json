@@ -16,7 +16,7 @@
     "test:server": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/tests/**/*.spec.js' --watch"
   },
   "dependencies": {
-    "admin-lte": "^2.3.8",
+    "admin-lte": "^2.3.11",
     "async": "~2.1.4",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
@@ -64,6 +64,7 @@
     "multer": "^1.2.0",
     "node-geocoder": "^3.16.0",
     "node-phantom-simple": "^2.2.4",
+    "node-uuid": "^1.4.8",
     "nodemailer": "~2.6.4",
     "normalizr": "^3.1.0",
     "nunjucks": "^3.0.0",
@@ -73,6 +74,8 @@
     "react-bootstrap": "^0.30.8",
     "react-bootstrap-autosuggest": "^0.5.0",
     "react-bootstrap-table": "^3.1.7",
+    "react-dnd": "^2.3.0",
+    "react-dnd-html5-backend": "^2.3.0",
     "react-dom": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "^5.0.3",

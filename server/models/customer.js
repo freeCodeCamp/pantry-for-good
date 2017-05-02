@@ -69,7 +69,7 @@ const CustomerSchema = new Schema({
   foodPreferences: [Schema.Types.ObjectId],
   fields: [{
     meta: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: true
     },
     value: String

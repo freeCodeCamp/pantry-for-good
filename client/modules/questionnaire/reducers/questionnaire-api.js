@@ -1,8 +1,8 @@
 import {denormalize} from 'normalizr'
 
-import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../store/schemas'
-import {CALL_API} from '../../store/middleware/api'
-import {crudActions, crudReducer} from '../../store/utils'
+import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../../store/schemas'
+import {CALL_API} from '../../../store/middleware/api'
+import {crudActions, crudReducer} from '../../../store/utils'
 
 export const actions = crudActions('questionnaire')
 

@@ -1,8 +1,13 @@
 import mongoose from 'mongoose'
+import uuid from 'node-uuid'
 
 const {Schema} = mongoose
 
 const FieldSchema = new Schema({
+  _id: {
+    type: String,
+    default: uuid.v4
+  },
   label: {
     type: String,
     required: 'Please fill in a field label',
@@ -18,12 +23,8 @@ const FieldSchema = new Schema({
     type: String,
     trim: true
   },
-  position: {
-    type: Number,
-    required: 'Position is required'
-  },
-  rows: [String],
-  columns: [String],
+  rows: String,
+  columns: String,
   required: {
     type: Boolean,
     default: false
@@ -31,14 +32,14 @@ const FieldSchema = new Schema({
 })
 
 const SectionSchema = new Schema({
+  _id: {
+    type: String,
+    default: uuid.v4
+  },
   name: {
     type: String,
     required: 'Please fill in a section name',
     trim: true
-  },
-  position: {
-    type: Number,
-    required: 'Position is required'
   },
   fields: [FieldSchema]
 })

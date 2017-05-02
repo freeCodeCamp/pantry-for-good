@@ -30,7 +30,7 @@ var DonorSchema = new Schema({
   }],
   fields: [{
     meta: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: true
     },
     value: String

@@ -20,6 +20,7 @@ const FieldGroup = ({
   touched,
   errorMessage,
   formGroupClass,
+  style,
   required,
   ...props
 }) =>
@@ -27,6 +28,7 @@ const FieldGroup = ({
     controlId={name}
     validationState={valid}
     className={formGroupClass}
+    style={style}
   >
     {label &&
       <ControlLabel>

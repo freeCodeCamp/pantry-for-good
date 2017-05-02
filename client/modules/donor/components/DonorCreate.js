@@ -9,7 +9,7 @@ import {fromForm, toForm} from '../../../lib/fields-adapter'
 import {selectors} from '../../../store'
 import {saveDonor} from '../donor-reducer'
 import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/questionnaire-reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
