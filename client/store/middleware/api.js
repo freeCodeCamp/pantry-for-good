@@ -87,9 +87,10 @@ export default store => next => action => {
           errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
             return acc + " " + val[1].message + "\n"
           }, "")
-          console.log(errorMessage)
       } else if (error.message) {
         errorMessage = error.message
+      } else if (error.errmsg) {
+        errorMessage = error.errmsg
       } else {
         errorMessage = "The server responded with an error"
       }

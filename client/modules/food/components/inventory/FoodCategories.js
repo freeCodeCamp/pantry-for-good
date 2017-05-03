@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Category from './Category'
 import NewCategory from './NewCategory'
 import { selectors } from 'store'
 import { loadFoods, saveFood, deleteFood } from '../../food-category-reducer'
@@ -14,7 +15,7 @@ class FoodCategories extends Component {
   onItemEdit = (_id, value) => {
     let foodCategoryToUpdate = _.find(this.props.foods, {_id})
 
-        //Don't do anything if it is the same value
+    //Don't do anything if it is the same value
     if (foodCategoryToUpdate.category === value.trim()) return
 
     foodCategoryToUpdate.category = value
@@ -28,11 +29,19 @@ class FoodCategories extends Component {
   getTableRows = () => {
     if (this.props.foods.length > 0) {
       return this.props.foods.map(category => (
-                <ListItem key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
+                <Category key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
             ))
     } else {
       return (<tr><td className="text-center">No food categories yet.</td></tr>)
     }
+  }
+
+  createCategory = category => {
+    this.props.createCategory(category.trim())
+  }
+
+  doesCategoryExist = name => {
+    return this.props.foods.some(category => category.category.toLowerCase() === name.toLowerCase())
   }
 
   render() {
@@ -55,7 +64,7 @@ class FoodCategories extends Component {
                 </div>
 
                 <div className="box-footer">
-                    <NewCategory createCategory={this.props.createCategory} />
+                    <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
 
                     {this.props.foodCategory.saveError &&
                         <div className="text-center text-danger">
@@ -102,59 +111,3 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodCategories)
-
-
-class ListItem extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { showEdit: false, editedName: this.props.category }
-  }
-
-  render = () => {
-    if (this.state.showEdit) {
-      return (
-                <tr>
-                    <td>
-                        <div className="input-group">
-                            <input type="text" className="form-control" value={this.state.editedName} onChange={e => this.onChange(e)} required />
-                            <span className="input-group-btn">
-                                <button className="btn btn-success btn-flat" onClick={() => this.onClickSubmitEdit()} disabled={this.state.editedName.trim() === ""}>
-                                    <i className="fa fa-check"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </td>
-                </tr>
-      )
-    } else {
-      return (
-                <tr>
-                    <td>
-                        <span>{this.props.category}</span>
-                        <div className="tools">
-                            <i className="fa fa-edit text-blue" onClick={() => this.onClickShowEdit()}></i>
-                            <i className="fa fa-trash-o text-red" onClick={() => this.onClickRemove()}></i>
-                        </div>
-                    </td>
-                </tr>
-      )
-    }
-  }
-
-  onChange = e => {
-    this.setState({ editedName: e.target.value })
-  }
-
-  onClickShowEdit = () => {
-    this.setState({ showEdit: true })
-  }
-
-  onClickSubmitEdit = e => {
-    this.setState({ showEdit: false })
-    this.props.onItemEdit(this.props.id, this.state.editedName)
-  }
-
-  onClickRemove = () => {
-    this.props.onItemRemove(this.props.id)
-  }
-}

@@ -10,8 +10,22 @@ export default {
   async create(req, res) {
     const food = new Food(req.body)
 
-    const savedFood = await food.save()
-    res.json(savedFood)
+    try {
+      const savedFood = await food.save()
+      res.json(savedFood)
+    } catch (error) {
+      // Check if it is a unique key error(11000) from the category field
+      if (error.code === 11000 && error.errmsg.match('category')) {
+        const response = {
+          name: 'Duplicate category error',
+          message: 'That category already exists', 
+          errors: {category: {message: 'That category already exists'}}
+        } 
+        return res.status(400).json({error: response})
+      } else {
+        return res.status(500).json(error)
+      }
+    }
   },
 
   /**
