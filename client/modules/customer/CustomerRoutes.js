@@ -7,6 +7,7 @@ import CustomerView from './components/CustomerView'
 import CustomerEdit from './components/CustomerEdit'
 import CustomerCreate from './components/CustomerCreate'
 import ClientCreateSuccess from '../../components/ClientCreateSuccess'
+import RequireRole from '../../components/RequireRole'
 
 import './customer.css'
 
@@ -15,14 +16,23 @@ const mapStateToProps = state => ({
 })
 
 const Customers = ({match, user}) =>
-  <Switch>
-    {user && user.roles.find(role => role === 'admin') &&
-      <Route path={`${match.url}`} exact component={CustomerList} />
-    }
-    <Route path={`${match.url}/create/success`} component={ClientCreateSuccess} />
-    <Route path={`${match.url}/create`} component={CustomerCreate} />
-    <Route path={`${match.url}/:customerId/edit`} component={CustomerEdit} />
-    <Route path={`${match.url}/:customerId`} component={CustomerView} />
-  </Switch>
+  <div> 
+
+    <RequireRole authorizedRoles={['admin']}>
+      <Switch>
+        <Route path={`${match.url}`} exact component={CustomerList} />
+      </Switch>
+    </RequireRole>
+
+    <RequireRole authorizedRoles={['admin', 'customer']} showUnauthorized redirectIfNotLoggedIn> 
+      <Switch>
+        <Route path={`${match.url}/create/success`} component={ClientCreateSuccess} />
+        <Route path={`${match.url}/create`} component={CustomerCreate} />
+        <Route path={`${match.url}/:customerId/edit`} component={CustomerEdit} />
+        <Route path={`${match.url}/:customerId`} component={CustomerView} />
+      </Switch>
+    </RequireRole>
+
+  </div>
 
 export default connect(mapStateToProps)(Customers)

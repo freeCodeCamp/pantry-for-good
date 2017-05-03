@@ -1,6 +1,4 @@
-import angular from 'angular'
 import React from 'react'
-import {react2angular} from 'react2angular'
 
 import ErrorPage from './Error'
 
@@ -9,11 +7,8 @@ const UnauthorizedPage = () =>
     color="yellow"
     status="403"
     msg="Oops! Access forbidden."
-    description="This part of the website is for admins only."
+    description="You are not authorized to view this page."
   />
 
 export default UnauthorizedPage
 
-export const old = angular.module('core')
-  .component('unauthorized', react2angular(UnauthorizedPage))
-  .name

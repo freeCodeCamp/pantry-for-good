@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const ErrorPage = ({msg, description, color, status}) =>
   <section className="content">
@@ -10,7 +11,7 @@ const ErrorPage = ({msg, description, color, status}) =>
           {msg}
         </h3>
         <p>
-          {description} Meanwhile, you may <a href="/#!/">return to the dashboard.</a>
+          {description} <br />Meanwhile, you may <Link to="/">return to the dashboard.</Link>
         </p>
       </div>
     </div>
