@@ -1,11 +1,8 @@
 import passport from 'passport'
-import {User} from '../models'
 import localStrategy from './strategies/local'
 
-/**
- * Module init function.
- */
-module.exports = function() {
+export default function() {
+  const {User} = require('../models')
   // Serialize sessions
   passport.serializeUser(function(user, done) {
     done(null, user.id)

@@ -84,26 +84,38 @@ const SettingsForm = ({onSubmit, handleSubmit}) =>
     </Row>
 
     <Row>
-      <Col sm={6} md={4} lg={2}>
-        <Button
-          onClick={handleSubmit}
-          bsStyle="success"
-        >
-          Save Changes
-        </Button>
+      <Col lg={6}>
+        <RFFieldGroup
+          name="gmapsApiKey"
+          label="Google Maps API Key"
+        />
       </Col>
-      <Col sm={6} md={4} lg={2}>
-        <Link to="/" className="btn btn-primary btn-block top-buffer">
-          Cancel
-        </Link>
+      <Col lg={6}>
+        <RFFieldGroup
+          name="gmapsClientId"
+          label="Google Maps Client ID"
+        />
       </Col>
     </Row>
+
+    <div className="text-right">
+      <Button
+        onClick={handleSubmit}
+        bsStyle="success"
+      >
+        Save Changes
+      </Button>
+      {' '}
+      <Link to="/" className="btn btn-primary">
+        Cancel
+      </Link>
+    </div>
   </div>
 
 export default reduxForm({
   form: 'settingsForm',
   validate,
-  destroyOnUnmount: !module.hot
+  warn
 })(SettingsForm)
 
 function validate(values) {
@@ -130,4 +142,14 @@ function validate(values) {
   }
 
   return errors
+}
+
+function warn(values) {
+  let warnings = {}
+
+  if (!values.gmapsApiKey && !values.gmapsClientId) {
+    warnings.gmapsApiKey = 'Maps require an API key or Client ID'
+  }
+
+  return warnings
 }

@@ -3,7 +3,7 @@ import {render as _render} from 'nunjucks'
 import thenify from 'thenify'
 import get from 'lodash/get'
 
-import config from '../config/config'
+import config from '../config/index'
 import Settings from '../models/settings'
 
 const render = thenify(_render)

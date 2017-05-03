@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 const {Schema} = mongoose
 

@@ -5,7 +5,7 @@ import FieldGroup from './FieldGroup'
 
 const RFFieldGroup = ({type, ...props}) => {
   if (type === 'radio') {
-    // have to avoid setting 'type=radio' on Field
+    // Field wraps multiple inputs, have to avoid setting its 'type' prop
     return <Field component={renderFieldGroup} fieldType={type} {...props} />
   }
 
@@ -29,7 +29,7 @@ function renderFieldGroup({input, meta, ...props}) {
   return (
     <FieldGroup
       valid={validationState({meta})}
-      errorMessage={meta.error}
+      errorMessage={meta.error || meta.warning}
       touched={meta.touched}
       {...input}
       {...props}
@@ -46,7 +46,8 @@ function normalizeCheckboxValues(value, previousValue) {
   return previousValue.filter(val => val !== value)
 }
 
-function validationState({meta: {touched, error}}) {
+function validationState({meta: {touched, error, warning}}) {
   if (!touched) return
-  return error && 'error'
+  if (error) return 'error'
+  if (warning) return 'warning'
 }

@@ -1,48 +1,28 @@
-/**
- * Module dependencies.
- */
-var init = require('./config/init')(),
-  config = require('./config/config'),
-  mongoose = require('mongoose'),
-  autoIncrement = require('mongoose-auto-increment'),
-  chalk = require('chalk')
+import mongoose from 'mongoose'
+import autoIncrement from 'mongoose-auto-increment'
 
-/**
- * Main application entry file.
- * Please note that the order of loading is important.
- */
+import config from './config'
+import setupPassport from './config/passport'
 
-// Bootstrap db connection
+/* eslint-disable no-console */
+process.on('unhandledRejection', err => console.log(err))
+
+mongoose.Promise = global.Promise
 mongoose.connect(config.db)
+const db = mongoose.connection
 
-var db = mongoose.connection
 
 db.on('error', function(err) {
-  console.error(chalk.red('Could not connect to MongoDB!'))
-  console.log(chalk.red(err))
+  console.error('Mongoose error', err)
 })
 
-// Mongoose promises deprecated, using Bluebird instead
-mongoose.Promise = require('bluebird')
-
 db.once('open', function() {
-  console.log("Connected to " + config.db)
+  console.log('Connected to', config.db)
 
-  // Init the mongoose auto-increment-plugin
   autoIncrement.initialize(db)
-
-  // Init the express application
-  var app = require('./config/express')()
-
-  // Bootstrap passport config
-  require('./config/passport')()
-
-  // Start the app by listening on <port>
+  const app = require('./config/express').default()
+  setupPassport()
   app.listen(config.port)
 
-  // Expose app
-  exports = module.exports = app
-
-  // Logging initialization
-  console.log('MEAN.JS application started on port ' + config.port)
+  console.log('Application started on port', config.port)
 })

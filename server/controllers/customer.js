@@ -1,6 +1,6 @@
 import extend from 'lodash/extend'
 
-import config from '../config/config'
+import config from '../config/index'
 import mailer from '../lib/mailer'
 import Customer from '../models/customer'
 import User from '../models/user'

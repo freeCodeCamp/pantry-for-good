@@ -7,8 +7,6 @@ node_modules/
 .vscode
 public/dist
 public/media
-app/tests/coverage/
-.bower-*/
 .idea/
 .c9/
 .env
@@ -16,3 +14,4 @@ app/tests/coverage/
 .settings/
 typings/
 .vscode
+server/config/env/secrets.js

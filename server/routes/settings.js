@@ -1,18 +1,13 @@
-'use strict'
+import Router from 'express-promise-router'
 
-/**
- * Module dependencies
- */
-var express = require('express')
-var settings = require('../controllers/settings')
+import settingsController  from '../controllers/settings'
 
-var settingsRouter = express.Router({mergeParams: true})
+export default () => {
+  const settingsRouter = Router({mergeParams: true})
 
-// Settings routes
-settingsRouter.route('/settings')
-  .post(settings.save)
+  settingsRouter.route('/settings')
+    .post(settingsController.save)
+    .get(settingsController.read)
 
-settingsRouter.route('/settings')
-  .get(settings.read)
-
-module.exports = settingsRouter
+  return settingsRouter
+}

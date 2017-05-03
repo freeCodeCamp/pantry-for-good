@@ -1,43 +1,29 @@
-'use strict'
+import {intersection} from 'lodash'
 import Settings from '../models/settings'
-/**
- * Module dependencies
- */
-var mongoose = require('mongoose'),
-  errorHandler = require('./errors')
-    // Settings = mongoose.model('Settings');
 
-/**
- * Read settings
- */
-exports.read = function(req, res) {
-  Settings.findOne({}, function(err, settings) {
-    if (err) throw err
+export default {
+  async read (req, res) {
+    const {user} = req
+    const projection = !intersection(user.roles, ['admin', 'driver']) ?
+      '-gmapsApiKey -gmapsClientId' : ''
 
-    // Return settings, create from default if none are found
-    if (settings) {
-      res.json(settings)
-    } else {
-      res.json(new Settings())
-    }
+    const settings = await Settings.findOne().select(projection)
+    res.json(settings)
+  },
 
-  })
-}
+  async save (req, res) {
+    const {user} = req
 
-/**
- * Save settings
- */
-exports.save = function(req, res) {
-  // If settings object already exist, update, otherwise save
-  Settings.count({}, function (err, count){
-    if (count>0) {
-      Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}, function(err, settings) {
-        if (err) throw err
-        res.json(settings)
+    if (!user.roles.find(role => role === 'admin'))
+      return res.status(403).json({
+        message: 'User is not authorized'
       })
-    } else {
-      var settings = new Settings(req.body)
-      settings.save()
-    }
-  })
+
+    const count = await Settings.count()
+    const settings = count ?
+      await Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
+      await Settings.create(req.body)
+
+    res.json(settings)
+  }
 }

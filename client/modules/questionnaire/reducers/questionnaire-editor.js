@@ -1,5 +1,5 @@
 import {normalize, denormalize} from 'normalizr'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 import {questionnaire as questionnaireSchema} from '../../../store/schemas'
 import sections from './sections'

@@ -35,7 +35,16 @@ const SettingsSchema = new Schema({
     type: String,
     trim: true
   },
-  location: [Number]
+  location: [Number],
+  gmapsApiKey: {
+    type: String,
+    trim: true
+  },
+  gmapsClientId: {
+    type: String,
+    trim: true
+  }
 })
 
 export default mongoose.model('Settings', SettingsSchema)
+// TODO: set location on save

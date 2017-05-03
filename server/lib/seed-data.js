@@ -1,5 +1,7 @@
 import {utc} from 'moment'
 
+import config from '../config/env/all'
+
 export const foodFields = [{
   category: 'Cheese',
   items: [
@@ -39,7 +41,8 @@ export const settingsFields = {
   foodBankAddress: '6 Rhyd-Y-Penau Road, Cardiff, Wales, CF23 6PT',
   clientIntakeNumber: '07123 456 789',
   supportNumber: '07234 567 891',
-  location: [51.520185, -3.178096]
+  location: [51.520185, -3.178096],
+  gmapsApiKey: config.gmapsApiKey
 }
 
 export const customerQuestionnaire = {

@@ -12,7 +12,7 @@ var mongoose       = require('mongoose'),
     // Settings      = mongoose.model('Settings'),
   async         = require('async'),
   mailHelper    = require('sendgrid').mail,
-  config         = require('../config/config'),
+  config         = require('../config/index'),
   fs            = require('fs')
 
 /**

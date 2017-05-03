@@ -14,7 +14,7 @@ import path from 'path'
 import session from 'express-session'
 
 import apiRoutes from '../routes/api'
-import config from './config'
+import config from './index'
 import getErrorMessage from '../lib/error-messages'
 import '../models'
 import seed from '../lib/seed'
@@ -25,7 +25,7 @@ const API_FAILURE_RATE = 0
 
 const mongoStore = connectMongo({session})
 
-module.exports = function() {
+export default function() {
   const app = express()
 
   // call with true or delete db to seed
@@ -43,7 +43,7 @@ module.exports = function() {
   app.set('showStackError', true)
 
   // add filter from swig for backwards compatibility
-  var env = nunjucks.configure(path.join(__dirname, '/../views'), {
+  nunjucks.configure(path.join(__dirname, '/../views'), {
     autoescape: false,
     express: app
   })

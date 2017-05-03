@@ -3,19 +3,21 @@ import {range} from 'lodash'
 
 export default class AddressGenerator {
   constructor() {
-    this.file = fs.readFileSync(`${__dirname}/addresses.csv`).toString().split('\n')
-    this.indices = range(this.file.length)
+    this.file = fs.readFileSync(`${__dirname}/addresses.csv`)
+      .toString().split('\n').map(s => s.replace(/"/g, ''))
+
+    this.indices = range(this.file.length - 1)
   }
 
   getAddress() {
-    const i = Math.floor(Math.random() * this.indices.length)
-    this.indices = this.indices.filter(idx => idx !== i)
-
     if (!this.indices.length)
       throw new Error('AddressGenerator: unique addresses exhausted')
 
-    const line = this.file[i].split(',')
-      .map(s => s.replace(/"/g, ''))
+    const i = Math.floor(Math.random() * this.indices.length)
+
+    const line = this.file[this.indices[i]].split(',')
+
+    this.indices.splice(i, 1)
 
     return {
       lat: line[0],
