@@ -67,41 +67,16 @@ class SignUp extends React.Component {
         loading={this.props.auth.fetching}
         error={this.props.auth.error}
       >
-        <FormGroup controlId="accountType">
-          <ControlLabel>Please select an account to create</ControlLabel>
-          <div>
-            <FieldGroup
-              name="accountType"
-              type="radio"
-              label="Client"
-              value="customer"
-              checked={this.state.accountType === 'customer'}
-              onChange={this.onFieldChange}
-              required
-              inline
-            />
-            <FieldGroup
-              name="accountType"
-              type="radio"
-              label="Volunteer"
-              value="volunteer"
-              checked={this.state.accountType === 'volunteer'}
-              onChange={this.onFieldChange}
-              required
-              inline
-            />
-            <FieldGroup
-              name="accountType"
-              type="radio"
-              label="Donor"
-              value="donor"
-              checked={this.state.accountType === 'donor'}
-              onChange={this.onFieldChange}
-              required
-              inline
-            />
-          </div>
-        </FormGroup>
+        <FieldGroup
+          name="accountType"
+          type="radio"
+          label="Please select an account to create"
+          options={['customer', 'donor', 'volunteer']}
+          value={this.state.accountType}
+          onChange={this.onFieldChange}
+          required
+          inline
+        />
         <FieldGroup
           name="firstName"
           onChange={this.onFieldChange}
@@ -140,7 +115,7 @@ class SignUp extends React.Component {
           placeholder="Password"
           icon="lock"
           required
-        />        
+        />
         <FieldGroup
           name="passwordConfirm"
           type="password"
@@ -154,7 +129,7 @@ class SignUp extends React.Component {
           <div className="alert alert-danger">Passwords do not match</div>
         }
         <div className="text-center form-group">
-          <button type="submit" className="btn btn-flat btn-primary" 
+          <button type="submit" className="btn btn-flat btn-primary"
             onClick={this.onSubmit}
             disabled={this.state.password !== this.state.passwordConfirm}>
             Sign up

@@ -53,7 +53,7 @@ function renderField(type, name, props) {
   const {options, inline, children, ...rest} = props
 
   if (type === 'checkbox') return renderCheckbox(options, inline, rest)
-  if (type === 'radio') return renderRadio(options, inline, rest)
+  if (type === 'radio') return renderRadio(name, options, inline, rest)
 
   if (type === 'select' || type === 'textarea') {
     return (
@@ -68,12 +68,13 @@ function renderField(type, name, props) {
   )
 }
 
-function renderRadio(options, inline, props) {
+function renderRadio(name, options, inline, props) {
   return (
     <div>
       {options.map((option, i) =>
         <Radio
           key={i}
+          name={name}
           {...props}
           value={option}
           checked={option === props.value}
