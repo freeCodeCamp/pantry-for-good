@@ -127,7 +127,7 @@ function formatRequestBody(body, method, schema) {
 }
 
 function generateRequestHeaders(method) {
-  return method === 'GET' ? null : new Headers({
-    'Content-Type': 'application/json'
-  })
+  return method === 'GET' ? 
+    new Headers({}) : 
+    new Headers({'Content-Type': 'application/json'})
 }
