@@ -5,7 +5,6 @@ import random from 'lodash/random'
 import range from 'lodash/range'
 import faker from 'faker'
 import {utc} from 'moment'
-import Generator from './address-generator'
 
 const User = mongoose.model('User')
 const Donation = mongoose.model('Donation')
@@ -13,7 +12,6 @@ const Food = mongoose.model('Food')
 const Questionnaire = mongoose.model('Questionnaire')
 
 const clientTypes = ['customer', 'volunteer', 'donor']
-const addressGenerator = new Generator
 
 export default async function seedClients() {
   await clientTypes.map(async type => {
@@ -43,7 +41,14 @@ export default async function seedClients() {
  * @returns {Promise<mongoose.Document>}
  */
 async function seedClientFields(client) {
-  const address = addressGenerator.getAddress()
+  const address = {
+    lat: faker.finance.amount(51.5, 51.55, 6),
+    lng: faker.finance.amount(-3.15, -3.25, 6),
+    street: faker.address.streetAddress(),
+    city: faker.address.city(),
+    state: faker.address.state(),
+    zip: faker.address.zipCode()
+  }
   const dynamicFields = await seedDynamicFields(client, address)
   const staticFields = await seedStaticFields(client, dynamicFields[0].value, address)
 
@@ -84,7 +89,7 @@ async function seedDynamicFields(client, address) {
   if (dateOfBirthField)
     fields.unshift({
       meta: dateOfBirthField,
-      value: randomDate('1950-01-01', '2000-12-31')
+      value: faker.date.between('1950-01-01', '2000-12-31').toISOString()
     })
 
   return fields
@@ -98,6 +103,7 @@ async function seedDynamicFields(client, address) {
  * @returns {object}
  */
 async function seedStaticFields(client, dateOfBirth, address) {
+  const {lat, lng} = address
   let properties = {}
 
   if (client.accountType.find(type => type === 'volunteer')) {
@@ -108,6 +114,7 @@ async function seedStaticFields(client, dateOfBirth, address) {
 
     if (client.firstName === 'driver') {
       properties.driver = true
+      properties.location = {lat, lng}
     }
   }
 
@@ -143,7 +150,7 @@ async function populateDonorFields(client) {
       'Non-cash with advantage': 0.25
     })
 
-    const dateReceived = randomDate('2015-01-01')
+    const dateReceived = faker.date.past(3).toISOString()
 
     return {
       type,
@@ -176,7 +183,8 @@ async function populateCustomerFields(client, dateOfBirth, address) {
     dateOfBirth
   }]
 
-  const location = [address.lat, address.lng]
+  const {lat, lng} = address
+  const location = {lat, lng}
 
   const status = randomIn({
     'Accepted': 0.8,
@@ -212,17 +220,4 @@ function randomIn(choices) {
     if (rand < a.acc) return {key}
     else return a
   }, {acc: 0}).key
-}
-
-/**
- * Generate a random date
- *
- * @param {string} fromDate
- * @param {string} [toDate=null]
- * @returns {string}
- */
-function randomDate(fromDate, toDate = null) {
-  const fromTime = new Date(fromDate).getTime()
-  const toTime = new Date(toDate || Date.now()).getTime()
-  return new Date(random(fromTime, toTime)).toISOString()
 }
