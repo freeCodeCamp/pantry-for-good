@@ -66,7 +66,7 @@ describe('Customer Api', function() {
       return request.get(`/api/customer/${user._id}`)
         .expect(res => {
           expect(res.body).to.be.an.object
-          expect(res.body).to.have.property('username', 'user')
+          expect(res.body).to.have.property('firstName', 'user')
         })
         .expect(200)
     })
@@ -145,7 +145,7 @@ describe('Customer Api', function() {
         .expect(res => {
           expect(res.body).to.be.an.array
           expect(res.body).to.have.lengthOf(1)
-          expect(res.body[0].username).to.equal('user')
+          expect(res.body[0]).to.have.property('firstName', 'user')
         })
         .expect(200)
     })

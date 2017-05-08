@@ -83,8 +83,10 @@ const CustomerSchema = new Schema({
 
 CustomerSchema.path('fields').validate(async function(fields) {
   const questionnaire = await Questionnaire.findOne({'identifier': 'qCustomers'})
-  const qFields = flatMap(questionnaire.sections, section => section.fields)
+  if (!questionnaire) return true
 
+  const qFields = flatMap(questionnaire.sections, section => section.fields)
+  // TODO: reduce qFields instead
   return fields.reduce((valid, field) => {
     if (!valid) return false
 
