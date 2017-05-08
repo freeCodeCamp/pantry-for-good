@@ -7,10 +7,11 @@ import auth from '../modules/users/auth-reducer'
 import customer from '../modules/customer/customer-reducer'
 import donation from '../modules/donor/donation-reducer'
 import donor from '../modules/donor/donor-reducer'
+import delivery from '../modules/driver/reducers/delivery'
 import entities from './entities'
 import foodCategory from '../modules/food/food-category-reducer'
 import foodItem from '../modules/food/food-item-reducer'
-import location from '../modules/driver/location-reducer'
+import location from '../modules/driver/reducers/location'
 import media from '../modules/media/media-reducer'
 import packing from '../modules/food/packing-reducer'
 import questionnaire from '../modules/questionnaire/reducers/questionnaire-api'
@@ -25,6 +26,7 @@ export default combineReducers({
   customer,
   donation,
   donor,
+  delivery,
   foodCategory,
   foodItem,
   form,

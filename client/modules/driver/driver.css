@@ -10,3 +10,9 @@
 	height: 100vh;
 	padding-bottom: 75px;
 }
+
+.overflow-scroll {
+	height: 80vh;
+	padding-bottom: 175px;
+	overflow-y: scroll;
+}

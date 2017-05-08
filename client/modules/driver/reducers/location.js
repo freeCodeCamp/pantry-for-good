@@ -1,5 +1,7 @@
 import objectify from 'geoposition-to-object'
+import {get} from 'lodash'
 
+// TODO: pass as param / proxy through api
 const LOCATION_URL = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCASB95kRU_cIYk8LaG8tS-HY4pgV47hMU&address='
 
 const LOCATE_ADDRESS_REQUEST = 'location/LOCATE_ADDRESS_REQUEST'
@@ -106,26 +108,27 @@ export default (state = {}, action) => {
   }
 }
 
-export const selectors = {
-  getAddressCoordinates(location) {
-    return location.address && location.address.geometry && location.address.geometry.location
+export const createSelectors = path => ({
+  getAddressCoordinates(state) {
+    return get(state, path, 'address.geometry.location')
   },
-  getUserCoordinates(location) {
-    return location.user && {
-      lat: location.user.coords.latitude,
-      lon: location.user.coords.longitude
+  getUserCoordinates(state) {
+    const {latitude, longitude} = get(state, path, 'user.coords', {})
+    return {
+      lat: latitude,
+      lon: longitude
     }
   },
-  loadingAddressLocation(location) {
-    return location.fetchingAddress
+  loadingAddressLocation(state) {
+    return get(state, path, 'fetchingAddress')
   },
-  loadAddressLocationError(location) {
-    return location.errorAddress
+  loadAddressLocationError(state) {
+    return get(state, path, 'errorAddress')
   },
-  loadingUserLocation(location) {
-    return location.fetchingUser
+  loadingUserLocation(state) {
+    return get(state, path, 'fetchingUser')
   },
-  loadUserLocationError(location) {
-    return location.errorUser
+  loadUserLocationError(state) {
+    return get(state, path, 'errorUser')
   }
-}
+})

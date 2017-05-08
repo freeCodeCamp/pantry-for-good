@@ -2,8 +2,8 @@ import React from 'react'
 import {Switch, Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 
-import DriverAdmin from './components/DriverAdmin'
-import DriverRoutes from './components/DriverRoutes'
+import DriverAdmin from './components/DriverList'
+import DriverRoutes from './components/DriverAssignment'
 import DriverUser from './components/DriverUser'
 
 import './driver.css'

@@ -9,7 +9,7 @@ import Home from './modules/core/components/Home'
 
 import Customers from './modules/customer/CustomerRoutes'
 import Donors from './modules/donor/DonorRoutes'
-import Drivers from './modules/driver/DriverRoutes'
+import Drivers from './modules/driver/DriverRouter'
 import Foods from './modules/food/FoodRoutes'
 import Media from './modules/media/MediaRouter'
 import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
