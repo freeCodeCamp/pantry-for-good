@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import locationSchema from './location-schema'
+
 const {Schema} = mongoose
 
 const SettingsSchema = new Schema({
@@ -35,7 +37,7 @@ const SettingsSchema = new Schema({
     type: String,
     trim: true
   },
-  location: [Number],
+  location: locationSchema,
   gmapsApiKey: {
     type: String,
     trim: true

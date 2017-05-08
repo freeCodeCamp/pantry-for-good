@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import {flatMap} from 'lodash'
 
 import {Questionnaire} from './questionnaire'
+import locationSchema from './location-schema'
 import validate from '../../common/validators'
 
 const {Schema} = mongoose
@@ -24,6 +25,7 @@ var VolunteerSchema = new Schema({
     trim: true
   },
   accountType: [String],
+  location: locationSchema,
   status: {
     type: String,
     enum: ['Active', 'Inactive'],

@@ -4,6 +4,7 @@ import moment from 'moment'
 import {head, flatMap} from 'lodash'
 
 import {Questionnaire} from './questionnaire'
+import locationSchema from './location-schema'
 import validate from '../../common/validators'
 
 const {Schema} = mongoose
@@ -26,7 +27,7 @@ const CustomerSchema = new Schema({
     required: true
   },
   accountType: [String],
-  location: [Number],
+  location: locationSchema,
   status: {
     type: String,
     enum: ['Accepted', 'Rejected', 'Pending', 'Inactive'],
@@ -117,7 +118,7 @@ CustomerSchema.pre('save', function(next) {
       if (!data) return next()
 
       const {latitude, longitude} = head(data)
-      doc.location = [longitude, latitude]
+      doc.location = {lat: latitude, lng: longitude}
 
       next()
     })
@@ -132,16 +133,6 @@ CustomerSchema.virtual('fullName').get(function() {
   fullName += this.middleName ? this.middleName + ' ' : ''
   fullName += this.lastName ? this.lastName : ''
   return fullName
-})
-
-CustomerSchema.virtual('fullAddress').get(function() {
-  var fullAddress = this.address ? this.address + ' ' : ''
-  fullAddress += this.apartmentNumber ? 'APT ' + this.apartmentNumber + ' ' : ''
-  fullAddress += this.city ? this.city + ' ' : ''
-  fullAddress += this.province ? this.province + ' ' : ''
-  fullAddress += this.postalCode ? this.postalCode + ' ' : ''
-  fullAddress += this.buzzNumber ? '#' + this.buzzNumber : ''
-  return fullAddress
 })
 
 CustomerSchema.virtual('householdSummary').get(function() {
