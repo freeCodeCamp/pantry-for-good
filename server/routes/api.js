@@ -32,7 +32,7 @@ export default (delay, errorProb) => apiRouter
   .use(donorRoutes())
   .use(foodRoutes())
   .use(packingRoutes)
-  .use(questionnaireRoutes)
+  .use(questionnaireRoutes())
   .use(volunteerRoutes())
 
 function loadingSimulator(time = 0) {

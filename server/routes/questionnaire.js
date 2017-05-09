@@ -1,24 +1,20 @@
-'use strict'
+import Router from 'express-promise-router'
 
-/**
- * Module dependencies
- */
-var express = require('express')
-var questionnaire = require('../controllers/questionnaire')
+import questionnaireController from '../controllers/questionnaire'
 
-var questionnaireRouter = express.Router({mergeParams: true})
+export default () => {
+  const  questionnaireRouter = Router({mergeParams: true})
 
-// Questionnaires routes
-questionnaireRouter.route('/questionnaires')
-  .get(questionnaire.query)
-  .post(questionnaire.create)
-// Questionnaire routes
-questionnaireRouter.route('/questionnaires/:questionnaireId')
-  .get(questionnaire.get)
-  .put(questionnaire.update)
-  .delete(questionnaire.delete)
+  questionnaireRouter.route('/questionnaires')
+    .get(questionnaireController.query)
+    // .post(questionnaireController.create)
 
-// Finish by binding the questionnaire middleware
-questionnaireRouter.param('questionnaireId', questionnaire.questionnaireById)
+  questionnaireRouter.route('/questionnaires/:questionnaireId')
+    .get(questionnaireController.get)
+    .put(questionnaireController.update)
+    // .delete(questionnaireController.delete)
 
-module.exports = questionnaireRouter
+  questionnaireRouter.param('questionnaireId', questionnaireController.questionnaireById)
+
+  return questionnaireRouter
+}

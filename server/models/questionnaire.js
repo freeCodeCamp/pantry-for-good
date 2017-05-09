@@ -60,4 +60,4 @@ const QuestionnaireSchema = new Schema({
   sections: [SectionSchema]
 })
 
-export const Questionnaire = mongoose.model('Questionnaire', QuestionnaireSchema)
+export default mongoose.model('Questionnaire', QuestionnaireSchema)
