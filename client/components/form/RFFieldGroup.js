@@ -10,14 +10,18 @@ const RFFieldGroup = ({type, ...props}) => {
   }
 
   if (type === 'checkbox') {
-    return (
+    return Array.isArray(props.options) ?
       <Field
         component={renderFieldGroup}
         fieldType={type}
         normalize={normalizeCheckboxValues}
         {...props}
+      /> :
+      <Field
+        component={renderFieldGroup}
+        type={type}
+        {...props}
       />
-    )
   }
 
   return <Field component={renderFieldGroup} type={type} {...props} />

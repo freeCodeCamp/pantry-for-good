@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
   fieldType: selector(state, 'type')
 })
 
-const FieldEdit = ({onSubmit, handleSubmit, onEdit, onKeyUp, fieldType}) =>
+const FieldEdit = ({onSubmit, handleSubmit, onEdit, onDelete, onKeyUp, fieldType}) =>
   <ListGroupItem
     onKeyUp={onKeyUp}
     style={{
@@ -39,7 +39,7 @@ const FieldEdit = ({onSubmit, handleSubmit, onEdit, onKeyUp, fieldType}) =>
           <option value="radio">Radio Buttons</option>
           <option value="checkbox">Checkboxes</option>
           <option disabled style={{fontSize: '1px'}}>{' '}</option>
-          <option disabled style={{fontSize: '12px', color: '#aaa'}}>{String.fromCharCode('00A0')}Widgets</option>
+          <option disabled style={{fontSize: '12px', color: '#aaa'}}>Widgets</option>
           <option value="foodPreferences">Food Preferences</option>
           <option value="household">Household</option>
           <option value="table">Table</option>
@@ -49,7 +49,7 @@ const FieldEdit = ({onSubmit, handleSubmit, onEdit, onKeyUp, fieldType}) =>
         <RFFieldGroup
           type="checkbox"
           name="required"
-          options={['Required']}
+          options="Required"
           style={{paddingRight: '10px'}}
         />
         {(fieldType === 'radio' || fieldType === 'checkbox') &&
@@ -94,16 +94,10 @@ const FieldEdit = ({onSubmit, handleSubmit, onEdit, onKeyUp, fieldType}) =>
           <i className="fa fa-times" />
         </Button>
         <Button
-          onClick={onEdit()}
+          onClick={onDelete}
           style={{backgroundColor: '#fff', height: '45px'}}
         >
-          <i className="fa fa-arrow-up" />
-        </Button>
-        <Button
-          onClick={onEdit()}
-          style={{backgroundColor: '#fff', height: '45px'}}
-        >
-          <i className="fa fa-arrow-down" />
+          <i className="fa fa-trash" />
         </Button>
       </ButtonToolbar>
     </div>
@@ -118,8 +112,6 @@ export default compose(
   }),
   connect(mapStateToProps)
 )(FieldEdit)
-
-
 
 function validate(fields, props) {
   const {values} = props

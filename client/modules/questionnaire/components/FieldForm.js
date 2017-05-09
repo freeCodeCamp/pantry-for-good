@@ -40,13 +40,21 @@ class FieldForm extends Component {
       this.handleEdit()()
   }
 
-  handleEdit = id => () => this.props.editField(id)
+  handleEdit = id => () => {
+    if (id && this.props.editing) return
+    this.props.editField(id)
+  }
+
+  handleCancel = () => () => this.props.editField()
 
   handleAdd = () => this.props.addField({}, this.props.section)
 
-  handleDelete = id => () => this.props.deleteField(id, this.props.section)
+  handleDelete = id => () => {
+    this.handleCancel()()
+    this.props.deleteField(id, this.props.section)
+  }
 
-  handleUpdate = fields => this.props.updateField(fromForm(fields))
+  handleUpdate = fields => this.props.updateField(fields)
 
   handleKeyUp = id => ev => {
     if (ev.keyCode === 13)
@@ -55,8 +63,8 @@ class FieldForm extends Component {
     if (ev.keyCode === 27) {
       if (!this.props.isValid && this.props.isPristine)
         this.handleDelete(id)()
-
-      this.handleEdit()()
+      else
+        this.handleCancel()()
     }
   }
 
@@ -90,9 +98,10 @@ class FieldForm extends Component {
                 form={FORM_NAME}
                 key={id}
                 onSubmit={this.handleUpdate}
-                onEdit={this.handleEdit}
+                onEdit={this.handleCancel}
+                onDelete={this.handleDelete(id)}
                 onKeyUp={this.handleKeyUp(id)}
-                initialValues={toForm(getField(id))}
+                initialValues={getField(id)}
               /> :
               <FieldView
                 key={id}
@@ -108,22 +117,3 @@ class FieldForm extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FieldForm)
-
-function toForm(field) {
-  return {
-    ...field,
-    required: field.required ? ['Required'] : []
-  }
-}
-
-function fromForm(field) {
-  let res = {...field}
-  if (field.type !== 'checkbox' || field.type !== 'radio')
-    delete res.choices
-  if (field.type !== 'table') {
-    delete res.rows
-    delete res.cols
-  }
-  res.required = field.required[0] === 'Required'
-  return res
-}

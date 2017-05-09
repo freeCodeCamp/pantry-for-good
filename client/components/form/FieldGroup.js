@@ -71,39 +71,42 @@ function renderField(type, name, props) {
 function renderRadio(name, options, inline, props) {
   return (
     <div>
-      {options.map((option, i) =>
-        <Radio
-          key={i}
-          name={name}
-          {...props}
-          value={option}
-          checked={option === props.value}
-          inline={inline}
-        >
-          {option}
-        </Radio>
-      )}
+      {options.map((option, i) => {
+        const value = option.value || option
+        return (
+          <Radio
+            key={i}
+            name={name}
+            {...props}
+            value={value}
+            checked={value === props.value}
+            inline={inline}
+          >
+            {option.label || option}
+          </Radio>
+        )
+      })}
     </div>
   )
 }
 
 function renderCheckbox(options, inline, props) {
-  return (
+  return Array.isArray(options) ?
     <div>
       {options.map((option, i) =>
         <Checkbox
           key={i}
           {...props}
-          value={option}
+          value={option.value || option}
           onChange={() => props.onChange(option)}
           checked={isChecked(props.value, option)}
           inline={inline}
         >
-          {option}
+          {option.label || option}
         </Checkbox>
       )}
-    </div>
-  )
+    </div> :
+    <Checkbox {...props}>{options}</Checkbox>
 }
 
 function isChecked(value, option) {

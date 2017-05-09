@@ -3,14 +3,18 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {push} from 'react-router-redux'
 
-import {ControlLabel, FormGroup} from 'react-bootstrap'
-
 import {signUp, clearFlags} from '../auth-reducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
 
 import './signup.css'
+
+const accountTypes = [
+  {label: 'Customer', value: 'customer'},
+  {label: 'Donor', value: 'donor'},
+  {label: 'Volunteer', value: 'volunteer'}
+]
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -71,7 +75,7 @@ class SignUp extends React.Component {
           name="accountType"
           type="radio"
           label="Please select an account to create"
-          options={['customer', 'donor', 'volunteer']}
+          options={accountTypes}
           value={this.state.accountType}
           onChange={this.onFieldChange}
           required
