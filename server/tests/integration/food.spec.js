@@ -171,7 +171,6 @@ describe('Food Api', function() {
       }
 
       const itemId = savedCategoryWithItem.items[0]._id
-
       return request.put(`/api/admin/foods/${savedCategory._id}/items/${itemId}`)
         .send(updatedItem)
         .expect(res => {
@@ -206,10 +205,10 @@ describe('Food Api', function() {
       const updatedItem = {
         ...savedItem,
         name: 'test item',
-        categoryIdOld: savedCategory1._id
+        categoryId: savedCategory2._id
       }
 
-      return request.put(`/api/admin/foods/${savedCategory2._id}/items/${savedItem._id}`)
+      return request.put(`/api/admin/foods/${savedCategory1._id}/items/${savedItem._id}`)
         .send(updatedItem)
         .expect(res => {
           expect(res.body).to.have.property('_id', savedCategory2._id)

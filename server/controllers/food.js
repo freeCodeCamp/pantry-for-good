@@ -123,16 +123,13 @@ export default {
 
     const savedFood = await Food.findByIdAndUpdate(
       id,
-      { $pull: { items: { _id: req.itemId } } },
+      { $pull: { items: { _id: req.itemId } } }, {new: true}
     ).lean()
 
     const deletedItem = savedFood.items.filter(item =>
       item._id.toString() === req.itemId)
 
-    res.json({
-      ...savedFood,
-      items: deletedItem
-    })
+    res.json(savedFood)
   },
 
   /**
@@ -159,17 +156,17 @@ export default {
  * Common functionality used by createItem and UpdateItem to update a food item
  */
 function updateItemHelper(originalCategoryId, updatedItem) {
-  if (updatedItem.categoryId === originalCategoryId) {
-    return updateFoodItemWithoutCategoryChange(updatedItem)
+  if (!updatedItem.categoryId || updatedItem.categoryId === originalCategoryId) {
+    return updateFoodItemWithoutCategoryChange(originalCategoryId, updatedItem)
   } else {
     return updateFoodItemWithCategoryChange(originalCategoryId, updatedItem)
   }
 }
 
-function updateFoodItemWithoutCategoryChange(updatedItem) {
+function updateFoodItemWithoutCategoryChange(categoryId, updatedItem) {
   // same food category so just update the item in that category
   return Food.findOneAndUpdate(
-    { _id: updatedItem.categoryId, 'items._id': updatedItem._id },
+    { _id: categoryId, 'items._id': updatedItem._id },
     { $set: { 'items.$': updatedItem } },
     { new: true }
   )
