@@ -28,8 +28,8 @@ export const createUserSession = async function(userModel) {
 }
 
 export const initApp = function() {
-  const app = require('../config/express')
-  require('../config/passport')()
+  const app = require('../config/express').default
+  require('../config/passport')
   return app
 }
 
