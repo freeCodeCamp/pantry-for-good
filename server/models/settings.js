@@ -40,11 +40,13 @@ const SettingsSchema = new Schema({
   location: locationSchema,
   gmapsApiKey: {
     type: String,
-    trim: true
+    trim: true,
+    select: false
   },
   gmapsClientId: {
     type: String,
-    trim: true
+    trim: true,
+    select: false
   }
 })
 

@@ -4,8 +4,8 @@ import Settings from '../models/settings'
 export default {
   async read (req, res) {
     const {user} = req
-    const projection = !intersection(user.roles, ['admin', 'driver']) ?
-      '-gmapsApiKey -gmapsClientId' : ''
+    const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
+      '+gmapsApiKey +gmapsClientId' : ''
 
     const settings = await Settings.findOne().select(projection)
     res.json(settings)
@@ -14,7 +14,7 @@ export default {
   async save (req, res) {
     const {user} = req
 
-    if (!user.roles.find(role => role === 'admin'))
+    if (!user || !user.roles.find(role => role === 'admin'))
       return res.status(403).json({
         message: 'User is not authorized'
       })
