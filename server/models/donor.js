@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import {flatMap} from 'lodash'
 
-import {Questionnaire} from './questionnaire'
+import Questionnaire from './questionnaire'
 import validate from '../../common/validators'
 
 const {Schema} = mongoose

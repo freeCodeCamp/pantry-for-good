@@ -3,7 +3,7 @@ import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
 import {head, flatMap} from 'lodash'
 
-import {Questionnaire} from './questionnaire'
+import Questionnaire from './questionnaire'
 import locationSchema from './location-schema'
 import validate from '../../common/validators'
 
