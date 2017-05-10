@@ -138,6 +138,13 @@ class SignUp extends React.Component {
             disabled={this.state.password !== this.state.passwordConfirm}>
             Sign up
           </button>
+          <br />
+          or
+          <br />
+          <a href="/api/auth/google"  className="btn btn-default">
+            <i className="fa fa-google" />{' '}
+            Sign up with Google
+          </a>
           <br/><br/>Already have an account?&nbsp;&nbsp;
           <Link to="/users/signin">Sign in</Link>
         </div>

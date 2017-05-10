@@ -1,5 +1,6 @@
 import passport from 'passport'
 import localStrategy from './strategies/local'
+import googleStrategy from './strategies/google'
 
 export default function() {
   const {User} = require('../models')
@@ -21,4 +22,5 @@ export default function() {
 
   // Initialize strategies
   localStrategy()
+  googleStrategy()
 }

@@ -67,8 +67,7 @@ const UserSchema = new Schema({
     type: String,
     required: 'Provider is required'
   },
-  providerData: {},
-  additionalProvidersData: {},
+  google: {},
   roles: {
     type: [{
       type: String,

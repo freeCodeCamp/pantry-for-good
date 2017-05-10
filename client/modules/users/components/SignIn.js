@@ -67,11 +67,18 @@ class SignIn extends React.Component {
           onChange={this.onFieldChange}
           icon="lock"
         />
-        <div className="pull-right form-group">
+        <div className="text-center form-group">
           <button className="btn btn-primary btn-flat" onClick={this.onSubmit}
             disabled={!this.state.username || !this.state.password}>Sign in
           </button>&nbsp; or&nbsp;
           <Link to="/users/signup">Sign up</Link>
+          <br />
+          or
+          <br />
+          <a href="/api/auth/google"  className="btn btn-default">
+            <i className="fa fa-google" />{' '}
+            Sign in with Google
+          </a>
         </div>
         <div className="form-group">
           <Link to="/users/forgot-password">Forgot your password?</Link>

@@ -1,6 +1,6 @@
 // import express from 'express'
 import Router from 'express-promise-router'
-// import passport from 'passport'
+import passport from 'passport'
 import * as users from '../controllers/users'
 
 const userRouter = Router({mergeParams: true})
@@ -36,14 +36,27 @@ export default () => {
   // userRouter.route('/auth/twitter').get(passport.authenticate('twitter'));
   // userRouter.route('/auth/twitter/callback').get(users.oauthCallback('twitter'));
 
-  // // Setting the google oauth routes
-  // userRouter.route('/auth/google').get(passport.authenticate('google', {
-  //   scope: [
-  //     'https://www.googleapis.com/auth/userinfo.profile',
-  //     'https://www.googleapis.com/auth/userinfo.email'
-  //   ]
-  // }));
-  // userRouter.route('/auth/google/callback').get(users.oauthCallback('google'));
+  // Setting the google oauth routes
+  userRouter.route('/auth/google').get(passport.authenticate('google', {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'
+    ]
+  }))
+  userRouter.route('/auth/google/callback').get(
+    (req, res, next) => passport.authenticate('google', {
+      scope: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email'
+      ]
+    }, (err, user, info) => {
+      if (err || !user) return res.status(400).json(info)
+      req.login(user, err => {
+        if (err) return res.status(400).json(err)
+        return res.redirect('/')
+      })
+    })(req, res, next)
+  )
 
   // // Setting the linkedin oauth routes
   // userRouter.route('/auth/linkedin').get(passport.authenticate('linkedin'));
