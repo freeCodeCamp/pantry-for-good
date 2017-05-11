@@ -22,5 +22,8 @@ export default function() {
 
   // Initialize strategies
   localStrategy()
-  googleStrategy()
+
+  if (process.env.NODE_ENV !== 'test') {
+    googleStrategy()
+  }
 }
