@@ -1,4 +1,4 @@
-import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/auth-reducer'
+import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
 
 export default (state, action) => {
   switch (action.type) {
@@ -36,7 +36,7 @@ function getUserMenuItems(user) {
       link: `${userType}/${user._id}/edit`,
     }
   ]
-  // need to figure out if user is driver to add route assignment menu item
+  // TODO: figure out if user is driver to add route assignment menu item
 }
 
 function getAdminMenuItems() {

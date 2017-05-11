@@ -122,7 +122,7 @@ export default (state = {
   }
 }
 
-export const createSelectors = (path, customersPath, customerSelectors) => {
+export const createSelectors = (path, customerSelectors) => {
   const getFilter = state => get(state, path).selectedFilter
   const getSelectedCustomerIds = state => get(state, path).selectedCustomers
 
@@ -132,7 +132,7 @@ export const createSelectors = (path, customersPath, customerSelectors) => {
     getSelectedCustomerIds,
     getFilteredCustomers: createSelector(
       getFilter,
-      state => customerSelectors.getAll(get(state, customersPath), state.entities),
+      state => customerSelectors.getAll(state),
       (filter, customers) =>
         customers.filter(customer => {
           if (!filter) return true

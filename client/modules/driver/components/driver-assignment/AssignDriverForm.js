@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 
-import {selectors, deliverySelectors} from '../../../../store'
+import selectors from '../../../../store/selectors'
 import {
   setDriver,
   assignCustomers
@@ -11,11 +11,11 @@ import {requestRoute} from '../../reducers/route'
 import {FieldGroup} from '../../../../components/form'
 
 const mapStateToProps = state => ({
-  location: state.settings.data.location,
-  getCustomer: selectors.getOneCustomer(state),
-  selectedCustomerIds: deliverySelectors.assignment.getSelectedCustomerIds(state),
-  selectedDriverId: deliverySelectors.assignment.getDriverId(state),
-  drivers: selectors.getAllDrivers(state)
+  location: selectors.settings.getSettings(state).location,
+  getCustomer: selectors.customer.getOne(state),
+  selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
+  selectedDriverId: selectors.delivery.assignment.getDriverId(state),
+  drivers: selectors.volunteer.getAllDrivers(state)
 })
 
 const mapDispatchToProps = dispatch => ({

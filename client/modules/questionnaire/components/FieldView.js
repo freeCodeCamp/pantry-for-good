@@ -5,11 +5,11 @@ import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
 import {ListGroupItem} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {moveField} from '../reducers/questionnaire-editor'
+import selectors from '../../../store/selectors'
+import {moveField} from '../reducers/editor/index'
 
 const mapStateToProps = state => ({
-  sectionId: selectors.getSelectedSection(state)
+  sectionId: selectors.qEditor.getSelectedSection(state)
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -1,3 +1,5 @@
+import {get} from 'lodash'
+
 import {CALL_API} from '../../store/middleware/api'
 
 export const LOAD_REQUEST = 'media/LOAD_REQUEST'
@@ -44,42 +46,46 @@ export default (state = {}, action) => {
       return {
         ...state,
         fetching: true,
-        error: null,
-        success: null
+        fetchError: null
       }
     case LOAD_SUCCESS:
       return {
         ...state,
         fetching: false,
-        success: true,
         data: action.response
       }
     case LOAD_FAILURE:
       return {
         ...state,
         fetching: false,
-        error: action.error
+        fetchError: action.error
       }
     case SAVE_REQUEST:
       return {
         ...state,
-        fetching: true,
-        error: null,
-        success: null
+        saving: true,
+        saveError: null
       }
     case SAVE_SUCCESS:
       return {
         ...state,
-        fetching: false,
-        success: true,
+        saving: false,
         data: action.response
       }
     case SAVE_FAILURE:
       return {
         ...state,
-        fetching: false,
-        error: action.error
+        saving: false,
+        saveError: action.error
       }
     default: return state
   }
 }
+
+export const createSelectors = path => ({
+  getMedia: state => get(state, path).data,
+  loading: state => get(state, path).fetching,
+  loadError: state => get(state, path).fetchError,
+  saving: state => get(state, path).saving,
+  saveError: state => get(state, path).saveError
+})

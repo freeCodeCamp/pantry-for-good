@@ -6,32 +6,31 @@ import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
 import {fromForm, toForm} from '../../../lib/fields-adapter'
-import {selectors} from '../../../store'
-import {saveDonor} from '../donor-reducer'
-import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
+import selectors from '../../../store/selectors'
+import {saveDonor} from '../reducers/donor'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
+import AssistanceInfo from '../../../components/AssistanceInfo'
 
 const FORM_NAME = 'donorForm'
 
 const mapStateToProps = state => ({
-  user: state.auth.user,
-  savingDonors: selectors.savingDonors(state),
-  saveDonorsError: selectors.saveDonorsError(state),
-  formData: selectors.getFormData(state, 'qDonors'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state),
-  settings: state.settings.data,
+  user: selectors.user.getUser(state),
+  savingDonors: selectors.donor.saving(state),
+  saveDonorsError: selectors.donor.saveError(state),
+  questionnaire: selectors.questionnaire.getOne(state)('qDonors'),
+  loading: selectors.questionnaire.loading(state) ||
+    selectors.donor.loading(state),
+  loadError: selectors.questionnaire.loadError(state) ||
+    selectors.donor.loadError(state),
+  settings: selectors.settings.getSettings(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   saveDonor: donor => dispatch(saveDonor(donor)),
-  loadFormData: () => {
-    dispatch(loadFoods())
-    dispatch(loadQuestionnaires())
-  },
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   push: route => dispatch(push(route)),
   submit: form => dispatch(submit(form))
 })
@@ -49,7 +48,7 @@ class DonorCreate extends Component {
   }
 
   componentWillMount() {
-    this.props.loadFormData()
+    this.props.loadQuestionnaires()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,12 +70,9 @@ class DonorCreate extends Component {
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {settings} = this.props
+    const {settings, questionnaire, loading, loadError, savingDonors} = this.props
     const {donorModel} = this.state
-    const {foods, questionnaire} = this.props.formData || null
-
-    const error = this.props.loadFormDataError || this.props.saveDonorsError
-    const loading = this.props.loadingFormData || this.props.savingDonors
+    const error = loadError || this.props.saveDonorsError
 
     return (
       <Page>
@@ -86,9 +82,7 @@ class DonorCreate extends Component {
           center
         >
           {settings &&
-            <div className="alert alert-info text-left">
-              <i className="icon fa fa-warning"></i>For assistance with this application, please contact our support line at               {settings.supportNumber.replace(/ /g, "\u00a0")}.
-            </div>
+            <AssistanceInfo settings={settings} />
           }
         </PageHeader>
         <PageBody error={error}>
@@ -97,7 +91,6 @@ class DonorCreate extends Component {
               <Questionnaire
                 form={FORM_NAME}
                 model={donorModel}
-                foods={foods}
                 questionnaire={questionnaire}
                 loading={loading}
                 onSubmit={this.saveDonor}

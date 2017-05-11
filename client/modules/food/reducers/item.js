@@ -1,15 +1,15 @@
-import union from 'lodash/union'
-import difference from 'lodash/difference'
 import {denormalize} from 'normalizr'
+import {createSelector} from 'reselect'
+import {difference, get, union} from 'lodash'
 
 import {
   foodCategory as foodCategorySchema,
   foodItem as foodItemSchema,
   arrayOfFoodItems
-} from '../../store/schemas'
-import {CALL_API} from '../../store/middleware/api'
-import {actions as foodCategoryActions} from './food-category-reducer'
-import {crudActions} from '../../store/utils'
+} from '../../../store/schemas'
+import {CALL_API} from '../../../store/middleware/api'
+import {actions as foodCategoryActions} from './category'
+import {crudActions} from '../../../store/utils'
 
 export const actions = crudActions('foodItem')
 export const CLEAR_FLAGS = 'foodItem/CLEAR_FLAGS'
@@ -50,7 +50,7 @@ export default (state = {
         saveError: null
       }
     case actions.SAVE_SUCCESS:
-    case actions.DELETE_SUCCESS:
+    case actions.DELETE_SUCCESS: {
       // save (and delete?) returns the whole updated food category
       const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
 
@@ -61,6 +61,7 @@ export default (state = {
                               union(state.ids, result),
         saving: false
       }
+    }
     case foodCategoryActions.LOAD_ALL_SUCCESS:
       return {
         ...state,
@@ -84,17 +85,22 @@ export default (state = {
   }
 }
 
-export const selectors = {
-  getAll(foodItems, entities) {
-    return denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
-  },
-  getOne(id, entities) {
-    return denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems
-  },
-  saving(foodItems) {
-    return foodItems.saving
-  },
-  saveError(foodItems) {
-    return foodItems.saveError
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+
+  return {
+    getAll: createSelector(
+      state => get(state, path).ids,
+      getEntities,
+      (foodItems, entities) =>
+        denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
+    ),
+    getOne: state => id => createSelector(
+      getEntities,
+      entities =>
+        denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems
+    )(state),
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
   }
 }

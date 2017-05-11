@@ -2,23 +2,23 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Nav, NavItem} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
+import selectors from '../../../store/selectors'
 import {
   editSection,
   deleteSection,
   addSection,
   updateSection,
   selectSection
-} from '../reducers/questionnaire-editor'
+} from '../reducers/editor/index'
 
 import SectionView from './SectionView'
 import SectionEdit from './SectionEdit'
 
 const mapStateToProps = state => ({
-  sectionIds: selectors.getSectionIds(state),
-  getSection: selectors.getSectionById(state),
-  editing: selectors.getEditingSection(state),
-  selected: selectors.getSelectedSection(state)
+  sectionIds: selectors.qEditor.getSectionIds(state),
+  getSection: selectors.qEditor.getSectionById(state),
+  editing: selectors.qEditor.getEditingSection(state),
+  selected: selectors.qEditor.getSelectedSection(state)
 })
 
 const mapDispatchToProps = dispatch => ({

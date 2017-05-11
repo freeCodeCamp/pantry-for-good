@@ -1,7 +1,8 @@
 import {normalize, denormalize} from 'normalizr'
+import {get} from 'lodash'
 import uuid from 'uuid'
 
-import {questionnaire as questionnaireSchema} from '../../../store/schemas'
+import {questionnaire as questionnaireSchema} from '../../../../store/schemas'
 import sections from './sections'
 import fields from './fields'
 
@@ -131,42 +132,29 @@ export default (state = {questionnaires: {}}, action) => {
   }
 }
 
-export const selectors = {
-  getSectionIds(state) {
-    return state.sections.allIds
-  },
-  getSectionById(state, id) {
-    return state.sections.byId[id]
-  },
-  getFieldIds(state, sectionId) {
-    const section = state.sections.byId[sectionId]
+export const createSelectors = path => ({
+  getSectionIds: state => get(state, path).sections.allIds,
+  getSectionById: state => id => get(state, path).sections.byId[id],
+  getFieldIds: state => sectionId => {
+    const section = get(state, path).sections.byId[sectionId]
     if (!section) return
     return section.fields
   },
-  getFieldById(state, id) {
-    return state.fields.byId[id]
-  },
-  getEditingQuestionnaire(state) {
-    const questionnaires = Object.keys(state.questionnaires).map(id =>
-      state.questionnaires[id])
+  getFieldById: state => id => get(state, path).fields.byId[id],
+  getEditingQuestionnaire: state => {
+    const questionnaires = Object.values(get(state, path).questionnaires)
     if (!questionnaires.length) return
     return questionnaires[0]
   },
-  getEditingSection(state) {
-    return state.editingSection
-  },
-  getEditingField(state) {
-    return state.editingField
-  },
-  getSelectedSection(state) {
-    return state.selectedSection
-  },
-  getCompleteQuestionnaire(state) {
-    const {questionnaires, sections, fields} = state
-    const ids = Object.keys(questionnaires)
-    if (!ids.length) return
+  getEditingSection: state => get(state, path).editingSection,
+  getEditingField: state => get(state, path).editingField,
+  getSelectedSection: state => get(state, path).selectedSection,
+  getCompleteQuestionnaire: state => {
+    const {sections, fields} = get(state, path)
+    const questionnaires = Object.values(get(state, path).questionnaires)
+    if (!questionnaires.length) return
 
-    const questionnaire = questionnaires[ids[0]]
+    const questionnaire = questionnaires[0]
 
     return denormalize(
       {questionnaires: questionnaire._id},
@@ -178,7 +166,7 @@ export const selectors = {
       }
     ).questionnaires
   }
-}
+})
 
 // Order section ids in questionnaire by order listed in state
 function reorderSections(questionnaire, sections) {

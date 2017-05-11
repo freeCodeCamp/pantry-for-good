@@ -4,11 +4,10 @@ import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-boots
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
 import Autosuggest from 'react-bootstrap-autosuggest'
 
-import { selectors } from 'store'
-import { saveFoodItem, deleteFoodItem, clearFlags } from '../../food-item-reducer'
+import selectors from '../../../../store/selectors'
+import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
 
 class FoodItems extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -142,7 +141,7 @@ class FoodItems extends React.Component {
         this.setState({ modalInputFields: { ...this.state.modalInputFields, name: value, categoryId:"" } }, this.validate)
       } else {
         // The user entered an existing food name and autosuggest provided the object for that food
-        this.setState({ modalInputFields: { ...this.state.modalInputFields, 
+        this.setState({ modalInputFields: { ...this.state.modalInputFields,
                                             name: value ? value.name : "",
                                             categoryId: value ? value.categoryId : ""
                                           } }, this.validate)
@@ -185,7 +184,7 @@ class FoodItems extends React.Component {
       defaultSortName: 'name',
       defaultSortOrder: 'asc',
       noDataText: (this.props.foodCategories.length === 0)
-        ? 'No foods in inventory. Add a category prior to adding a food' 
+        ? 'No foods in inventory. Add a category prior to adding a food'
         : 'No foods in inventory matching ' + this.state.searchText,
       // afterSearch specifies a function to call when the user changes the search box text
       afterSearch: searchText => this.setState({searchText})
@@ -250,14 +249,14 @@ class FoodItems extends React.Component {
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.closeModal}>Cancel</Button>
-              <Button className={this.state.validInput && 'btn-success'} 
-                      onClick={this.saveFood} 
+              <Button className={this.state.validInput && 'btn-success'}
+                      onClick={this.saveFood}
                       disabled={!this.state.validInput || this.props.savingFoodItem}>
                         {this.state.showModal === 'Add' ? 'Add' : 'Update'}
               </Button>
             </Modal.Footer>
-            {this.props.foodItemSaveError &&
-              <div className="alert alert-danger">{this.props.foodItemSaveError}</div>
+            {this.props.saveFoodItemError &&
+              <div className="alert alert-danger">{this.props.saveFoodItemError}</div>
             }
             {this.props.savingFoodItem &&
               <div className="overlay">
@@ -267,8 +266,8 @@ class FoodItems extends React.Component {
           </div>
         </Modal>
 
-        {(this.props.foodItemSaveError && !this.state.showModal) &&
-          <div className="alert alert-danger">{this.props.foodItemSaveError}</div>
+        {(this.props.saveFoodItemError && !this.state.showModal) &&
+          <div className="alert alert-danger">{this.props.saveFoodItemError}</div>
         }
 
         {(this.props.fetching || this.props.savingFoodItem) &&
@@ -283,11 +282,12 @@ class FoodItems extends React.Component {
 
 const mapStateToProps = state => ({
   // Add a nameLowerCased property with the name in lower case to use for sorting in autosuggest
-  foodItems: selectors.getAllFoodItems(state).map(item => ({...item, nameLowerCased: item.name.toLowerCase()})),
-  foodCategories: selectors.getAllFoods(state),
-  fetching: state.foodCategory.fetching,
-  savingFoodItem: state.foodItem.saving,
-  foodItemSaveError: state.foodItem.saveError,
+  foodItems: selectors.food.item.getAll(state).map(item =>
+    ({...item, nameLowerCased: item.name.toLowerCase()})),
+  foodCategories: selectors.food.category.getAll(state),
+  loading: selectors.food.category.loading(state),
+  savingFoodItem: selectors.food.item.saving(state),
+  saveFoodItemError: selectors.food.item.saveError(state),
 })
 
 const mapDispatchToProps = dispatch => ({

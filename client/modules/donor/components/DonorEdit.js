@@ -6,10 +6,9 @@ import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
 import {toForm, fromForm} from '../../../lib/fields-adapter'
-import {selectors} from '../../../store'
-import {loadDonor, saveDonor} from '../donor-reducer'
-import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
+import selectors from '../../../store/selectors'
+import {loadDonor, saveDonor} from '../reducers/donor'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
@@ -17,25 +16,22 @@ import {Questionnaire} from '../../../components/questionnaire'
 const FORM_NAME = 'donorForm'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  savingDonors: selectors.savingDonors(state),
-  saveDonorsError: selectors.saveDonorsError(state),
-  loadingDonors: selectors.loadingDonors(state),
-  loadDonorsError: selectors.loadDonorsError(state),
-  getDonor: selectors.getOneDonor(state),
+  user: selectors.user.getUser(state),
+  savingDonors: selectors.donor.saving(state),
+  saveDonorsError: selectors.donor.saveError(state),
+  getDonor: selectors.donor.getOne(state),
   donorId: ownProps.match.params.donorId,
-  formData: selectors.getFormData(state, 'qDonors'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state)
+  questionnaire: selectors.questionnaire.getOne(state)('qDonors'),
+  loading: selectors.questionnaire.loading(state) ||
+    selectors.donor.loading(state),
+  loadFormDataError: selectors.questionnaire.loadError(state) ||
+    selectors.donor.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadDonor: (id, admin) => dispatch(loadDonor(id, admin)),
   saveDonor: (donor, admin) => dispatch(saveDonor(donor, admin)),
-  loadFormData: () => {
-    dispatch(loadFoods())
-    dispatch(loadQuestionnaires())
-  },
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   push: route => dispatch(push(route)),
   submit: form => dispatch(submit(form))
 })
@@ -49,17 +45,17 @@ class DonorEdit extends Component {
 
   componentWillMount() {
     this.props.loadDonor(this.props.donorId, this.isAdmin)
-    this.props.loadFormData()
+    this.props.loadQuestionnaires()
   }
 
   componentWillReceiveProps(nextProps) {
-    const {savingDonors, saveDonorsError, formData} = nextProps
+    const {getDonor, questionnaire, savingDonors, saveDonorsError} = nextProps
     if (!savingDonors && this.props.savingDonors && !saveDonorsError) {
       this.props.push(this.isAdmin ? '/donors' : '/')
     }
 
-    const donor = nextProps.getDonor(nextProps.donorId)
-    if (donor && !this.state.donorModel && formData.questionnaire) {
+    const donor = getDonor(nextProps.donorId)
+    if (donor && !this.state.donorModel && questionnaire) {
       this.setState({
         donorModel: {...donor}
       })
@@ -78,11 +74,8 @@ class DonorEdit extends Component {
 
   render() {
     const {donorModel} = this.state
-    const {foods, questionnaire} = this.props.formData || null
-
-    const error = this.props.loadDonorsError || this.props.saveDonorsError ||
-      this.props.loadFormDataError
-    const loading = this.props.loadingDonors || this.props.loadingFormData || this.props.savingDonors
+    const {questionnaire, loading} = this.props
+    const error = this.props.loadError || this.props.saveDonorsError
 
     return (
       <Page>
@@ -93,7 +86,6 @@ class DonorEdit extends Component {
               <Questionnaire
                 form={FORM_NAME}
                 model={donorModel}
-                foods={foods}
                 questionnaire={questionnaire}
                 loading={loading}
                 onSubmit={this.saveDonor}

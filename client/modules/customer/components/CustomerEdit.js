@@ -5,10 +5,9 @@ import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
 import {toForm, fromForm} from '../../../lib/fields-adapter'
-import {selectors} from '../../../store'
-import {loadCustomer, saveCustomer} from '../customer-reducer'
-import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
+import selectors from '../../../store/selectors'
+import {loadCustomer, saveCustomer} from '../reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
@@ -16,25 +15,22 @@ import {Questionnaire} from '../../../components/questionnaire'
 const FORM_NAME = 'questionnaireForm'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  savingCustomers: selectors.savingCustomers(state),
-  saveCustomersError: selectors.saveCustomersError(state),
-  loadingCustomers: selectors.loadingCustomers(state),
-  loadCustomersError: selectors.loadCustomersError(state),
-  getCustomer: selectors.getOneCustomer(state),
+  user: selectors.user.getUser(state),
+  savingCustomers: selectors.customer.saving(state),
+  saveCustomersError: selectors.customer.saveError(state),
+  getCustomer: selectors.customer.getOne(state),
   customerId: ownProps.match.params.customerId,
-  formData: selectors.getFormData(state, 'qCustomers'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state)
+  questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  loading: selectors.questionnaire.loading(state) ||
+    selectors.customer.loading(state),
+  loadError: selectors.questionnaire.loadError(state) ||
+    selectors.customer.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadCustomer: (id, admin) => dispatch(loadCustomer(id, admin)),
   saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
-  loadFormData: () => {
-    dispatch(loadFoods())
-    dispatch(loadQuestionnaires())
-  },
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   submit: form => dispatch(submit(form))
 })
 
@@ -47,12 +43,12 @@ class CustomerEdit extends Component {
 
   componentWillMount() {
     this.props.loadCustomer(this.props.customerId, this.isAdmin)
-    this.props.loadFormData()
+    this.props.loadQuestionnaires()
   }
 
   componentWillReceiveProps(nextProps) {
     const customer = nextProps.getCustomer(nextProps.customerId)
-    if (customer && !this.state.customerModel && nextProps.formData.questionnaire) {
+    if (customer && !this.state.customerModel) {
       this.setState({
         customerModel: {...customer}
       })
@@ -72,11 +68,8 @@ class CustomerEdit extends Component {
 
   render() {
     const {customerModel} = this.state
-    const {foods, questionnaire} = this.props.formData || null
-
-    const error = this.props.loadCustomersError ||
-      this.props.saveCustomersError || this.props.loadFormDataError
-    const loading = this.props.loadingCustomers || this.props.loadingFormData
+    const {questionnaire, loading} = this.props
+    const error = this.props.saveCustomersError || this.props.loadError
 
     return (
       <Page loading={loading}>
@@ -87,7 +80,6 @@ class CustomerEdit extends Component {
               <Questionnaire
                 form={FORM_NAME}
                 model={customerModel}
-                foods={foods}
                 questionnaire={questionnaire}
                 loading={this.props.savingCustomers}
                 onSubmit={this.saveCustomer}

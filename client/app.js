@@ -5,9 +5,9 @@ import {AppContainer} from 'react-hot-loader'
 import createHistory from 'history/createBrowserHistory'
 
 import createStore from './store'
-import {setUser} from './modules/users/auth-reducer'
-import {loadMedia} from './modules/media/media-reducer'
-import {loadSettings} from './modules/settings/settings-reducer'
+import {setUser} from './modules/users/reducer'
+import {loadMedia} from './modules/media/reducer'
+import {loadSettings} from './modules/settings/reducer'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.css'

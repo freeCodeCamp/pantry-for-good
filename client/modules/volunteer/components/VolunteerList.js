@@ -1,41 +1,48 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Col, Row, Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadVolunteers} from '../volunteer-reducer'
+import selectors from '../../../store/selectors'
+import {loadVolunteers} from '../reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import {Page, PageBody, PageHeader} from '../../../components/page'
 
 const mapStateToProps = state => ({
-  user: state.auth.user,
-  volunteers: selectors.getAllVolunteers(state),
-  loadingVolunteers: selectors.loadingVolunteers(state),
-  loadVolunteersError: selectors.loadVolunteersError(state),
-  settings: state.settings.data
+  volunteers: selectors.volunteer.getAll(state),
+  loading: selectors.volunteer.loading(state) ||
+    selectors.questionnaire.loading(state),
+  loadError: selectors.volunteer.loadError(state) ||
+    selectors.questionnaire.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadVolunteers: () => dispatch(loadVolunteers())
+  loadVolunteers: () => dispatch(loadVolunteers()),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires())
 })
 
 class VolunteerList extends Component {
   componentWillMount() {
-    if (!this.props.loadingVolunteers && !this.props.loadVolunteersError)
-      this.props.loadVolunteers()
+    this.props.loadVolunteers()
+    this.props.loadQuestionnaires()
   }
+
   render() {
-    const {volunteers, loadVolunteersError} = this.props
+    const {volunteers, loading, loadError} = this.props
+
     return (
       <Page>
         <PageHeader heading="Volunteer Database" />
-        <PageBody error={loadVolunteersError}>
+        <PageBody>
           <Box>
             <BoxHeader heading="Applications" />
-            <BoxBody>
+            <BoxBody
+              loading={loading}
+              error={loadError}
+            >
               <Table responsive>
                 <thead>
                   <tr>
@@ -53,7 +60,7 @@ class VolunteerList extends Component {
                     <tr key={volunteer.id}>
                       <td><span>{volunteer.id}</span></td>
                       <td><span>{volunteer.fullName}</span></td>
-                      <td><span>{volunteer.fullAddress}</span></td>
+                      <td><span>{getAddress(volunteer)}</span></td>
                       <td><span>{volunteer.telephoneNumber}</span></td>
                       <td><span>{volunteer.email}</span></td>
                       <td><ClientStatusLabel client={volunteer} /></td>
@@ -80,3 +87,10 @@ class VolunteerList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolunteerList)
+
+function getAddress(client) {
+  return client && client.fields.filter(f =>
+      f.meta && f.meta.type === 'address')
+    .map(f => f.value)
+    .join(', ')
+}

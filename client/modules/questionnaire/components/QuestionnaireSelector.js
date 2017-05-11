@@ -3,11 +3,11 @@ import {connect} from 'react-redux'
 import {sortBy} from 'lodash'
 import {Nav, NavItem} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
+import selectors from '../../../store/selectors'
 
 const mapStateToProps = state => ({
-  questionnaires: sortBy(selectors.getAllQuestionnaires(state), 'name'),
-  selected: selectors.getEditingQuestionnaire(state)
+  questionnaires: sortBy(selectors.questionnaire.getAll(state), 'name'),
+  selected: selectors.qEditor.getEditingQuestionnaire(state)
 })
 
 const mapDispatchToProps = dispatch => ({

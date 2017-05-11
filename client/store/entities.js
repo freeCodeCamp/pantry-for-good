@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 
 export default function entities(state = {
-  customers: {},
+  customer: {},
   donations: {},
   donors: {},
   fields: {},

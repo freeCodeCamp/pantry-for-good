@@ -1,3 +1,5 @@
+import {get} from 'lodash'
+
 import {CALL_API} from '../../store/middleware/api'
 
 export const SET_USER = 'auth/SET_USER'
@@ -148,3 +150,10 @@ export default (state = {user: null}, action) => {
     default: return state
   }
 }
+
+export const createSelectors = path => ({
+  getUser: state => get(state, path).user,
+  fetching: state => get(state, path).fetching,
+  error: state => get(state, path).error,
+  success: state => get(state, path).success
+})

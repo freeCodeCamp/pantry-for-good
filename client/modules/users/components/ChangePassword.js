@@ -2,7 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Col, Row} from 'react-bootstrap'
 
-import {setPassword, clearFlags} from '../auth-reducer'
+import selectors from '../../../store/selectors'
+import {setPassword, clearFlags} from '../reducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import LoadingWrapper from '../../../components/LoadingWrapper'
@@ -87,7 +88,7 @@ class ChangePassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  auth: selectors.user.getUser(state)
 })
 
 const mapDispatchToProps = dispatch => ({

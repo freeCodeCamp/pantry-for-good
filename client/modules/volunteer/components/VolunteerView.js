@@ -3,36 +3,35 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {ButtonToolbar, Button} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../volunteer-reducer'
-import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
+import selectors from '../../../store/selectors'
+import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageBody, PageHeader} from '../../../components/page'
 import {QuestionnaireView} from '../../../components/questionnaire-view'
 
-const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  savingVolunteers: state.volunteer.saving,
-  saveVolunteersError: state.volunteer.saveError,
-  loadingVolunteers: selectors.loadingVolunteers(state),
-  loadVolunteersError: selectors.loadVolunteersError(state),
-  getVolunteer: selectors.getOneVolunteer(state),
-  volunteerId: ownProps.match.params.volunteerId,
-  formData: selectors.getFormData(state, 'qVolunteers'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state)
-})
+const mapStateToProps = (state, ownProps) => {
+  const {volunteerId} = ownProps.match.params
+  return {
+    user: selectors.user.getUser(state),
+    savingVolunteers: selectors.volunteer.saving(state),
+    saveVolunteersError: selectors.volunteer.saveError(state),
+    volunteer: selectors.volunteer.getOne(state)(volunteerId),
+    volunteerId,
+    questionnaire: selectors.questionnaire.getOne(state)('qVolunteers'),
+    loading: selectors.questionnaire.loading(state) ||
+      selectors.volunteer.loading(state),
+    loadError: selectors.questionnaire.loadError(state) ||
+      selectors.volunteer.loadError(state)
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
   deleteVolunteer: volunteer => dispatch(deleteVolunteer(volunteer.id)),
-  loadFormData: () => {
-    dispatch(loadFoods())
-    dispatch(loadQuestionnaires())
-  }
+  loadQuestionnaires: () => dispatch(loadQuestionnaires())
 })
 
 class VolunteerView extends Component {
@@ -43,12 +42,13 @@ class VolunteerView extends Component {
 
   componentWillMount() {
     this.props.loadVolunteer(this.props.volunteerId, this.isAdmin)
-    this.props.loadFormData()
+    this.props.loadQuestionnaires()
   }
 
   saveVolunteer = status => () => {
-    const volunteer = this.props.getVolunteer(this.props.volunteerId)
+    const {volunteer} = this.props
     if (!volunteer) return
+
     if (status === 'Driver') {
       return this.props.saveVolunteer({
         ...volunteer,
@@ -56,6 +56,7 @@ class VolunteerView extends Component {
         driver: true
       }, this.isAdmin)
     }
+
     this.props.saveVolunteer({
       ...volunteer,
       status,
@@ -66,20 +67,24 @@ class VolunteerView extends Component {
   deleteVolunteer = volunteer => () => this.props.deleteVolunteer(volunteer)
 
   render() {
-    const volunteer = this.props.getVolunteer(this.props.volunteerId)
-    const questionnaire = this.props.formData.questionnaire
-    const loading = this.props.loadingVolunteers || this.props.loadingFormData || this.props.savingVolunteers
-    const error = this.props.loadVolunteersError || this.props.saveVolunteersError || this.props.loadFormDataError
+    const {
+      volunteer,
+      questionnaire,
+      loading,
+      loadError,
+      savingVolunteers,
+      saveVolunteersError,
+    } = this.props
 
     return (
       <Page>
         <PageHeader heading={volunteer && volunteer.fullName} />
-        <PageBody error={error}>
+        <PageBody error={loadError || saveVolunteersError}>
           {volunteer && questionnaire &&
             <QuestionnaireView
               model={volunteer}
               questionnaire={questionnaire}
-              loading={loading}
+              loading={loading || savingVolunteers}
             />
           }
           {volunteer && this.isAdmin &&

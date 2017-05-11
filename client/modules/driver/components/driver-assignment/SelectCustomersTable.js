@@ -2,16 +2,16 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Checkbox, Table} from 'react-bootstrap'
 
-import {selectors, deliverySelectors} from '../../../../store'
+import selectors from '../../../../store/selectors'
 import {setFilter, selectCustomers, toggleCustomer} from '../../reducers/assignment'
 import {FieldGroup} from '../../../../components/form'
 
 const mapStateToProps = state => ({
-  customers: deliverySelectors.assignment.getFilteredCustomers(state),
-  selectedCustomerIds: deliverySelectors.assignment.getSelectedCustomerIds(state),
-  drivers: selectors.getAllDrivers(state),
-  isSelected: deliverySelectors.assignment.isCustomerSelected(state),
-  filter: deliverySelectors.assignment.getFilter(state),
+  customers: selectors.delivery.assignment.getFilteredCustomers(state),
+  selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
+  drivers: selectors.volunteer.getAllDrivers(state),
+  isSelected: selectors.delivery.assignment.isCustomerSelected(state),
+  filter: selectors.delivery.assignment.getFilter(state),
 })
 
 const mapDispatchToProps = dispatch => ({

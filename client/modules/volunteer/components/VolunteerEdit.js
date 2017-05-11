@@ -6,10 +6,9 @@ import {Link} from 'react-router-dom'
 import {Button, Col, Row} from 'react-bootstrap'
 
 import {toForm, fromForm} from '../../../lib/fields-adapter'
-import {selectors} from '../../../store'
-import {loadVolunteer, saveVolunteer} from '../volunteer-reducer'
-import {loadFoods} from '../../food/food-category-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
+import selectors from '../../../store/selectors'
+import {loadVolunteer, saveVolunteer} from '../reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Page, PageBody, PageHeader} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
@@ -17,26 +16,23 @@ import {Questionnaire} from '../../../components/questionnaire'
 const FORM_NAME = 'volunteerForm'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  getVolunteer: selectors.getOneVolunteer(state),
-  loadingVolunteer: selectors.loadingVolunteers(state),
-  loadVolunteerError: selectors.loadVolunteersError(state),
-  savingVolunteers: selectors.savingVolunteers(state),
-  saveVolunteersError: selectors.saveVolunteersError(state),
-  formData: selectors.getFormData(state, 'qVolunteers'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state),
+  user: selectors.user.getUser(state),
+  getVolunteer: selectors.volunteer.getOne(state),
+  savingVolunteers: selectors.volunteer.saving(state),
+  saveVolunteersError: selectors.volunteer.saveError(state),
+  questionnaire: selectors.questionnaire.getOne(state)('qVolunteers'),
+  loading: selectors.questionnaire.loading(state) ||
+    selectors.volunteer.loading(state),
+  loadError: selectors.questionnaire.loadError(state) ||
+    selectors.volunteer.loadError(state),
   volunteerId: ownProps.match.params.volunteerId,
-  settings: state.settings.data
+  settings: selectors.settings.getSettings(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
-  loadFormData: () => {
-    dispatch(loadFoods())
-    dispatch(loadQuestionnaires())
-  },
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   push: route => dispatch(push(route)),
   submit: form => dispatch(submit(form))
 })
@@ -50,22 +46,23 @@ class VolunteerEdit extends Component {
 
   componentWillMount() {
     this.props.loadVolunteer(this.props.volunteerId, this.isAdmin)
-    this.props.loadFormData()
+    this.props.loadQuestionnaires()
   }
 
   componentWillReceiveProps(nextProps) {
     const {
+      questionnaire,
+      getVolunteer,
       savingVolunteers,
       saveVolunteersError,
-      formData
     } = nextProps
 
     if (!savingVolunteers && this.props.savingVolunteers && !saveVolunteersError) {
       this.props.push(this.isAdmin ? '/volunteers' : '/')
     }
 
-    const volunteer = nextProps.getVolunteer(nextProps.volunteerId)
-    if (volunteer && !this.state.volunteerModel && formData.questionnaire) {
+    const volunteer = getVolunteer(nextProps.volunteerId)
+    if (volunteer && !this.state.volunteerModel && questionnaire) {
       this.setState({
         volunteerModel: {...volunteer}
       })
@@ -84,25 +81,21 @@ class VolunteerEdit extends Component {
 
   render() {
     const {volunteerModel} = this.state
-    const {foods, questionnaire} = this.props.formData || null
-
-    const error = this.props.loadVolunteerError || this.props.saveVolunteerError || this.props.loadFormDataError
-    const loading = this.props.loadingVolunteers || this.props.savingVolunteers || this.props.loadingFormData
+    const {questionnaire, loadError, saveVolunteersError, loading, savingVolunteers} = this.props
 
     return (
       <Page>
         <PageHeader
           heading={volunteerModel && volunteerModel.fullName}
         />
-        <PageBody error={error}>
+        <PageBody error={loadError || saveVolunteersError}>
           <form onSubmit={this.saveVolunteer}>
             {volunteerModel && questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
                 model={volunteerModel}
-                foods={foods}
                 questionnaire={questionnaire}
-                loading={loading}
+                loading={loading || savingVolunteers}
                 onSubmit={this.saveVolunteer}
                 initialValues={toForm(volunteerModel, questionnaire)}
               />

@@ -1,8 +1,10 @@
 import {denormalize} from 'normalizr'
+import {createSelector} from 'reselect'
+import {get} from 'lodash'
 
-import {donor as donorSchema, arrayOfDonors} from '../../store/schemas'
-import {CALL_API} from '../../store/middleware/api'
-import {crudActions, crudReducer} from '../../store/utils'
+import {donor as donorSchema, arrayOfDonors} from '../../../store/schemas'
+import {CALL_API} from '../../../store/middleware/api'
+import {crudActions, crudReducer} from '../../../store/utils'
 
 export const actions = crudActions('donor')
 
@@ -48,23 +50,24 @@ export const deleteDonor = id => ({
 
 export default crudReducer('donor')
 
-export const selectors = {
-  getAll(donors, entities) {
-    return denormalize({donors}, {donors: arrayOfDonors}, entities).donors
-  },
-  getOne(id, entities) {
-    return denormalize({donors: id}, {donors: donorSchema}, entities).donors
-  },
-  loading(donors) {
-    return donors.fetching
-  },
-  loadError(donors) {
-    return donors.fetchError
-  },
-  saving(donors) {
-    return donors.saving
-  },
-  saveError(donors) {
-    return donors.saveError
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+
+  return {
+    getAll: createSelector(
+      state => get(state, path).ids,
+      getEntities,
+      (donors, entities) =>
+        denormalize({donors}, {donors: arrayOfDonors}, entities).donors
+    ),
+    getOne: state => id => createSelector(
+      getEntities,
+      entities =>
+        denormalize({donors: id}, {donors: donorSchema}, entities).donors
+    )(state),
+    loading: state => get(state, path).fetching,
+    loadError: state => get(state, path).fetchError,
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
   }
 }

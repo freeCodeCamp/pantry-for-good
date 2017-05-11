@@ -2,25 +2,24 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {utc} from 'moment'
 import set from 'lodash/set'
-import {Link} from 'react-router-dom'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadDonor, saveDonor, deleteDonor} from '../donor-reducer'
+import selectors from '../../../store/selectors'
+import {loadDonor, deleteDonor} from '../reducers/donor'
 
 import Page from '../../../components/page/PageBody'
 import DonationView from './DonationView'
 import DonationCreate from './DonationCreate'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  savingDonor: state.donor.saving,
-  savingDonorError: state.donor.saveError,
-  loadingDonors: selectors.loadingDonors(state),
-  loadDonorsError: selectors.loadDonorsError(state),
-  getDonor: selectors.getOneDonor(state),
+  user: selectors.user.getUser(state),
+  savingDonors: selectors.donor.saving(state),
+  saveDonorsError: selectors.donor.saveError(state),
+  loadingDonors: selectors.donor.loading(state),
+  loadDonorsError: selectors.donor.loadError(state),
+  getDonor: selectors.donor.getOne(state),
   donorId: ownProps.match.params.donorId,
-  settings: state.settings.data
+  settings: selectors.settings.getSettings(state)
 })
 
 const mapDispatchToProps = dispatch => ({

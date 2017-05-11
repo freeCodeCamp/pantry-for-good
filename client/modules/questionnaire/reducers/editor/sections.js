@@ -1,4 +1,4 @@
-import {actions} from './questionnaire-editor'
+import {actions} from './index'
 
 export default (state = {
   byId: {},

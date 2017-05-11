@@ -1,4 +1,6 @@
 import {denormalize} from 'normalizr'
+import {createSelector} from 'reselect'
+import {get} from 'lodash'
 
 import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../store/schemas'
 import {CALL_API} from '../../store/middleware/api'
@@ -48,23 +50,28 @@ export const deleteVolunteer = id => ({
 
 export default crudReducer('volunteer')
 
-export const selectors = {
-  getAll(volunteers, entities) {
-    return denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers
-  },
-  getOne(id, entities) {
-    return denormalize({volunteers: id}, {volunteers: volunteerSchema}, entities).volunteers
-  },
-  loading(volunteers) {
-    return volunteers.fetching
-  },
-  loadError(volunteers) {
-    return volunteers.fetchError
-  },
-  saving(volunteers) {
-    return volunteers.saving
-  },
-  saveError(volunteers) {
-    return volunteers.saveError
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+  const getAll = createSelector(
+    state => get(state, path).ids,
+    getEntities,
+    (volunteers, entities) =>
+      denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers
+  )
+  return {
+    getAll,
+    getAllDrivers: createSelector(
+      getAll,
+      volunteers => volunteers.filter(v => v.driver && v.status === 'Active')
+    ),
+    getOne: state => id => createSelector(
+      getEntities,
+      entities =>
+        denormalize({volunteers: id}, {volunteers: volunteerSchema}, entities).volunteers
+    )(state),
+    loading: state => get(state, path).fetching,
+    loadError: state => get(state, path).fetchError,
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
   }
 }

@@ -1,9 +1,10 @@
 import {denormalize} from 'normalizr'
-import union from 'lodash/union'
+import {createSelector} from 'reselect'
+import {get, union} from 'lodash'
 
-import {donation as donationSchema, arrayOfDonations} from '../../store/schemas'
-import {callApi} from '../../store/middleware/api'
-import {saveDonor} from './donor-reducer'
+import {donation as donationSchema, arrayOfDonations} from '../../../store/schemas'
+import {callApi} from '../../../store/middleware/api'
+import {saveDonor} from './donor'
 
 export const SAVE_DONATION_REQUEST = 'donation/SAVE_REQUEST'
 export const SAVE_DONATION_SUCCESS = 'donation/SAVE_SUCCESS'
@@ -92,17 +93,22 @@ export default (state = {
   }
 }
 
-export const selectors = {
-  getAll(donations, entities) {
-    return denormalize({donations}, {donations: arrayOfDonations}, entities).donations
-  },
-  getOne(id, entities) {
-    return denormalize({donationss: id}, {donations: donationSchema}, entities).donations
-  },
-  saving(donations) {
-    return donations.saving
-  },
-  saveError(donations) {
-    return donations.saveError
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+
+  return {
+    getAll: createSelector(
+      state => get(state, path).ids,
+      getEntities,
+      (donations, entities) =>
+        denormalize({donations}, {donations: arrayOfDonations}, entities).donations
+    ),
+    getOne: state => id => createSelector(
+      getEntities,
+      entities =>
+        denormalize({donationss: id}, {donations: donationSchema}, entities).donations
+    )(state),
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
   }
 }

@@ -1,9 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
+import selectors from '../store/selectors'
+
 const mapStateToProps = state => ({
-  settings: state.settings.data,
-  media: state.media.data
+  settings: selectors.settings.getSettings(state),
+  media: selectors.media.getMedia(state)
 })
 
 const FoodbankLogo = ({settings, media}) =>

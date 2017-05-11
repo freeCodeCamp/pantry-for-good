@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import DriverAdmin from './components/DriverList'
 import DriverRoutes from './components/DriverAssignment'
-import DriverUser from './components/DriverUser'
+// import DriverUser from './components/DriverUser'
 
 import './driver.css'
 
@@ -19,7 +19,7 @@ const DonorRoutes = ({match, user}) =>
     }
     {isAdmin(user) ?
       <Route path={`${match.url}/routes`} component={DriverRoutes} /> :
-      <Route path={`${match.url}/routes`} component={DriverUser} />
+      {/*<Route path={`${match.url}/routes`} component={DriverUser} />*/}
     }
   </Switch>
 

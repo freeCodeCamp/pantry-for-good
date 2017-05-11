@@ -7,7 +7,7 @@ import 'moment-recur'
 import {selectors} from '../../../store'
 import {locateAddress, locateUser, stopLocateUser} from '../reducers/location'
 import {deliver} from '../../food/packing-reducer'
-import {loadVolunteer, saveVolunteer} from '../../volunteer/volunteer-reducer'
+import {loadVolunteer, saveVolunteer} from '../../volunteer/reducer'
 
 import Page from '../../../components/page/PageBody'
 

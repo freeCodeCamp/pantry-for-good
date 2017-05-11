@@ -2,10 +2,11 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
+import selectors from '../store/selectors'
 import FoodbankLogo from './FoodbankLogo'
 
 const mapStateToProps = state => ({
-  settings: state.settings.data
+  settings: selectors.settings.getSettings(state)
 })
 
 const CustomerCreateSuccess = ({settings}) =>

@@ -1,4 +1,6 @@
-import {normalize, denormalize} from 'normalizr'
+import {denormalize} from 'normalizr'
+import {createSelector} from 'reselect'
+import {get} from 'lodash'
 
 import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
 import {CALL_API, callApi} from '../../store/middleware/api'
@@ -58,23 +60,24 @@ export const assignCustomers = (customerIds, driverId) => dispatch => {
 
 export default crudReducer('customer')
 
-export const selectors = {
-  getAll(customers, entities) {
-    return denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
-  },
-  getOne(id, entities) {
-    return denormalize({customers: id}, {customers: customerSchema}, entities).customers
-  },
-  loading(customers) {
-    return customers.fetching
-  },
-  loadError(customers) {
-    return customers.fetchError
-  },
-  saving(customers) {
-    return customers.saving
-  },
-  saveError(customers) {
-    return customers.saveError
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+
+  return {
+    getAll: createSelector(
+      state => get(state, path).ids,
+      getEntities,
+      (customers, entities) =>
+        denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
+    ),
+    getOne: state => id => createSelector(
+      getEntities,
+      entities =>
+        denormalize({customers: id}, {customers: customerSchema}, entities).customers
+    )(state),
+    loading: state => get(state, path).fetching,
+    loadError: state => get(state, path).fetchError,
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
   }
 }

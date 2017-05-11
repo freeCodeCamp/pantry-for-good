@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Col} from 'react-bootstrap'
 
-import {selectors, deliverySelectors} from '../../../store'
-import {loadCustomers} from '../../customer/customer-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
-import {loadSettings} from '../../settings/settings-reducer'
-import {loadVolunteers} from '../../volunteer/volunteer-reducer'
+import selectors from '../../../store/selectors'
+import {loadCustomers} from '../../customer/reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {loadSettings} from '../../settings/reducer'
+import {loadVolunteers} from '../../volunteer/reducer'
 
 import {Page, PageBody} from '../../../components/page'
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
@@ -15,12 +15,17 @@ import AssignDriverForm from './driver-assignment/AssignDriverForm'
 import SelectCustomersMap from './driver-assignment/SelectCustomersMap'
 
 const mapStateToProps = state => ({
-  assigning: deliverySelectors.assignment.isFetching(state),
-  assignError: deliverySelectors.assignment.hasError(state),
-  directing: deliverySelectors.route.isFetching(state),
-  loading: selectors.loadingCustomers(state) || selectors.loadingQuestionnaires(state) ||
-    state.settings.fetching || selectors.loadingVolunteers(state),
-  loadError: selectors.loadCustomersError(state) || selectors.loadQuestionnairesError(state) || selectors.loadVolunteersError(state) || state.settings.error
+  assigning: selectors.delivery.assignment.isFetching(state),
+  assignError: selectors.delivery.assignment.hasError(state),
+  directing: selectors.delivery.route.isFetching(state),
+  loading: selectors.customer.loading(state) ||
+    selectors.questionnaire.loading(state) ||
+    selectors.settings.fetching(state) ||
+    selectors.volunteer.loading(state),
+  loadError: selectors.customer.loadError(state) ||
+    selectors.questionnaire.loadError(state) ||
+    selectors.volunteer.loadError(state) ||
+    selectors.settings.error(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -46,7 +51,10 @@ class DriverRoutes extends Component {
           <Col md={6} lg={5}>
             <Box>
               <BoxHeader heading="Driver Assignment" />
-              <BoxBody loading={loading || assigning || directing} error={loadError || assignError}  >
+              <BoxBody
+                loading={loading || assigning || directing}
+                error={loadError || assignError}
+              >
                 {!loading && !loadError &&
                   <div className="overflow-scroll">
                     <AssignDriverForm />

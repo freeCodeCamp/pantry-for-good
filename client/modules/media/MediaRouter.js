@@ -2,10 +2,11 @@ import React from 'react'
 import {Switch, Route} from 'react-router-dom'
 import {connect} from 'react-redux'
 
+import selectors from '../../store/selectors'
 import Media from './components/Media'
 
 const mapStateToProps = state => ({
-  user: state.auth.user
+  user: selectors.user.getUser(state)
 })
 
 const MediaRoutes = ({match, user}) =>

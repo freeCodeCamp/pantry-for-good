@@ -3,26 +3,26 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {ButtonToolbar, Button} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadCustomer, saveCustomer, deleteCustomer} from '../customer-reducer'
-import {loadQuestionnaires} from '../../questionnaire/reducers/questionnaire-api'
-import {loadFoods} from '../../food/food-category-reducer'
+import selectors from '../../../store/selectors'
+import {loadCustomer, saveCustomer, deleteCustomer} from '../reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {loadFoods} from '../../food/reducers/category'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {QuestionnaireView} from '../../../components/questionnaire-view'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: state.auth.user,
-  savingCustomers: selectors.savingCustomers(state),
-  saveCustomersError: selectors.saveCustomersError(state),
-  loadingCustomers: selectors.loadingCustomers(state),
-  loadCustomersError: selectors.loadCustomersError(state),
-  getCustomer: selectors.getOneCustomer(state),
+  user: selectors.user.getUser(state),
+  savingCustomers: selectors.customer.saving(state),
+  saveCustomersError: selectors.customer.saveError(state),
+  getCustomer: selectors.customer.getOne(state),
   customerId: ownProps.match.params.customerId,
-  formData: selectors.getFormData(state, 'qCustomers'),
-  loadingFormData: selectors.loadingFormData(state),
-  loadFormDataError: selectors.loadFormDataError(state)
+  questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  loading: selectors.questionnaire.loading(state) ||
+    selectors.customer.loading(state),
+  loadFormDataError: selectors.questionnaire.loadError(state) ||
+      selectors.customer.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -46,7 +46,6 @@ class CustomerView extends Component {
   saveCustomer = status => () => {
     const customer = this.props.getCustomer(this.props.customerId)
     if (!customer) return
-
     this.props.saveCustomer({
       ...customer,
       status
@@ -55,14 +54,10 @@ class CustomerView extends Component {
 
   deleteCustomer = customer => () => this.props.deleteCustomer(customer.id)
 
-  // Add up totals in Financial Assessment
-  total = (data, type) =>
-    data && data.reduce((a, b) => a + b[type], 0);
-
   render() {
-    const customer = this.props.getCustomer(this.props.customerId)
-    const questionnaire = this.props.formData.questionnaire
-    const loading = this.props.loadingCustomers || this.props.loadingFormData || this.props.savingCustomers
+    const {getCustomer, questionnaire} = this.props
+    const customer = getCustomer(this.props.customerId)
+    const loading = this.props.loading || this.props.savingCustomers
 
     return (
       <Page>

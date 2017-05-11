@@ -4,20 +4,20 @@ import {utc} from 'moment'
 import 'moment-recur'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadCustomers} from '../../customer/customer-reducer'
-import {loadFoods} from '../food-category-reducer'
-import {pack} from '../packing-reducer'
+import selectors from '../../../store/selectors'
+import {loadCustomers} from '../../customer/reducer'
+import {loadFoods} from '../reducers/category'
+import {pack} from '../reducers/packing'
 
 import Page from '../../../components/page/PageBody'
 
 const mapStateToProps = state => ({
-  customers: selectors.getAllCustomers(state),
-  items: selectors.getAllFoodItems(state),
-  loading: selectors.loadingCustomers(state) ||
-            selectors.loadingFoods(state),
-  loadCustomersError: selectors.loadCustomersError(state),
-  loadFoodsError: selectors.loadFoodsError(state)
+  customers: selectors.customer.getAll(state),
+  items: selectors.food.item.getAll(state),
+  loading: selectors.customer.loading(state) ||
+    selectors.food.category.loading(state),
+  loadError: selectors.customer.loadError(state) ||
+    selectors.food.category.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({

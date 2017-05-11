@@ -4,7 +4,7 @@ import {noop} from 'lodash'
 import {Marker} from 'react-google-maps'
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer'
 
-import {selectors, deliverySelectors} from '../../../../store'
+import selectors from '../../../../store/selectors'
 import {toggleCustomer, selectCluster} from '../../reducers/assignment'
 import Map from '../Map'
 
@@ -14,11 +14,11 @@ import driverMarker from '../../images/driver-marker.png'
 import solidMarker from '../../images/client-marker.png'
 
 const mapStateToProps = state => ({
-  settings: state.settings.data,
-  customers: deliverySelectors.assignment.getFilteredCustomers(state),
-  isSelected: deliverySelectors.assignment.isCustomerSelected(state),
-  selectedCustomerIds: deliverySelectors.assignment.getSelectedCustomerIds(state),
-  route: deliverySelectors.route.getRoute(state)
+  settings: selectors.settings.getSettings(state),
+  customers: selectors.delivery.assignment.getFilteredCustomers(state),
+  isSelected: selectors.delivery.assignment.isCustomerSelected(state),
+  selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
+  route: selectors.delivery.route.getRoute(state)
 })
 
 const mapDispatchToProps = dispatch => ({

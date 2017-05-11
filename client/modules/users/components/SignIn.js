@@ -3,7 +3,8 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {push} from 'react-router-redux'
 
-import {signIn, clearFlags} from '../auth-reducer'
+import selectors from '../../../store/selectors'
+import {signIn, clearFlags} from '../reducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
@@ -88,7 +89,7 @@ class SignIn extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: selectors.user.getUser(state)
 })
 
 const mapDispatchToProps = dispatch => ({

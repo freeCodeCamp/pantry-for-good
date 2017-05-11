@@ -2,80 +2,75 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from 'store'
-import {loadVolunteers} from '../../volunteer/volunteer-reducer'
+import selectors from '../../../store/selectors'
+import {loadVolunteers} from '../../volunteer/reducer'
+import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
-import Page from '../../../components/page/PageBody'
+import {Box, BoxBody} from '../../../components/box'
+import {Page, PageBody, PageHeader} from '../../../components/page'
 
 const mapStateToProps = state => ({
-  drivers: selectors.getAllVolunteers(state).filter(vol =>
-    vol.driver && vol.status === 'Active'),
-  loading: selectors.loadingVolunteers(state)
+  drivers: selectors.volunteer.getAllDrivers(state),
+  loading: selectors.volunteer.loading(state) ||
+    selectors.questionnaire.loading(state),
+  loadError: selectors.volunteer.loadError(state) ||
+    selectors.questionnaire.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadVolunteers: () => dispatch(loadVolunteers())
+  loadVolunteers: () => dispatch(loadVolunteers()),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires())
 })
 
 class DriverAdmin extends Component {
   componentWillMount() {
     this.props.loadVolunteers()
+    this.props.loadQuestionnaires()
   }
 
   render() {
-    const {drivers, loading} = this.props
+    const {drivers, loading, loadError} = this.props
+
     return (
-      <Page heading="Drivers">
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title"></h3>
-                <div className="box-tools">
-                  <div className="form-group has-feedback">
-                    <input className="form-control" type="search" placeholder="Search" />
-                    <span className="glyphicon glyphicon-search form-control-feedback"></span>
-                  </div>
-                </div>
-              </div>
-              <div className="box-body table-responsive no-padding top-buffer">
-                <Table striped responsive>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Full Name</th>
-                      <th>Delivery Status</th>
-                      <th>General Notes</th>
+      <Page>
+        <PageHeader heading="Drivers" />
+        <PageBody>
+          <Box>
+            <BoxBody
+              loading={loading}
+              error={loadError}
+            >
+              <Table striped responsive>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Delivery Status</th>
+                    <th>General Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {drivers && drivers.map((driver, i) =>
+                    <tr key={i}>
+                      <td><span>{driver.id}</span></td>
+                      <td><span>{driver.fullName}</span></td>
+                      <td>
+                        <span className={labelClass(driver.deliveryStatus)}>{driver.deliveryStatus}
+                        </span>
+                      </td>
+                      <td><span>{driver.generalNotes}</span></td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {drivers && drivers.map((driver, i) =>
-                      <tr key={i}>
-                        <td><span>{driver.id}</span></td>
-                        <td><span>{driver.fullName}</span></td>
-                        <td>
-                          <span className={labelClass(driver.deliveryStatus)}>{driver.deliveryStatus}
-                          </span>
-                        </td>
-                        <td><span>{driver.generalNotes}</span></td>
-                      </tr>
-                    )}
-                    {!drivers &&
-                      <tr>
-                        <td className="text-center" colSpan="4">No drivers yet.</td>
-                      </tr>
-                    }
-                  </tbody>
-                </Table>
-              </div>
-              {loading &&
-                <div className="overlay">
-                  <i className="fa fa-refresh fa-spin"></i>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
+                  )}
+                  {!drivers &&
+                    <tr>
+                      <td className="text-center" colSpan="4">No drivers yet.</td>
+                    </tr>
+                  }
+                </tbody>
+              </Table>
+            </BoxBody>
+          </Box>
+        </PageBody>
       </Page>
     )
   }

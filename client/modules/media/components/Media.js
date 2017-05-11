@@ -2,11 +2,12 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
-import {loadMedia, saveMedia} from '../media-reducer'
+import selectors from '../../../store/selectors'
+import {loadMedia, saveMedia} from '../reducer'
 import FoodbankLogo from '../../../components/FoodbankLogo'
 
 const mapStateToProps = state => ({
-  media: state.media.data,
+  media: selectors.media.getMedia(state)
 })
 
 const mapDispatchToProps = dispatch => ({

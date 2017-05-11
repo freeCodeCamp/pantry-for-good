@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+
 import Category from './Category'
 import NewCategory from './NewCategory'
-import { selectors } from 'store'
-import { loadFoods, saveFood, deleteFood } from '../../food-category-reducer'
+import selectors from '../../../../store/selectors'
+import { loadFoods, saveFood, deleteFood } from '../../reducers/category'
 import { CALL_API } from '../../../../store/middleware/api'
 
 class FoodCategories extends Component {
-
   componentWillMount = () => {
     this.props.loadFoods()
   }
@@ -28,9 +28,9 @@ class FoodCategories extends Component {
 
   getTableRows = () => {
     if (this.props.foods.length > 0) {
-      return this.props.foods.map(category => (
-                <Category key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
-            ))
+      return this.props.foods.map(category =>
+        <Category key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
+      )
     } else {
       return (<tr><td className="text-center">No food categories yet.</td></tr>)
     }
@@ -45,54 +45,54 @@ class FoodCategories extends Component {
   }
 
   render() {
-
     return (
-            <div className="box">
-                <div className="box-header">
-                    <h3 className="box-title">Categories</h3>
-                </div>
+      <div className="box">
+        <div className="box-header">
+          <h3 className="box-title">Categories</h3>
+        </div>
 
-                <div className="box-body table-responsive no-padding">
-                    <table className="table table-striped table-bordered">
-                        <thead>
-                            <tr><th>Name</th></tr>
-                        </thead>
-                        <tbody>
-                            {this.getTableRows()}
-                        </tbody>
-                    </table>
-                </div>
+        <div className="box-body table-responsive no-padding">
+          <table className="table table-striped table-bordered">
+            <thead>
+              <tr><th>Name</th></tr>
+            </thead>
+            <tbody>
+              {this.getTableRows()}
+            </tbody>
+          </table>
+        </div>
 
-                <div className="box-footer">
-                    <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
+        <div className="box-footer">
+          <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
 
-                    {this.props.foodCategory.saveError &&
-                        <div className="text-center text-danger">
-                            <strong>{this.props.foodCategory.saveError}</strong>
-                        </div>
-                    }
-                    {this.props.foodCategory.fetchError &&
-                        <div className="text-center text-danger">
-                            <strong>{this.props.foodCategory.fetchError}</strong>
-                        </div>
-                    }
-                </div>
-
-                {(this.props.foodCategory.fetching || this.props.foodCategory.saving) &&
-                    <div className="overlay">
-                        <i className="fa fa-refresh fa-spin"></i>
-                    </div>
-                }
-
+          {this.props.saveFoodsError &&
+            <div className="text-center text-danger">
+                <strong>{this.props.saveFoodsError}</strong>
             </div>
+          }
+          {this.props.loadFoodsError &&
+            <div className="text-center text-danger">
+                <strong>{this.props.loadFoodsError}</strong>
+            </div>
+          }
+        </div>
 
+        {(this.props.loadingFoods || this.props.savingFoods) &&
+          <div className="overlay">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        }
+      </div>
     )
   }
 }
 
 const mapStateToProps = state => ({
-  foods: selectors.getAllFoods(state),
-  foodCategory: state.foodCategory
+  foods: selectors.food.category.getAll(state),
+  loadingFoods: selectors.food.category.loading(state),
+  loadFoodsError: selectors.food.category.loadError(state),
+  savingFoods: selectors.food.category.saving(state),
+  saveFoodsError: selectors.food.category.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -100,9 +100,9 @@ const mapDispatchToProps = dispatch => ({
   createCategory: category => dispatch(saveFood({ category: category })),
   updateCategory: foodCategory => {
     let action = saveFood(foodCategory)
-        //If the schema is present then callAPI will not include the complete
-        //food objects in the request and it will fail. However the schema
-        //is needed to process the response
+    //If the schema is present then callAPI will not include the complete
+    //food objects in the request and it will fail. However the schema
+    //is needed to process the response
     action[CALL_API].responseSchema = action[CALL_API].schema
     delete action[CALL_API].schema
     dispatch(action)

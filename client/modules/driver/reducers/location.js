@@ -109,26 +109,16 @@ export default (state = {}, action) => {
 }
 
 export const createSelectors = path => ({
-  getAddressCoordinates(state) {
-    return get(state, path, 'address.geometry.location')
-  },
-  getUserCoordinates(state) {
+  getAddressCoordinates: state => get(state, path, 'address.geometry.location'),
+  getUserCoordinates: state => {
     const {latitude, longitude} = get(state, path, 'user.coords', {})
     return {
       lat: latitude,
-      lon: longitude
+      lng: longitude
     }
   },
-  loadingAddressLocation(state) {
-    return get(state, path, 'fetchingAddress')
-  },
-  loadAddressLocationError(state) {
-    return get(state, path, 'errorAddress')
-  },
-  loadingUserLocation(state) {
-    return get(state, path, 'fetchingUser')
-  },
-  loadUserLocationError(state) {
-    return get(state, path, 'errorUser')
-  }
+  loadingAddressLocation: state => get(state, path, 'fetchingAddress'),
+  loadAddressLocationError: state => get(state, path, 'errorAddress'),
+  loadingUserLocation: state => get(state, path, 'fetchingUser'),
+  loadUserLocationError: state => get(state, path, 'errorUser')
 })

@@ -2,18 +2,18 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {loadFoods} from '../food-category-reducer'
-import {saveFoodItem} from '../food-item-reducer'
+import selectors from '../../../store/selectors'
+import {loadFoods} from '../reducers/category'
+import {saveFoodItem} from '../reducers/item'
 
 import Page from '../../../components/page/PageBody'
 import ItemRow from './schedule/ItemRow'
 
 const mapStateToProps = state => ({
-  foodItems: selectors.getAllFoodItems(state),
-  foodCategories: selectors.getAllFoods(state),
-  loadingFoods: selectors.loadingFoods(state),
-  loadFoodsError: selectors.loadFoodsError(state)
+  foodItems: selectors.food.item.getAll(state),
+  foodCategories: selectors.food.category.getAll(state),
+  loadingFoods: selectors.food.category.loading(state),
+  loadFoodsError: selectors.food.category.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -68,7 +68,7 @@ class Schedule extends Component {
 
   render() {
     const {itemModel, error} = this.state
-    const {foodItems, loadingFoods} = this.props
+    const {foodItems, loadingFoods, loadFoodsError} = this.props
     return (
       <Page heading="Food Schedule">
         <div className="row">

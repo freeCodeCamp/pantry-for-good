@@ -3,13 +3,13 @@ import {connect} from 'react-redux'
 import {submit, isValid, isPristine, hasSubmitSucceeded} from 'redux-form'
 import {ListGroup} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
+import selectors from '../../../store/selectors'
 import {
   editField,
   deleteField,
   addField,
   updateField
-} from '../reducers/questionnaire-editor'
+} from '../reducers/editor/index'
 
 import FieldEdit from './FieldEdit'
 import FieldView from './FieldView'
@@ -17,10 +17,10 @@ import FieldView from './FieldView'
 const FORM_NAME = 'fieldForm'
 
 const mapStateToProps = state => ({
-  fieldIds: selectors.getFieldIds(state),
-  getField: selectors.getFieldById(state),
-  editing: selectors.getEditingField(state),
-  section: selectors.getSelectedSection(state),
+  fieldIds: selectors.qEditor.getFieldIds(state),
+  getField: selectors.qEditor.getFieldById(state),
+  editing: selectors.qEditor.getEditingField(state),
+  section: selectors.qEditor.getSelectedSection(state),
   submitSucceeded: hasSubmitSucceeded(FORM_NAME)(state),
   isValid: isValid(FORM_NAME)(state),
   isPristine: isPristine(FORM_NAME)(state)

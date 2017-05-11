@@ -1,7 +1,8 @@
 import {normalize} from 'normalizr'
+import {get} from 'lodash'
 
-import {callApi} from '../../store/middleware/api'
-import {arrayOfCustomers, arrayOfFoodItems} from '../../store/schemas'
+import {callApi} from '../../../store/middleware/api'
+import {arrayOfCustomers, arrayOfFoodItems} from '../../../store/schemas'
 
 const PACK_REQUEST = 'packing/PACK_REQUEST'
 const PACK_SUCCESS = 'packing/PACK_SUCCESS'
@@ -48,21 +49,26 @@ export default (state = {}, action) => {
     case PACK_REQUEST:
       return {
         ...state,
-        fetching: true,
-        error: null
+        saving: true,
+        saveError: null
       }
     case PACK_SUCCESS:
       return {
         ...state,
-        fetching: false,
-        error: null
+        saving: false,
+        saveError: null
       }
     case PACK_FAILURE:
       return {
         ...state,
-        fetching: false,
-        error: action.error
+        saving: false,
+        saveError: action.error
       }
     default: return state
   }
 }
+
+export const createSelectors = path => ({
+  saving: state => get(state, path).saving,
+  saveError: state => get(state, path).saveError
+})

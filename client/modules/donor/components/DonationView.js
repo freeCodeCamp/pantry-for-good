@@ -2,13 +2,13 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Modal, Table} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {sendReceipt} from '../donation-reducer'
+import selectors from '../../../store/selectors'
+import {sendReceipt} from '../reducers/donation'
 
 const mapStateToProps = state => ({
-  savingDonations: selectors.savingDonations(state),
-  saveDonationsError: selectors.saveDonationsError(state),
-  settings: state.settings.data
+  savingDonations: selectors.donation.saving(state),
+  saveDonationsError: selectors.donation.saveError(state),
+  settings: selectors.settings.getSettings(state)
 })
 
 const mapDispatchToProps = dispatch => ({

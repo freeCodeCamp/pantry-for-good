@@ -1,3 +1,5 @@
+import {get} from 'lodash'
+
 import {CALL_API} from '../../store/middleware/api'
 
 export const LOAD_REQUEST = 'settings/LOAD_REQUEST'
@@ -51,3 +53,10 @@ export default (state = {}, action) => {
     default: return state
   }
 }
+
+export const createSelectors = path => ({
+  getSettings: state => get(state, path).data,
+  fetching: state => get(state, path).fetching,
+  error: state => get(state, path).error,
+  success: state => get(state, path).success
+})

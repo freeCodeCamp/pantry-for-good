@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import {selectors} from '../../../store'
+import selectors from '../../../store/selectors'
 import {FieldGroup} from '../../../components/form'
 
 const mapStateToProps = state => ({
-  getSection: selectors.getSectionById(state)
+  getSection: selectors.qEditor.getSectionById(state)
 })
 
 class SectionEdit extends Component {

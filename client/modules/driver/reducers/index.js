@@ -6,8 +6,8 @@ import route, {createSelectors as createRouteSelectors} from './route'
 
 export default combineReducers({location, assignment, route})
 
-export const createSelectors = (path, ...args) => ({
+export const createSelectors = (path, customerSelectors) => ({
   location: createLocationSelectors(`${path}.location`),
-  assignment: createAssignmentSelectors(`${path}.assignment`, ...args),
+  assignment: createAssignmentSelectors(`${path}.assignment`, customerSelectors),
   route: createRouteSelectors(`${path}.route`)
 })

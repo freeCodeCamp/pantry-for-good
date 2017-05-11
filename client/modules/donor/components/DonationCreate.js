@@ -2,12 +2,12 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Modal} from 'react-bootstrap'
 
-import {selectors} from '../../../store'
-import {saveDonation} from '../donation-reducer'
+import selectors from '../../../store/selectors'
+import {saveDonation} from '../reducers/donation'
 
 const mapStateToProps = state => ({
-  savingDonations: selectors.savingDonations(state),
-  saveDonationsError: selectors.saveDonationsError(state)
+  savingDonations: selectors.donation.saving(state),
+  saveDonationsError: selectors.donation.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -3,11 +3,11 @@ import {connect} from 'react-redux'
 import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
 
-import {selectors} from '../../../store'
-import {moveSection} from '../reducers/questionnaire-editor'
+import selectors from '../../../store/selectors'
+import {moveSection} from '../reducers/editor/index'
 
 const mapStateToProps = state => ({
-  getSection: selectors.getSectionById(state)
+  getSection: selectors.qEditor.getSectionById(state)
 })
 
 const mapDispatchToProps = dispatch => ({
