@@ -12,6 +12,9 @@ import pinkMarker from '../../images/gm-marker-pink.png'
 import blueMarker from '../../images/gm-marker-blue.png'
 import driverMarker from '../../images/driver-marker.png'
 import solidMarker from '../../images/client-marker.png'
+import bluecluster from '../../images/m1-cyan.png'
+import purpleCluster from '../../images/m1-purple.png'
+import pinkCluster from '../../images/m1-pink.png'
 
 const mapStateToProps = state => ({
   settings: selectors.settings.getSettings(state),
@@ -38,6 +41,12 @@ const loadingElement = (
   <div className="overlay"><i className="fa fa-refresh fa-spin"></i></div>
 )
 
+const clusterStyles = [
+  {url: bluecluster, height: 52, width: 53},
+  {url: purpleCluster, height: 52, width: 53},
+  {url: pinkCluster, height: 52, width: 53}
+]
+
 const SelectCustomersMap = ({
   settings,
   customers,
@@ -62,9 +71,11 @@ const SelectCustomersMap = ({
         <MarkerClusterer
           averageCenter
           enableRetinaIcons
-          gridSize={60}
+          gridSize={20}
           zoomOnClick={false}
           onClick={selectCluster}
+          calculator={calculator}
+          styles={clusterStyles}
         >
           {!route && customers && customers.map(customer =>
             customer.location ?
@@ -92,16 +103,21 @@ function getGoogleMapURL(settings) {
     `${baseUrl}key=${gmapsApiKey}`
 }
 
-// cluster => {
-//             console.log('cluster', cluster)
-//             {/*console.log('cluster.isMarkerInClusterBounds',
-//             customers.filter(customer =>
-//               cluster.isMarkerInClusterBounds({
-//                 getPosition: function() {return {lat: 51.48, lng: -3.15}}
-//               })
-//             )*/}
+function calculator(markers) {
+  const total = markers.length
+  const selected = markers.reduce((acc, marker) =>
+    marker.icon.match(/pink/) ? acc + 1 : acc
+  , 0)
+  const unselected = total - selected
 
-//             // get {id, location} from customers array
-//             // filter by in bounds
-//             // toggle select remaining customers
-//           }}
+  let index
+  if (!unselected) index = 3
+  else if (selected) index = 2
+  else index = 1
+
+  return {
+    text: total,
+    index,
+    title: `${selected} selected`
+  }
+}
