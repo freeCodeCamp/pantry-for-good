@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {take} from 'lodash'
 import {Checkbox, Table} from 'react-bootstrap'
 
 import selectors from '../../../../store/selectors'
@@ -75,7 +76,7 @@ const SelectCustomersTable = ({
             onClick={handleSelect(customer.id)}
             style={{cursor: 'pointer'}}
           >
-            <td>
+            <td style={{padding: 0}}>
               <Checkbox checked={isSelected(customer.id)} readOnly />
             </td>
             <td><span>{customer.id}</span></td>
@@ -96,8 +97,9 @@ const SelectCustomersTable = ({
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(SelectCustomersTable)
 
 function getAddress(customer) {
-  return customer.fields.filter(field =>
-      field.meta && field.meta.type === 'address')
+  const fields = customer.fields.filter(field =>
+    field.meta && field.meta.type === 'address')
+  return take(fields, 2)
     .map(field => field.value)
     .join(', ')
 }

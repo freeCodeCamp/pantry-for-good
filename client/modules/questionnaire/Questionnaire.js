@@ -6,7 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import {get, head, sortBy} from 'lodash'
 import {Button, Col} from 'react-bootstrap'
 
-import {selectors} from '../../store'
+import selectors from '../../store/selectors'
 import {loadQuestionnaires, saveQuestionnaire} from './reducers/api'
 import {init, selectSection, editField} from './reducers/editor/index'
 import {Page, PageBody} from '../../components/page'
@@ -18,13 +18,14 @@ import FieldForm from './components/FieldForm'
 import './questionnaire.css'
 
 const mapStateToProps = state => ({
-  questionnaires: sortBy(selectors.getAllQuestionnaires(state), 'name'),
-  loading: selectors.loadingQuestionnaires(state),
-  saving: selectors.savingQuestionnaires(state),
-  error: selectors.loadQuestionnairesError(state) ||
-    selectors.saveQuestionnairesError(state),
-  completeQuestionnaire: selectors.getCompleteQuestionnaire(state),
-  sectionIds: selectors.getSectionIds(state)
+  questionnaires: sortBy(selectors.questionnaire.getAll(state), 'name'),
+  getQuestionnaire: selectors.questionnaire.getOne(state),
+  loading: selectors.questionnaire.loading(state),
+  saving: selectors.questionnaire.saving(state),
+  error: selectors.questionnaire.loadError(state) ||
+    selectors.questionnaire.saveError(state),
+  completeQuestionnaire: selectors.qEditor.getCompleteQuestionnaire(state),
+  sectionIds: selectors.qEditor.getSectionIds(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -42,8 +43,7 @@ class Questionnaire extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.loading && !nextProps.loading) {
-      const questionnaire = nextProps.questionnaires.find(q =>
-        q.identifier === 'qCustomers')
+      const questionnaire = nextProps.getQuestionnaire('qCustomers')
 
       this.props.init(questionnaire)
       this.props.selectSection(questionnaire.sections[0]._id)

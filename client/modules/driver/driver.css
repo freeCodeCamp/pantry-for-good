@@ -7,12 +7,10 @@
 }
 
 .googleMap{
-	height: 100vh;
-	padding-bottom: 75px;
+	height: calc(100vh - 130px);
 }
 
-.overflow-scroll {
-	height: 80vh;
-	padding-bottom: 175px;
-	overflow-y: scroll;
+.assignmentBox {
+	height: calc(100vh - 130px);
+	overflow-y: overlay;
 }

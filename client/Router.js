@@ -19,7 +19,7 @@ import Volunteers from './modules/volunteer/VolunteerRouter'
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
-    <div className="wrapper">
+    <div>
       <Sidebar />
       <Header />
       <div className="content-wrapper">

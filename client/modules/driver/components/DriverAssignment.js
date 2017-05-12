@@ -49,14 +49,14 @@ class DriverRoutes extends Component {
       <Page>
         <PageBody>
           <Col md={6} lg={5}>
-            <Box>
+            <Box className="assignmentBox">
               <BoxHeader heading="Driver Assignment" />
               <BoxBody
                 loading={loading || assigning || directing}
                 error={loadError || assignError}
               >
                 {!loading && !loadError &&
-                  <div className="overflow-scroll">
+                  <div>
                     <AssignDriverForm />
                     <SelectCustomersTable />
                   </div>

@@ -13,6 +13,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.css'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/skin-blue.min.css'
+import 'jquery'
+import 'admin-lte/plugins/slimScroll/jquery.slimscroll'
+import 'admin-lte/plugins/fastclick/fastclick'
 
 import './application.css'
 import './modules/core/css/core.css'
@@ -36,6 +39,9 @@ function render(Component) {
     </AppContainer>,
     root
   )
+
+  // for admin-lte
+  window.dispatchEvent(new Event('resize'))
 }
 
 if (module.hot) {
