@@ -16,10 +16,9 @@ export default function() {
   }, async function(accessToken, refreshToken, profile, cb) {
     try {
       const user = await User.findOne({'google.id': profile.id})
-      // console.log('profile', profile)
 
       if (!user) {
-        const newUser = new User({
+        const newUser = await User.create({
           username: profile.displayName,
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
@@ -31,7 +30,6 @@ export default function() {
           google: {id: profile.id}
         })
 
-        await newUser.save()
         return cb(null, newUser)
       }
 

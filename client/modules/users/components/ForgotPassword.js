@@ -23,7 +23,7 @@ class ForgotPassword extends React.Component {
   }
 
   redirectIfAlreadySignedIn(props) {
-    if (props.auth && props.auth.user && props.auth.user._id) {
+    if (props.user && props.user._id) {
       props.push('root')
     }
   }
@@ -50,7 +50,7 @@ class ForgotPassword extends React.Component {
         </Col>
         <p className="small text-center">Enter your account username.</p>
         <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
-          <LoadingWrapper loading={this.props.auth.fetching}>
+          <LoadingWrapper loading={this.props.fetchingUser}>
             <form className="signin form-horizontal" autoComplete="off">
               <fieldset>
                 <FieldGroup
@@ -62,12 +62,12 @@ class ForgotPassword extends React.Component {
                 <div className="text-center form-group">
                   <button type="submit" onClick={this.onSubmit} disabled={this.state.username.trim() === ""} className="btn btn-primary">Submit</button>
                 </div>
-                {this.props.auth.success &&
+                {this.props.fetchUserSuccess &&
                   <div className="text-center text-success">
                     <strong>{this.props.auth.success.message}</strong>
                   </div>
                 }
-                {this.props.auth.error &&
+                {this.props.fetchUserError &&
                   <div className="text-center text-danger">
                     <strong>{this.props.auth.error}</strong>
                   </div>
@@ -81,7 +81,10 @@ class ForgotPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: selectors.user.getUser(state)
+  user: selectors.user.getUser(state),
+  fetchingUser: selectors.user.fetching(state),
+  fetchUserError: selectors.user.error(state),
+  fetchUserSuccess: selectors.user.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -37,7 +37,7 @@ class SignUp extends React.Component {
   }
 
   redirectIfAlreadySignedIn(props) {
-    if (props.auth && props.auth.user && props.auth.user._id) {
+    if (props.user && props.user._id) {
       props.push('root')
     }
   }
@@ -69,8 +69,8 @@ class SignUp extends React.Component {
         showLogo
         heading="Register a new membership"
         formName="registerForm"
-        loading={this.props.auth.fetching}
-        error={this.props.auth.error}
+        loading={this.props.fetchingUser}
+        error={this.props.fetchUserError}
       >
         <FieldGroup
           name="accountType"
@@ -154,7 +154,9 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: selectors.user.getUser(state)
+  user: selectors.user.getUser(state),
+  fetchingUser: selectors.user.fetching(state),
+  fetchUserError: selectors.user.error(state)
 })
 
 const mapDispatchToProps = dispatch => ({

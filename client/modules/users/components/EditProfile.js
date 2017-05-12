@@ -12,10 +12,10 @@ class EditProfile extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      firstName: this.props.auth.user.firstName,
-      lastName: this.props.auth.user.lastName,
-      email: this.props.auth.user.email,
-      username: this.props.auth.user.username
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
+      email: this.props.user.email,
+      username: this.props.user.username
     }
   }
 
@@ -30,7 +30,7 @@ class EditProfile extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
-    this.props.setProfile({...this.props.auth.user,
+    this.props.setProfile({...this.props.user,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
@@ -45,7 +45,7 @@ class EditProfile extends React.Component {
           <h3 className="col-md-12 text-center">Edit your profile</h3>
         </Col>
         <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
-          <LoadingWrapper loading={this.props.auth.fetching}>
+          <LoadingWrapper loading={this.props.fetchingUser}>
             <form name="userForm" className="signin form-horizontal" autoComplete="off">
               <fieldset>
                 <FieldGroup
@@ -80,14 +80,14 @@ class EditProfile extends React.Component {
                 <div className="text-center form-group">
                   <button onClick={this.onSubmit} type="submit" className="btn btn-large btn-primary">Save Profile</button>
                 </div>
-                {this.props.auth.success &&
+                {this.props.fetchUserSuccess &&
                   <div className="text-center text-success">
                     <strong>Profile Saved Successfully</strong>
                   </div>
                 }
-                {this.props.auth.error &&
+                {this.props.fetchUserError &&
                   <div className="text-center text-danger">
-                    <strong>{this.props.auth.error}</strong>
+                    <strong>{this.props.fetchUserError}</strong>
                   </div>
                 }
               </fieldset>
@@ -100,7 +100,10 @@ class EditProfile extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: selectors.user.getUser(state),
+  user: selectors.user.getUser(state),
+  fetchingUser: selectors.user.fetching(state),
+  fetchUserError: selectors.user.error(state),
+  fetchUserSuccess: selectors.user.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({

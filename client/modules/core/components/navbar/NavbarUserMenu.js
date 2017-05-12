@@ -7,7 +7,7 @@ const NavbarUserMenu = ({user}) =>
       {/*<!-- User account -->*/}
       <li className="dropdown user user-menu">
         <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-          <span>{user.displayName}</span>
+          <span>{user.displayName || user.email}</span>
         </a>
         <ul className="dropdown-menu">
           <li>
