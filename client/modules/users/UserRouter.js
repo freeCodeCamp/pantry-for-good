@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import ChangePassword from './components/ChangePassword'
 import EditProfile from './components/EditProfile'
 import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 
@@ -23,6 +24,7 @@ const SettingsRoutes = ({match, user}) =>
       </Switch> :
       <Switch>
         <Route path={`${match.url}/forgot-password`} component={ForgotPassword} />
+        <Route path={`${match.url}/reset-password/:token`} component={ResetPassword} />
         <Route path={`${match.url}/signin`} component={SignIn} />
         <Route path={`${match.url}/signup`} component={SignUp} />
       </Switch>

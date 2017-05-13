@@ -18,7 +18,6 @@ export default () => {
   // Setting up the users password api
   userRouter.route('/users/password').post(users.changePassword)
   userRouter.route('/auth/forgot').post(users.forgot)
-  userRouter.route('/auth/reset/:token').get(users.validateResetToken)
   userRouter.route('/auth/reset/:token').post(users.reset)
 
   // Setting up the users authentication api

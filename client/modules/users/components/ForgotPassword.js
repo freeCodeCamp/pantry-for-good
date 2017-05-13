@@ -14,7 +14,7 @@ class ForgotPassword extends React.Component {
     super(props)
     this.redirectIfAlreadySignedIn(this.props)
     this.state = {
-      username: ""
+      email: ""
     }
   }
 
@@ -35,60 +35,70 @@ class ForgotPassword extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
-    this.props.resetPassword(this.state.username)
+    this.props.resetPassword(this.state.email)
   }
 
   componentWillReceiveProps = nextProps => {
     this.redirectIfAlreadySignedIn(nextProps)
   }
 
-  render = () =>
-    <section>
-      <Row>
-        <Col md={12}>
-          <h3 className="text-center">Restore your password</h3>
-        </Col>
-        <p className="small text-center">Enter your account username.</p>
-        <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
-          <LoadingWrapper loading={this.props.fetchingUser}>
-            <form className="signin form-horizontal" autoComplete="off">
-              <fieldset>
-                <FieldGroup
-                  name="username"
-                  placeholder="Username"
-                  value={this.state.username}
-                  onChange={this.onFieldChange}
-                />
-                <div className="text-center form-group">
-                  <button type="submit" onClick={this.onSubmit} disabled={this.state.username.trim() === ""} className="btn btn-primary">Submit</button>
-                </div>
-                {this.props.fetchUserSuccess &&
-                  <div className="text-center text-success">
-                    <strong>{this.props.auth.success.message}</strong>
-                  </div>
-                }
-                {this.props.fetchUserError &&
-                  <div className="text-center text-danger">
-                    <strong>{this.props.auth.error}</strong>
-                  </div>
-                }
-              </fieldset>
-            </form>
-          </LoadingWrapper>
-        </Col>
-      </Row>
-    </section>
+  render = () => {
+    if (this.props.success) {
+      return (
+        <Row>
+          <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+            <div className="text-center text-success">
+              <br/><strong>{this.props.success.message}</strong>
+            </div>
+          </Col>
+        </Row>
+      )
+    } else {
+      return (
+        <section>
+          <Row>
+            <Col md={12}>
+              <h3 className="text-center">Reset your password</h3>
+            </Col>
+            <p className="text-center">Enter your email address.</p>
+            <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+              <LoadingWrapper loading={this.props.fetching}>
+                <form className="signin form-horizontal" autoComplete="off">
+                  <fieldset>
+                    <FieldGroup
+                      name="email"
+                      value={this.state.email}
+                      onChange={this.onFieldChange}
+                    />
+                    <div className="text-center form-group">
+                      <button type="submit" onClick={this.onSubmit} disabled={this.state.email.trim() === "" || this.props.fetching} className="btn btn-primary">Submit</button>
+                    </div>
+                    {this.props.error &&
+                      <div className="text-center text-danger">
+                        <strong>{this.props.error}</strong>
+                      </div>
+                    }
+                  </fieldset>
+                </form>
+              </LoadingWrapper>
+            </Col>
+          </Row>
+        </section>
+      )
+    }
+  }
+
 }
 
 const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
-  fetchingUser: selectors.user.fetching(state),
-  fetchUserError: selectors.user.error(state),
-  fetchUserSuccess: selectors.user.success(state)
+  fetching: selectors.user.fetching(state),
+  error: selectors.user.error(state),
+  success: selectors.user.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  resetPassword: username => dispatch(forgotPassword({ username })),
+  resetPassword: email => dispatch(forgotPassword({ email })),
   clearFlags: () => dispatch(clearFlags()),
   push: location => dispatch(push(location))
 })

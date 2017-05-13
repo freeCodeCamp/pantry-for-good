@@ -64,7 +64,7 @@ export const resetPassword = (token, password) => ({
   [CALL_API]: {
     endpoint: `auth/reset/${token}`,
     method: 'POST',
-    body: password,
+    body: { password: password},
     types: [RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAILURE]
   }
 })
