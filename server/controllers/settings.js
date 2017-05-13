@@ -1,5 +1,6 @@
 import {intersection} from 'lodash'
 import Settings from '../models/settings'
+import config from '../config'
 
 export default {
   async read (req, res) {
@@ -7,7 +8,15 @@ export default {
     const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
       '+gmapsApiKey +gmapsClientId' : ''
 
-    const settings = await Settings.findOne().select(projection)
+    const settings = await Settings.findOne().select(projection).lean()
+
+    // Add property to indicate if google authentication is available
+    Object.assign(settings, {googleAuthentication: !!(config.oauth)})
+
+    // Remove unnecessary info before sending off the object to the client
+    delete settings._id
+    delete settings.__v
+
     res.json(settings)
   },
 

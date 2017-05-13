@@ -1,6 +1,7 @@
 import passport from 'passport'
 import localStrategy from './strategies/local'
 import googleStrategy from './strategies/google'
+import config from './index.js'
 
 export default function() {
   const {User} = require('../models')
@@ -23,7 +24,13 @@ export default function() {
   // Initialize strategies
   localStrategy()
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (config.oauth) {
     googleStrategy()
+  } else if (process.env.NODE_ENV !== 'test') {
+    console.log()
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log('!!!  Google oauth API keys not set. Google login is disabled  !!!')
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log()
   }
 }

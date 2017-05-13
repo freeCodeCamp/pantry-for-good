@@ -140,12 +140,16 @@ class SignUp extends React.Component {
             Sign up
           </button>
           <br />
-          or
-          <br />
-          <a href="/api/auth/google"  className="btn btn-default">
-            <i className="fa fa-google" />{' '}
-            Sign up with Google
-          </a>
+          {this.props.googleAuthentication &&
+            <div>
+              or
+              <br />
+              <a href="/api/auth/google"  className="btn btn-default">
+                <i className="fa fa-google" />{' '}
+                Sign up with Google
+              </a>
+            </div>
+          }
           <br/><br/>Already have an account?&nbsp;&nbsp;
           <Link to="/users/signin">Sign in</Link>
         </div>
@@ -156,7 +160,8 @@ class SignUp extends React.Component {
 const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
   fetchingUser: selectors.user.fetching(state),
-  fetchUserError: selectors.user.error(state)
+  fetchUserError: selectors.user.error(state),
+  googleAuthentication: (state.settings && state.settings.data) ? state.settings.data.googleAuthentication : false
 })
 
 const mapDispatchToProps = dispatch => ({
