@@ -36,7 +36,7 @@ const DrawSelection = ({
   selectShape
 }) =>
   <DrawingManager
-    defaultDrawingMode={google.maps.drawing.OverlayType.CIRCLE}
+    defaultDrawingMode={null}
     defaultOptions={{
       drawingControl: true,
       drawingControlOptions: {
