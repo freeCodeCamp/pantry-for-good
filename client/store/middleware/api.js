@@ -1,7 +1,9 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
 import {normalize} from 'normalizr'
 
-const API_ROOT = 'http://localhost:8080/api/'
+const API_ROOT = process.env.NODE_ENV === 'production' ?
+  '/api/' :
+  'http://localhost:8080/api/'
 
 // Fetches an API response and normalizes the result JSON according to schema.
 // This makes every API response have the same shape, regardless of how nested it was.
@@ -81,7 +83,7 @@ export default store => next => action => {
       response,
       type: successType
     })),
-    error => { 
+    error => {
       let errorMessage = ""
       if (error.error && error.error.errors) {
           errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
@@ -127,7 +129,7 @@ function formatRequestBody(body, method, schema) {
 }
 
 function generateRequestHeaders(method) {
-  return method === 'GET' ? 
-    new Headers({}) : 
+  return method === 'GET' ?
+    new Headers({}) :
     new Headers({'Content-Type': 'application/json'})
 }

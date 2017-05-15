@@ -14,8 +14,8 @@ export default {
     Object.assign(settings, {googleAuthentication: !!(config.oauth)})
 
     // Remove unnecessary info before sending off the object to the client
-    delete settings._id
     delete settings.__v
+
 
     res.json(settings)
   },
@@ -33,6 +33,6 @@ export default {
       await Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
       await Settings.create(req.body)
 
-    res.json(settings)
+    res.json(settings.select('+gmapsApiKey +gmapsClientId'))
   }
 }

@@ -1,51 +1,62 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
-var webpack = require('webpack');
-var nodemon = require('gulp-nodemon');
+const gulp = require('gulp')
+const babel = require('gulp-babel')
+const webpack = require('webpack')
+const webpackDevServer = require('webpack-dev-server')
+const nodemon = require('gulp-nodemon')
+const del = require('del')
 
-var webpackConfig = require('./webpack.config');
+const webpackConfigDev = require('./webpack.config.dev')
+const webpackConfigProd = require('./webpack.config.prod')
 
-var webpackDevServer;
-if (process.env.NODE_ENV !== 'production') {
-  webpackDevServer = require('webpack-dev-server');
-}
+gulp.task('clean-server', function() {
+  return del('dist')
+})
 
-gulp.task('build-client', function(done) {
-  webpack(webpackConfig).run(function(err, stats) {
-    if (err) console.error(err);
-    else console.log(stats.toString());
-    done();
-  });
-});
+gulp.task('build-common', ['clean-server'], function() {
+  return gulp.src('common/**/*')
+    .pipe(babel({
+      only: /\.js$/
+    }))
+    .pipe(gulp.dest('dist/common'))
+})
 
-gulp.task('build-server', function(done) {
-  // build server with babel
-  done();
-});
+gulp.task('build-server', ['build-common'], function() {
+  return gulp.src('server/**/*')
+    .pipe(babel({
+      only: /\.js$/
+    }))
+    .pipe(gulp.dest('dist/server'))
+})
+
+
+gulp.task('clean-client', function() {
+  return del('public/dist')
+})
+
+gulp.task('build-client', ['clean-client'], function(done) {
+  webpack(webpackConfigProd).run(function(err, stats) {
+    /* eslint-disable no-console */
+    if (err) console.error(err)
+    else console.log(stats.toString())
+    /* eslint-enable no-console */
+    done()
+  })
+})
+
 
 gulp.task('watch-server', function() {
   nodemon({
-    watch: ['server/**/*.js'],
+    watch: ['server/**/*.js', 'common/**/*.js'],
     exec: "node ./server/index.js"
-  });
-});
+  })
+})
 
 gulp.task('watch-client', ['watch-server'], function() {
-  var compiler = webpack(webpackConfig);
-  new webpackDevServer(compiler, webpackConfig.devServer)
-    .listen(webpackConfig.devServer.port);
-});
+  var compiler = webpack(webpackConfigDev)
+  new webpackDevServer(compiler, webpackConfigDev.devServer)
+    .listen(webpackConfigDev.devServer.port)
+})
 
-gulp.task('compress', ['build-client'], function() {
-  return gulp.src('public/dist/*.js')
-    .pipe(uglify({
-      compress: {warnings: false}
-    }))
-    .pipe(gulp.dest('public/dist', {
-      overwrite: true
-    }));
-});
+gulp.task('build', ['build-server', 'build-client'])
 
-gulp.task('build', ['build-client', 'compress']);
-
-gulp.task('watch', ['watch-server', 'watch-client']);
+gulp.task('watch', ['watch-server', 'watch-client'])

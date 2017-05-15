@@ -13,5 +13,5 @@ public/media
 *.swp
 .settings/
 typings/
-.vscode
 server/config/env/secrets.js
+dist

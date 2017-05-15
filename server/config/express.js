@@ -115,11 +115,13 @@ export default function() {
     })
   })
 
-  // Assume 404 since no middleware responded
+  // let the client handle it
   app.use(function(req, res) {
-    res.status(404).json({
-      message: 'Not found'
-    })
+    res.sendFile(path.resolve('./public/dist/index.html'))
+    // res.end()
+    // res.status(404).json({
+    //   message: 'Not found'
+    // })
   })
 
   // Return Express server instance

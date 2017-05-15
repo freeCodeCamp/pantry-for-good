@@ -34,6 +34,9 @@ export default (delay, errorProb) => apiRouter
   .use(packingRoutes)
   .use(questionnaireRoutes())
   .use(volunteerRoutes())
+  .all('*', (req, res) => res.status(404).json({
+    message: 'Not found'
+  }))
 
 function loadingSimulator(time = 0) {
   return (req, res, next) => {
