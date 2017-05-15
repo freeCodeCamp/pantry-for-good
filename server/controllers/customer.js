@@ -3,6 +3,7 @@ import extend from 'lodash/extend'
 import config from '../config/index'
 import mailer from '../lib/mailer'
 import Customer from '../models/customer'
+import Volunteer from '../models/volunteer'
 import User from '../models/user'
 import mongoose from 'mongoose'
 
@@ -81,12 +82,17 @@ export default {
   async assign(req, res) {
     const {customerIds, driverId} = req.body
 
+    // TODO: make separate api for delivery
     const customers = await Promise.all(
       customerIds.map(async id =>
         await Customer.findByIdAndUpdate(id, {$set: {assignedTo: driverId}}, {new: true}))
     )
 
-    res.json(customers)
+    const numericCustomerIds = customerIds.map(id => Number(id))
+    const driver = await Volunteer.findByIdAndUpdate(driverId,
+      {$addToSet: {customers: {$each: numericCustomerIds}}}, {new: true})
+
+    res.json({customers, driver})
   },
 
   /**

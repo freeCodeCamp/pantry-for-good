@@ -1,91 +1,54 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'react-bootstrap'
 
 import selectors from '../../../../store/selectors'
-import {
-  setDriver,
-  assignCustomers
-} from '../../reducers/assignment'
-import {requestRoute} from '../../reducers/route'
-import {FieldGroup} from '../../../../components/form'
+import {setFilter, setDriver} from '../../reducers/assignment'
+import {Box, BoxBody, BoxHeader} from '../../../../components/box'
+import FilterCustomers from './FilterCustomers'
+import DriverList from './DriverList'
 
 const mapStateToProps = state => ({
-  location: selectors.settings.getSettings(state).location,
-  getCustomer: selectors.customer.getOne(state),
-  selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
   selectedDriverId: selectors.delivery.assignment.getDriverId(state),
-  drivers: selectors.volunteer.getAllDrivers(state)
+  drivers: selectors.volunteer.getAllDrivers(state),
+  filter: selectors.delivery.assignment.getFilter(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  assign: (customerIds, driverId) => dispatch(assignCustomers(customerIds, driverId)),
-  setDriver: ev => dispatch(setDriver(ev.target.value)),
-  requestRoute: (start, end, waypoints) =>
-    dispatch(requestRoute(start, end, waypoints))
-})
-
-const mergeProps = (stateProps, dispatchProps) => ({
-  ...stateProps,
-  ...dispatchProps,
-  assign: () =>
-    dispatchProps.assign(stateProps.selectedCustomerIds, stateProps.selectedDriverId),
-  requestRoute: () => {
-    dispatchProps.requestRoute(
-      stateProps.location,
-      // stateProps.location,
-      stateProps.drivers.find(driver =>
-        driver.id === stateProps.selectedDriverId).location,
-      stateProps.selectedCustomerIds.map(id => stateProps.getCustomer(id).location)
-    )
-  }
+  setDriver: id => () => dispatch(setDriver(id)),
+  handleFilterChange: ev => dispatch(setFilter(ev.target.value))
 })
 
 const AssignDriverForm = ({
-  selectedCustomerIds,
   selectedDriverId,
   drivers,
-  assign,
-  requestRoute,
-  setDriver
+  filter,
+  handleFilterChange,
+  setDriver,
+  loading,
+  error
 }) =>
-  <div style={{
-    display: 'flex',
-    alignContent: 'space-between',
-    alignItems: 'center'
-  }}>
-    <FieldGroup
-      name="selectedDriver"
-      type="select"
-      label="Assign To"
-      value={selectedDriverId}
-      onChange={setDriver}
-      style={{flexGrow: 1, marginRight: '10px'}}
-    >
-      <option value="">Select a driver</option>
-      {drivers && drivers.map(driver =>
-        <option key={driver.id} value={driver.id}>
-          {driver.fullName}
-        </option>
-      )}
-    </FieldGroup>
-    <Button
-      bsStyle="primary"
-      onClick={requestRoute}
-      disabled={!selectedCustomerIds.length || !selectedDriverId}
-      style={{margin: '10px 10px 0 0'}}
-    >
-      Directions
-    </Button>
-    {' '}
-    <Button
-      bsStyle="success"
-      onClick={assign}
-      disabled={!selectedCustomerIds.length || !selectedDriverId}
-      style={{marginTop: '10px'}}
-    >
-      Assign
-    </Button>
-  </div>
+  !loading && !error ?
+    <Box className="assignmentBox">
+      <BoxHeader heading="Drivers">
+        <div className="box-tools">
+          <FilterCustomers
+            filter={filter}
+            handleFilterChange={handleFilterChange}
+            drivers={drivers}
+          />
+        </div>
+      </BoxHeader>
+      <BoxBody
+        loading={loading}
+        error={error}
+      >
+        <DriverList
+          drivers={drivers}
+          selectedDriverId={selectedDriverId}
+          setDriver={setDriver}
+        />
+      </BoxBody>
+    </Box> :
+    null
 
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(AssignDriverForm)
+export default connect(mapStateToProps, mapDispatchToProps)(AssignDriverForm)

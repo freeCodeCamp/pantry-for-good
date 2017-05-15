@@ -18,6 +18,7 @@ const mapStateToProps = state => ({
   assigning: selectors.delivery.assignment.isFetching(state),
   assignError: selectors.delivery.assignment.hasError(state),
   directing: selectors.delivery.route.isFetching(state),
+  directingError: selectors.delivery.route.hasError(state),
   loading: selectors.customer.loading(state) ||
     selectors.questionnaire.loading(state) ||
     selectors.settings.fetching(state) ||
@@ -38,31 +39,46 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class DriverRoutes extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showDrivers: true,
+      showCustomers: false
+    }
+  }
   componentWillMount() {
     this.props.load()
   }
 
   render() {
-    const {loading, loadError, assigning, assignError, directing} = this.props
+    const {
+      loading,
+      loadError,
+      assigning,
+      assignError,
+      directing,
+      directingError
+    } = this.props
 
     return (
       <Page>
         <PageBody>
-          <Col md={6} lg={5}>
-            <Box className="assignmentBox">
-              <BoxHeader heading="Driver Assignment" />
-              <BoxBody
-                loading={loading || assigning || directing}
-                error={loadError || assignError}
-              >
-                {!loading && !loadError &&
-                  <div>
-                    <AssignDriverForm />
-                    <SelectCustomersTable />
-                  </div>
-                }
-              </BoxBody>
-            </Box>
+          <Col md={6} lg={5}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'calc(100vh - 130px)',
+            }}
+          >
+            <AssignDriverForm
+              loading={loading || assigning || directing}
+              error={loadError || assignError || directingError}
+              style={{flexShrink: 1}}
+            />
+            <SelectCustomersTable
+              loading={loading || assigning || directing}
+              error={loadError || assignError || directingError}
+            />
           </Col>
           <Col md={6} lg={7}>
             <SelectCustomersMap />

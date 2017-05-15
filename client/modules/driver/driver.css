@@ -1,16 +1,8 @@
-/* Google Maps */
-.gm-style-iw {
-	text-align: center;
-}
-.gm-style-iw + div {
-	display: none;
-}
-
 .googleMap{
 	height: calc(100vh - 130px);
 }
 
 .assignmentBox {
-	height: calc(100vh - 130px);
-	overflow-y: overlay;
+	/*height: calc(100vh - 130px);*/
+	/*overflow-y: overlay;*/
 }

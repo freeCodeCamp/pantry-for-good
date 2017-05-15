@@ -1,8 +1,11 @@
 import {get} from 'lodash'
 
+const CLEAR_ROUTE = 'assignment/route/CLEAR_ROUTE'
 const ROUTE_REQUEST = 'assignment/route/ROUTE_REQUEST'
 const ROUTE_SUCCESS = 'assignment/route/ROUTE_SUCCESS'
 const ROUTE_FAILURE = 'assignment/route/ROUTE_FAILURE'
+
+export const clearRoute = () => ({type: CLEAR_ROUTE})
 
 export const requestRoute = (origin, destination, waypoints) => dispatch => {
   dispatch({type: ROUTE_REQUEST, origin, destination, waypoints})
@@ -33,6 +36,11 @@ export default (state = {
   route: null
 }, action) => {
   switch (action.type) {
+    case CLEAR_ROUTE:
+      return {
+        ...state,
+        route: null
+      }
     case ROUTE_REQUEST:
       return {
         ...state,

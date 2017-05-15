@@ -5,20 +5,21 @@ import {Checkbox, Table} from 'react-bootstrap'
 
 import selectors from '../../../../store/selectors'
 import {setFilter, selectCustomers, toggleCustomer} from '../../reducers/assignment'
-import {FieldGroup} from '../../../../components/form'
+import {Box, BoxBody, BoxHeader} from '../../../../components/box'
+import FilterCustomers from './FilterCustomers'
 
 const mapStateToProps = state => ({
   customers: selectors.delivery.assignment.getFilteredCustomers(state),
   selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
   drivers: selectors.volunteer.getAllDrivers(state),
   isSelected: selectors.delivery.assignment.isCustomerSelected(state),
-  filter: selectors.delivery.assignment.getFilter(state),
+  filter: selectors.delivery.assignment.getFilter(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   handleSelect: id => () => dispatch(toggleCustomer(id)),
-  handleFilterChange: ev => dispatch(setFilter(ev.target.value)),
-  selectCustomers: customers => dispatch(selectCustomers(customers))
+  selectCustomers: customers => dispatch(selectCustomers(customers)),
+  handleFilterChange: ev => dispatch(setFilter(ev.target.value))
 })
 
 const mergeProps = (stateProps, dispatchProps) => ({
@@ -31,68 +32,77 @@ const mergeProps = (stateProps, dispatchProps) => ({
 
 const SelectCustomersTable = ({
   customers,
-  drivers,
   isSelected,
-  filter,
   handleSelect,
-  handleFilterChange,
   allSelected,
   handleSelectAll,
-  handleDeselectAll
+  handleDeselectAll,
+  drivers,
+  filter,
+  handleFilterChange,
+  loading,
+  error,
+  style
 }) =>
-  <div>
-    <FieldGroup
-      label="Filter Customers"
-      type="select"
-      value={filter}
-      onChange={handleFilterChange}
+  <Box
+    className="assignmentBox"
+    style={{
+      overflowY: 'overlay'
+    }}
+  >
+    <BoxHeader heading="Customers">
+      <div className="box-tools">
+        <FilterCustomers
+          filter={filter}
+          handleFilterChange={handleFilterChange}
+          drivers={drivers}
+        />
+      </div>
+    </BoxHeader>
+    <BoxBody
+      loading={loading}
+      error={error}
     >
-      <option value="">All</option>
-      <option value="unassigned">Unassigned</option>
-      {drivers && drivers.map(driver =>
-        <option key={driver.id} value={driver.id}>
-          {driver.fullName}
-        </option>
-      )}
-    </FieldGroup>
-    <Table responsive striped>
-      <thead>
-        <tr>
-          <th>
-            <Checkbox
-              checked={allSelected}
-              onClick={allSelected ? handleDeselectAll : handleSelectAll}
-            />
-          </th>
-          <th>Customer ID</th>
-          <th>Address</th>
-        </tr>
-      </thead>
-      <tbody>
-        {customers.map(customer =>
-          <tr
-            key={customer.id}
-            className={isSelected(customer.id) ? 'active' : ''}
-            onClick={handleSelect(customer.id)}
-            style={{cursor: 'pointer'}}
-          >
-            <td style={{padding: 0}}>
-              <Checkbox checked={isSelected(customer.id)} readOnly />
-            </td>
-            <td><span>{customer.id}</span></td>
-            <td><span>
-              {getAddress(customer)}
-            </span></td>
-          </tr>
-        )}
-        {!customers.length &&
+      <Table responsive striped>
+        <thead>
           <tr>
-            <td className="text-center" colSpan="4">No matching customers.</td>
+            <th style={{padding: '0 0 0 4px'}}>
+              <Checkbox
+                checked={allSelected}
+                onClick={allSelected ? handleDeselectAll : handleSelectAll}
+                style={{margin: '2px 0'}}
+              />
+            </th>
+            <th>#</th>
+            <th>Address</th>
           </tr>
-        }
-      </tbody>
-    </Table>
-  </div>
+        </thead>
+        <tbody>
+          {customers.map(customer =>
+            <tr
+              key={customer.id}
+              className={isSelected(customer.id) ? 'active' : ''}
+              onClick={handleSelect(customer.id)}
+              style={{cursor: 'pointer'}}
+            >
+              <td style={{padding: '0 0 0 4px'}}>
+                <Checkbox checked={isSelected(customer.id)} readOnly />
+              </td>
+              <td><span>{customer.id}</span></td>
+              <td><span>
+                {getAddress(customer)}
+              </span></td>
+            </tr>
+          )}
+          {!customers.length &&
+            <tr>
+              <td className="text-center" colSpan="4">No matching customers.</td>
+            </tr>
+          }
+        </tbody>
+      </Table>
+    </BoxBody>
+  </Box>
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(SelectCustomersTable)
 

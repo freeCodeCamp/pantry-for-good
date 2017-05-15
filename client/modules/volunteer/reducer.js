@@ -55,8 +55,11 @@ export const createSelectors = path => {
   const getAll = createSelector(
     state => get(state, path).ids,
     getEntities,
-    (volunteers, entities) =>
-      denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers
+    (volunteers, entities) => {
+      console.log('volunteers, entities', volunteers, entities)
+
+      return denormalize({volunteers}, {volunteers: arrayOfVolunteers}, entities).volunteers
+    }
   )
   return {
     getAll,

@@ -5,7 +5,6 @@ import thunk from 'redux-thunk'
 import apiMiddleware from './middleware/api'
 import reducer from './reducer'
 
-
 /**
  * Create redux store
  * @param {History} history
