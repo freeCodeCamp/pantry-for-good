@@ -1,30 +1,32 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {Route} from 'react-router-dom'
 
 import DriverAdmin from './components/DriverList'
 import DriverRoutes from './components/DriverAssignment'
 // import DriverUser from './components/DriverUser'
+import requireRole from '../../components/router/requireRole'
+// import ownerOrAdmin from '../../components/router/ownerOrAdmin'
+import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 import './driver.css'
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
+const IsAdmin = requireRole(['admin'])
+// const Owns = ownerOrAdmin('driverId')
 
-const DonorRoutes = ({match, user}) =>
-  <Switch>
-    {isAdmin(user) &&
-      <Route path={`${match.url}`} exact component={DriverAdmin} />
+const DriverRouter = ({match}) =>
+  <SwitchWithNotFound>
+      <Route path={match.url} exact component={IsAdmin(DriverAdmin)} />
+      <Route
+        path={`${match.url}/routes`}
+        exact
+        component={IsAdmin(DriverRoutes)}
+      />
+      {/*<Route
+        path={`${match.url}/:driverId/routes`}
+        exact
+        component={Owns(DriverUser)}
+      />*/}
     }
-    {isAdmin(user) ?
-      <Route path={`${match.url}/routes`} component={DriverRoutes} /> :
-      {/*<Route path={`${match.url}/routes`} component={DriverUser} />*/}
-    }
-  </Switch>
+  </SwitchWithNotFound>
 
-export default connect(mapStateToProps)(DonorRoutes)
-
-function isAdmin(user) {
-  return user && user.roles.find(role => role === 'admin')
-}
+export default DriverRouter

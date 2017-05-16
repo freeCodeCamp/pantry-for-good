@@ -48,7 +48,7 @@ class CustomerEdit extends Component {
 
   componentWillReceiveProps(nextProps) {
     const customer = nextProps.getCustomer(nextProps.customerId)
-    if (customer && !this.state.customerModel) {
+    if (customer && !nextProps.loading && !this.state.customerModel) {
       this.setState({
         customerModel: {...customer}
       })

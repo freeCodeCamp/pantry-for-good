@@ -38,7 +38,7 @@ class SignUp extends React.Component {
 
   redirectIfAlreadySignedIn(props) {
     if (props.user && props.user._id) {
-      props.push('root')
+      props.push('/')
     }
   }
 

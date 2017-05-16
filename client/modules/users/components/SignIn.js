@@ -25,7 +25,7 @@ class SignIn extends React.Component {
 
   redirectIfAlreadySignedIn(props) {
     if (props.user && props.user._id) {
-      props.push('root')
+      props.push('/')
     }
   }
 
@@ -81,7 +81,7 @@ class SignIn extends React.Component {
               <a href="/api/auth/google"  className="btn btn-default">
                 <i className="fa fa-google" />{' '}
                 Sign in with Google
-              </a> 
+              </a>
           </div>
           }
         </div>

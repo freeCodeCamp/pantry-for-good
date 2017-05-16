@@ -1,22 +1,12 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {Route} from 'react-router-dom'
 
 import Questionnaire from './Questionnaire'
+import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
+const QuestionnaireRouter = ({match}) =>
+  <SwitchWithNotFound>
+    <Route path={match.url} exact component={Questionnaire} />
+  </SwitchWithNotFound>
 
-const QuestionnaireRoutes = ({match, user}) =>
-  <Switch>
-    {isAdmin(user) &&
-      <Route path={`${match.url}`} component={Questionnaire} />
-    }
-  </Switch>
-
-export default connect(mapStateToProps)(QuestionnaireRoutes)
-
-function isAdmin(user) {
-  return user && user.roles.find(role => role === 'admin')
-}
+export default QuestionnaireRouter

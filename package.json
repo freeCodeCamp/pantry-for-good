@@ -71,6 +71,7 @@
     "passport": "~0.3.2",
     "passport-google-oauth2": "^0.1.6",
     "passport-local": "~1.0.0",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-bootstrap": "^0.30.8",
     "react-bootstrap-autosuggest": "^0.5.0",

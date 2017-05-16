@@ -1,23 +1,12 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {Route} from 'react-router-dom'
 
-import selectors from '../../store/selectors'
 import Media from './components/Media'
+import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
-const mapStateToProps = state => ({
-  user: selectors.user.getUser(state)
-})
+const MediaRouter = ({match}) =>
+  <SwitchWithNotFound>
+      <Route path={match.url} exact component={Media} />
+  </SwitchWithNotFound>
 
-const MediaRoutes = ({match, user}) =>
-  <Switch>
-    {isAdmin(user) &&
-      <Route path={`${match.url}`} component={Media} />
-    }
-  </Switch>
-
-export default connect(mapStateToProps)(MediaRoutes)
-
-function isAdmin(user) {
-  return user && user.roles.find(role => role === 'admin')
-}
+export default MediaRouter
