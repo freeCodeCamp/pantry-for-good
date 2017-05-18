@@ -53,7 +53,7 @@ class CustomerEdit extends Component {
     const {savingCustomers, saveCustomersError} = nextProps
 
     if (!savingCustomers && this.props.savingCustomers && !saveCustomersError) {
-      this.props.push(this.isAdmin ? '/customers' : '/')
+      // this.props.push(this.isAdmin ? '/customers' : '/')
     }
   }
 
