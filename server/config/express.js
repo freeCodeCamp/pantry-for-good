@@ -95,7 +95,7 @@ export default function() {
   app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
   // Setting the static folder
-  app.use(express.static(path.resolve('./assets')))
+  app.use(express.static(path.resolve('./client')))
 
   // Error handler
   app.use(function(err, req, res, next) {
@@ -115,11 +115,7 @@ export default function() {
 
   // let the client handle it
   app.use(function(req, res) {
-    res.sendFile(path.resolve('./assets/index.html'))
-    // res.end()
-    // res.status(404).json({
-    //   message: 'Not found'
-    // })
+    res.sendFile(path.resolve('./client/index.html'))
   })
 
   // Return Express server instance

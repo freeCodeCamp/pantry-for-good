@@ -1,5 +1,6 @@
 const gulp = require('gulp')
 const babel = require('gulp-babel')
+const uglify = require('gulp-uglify')
 const webpack = require('webpack')
 const webpackDevServer = require('webpack-dev-server')
 const nodemon = require('gulp-nodemon')
@@ -34,7 +35,7 @@ gulp.task('build-server', ['clean-server','build-common'], function() {
 
 
 gulp.task('clean-client', function() {
-  return del('dist/assets')
+  return del('dist/client')
 })
 
 gulp.task('build-client', ['clean-client'], function(done) {
@@ -45,6 +46,16 @@ gulp.task('build-client', ['clean-client'], function(done) {
     /* eslint-enable no-console */
     done()
   })
+})
+
+gulp.task('minify', ['build-client'], function() {
+  return gulp.src('dist/client/*.js')
+    .pipe(uglify({
+      compress: {warnings: false}
+    }))
+    .pipe(gulp.dest('dist/client', {
+      overwrite: true
+    }))
 })
 
 
@@ -61,6 +72,6 @@ gulp.task('watch-client', ['watch-server'], function() {
     .listen(webpackConfigDev.devServer.port)
 })
 
-gulp.task('build', ['build-server', 'build-client'])
+gulp.task('build', ['build-server', 'build-client', 'minify'])
 
 gulp.task('watch', ['watch-server', 'watch-client'])

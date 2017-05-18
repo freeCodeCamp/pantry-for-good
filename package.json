@@ -9,7 +9,7 @@
     "url": "git@github.com:FreeCodeCamp/food-bank-app.git"
   },
   "scripts": {
-    "heroku-postinstall": "gulp build",
+    "heroku-postbuild": "gulp build",
     "dev": "gulp watch",
     "build": "gulp build",
     "clean": "rimraf dist",
@@ -55,6 +55,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-nodemon": "^2.2.1",
+    "gulp-uglify": "^2.1.2",
     "helmet": "^3.1.0",
     "html-webpack-plugin": "^2.26.0",
     "jquery": "^3.1.1",
@@ -93,6 +94,7 @@
     "request": "^2.79.0",
     "reselect": "^3.0.0",
     "rimraf": "^2.6.1",
+    "sendgrid": "^5.1.0",
     "sendpulse-api": "^1.0.2",
     "striptags": "^3.0.1",
     "style-loader": "^0.13.1",

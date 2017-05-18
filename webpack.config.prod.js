@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const {resolve} = require('path')
 
 const common = require('./webpack.config')
@@ -13,7 +14,7 @@ module.exports = merge(common, {
     ]
   },
   output: {
-    path: resolve(__dirname, 'dist', 'assets'),
+    path: resolve(__dirname, 'dist', 'client'),
     filename: '[name].js',
     publicPath: '/'
   },
@@ -35,8 +36,11 @@ module.exports = merge(common, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin(),
-    new ExtractTextPlugin('styles.css')
+    new ExtractTextPlugin('styles.css'),
+    new CopyWebpackPlugin([{
+      from: resolve(__dirname, 'assets'),
+      to: resolve(__dirname, 'dist', 'client')
+    }])
   ],
   devtool: 'cheap-module-source-map'
 })
