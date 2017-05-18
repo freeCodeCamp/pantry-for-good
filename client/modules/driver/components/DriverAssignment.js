@@ -9,7 +9,6 @@ import {loadSettings} from '../../settings/reducer'
 import {loadVolunteers} from '../../volunteer/reducer'
 
 import {Page, PageBody} from '../../../components/page'
-import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import SelectCustomersTable from './driver-assignment/SelectCustomersTable'
 import AssignDriverForm from './driver-assignment/AssignDriverForm'
 import SelectCustomersMap from './driver-assignment/SelectCustomersMap'

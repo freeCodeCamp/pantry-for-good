@@ -1,11 +1,25 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import {compose, setPropTypes} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {Link} from 'react-router-dom'
 import {Button, Clearfix, Col, Row} from 'react-bootstrap'
 
 import {RFFieldGroup} from '../../../components/form'
 
-const SettingsForm = ({onSubmit, handleSubmit}) =>
+const enhance = compose(
+  setPropTypes({
+    onSubmit: PropTypes.func.isRequired,
+    initialValues: PropTypes.object
+  }),
+  reduxForm({
+    form: 'settingsForm',
+    validate,
+    warn
+  })
+)
+
+const SettingsForm = ({handleSubmit}) =>
   <div>
     <Row>
       <Col lg={3}>
@@ -112,11 +126,7 @@ const SettingsForm = ({onSubmit, handleSubmit}) =>
     </div>
   </div>
 
-export default reduxForm({
-  form: 'settingsForm',
-  validate,
-  warn
-})(SettingsForm)
+export default enhance(SettingsForm)
 
 function validate(values) {
   let errors = {}

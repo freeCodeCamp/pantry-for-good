@@ -20,6 +20,7 @@
         "_": true,
         "console": true,
         "expect": true,
+        "google": true,
         "initDb": true,
         "module": true,
         "process": true,

@@ -4,9 +4,7 @@ import User from '../../models/user'
  * Module dependencies.
  */
 var _ = require('lodash'),
-  errorHandler = require('../errors'),
-  passport = require('passport')
-  // User = mongoose.model('User');
+  errorHandler = require('../errors')
 
 /**
  * Update user details
@@ -14,7 +12,6 @@ var _ = require('lodash'),
 exports.update = function(req, res) {
   // Init Variables
   var user = req.user
-  var message = null
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles

@@ -57,7 +57,6 @@ const SectionView = ({
   connectDropTarget,
   isDragging,
   isOver,
-  idx,
   section,
   onEdit,
   onDelete

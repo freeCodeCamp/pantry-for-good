@@ -14,7 +14,7 @@ class Category extends React.Component {
     this.setState({ showEdit: true })
   }
 
-  onClickSubmitEdit = e => {
+  onClickSubmitEdit = () => {
     this.setState({ showEdit: false })
     this.props.onItemEdit(this.props.id, this.state.editedName)
   }
@@ -53,7 +53,7 @@ class Category extends React.Component {
       )
     }
   }
-  
+
 }
 
 export default Category

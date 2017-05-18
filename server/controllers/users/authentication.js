@@ -21,15 +21,15 @@ exports.signup = async function(req, res) {
     if (error.code === 11000) {
       let errors
       if (error.errmsg.match('username')) {
-          errors = {username: {message: 'Username already taken'}}
+        errors = {username: {message: 'Username already taken'}}
       } else if (error.errmsg.match('email')) {
-          errors = {email: {message: 'Email address already has an account'}}  
+        errors = {email: {message: 'Email address already has an account'}}
       } else {
-          errors = {message: 'A database unique key error occured'}
+        errors = {message: 'A database unique key error occured'}
       }
       const response = {
         name: 'Unique key error',
-        message: 'A unique key error occured', 
+        message: 'A unique key error occured',
         errors
       }
       return res.status(400).json({error: response})

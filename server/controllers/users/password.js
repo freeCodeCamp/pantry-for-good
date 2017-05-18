@@ -1,7 +1,6 @@
 import async from 'async'
 import crypto from 'crypto'
 
-import config from '../../config'
 import User from '../../models/user'
 import Settings from '../../models/settings'
 import { sendEmail } from '../../config/mailer'

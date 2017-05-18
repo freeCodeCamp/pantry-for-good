@@ -19,12 +19,12 @@ if (config.sendpulse) {
       "text" : striptags(bodyHTML, [], '\n'),
       "subject" : subject,
       "from" : {
-          "name" : sp_config.name,
-          "email" : sp_config.email
+        "name" : sp_config.name,
+        "email" : sp_config.email
       },
-      "to" : [ { 
-          "name" : recepientName,
-          "email" : recepientEmail
+      "to" : [ {
+        "name" : recepientName,
+        "email" : recepientEmail
       } ]
     }
 

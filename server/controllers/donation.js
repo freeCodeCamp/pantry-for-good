@@ -5,15 +5,13 @@ import Settings from '../models/settings'
 /**
  * Module dependencies
  */
-var mongoose       = require('mongoose'),
+var //mongoose       = require('mongoose'),
   errorHandler   = require('./errors'),
     // Donation       = mongoose.model('Donation'),
     // Donor          = mongoose.model('Donor'),
     // Settings      = mongoose.model('Settings'),
-  async         = require('async'),
   mailHelper    = require('sendgrid').mail,
-  config         = require('../config/index'),
-  fs            = require('fs')
+  config         = require('../config/index')
 
 /**
  * Create a donation
@@ -46,7 +44,7 @@ exports.sendEmail = function(req, res, next) {
     if (err) return next(err)
 
     Settings.findOne({}, function(err, settings) {
-      if (err)
+      if (err) // eslint-disable-next-line no-console
         console.log(err)
 
       donation.tconfig = settings
@@ -65,8 +63,8 @@ exports.sendEmail = function(req, res, next) {
 
         sg.API(request, function(error, response) {
           if (error) {
-            console.log(error)
-            console.log(response.body.errors)
+            // eslint-disable-next-line no-console
+            console.log(error, response.body.errors)
           }
         })
       })

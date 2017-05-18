@@ -1,6 +1,5 @@
 import React from 'react'
-import {Switch, Route} from 'react-router-dom'
-import {connect} from 'react-redux'
+import {Route} from 'react-router-dom'
 
 import VolunteerList from './components/VolunteerList'
 import VolunteerView from './components/VolunteerView'

@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import moment from 'moment'
 import Customer from '../models/customer'
 import Food from '../models/food'

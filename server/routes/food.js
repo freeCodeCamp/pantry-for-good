@@ -8,7 +8,7 @@ export default () => {
 
   const foodRouter = Router({mergeParams: true})
 
-  // Food routes
+  // TODO: protect these!
   foodRouter.route('/admin/foods')
     .get(foodController.list)
     .post(foodController.create)
@@ -23,7 +23,7 @@ export default () => {
 
   // Food routes for user
   foodRouter.route('/foods')
-    .get(foodController.list)
+    .get(requiresLogin, foodController.list)
 
   // Finish by binding the food middleware
   foodRouter.param('foodId', foodController.foodById)

@@ -5,7 +5,6 @@ import mailer from '../lib/mailer'
 import Customer from '../models/customer'
 import Volunteer from '../models/volunteer'
 import User from '../models/user'
-import mongoose from 'mongoose'
 
 export default {
   /**

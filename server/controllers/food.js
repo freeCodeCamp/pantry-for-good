@@ -18,9 +18,9 @@ export default {
       if (error.code === 11000 && error.errmsg.match('category')) {
         const response = {
           name: 'Duplicate category error',
-          message: 'That category already exists', 
+          message: 'That category already exists',
           errors: {category: {message: 'That category already exists'}}
-        } 
+        }
         return res.status(400).json({error: response})
       } else {
         return res.status(500).json(error)
@@ -126,8 +126,8 @@ export default {
       { $pull: { items: { _id: req.itemId } } }, {new: true}
     ).lean()
 
-    const deletedItem = savedFood.items.filter(item =>
-      item._id.toString() === req.itemId)
+    // const deletedItem = savedFood.items.filter(item =>
+    //   item._id.toString() === req.itemId)
 
     res.json(savedFood)
   },
@@ -184,9 +184,9 @@ function updateFoodItemWithCategoryChange(originalCategoryId, updatedItem) {
       Food.findByIdAndUpdate(updatedItem.categoryId, { $addToSet: { items: updatedItem } }, { new: true })
       .then(result => {
         if (result) {
-            resolve(result)
-          } else {
-            reject(new Error('Could not update database'))
+          resolve(result)
+        } else {
+          reject(new Error('Could not update database'))
         }
       })
       .catch(err => reject(err))

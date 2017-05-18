@@ -86,9 +86,9 @@ export default store => next => action => {
     error => {
       let errorMessage = ""
       if (error.error && error.error.errors) {
-          errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
-            return acc + " " + val[1].message + "\n"
-          }, "")
+        errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
+          return acc + " " + val[1].message + "\n"
+        }, "")
       } else if (error.message) {
         errorMessage = error.message
       } else if (error.errmsg) {
@@ -98,9 +98,9 @@ export default store => next => action => {
       }
 
       return next(actionWith({
-      type: failureType,
-      error: errorMessage
-    }))}
+        type: failureType,
+        error: errorMessage
+      }))}
   )
 }
 

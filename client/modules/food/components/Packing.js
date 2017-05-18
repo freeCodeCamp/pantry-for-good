@@ -271,12 +271,6 @@ function getPackedCustomersAndItems(scheduledCustomers, scheduledItems) {
   return {customers, items}
 }
 
-// get a list of ids of checked customers
-function getCustomerIds(customers) {
-  return customers.filter(customer => customer.isChecked)
-    .map(customer => customer.id)
-}
-
 // get customers list after toggling selected on matching id
 function selectCustomer(customers, id) {
   return customers.map(customer => {

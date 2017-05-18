@@ -29,10 +29,11 @@ export default {
       })
 
     const count = await Settings.count()
-    const settings = count ?
-      await Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
-      await Settings.create(req.body)
+    const query = count ?
+      Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
+      Settings.create(req.body)
 
-    res.json(settings.select('+gmapsApiKey +gmapsClientId'))
+    const settings = await query.select('+gmapsApiKey +gmapsClientId')
+    res.json(settings)
   }
 }

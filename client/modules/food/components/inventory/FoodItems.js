@@ -75,14 +75,14 @@ class FoodItems extends React.Component {
   /**
    * Used by react-bootstrap-table to get the food item edit buttons
    */
-  getEditButton = (cell, row, formatExtraData, rowIdx) => (
+  getEditButton = (cell, row) => (
     <button onClick={() => { this.openModal(row._id) }} className="btn btn-primary btn-flat btn-xs"><i className="fa fa-pencil"></i>Edit</button>
   )
 
   /**
    * Used by react-bootstrap-table to get the food item delete buttons
    */
-  getDeleteButton = (cell, row, formatExtraData, rowIdx) => (
+  getDeleteButton = (cell, row) => (
     <button
       onClick={() => { this.props.deleteFoodItem(row.categoryId, row._id) }}
       className="btn btn-danger btn-flat btn-xs">
@@ -142,9 +142,9 @@ class FoodItems extends React.Component {
       } else {
         // The user entered an existing food name and autosuggest provided the object for that food
         this.setState({ modalInputFields: { ...this.state.modalInputFields,
-                                            name: value ? value.name : "",
-                                            categoryId: value ? value.categoryId : ""
-                                          } }, this.validate)
+          name: value ? value.name : "",
+          categoryId: value ? value.categoryId : ""
+        } }, this.validate)
       }
     },
     foodQuantity: e =>

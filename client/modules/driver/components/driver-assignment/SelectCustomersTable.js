@@ -41,8 +41,7 @@ const SelectCustomersTable = ({
   filter,
   handleFilterChange,
   loading,
-  error,
-  style
+  error
 }) =>
   <Box
     className="assignmentBox"

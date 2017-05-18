@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {compose} from 'recompose'
 import {DragDropContext} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
-import {get, head, sortBy} from 'lodash'
+import {sortBy} from 'lodash'
 import {Button, Col} from 'react-bootstrap'
 
 import selectors from '../../store/selectors'

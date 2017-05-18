@@ -57,7 +57,6 @@ const FieldView = ({
   connectDropTarget,
   isDragging,
   isOver,
-  idx,
   field,
   onSelect
 }) => connectDragSource(

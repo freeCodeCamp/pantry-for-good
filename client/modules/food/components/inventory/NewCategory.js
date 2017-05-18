@@ -4,9 +4,9 @@ class NewCategory extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        inputFieldValue: "",
-        categoryExists: false,
-        validInput: false
+      inputFieldValue: "",
+      categoryExists: false,
+      validInput: false
     }
   }
 
@@ -20,10 +20,10 @@ class NewCategory extends React.Component {
   }
 
   validate = () => {
-      const trimmedInput = this.state.inputFieldValue.trim()
-      const categoryExists = this.props.doesCategoryExist(trimmedInput)
-      const validInput = (trimmedInput !== "") && !categoryExists
-      this.setState({validInput, categoryExists})
+    const trimmedInput = this.state.inputFieldValue.trim()
+    const categoryExists = this.props.doesCategoryExist(trimmedInput)
+    const validInput = (trimmedInput !== "") && !categoryExists
+    this.setState({validInput, categoryExists})
   }
 
   render = () => (

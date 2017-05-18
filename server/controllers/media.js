@@ -3,10 +3,7 @@ import Media from '../models/media'
 /**
  * Module dependencies
  */
-var mongoose = require('mongoose'),
-  errorHandler = require('./errors'),
-    // Media = mongoose.model('Media'),
-  fs = require('fs')
+var fs = require('fs')
 
 /**
  * Read media data
@@ -20,6 +17,7 @@ exports.read = function(req, res) {
       if (files.indexOf(media.logoFile) === -1) {
         const file = files.find( file => file.match(/.*\.gif|.*\.jpeg|.*\.png/) )
         if (!file)
+          // eslint-disable-next-line no-console
           console.log(
             "WARNING: Can't find logo " + media.logoPath + media.logoFile + ".")
         else

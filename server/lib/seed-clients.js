@@ -4,7 +4,6 @@ import extend from 'lodash/extend'
 import random from 'lodash/random'
 import range from 'lodash/range'
 import faker from 'faker'
-import {utc} from 'moment'
 
 const User = mongoose.model('User')
 const Donation = mongoose.model('Donation')

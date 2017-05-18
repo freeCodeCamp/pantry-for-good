@@ -25,12 +25,12 @@ exports.getErrorMessage = function(err) {
 
   if (err.code) {
     switch (err.code) {
-    case 11000:
-    case 11001:
-      message = getUniqueErrorMessage(err)
-      break
-    default:
-      message = 'Something went wrong'
+      case 11000:
+      case 11001:
+        message = getUniqueErrorMessage(err)
+        break
+      default:
+        message = 'Something went wrong'
     }
   } else {
     for (var errName in err.errors) {

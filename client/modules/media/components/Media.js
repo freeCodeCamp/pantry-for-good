@@ -12,8 +12,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadMedia: () => dispatch(loadMedia()),
-  saveMedia: file => dispatch(saveMedia(file)),
-  push: (route, params, options) => dispatch(stateGo(route, params, options))
+  saveMedia: file => dispatch(saveMedia(file))
 })
 
 class Media extends Component {
