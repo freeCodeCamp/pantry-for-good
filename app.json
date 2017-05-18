@@ -1,7 +1,7 @@
 {
   "name": "FreeCodeCamp.com Food Bank App",
   "description": "A customizable food bank webapp",
-  "repository": "https://www.github.com/FreeCodeCamp/food-bank-app",
+  "repository": "https://github.com/jspaine/food-bank-app/tree/staging",
   "addons": ["mongolab"],
   "scripts": {
 
