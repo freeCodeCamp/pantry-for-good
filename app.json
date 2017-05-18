@@ -3,7 +3,10 @@
   "description": "A customizable food bank webapp",
   "repository": "https://github.com/jspaine/food-bank-app/tree/staging",
   "addons": ["mongolab"],
-  "scripts": {
-
+  "env": {
+    "SECRET": {
+      "description": "Session secret",
+      "generator": "secret"
+    }
   }
 }
