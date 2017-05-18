@@ -5,8 +5,6 @@ heroku_5svv90mx
 npm-debug.log
 node_modules/
 .vscode
-public/dist
-public/media
 .idea/
 .c9/
 .env

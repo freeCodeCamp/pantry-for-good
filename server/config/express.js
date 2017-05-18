@@ -94,10 +94,8 @@ export default function() {
   // Use api routes
   app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
-  // Setting the app router and static folder
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.resolve('./public/dist')))
-  }
+  // Setting the static folder
+  app.use(express.static(path.resolve('./assets')))
 
   // Error handler
   app.use(function(err, req, res, next) {
@@ -117,7 +115,7 @@ export default function() {
 
   // let the client handle it
   app.use(function(req, res) {
-    res.sendFile(path.resolve('./public/dist/index.html'))
+    res.sendFile(path.resolve('./assets/index.html'))
     // res.end()
     // res.status(404).json({
     //   message: 'Not found'

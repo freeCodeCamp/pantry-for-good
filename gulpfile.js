@@ -8,11 +8,11 @@ const del = require('del')
 const webpackConfigDev = require('./webpack.config.dev')
 const webpackConfigProd = require('./webpack.config.prod')
 
-gulp.task('clean-server', function() {
-  return del('dist')
+gulp.task('clean-common', function() {
+  return del('dist/common')
 })
 
-gulp.task('build-common', ['clean-server'], function() {
+gulp.task('build-common', ['clean-common'], function() {
   return gulp.src('common/**/*')
     .pipe(babel({
       only: /\.js$/
@@ -20,8 +20,12 @@ gulp.task('build-common', ['clean-server'], function() {
     .pipe(gulp.dest('dist/common'))
 })
 
-gulp.task('build-server', ['build-common'], function() {
-  return gulp.src('server/**/*')
+gulp.task('clean-server', function() {
+  return del('dist/server')
+})
+
+gulp.task('build-server', ['clean-server','build-common'], function() {
+  return gulp.src(['server/**/*', '!server/tests/**', '!server/tests', '!server/entry.test.js', '!server/index.js'])
     .pipe(babel({
       only: /\.js$/
     }))
@@ -30,7 +34,7 @@ gulp.task('build-server', ['build-common'], function() {
 
 
 gulp.task('clean-client', function() {
-  return del('public/dist')
+  return del('dist/assets')
 })
 
 gulp.task('build-client', ['clean-client'], function(done) {

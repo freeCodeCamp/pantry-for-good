@@ -16,7 +16,7 @@ exports.read = function(req, res) {
     if (err) throw err
 
     if (media) {
-      const files = fs.readdirSync("public/" + media.logoPath)
+      const files = fs.readdirSync("assets/" + media.logoPath)
       if (files.indexOf(media.logoFile) === -1) {
         const file = files.find( file => file.match(/.*\.gif|.*\.jpeg|.*\.png/) )
         if (!file)

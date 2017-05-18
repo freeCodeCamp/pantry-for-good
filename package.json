@@ -11,7 +11,9 @@
   "scripts": {
     "heroku-postinstall": "gulp build",
     "dev": "gulp watch",
-    "start": "node dist/server/server.js",
+    "build": "gulp build",
+    "clean": "rimraf dist",
+    "start": "[ -d dist ] || npm run build && cd dist && NODE_ENV=production node server/server.js",
     "lint": "npm run lint:server; npm run lint:client",
     "lint:server": "eslint server",
     "lint:client": "eslint client",
@@ -90,6 +92,7 @@
     "redux-thunk": "^2.2.0",
     "request": "^2.79.0",
     "reselect": "^3.0.0",
+    "rimraf": "^2.6.1",
     "sendpulse-api": "^1.0.2",
     "striptags": "^3.0.1",
     "style-loader": "^0.13.1",
