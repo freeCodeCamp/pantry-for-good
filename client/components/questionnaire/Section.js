@@ -1,38 +1,23 @@
 import React from 'react'
-import {take, takeRight} from 'lodash'
-import {Col} from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 import {RFFieldGroup} from '../form'
+import FoodPreferences from './widgets/FoodPreferences'
 import Household from './widgets/Household'
 
-// eslint-disable-next-line no-unused-vars
-const Section = ({section, model, onSubmit}) => {
-  const fields = section.fields
-  const numFields = fields.length
+const Section = ({section}) =>
+  <div style={{display: 'flex', flexWrap: 'wrap'}}>
+    {section.fields.map(renderField)}
+  </div>
 
-  const left = take(fields, Math.ceil(numFields / 2))
-  const right = takeRight(fields, Math.floor(numFields / 2))
-
-  return numFields > 1 ?
-    <div>
-      <Col xs={12} md={6}>
-        {left.map(field =>
-            renderField(field, model)
-        )}
-      </Col>
-      <Col xs={12} md={6}>
-        {right.map(field =>
-            renderField(field, model)
-        )}
-      </Col>
-    </div> :
-
-    renderField(fields[0], model)
+Section.propTypes = {
+  section: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default Section
 
-function renderField(field, model) {
+function renderField(field) {
   const inputTypes = ['text', 'textarea', 'date', 'checkbox', 'radio']
   const type = field.type === 'address' ? 'text' : field.type
   const options = field.choices && field.choices.split(',')
@@ -41,21 +26,19 @@ function renderField(field, model) {
   if (inputTypes.find(t => t === type)) {
     return <RFFieldGroup
       key={field._id}
-      name={field._id}
+      name={`fields['${field._id}']`}
       label={field.label}
       type={type}
       required={field.required}
       options={options}
+      formGroupClass="questionnaireInput"
       inline
     />
   }
 
   if (type === 'household')
-    return <Household
-      key={field._id}
-      numberOfDependants={model.household.length}
-      dependants={model.household}
-      setDependantList={() => () => {}}
-      handleFieldChange={() => () => {}}
-    />
+    return <Household key={field._id} className="questionnaireWidget" />
+
+  if (type === 'foodPreferences')
+    return <FoodPreferences key={field._id} className="questionnaireWidget" />
 }

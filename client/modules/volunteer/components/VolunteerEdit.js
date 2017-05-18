@@ -41,7 +41,6 @@ class VolunteerEdit extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.state = {volunteerModel: null}
   }
 
   componentWillMount() {
@@ -50,54 +49,43 @@ class VolunteerEdit extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      questionnaire,
-      getVolunteer,
-      savingVolunteers,
-      saveVolunteersError,
-    } = nextProps
+    const {savingVolunteers, saveVolunteersError} = nextProps
 
     if (!savingVolunteers && this.props.savingVolunteers && !saveVolunteersError) {
       this.props.push(this.isAdmin ? '/volunteers' : '/')
     }
-
-    const volunteer = getVolunteer(nextProps.volunteerId)
-    if (volunteer && !this.state.volunteerModel && questionnaire) {
-      this.setState({
-        volunteerModel: {...volunteer}
-      })
-    }
   }
 
-  saveVolunteer = fields => {
-    if (!this.state.volunteerModel) return
-    this.props.saveVolunteer({
-      ...this.state.volunteerModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveVolunteer = form =>
+    this.props.saveVolunteer(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {volunteerModel} = this.state
-    const {questionnaire, loadError, saveVolunteersError, loading, savingVolunteers} = this.props
+    const {
+      getVolunteer,
+      volunteerId,
+      questionnaire,
+      loading,
+      savingVolunteers
+    } = this.props
+    const volunteer = getVolunteer(volunteerId)
+    const error = this.props.saveVolunteersError || this.props.loadError
 
     return (
-      <Page>
+      <Page loading={loading}>
         <PageHeader
-          heading={volunteerModel && volunteerModel.fullName}
+          heading={volunteer && volunteer.fullName}
         />
-        <PageBody error={loadError || saveVolunteersError}>
+        <PageBody error={error}>
           <form onSubmit={this.saveVolunteer}>
-            {volunteerModel && questionnaire &&
+            {volunteer && questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
-                model={volunteerModel}
                 questionnaire={questionnaire}
-                loading={loading || savingVolunteers}
+                loading={savingVolunteers}
                 onSubmit={this.saveVolunteer}
-                initialValues={toForm(volunteerModel, questionnaire)}
+                initialValues={toForm(volunteer, questionnaire)}
               />
             }
             <div className="text-right">

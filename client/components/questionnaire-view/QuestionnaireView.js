@@ -3,6 +3,8 @@ import React from 'react'
 import {Box, BoxHeader, BoxBody} from '../box'
 import SectionView from './SectionView'
 
+import '../questionnaire/questionnaire.css'
+
 const QuestionnaireView = ({
   model,
   questionnaire,

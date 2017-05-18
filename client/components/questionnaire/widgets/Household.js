@@ -1,67 +1,40 @@
 import React from 'react'
+import {FieldArray} from 'redux-form'
+import {withHandlers} from 'recompose'
+import {Button} from 'react-bootstrap'
 
-const Household = ({
-  numberOfDependants,
-  dependants,
-  setDependantList,
-  handleFieldChange
-}) =>
-  <div className="row">
-    <div className="col-md-10 col-lg-8">
-      <div className="form-group">
-        <label className="col-md-10">How many people in your household will be needing assistance?</label>
-        <div className="col-sm-2">
-          <input
-            type="number"
-            id="numberOfDependants"
-            value={numberOfDependants}
-            className="form-control"
-            min="1"
-            max="20"
-            onChange={setDependantList}
-          />
-        </div>
-      </div>
+import HouseholdRow from './household/HouseholdRow'
+
+const renderHousehold = withHandlers({
+  handleDelete: ({fields}) => index => () => fields.remove(index),
+  handleAdd: ({fields}) => () => fields.push()
+})(({fields, handleDelete, handleAdd}) =>
+  <div style={{padding: '10px'}}>
+    <ul style={{paddingLeft: 0}}>
+      {fields.map((dependent, i) =>
+        <HouseholdRow
+          key={i}
+          dependent={dependent}
+          showDelete={fields.length > 1}
+          handleDelete={handleDelete(i)}
+        />
+      )}
+    </ul>
+    <div className="text-center">
+      <Button onClick={handleAdd}>Add Dependant</Button>
     </div>
-    <div className="clearfix"></div>
-    {dependants.map((dependant, i) =>
-      <div key={i}>
-        <div className="col-sm-6 col-lg-4">
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              value={dependant.name}
-              className="form-control"
-              onChange={handleFieldChange(`household[${i}].name`)}
-            />
-          </div>
-        </div>
-        <div className="col-sm-6 col-lg-4">
-          <div className="form-group">
-            <label>Relationship to Applicant</label>
-            <input
-              type="text"
-              value={dependant.relationship}
-              className="form-control"
-              onChange={handleFieldChange(`household[${i}].relationship`)}
-            />
-          </div>
-        </div>
-        <div className="col-sm-6 col-lg-4">
-          <div className="form-group">
-            <label>Date of Birth</label>
-            <input
-              type="date"
-              value={dependant.dateOfBirth}
-              className="form-control"
-              onChange={handleFieldChange(`household[${i}].dateOfBirth`)}
-            />
-          </div>
-        </div>
-      </div>
-    )}
-    <div className="clearfix"></div>
+  </div>
+)
+
+const Household = ({className}) =>
+  <div className={className}>
+    <label style={{padding: '0 0 10px 10px'}}>
+      Please list the members of your household
+    </label>
+    <FieldArray
+      name="household"
+      component={renderHousehold}
+    />
   </div>
 
 export default Household

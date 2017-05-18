@@ -8,6 +8,7 @@ import {toForm, fromForm} from '../../../lib/fields-adapter'
 import selectors from '../../../store/selectors'
 import {loadCustomer, saveCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {loadFoods} from '../../food/reducers/category'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
@@ -21,16 +22,18 @@ const mapStateToProps = (state, ownProps) => ({
   getCustomer: selectors.customer.getOne(state),
   customerId: ownProps.match.params.customerId,
   questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  foodCategories: selectors.food.category.getAll(state),
   loading: selectors.questionnaire.loading(state) ||
-    selectors.customer.loading(state),
+    selectors.customer.loading(state) || selectors.food.category.loading(state),
   loadError: selectors.questionnaire.loadError(state) ||
-    selectors.customer.loadError(state)
+    selectors.customer.loadError(state) || selectors.food.category.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadCustomer: (id, admin) => dispatch(loadCustomer(id, admin)),
   saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  loadFoods: () => dispatch(loadFoods()),
   submit: form => dispatch(submit(form))
 })
 
@@ -38,52 +41,51 @@ class CustomerEdit extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = this.props.user.roles.find(r => r === 'admin')
-    this.state = {customerModel: null}
   }
 
   componentWillMount() {
     this.props.loadCustomer(this.props.customerId, this.isAdmin)
     this.props.loadQuestionnaires()
+    this.props.loadFoods()
   }
 
   componentWillReceiveProps(nextProps) {
-    const customer = nextProps.getCustomer(nextProps.customerId)
-    if (customer && !nextProps.loading && !this.state.customerModel) {
-      this.setState({
-        customerModel: {...customer}
-      })
+    const {savingCustomers, saveCustomersError} = nextProps
+
+    if (!savingCustomers && this.props.savingCustomers && !saveCustomersError) {
+      this.props.push(this.isAdmin ? '/customers' : '/')
     }
   }
 
-  saveCustomer = fields => {
-    if (!this.state.customerModel) return
-
-    this.props.saveCustomer({
-      ...this.state.customerModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveCustomer = form =>
+    this.props.saveCustomer(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {customerModel} = this.state
-    const {questionnaire, loading} = this.props
+    const {
+      getCustomer,
+      customerId,
+      questionnaire,
+      foodCategories,
+      loading,
+      savingCustomers
+    } = this.props
+    const customer = getCustomer(customerId)
     const error = this.props.saveCustomersError || this.props.loadError
 
     return (
       <Page loading={loading}>
-        <PageHeader heading={customerModel && customerModel.fullName} />
+        <PageHeader heading={customer && customer.fullName} />
         <PageBody error={error}>
           <form onSubmit={this.saveCustomer}>
-            {customerModel && questionnaire &&
+            {questionnaire && customer && foodCategories && !loading &&
               <Questionnaire
                 form={FORM_NAME}
-                model={customerModel}
                 questionnaire={questionnaire}
-                loading={this.props.savingCustomers}
+                loading={savingCustomers}
                 onSubmit={this.saveCustomer}
-                initialValues={toForm(customerModel, questionnaire)}
+                initialValues={toForm(customer, questionnaire)}
               />
             }
             <div className="text-right">

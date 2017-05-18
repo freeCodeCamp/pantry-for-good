@@ -8,6 +8,7 @@ import {fromForm, toForm} from '../../../lib/fields-adapter'
 import selectors from '../../../store/selectors'
 import {saveCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {loadFoods} from '../../food/reducers/category'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import AssistanceInfo from '../../../components/AssistanceInfo'
@@ -21,52 +22,43 @@ const mapStateToProps = state => ({
   saveCustomersError: selectors.customer.saveError(state),
   questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
   loading: selectors.questionnaire.loading(state) ||
-    selectors.settings.fetching(state),
+    selectors.settings.fetching(state) || selectors.food.category.loading(state),
   loadError: selectors.questionnaire.loadError(state) ||
-    selectors.settings.error(state),
+    selectors.settings.error(state) || selectors.food.category.loadError(state),
   settings: selectors.settings.getSettings(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   saveCustomer: customer => dispatch(saveCustomer(customer)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  loadFoods: () => dispatch(loadFoods()),
   submit: form => dispatch(submit(form))
 })
 
 class CustomerCreate extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      customerModel: {
-        ...props.user,
-        household: [],
-        foodPreferences: [],
-        fields: []
-      }
-    }
-  }
-
   isAdmin = this.props.user.roles.find(r => r === 'admin')
-
+  customer = {
+    ...this.props.user,
+    household: [],
+    foodPreferences: [],
+    fields: []
+  }
   componentWillMount() {
     this.props.loadQuestionnaires()
+    this.props.loadFoods()
   }
 
-  saveCustomer = fields => {
-    this.props.saveCustomer({
-      ...this.state.customerModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveCustomer = form =>
+    this.props.saveCustomer(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {settings, questionnaire, loading, loadError} = this.props
-    const {customerModel} = this.state
+    const {settings, questionnaire, loading, savingCustomers} = this.props
+    const error = this.props.saveCustomersError || this.props.loadError
 
     return (
-      <Page>
+      <Page loading={loading}>
         <PageHeader
           heading="Client Request for Assistance Application"
           showLogo
@@ -84,16 +76,15 @@ class CustomerCreate extends Component {
             </AssistanceInfo>
           }
         </PageHeader>
-        <PageBody>
+        <PageBody error={error}>
           <form onSubmit={this.saveCustomer}>
             {questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
-                model={customerModel}
                 questionnaire={questionnaire}
-                loading={loading}
+                loading={savingCustomers}
                 onSubmit={this.saveCustomer}
-                initialValues={toForm(customerModel, questionnaire)}
+                initialValues={toForm(this.customer, questionnaire)}
               />
             }
             <div className="text-right">

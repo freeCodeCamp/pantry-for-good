@@ -40,11 +40,9 @@ class VolunteerCreate extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.state = {
-      volunteerModel: {
-        ...this.props.user,
-        fields: []
-      }
+    this.volunteer = {
+      ...this.props.user,
+      fields: []
     }
   }
 
@@ -60,38 +58,16 @@ class VolunteerCreate extends Component {
     }
   }
 
-  saveVolunteer = fields => {
-    if (!this.state.volunteerModel) return
-    this.props.saveVolunteer({
-      ...this.state.volunteerModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveVolunteer = form =>
+    this.props.saveVolunteer(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
-  handleFieldChange = (field, value) => ev => {
-    if (!value) value = ev.target.value
-    let items
-
-    if (ev.target.type === 'checkbox')
-      items = this.formMethods.toggleCheckbox(this.state.volunteerModel, field, value)
-
-    const volunteerModel = set({...this.state.volunteerModel}, field, items || value)
-    this.setState({volunteerModel})
-  }
-
-  isMinor = () => {
-    const dateOfBirth = this.state.volunteerModel.dateOfBirth
-    return dateOfBirth && utc().diff(dateOfBirth, 'years') < 18
-  }
-
   render() {
     const {settings, questionnaire, loading, loadError, savingVolunteers} = this.props
-    const {volunteerModel} = this.state
 
     return (
-      <Page>
+      <Page loading={loading}>
         <PageHeader
           showLogo
           center
@@ -102,14 +78,13 @@ class VolunteerCreate extends Component {
         >
           {settings && <AssistanceInfo settings={settings} />}
           <form onSubmit={this.saveVolunteer}>
-            {volunteerModel && questionnaire &&
+            {questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
-                model={volunteerModel}
                 questionnaire={questionnaire}
-                loading={loading || savingVolunteers}
+                loading={savingVolunteers}
                 onSubmit={this.saveVolunteer}
-                initialValues={toForm(volunteerModel, questionnaire)}
+                initialValues={toForm(this.volunteer, questionnaire)}
               />
             }
             {/*<VolunteerWaiver

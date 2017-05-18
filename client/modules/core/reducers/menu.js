@@ -45,6 +45,12 @@ function getAdminMenuItems() {
       title: 'Client Database',
       link: 'customers',
     }, {
+      title: 'Volunteer Database',
+      link: 'volunteers',
+    }, {
+      title: 'Donor Database and Tax Receipts',
+      link: 'donors',
+    }, {
       title: 'Food Schedule',
       link: 'foods/schedule',
     }, {
@@ -67,19 +73,13 @@ function getAdminMenuItems() {
         }
       ]
     }, {
-      title: 'Volunteer Database',
-      link: 'volunteers',
-    }, {
-      title: 'Donor Database and Tax Receipts',
-      link: 'donors',
-    }, {
       title: 'App Settings',
       link: 'settings',
     }, {
       title: 'Media',
       link: 'media',
     }, {
-      title: 'Questionnaire Editor',
+      title: 'Application Forms',
       link: 'questionnaires',
     }
   ]

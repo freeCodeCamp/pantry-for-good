@@ -102,11 +102,15 @@ function renderCheckbox(options, inline, props) {
           checked={isChecked(props.value, option)}
           inline={inline}
         >
+          <span></span>
           {option.label || option}
         </Checkbox>
       )}
     </div> :
-    <Checkbox {...props}>{options}</Checkbox>
+    <Checkbox {...props}>
+      <span></span>
+      {options}
+    </Checkbox>
 }
 
 function isChecked(value, option) {

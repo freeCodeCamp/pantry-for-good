@@ -1,3 +1,5 @@
+import {utc} from 'moment'
+
 export default (value, meta) => {
   let errors = {}
 
@@ -36,7 +38,7 @@ function validateTextarea(value, meta) {
 }
 
 function validateDate(value, meta) {
-  if (value && new Date(value) === 'Invalid Date')
+  if (value && !utc(value).isValid())
     return {[meta._id]: `${meta.label} must be a valid date`}
 }
 

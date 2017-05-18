@@ -22,9 +22,9 @@ const mapStateToProps = state => ({
   saveDonorsError: selectors.donor.saveError(state),
   questionnaire: selectors.questionnaire.getOne(state)('qDonors'),
   loading: selectors.questionnaire.loading(state) ||
-    selectors.donor.loading(state),
+    selectors.settings.fetching(state),
   loadError: selectors.questionnaire.loadError(state) ||
-    selectors.donor.loadError(state),
+    selectors.settings.error(state),
   settings: selectors.settings.getSettings(state),
 })
 
@@ -39,11 +39,9 @@ class DonorCreate extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.state = {
-      donorModel: {
-        ...this.props.user,
-        fields: []
-      }
+    this.donor = {
+      ...this.props.user,
+      fields: []
     }
   }
 
@@ -59,19 +57,13 @@ class DonorCreate extends Component {
     }
   }
 
-  saveDonor = fields => {
-    if (!this.state.donorModel) return
-    this.props.saveDonor({
-      ...this.state.donorModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveDonor = form =>
+    this.props.saveDonor(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
     const {settings, questionnaire, loading, loadError, savingDonors} = this.props
-    const {donorModel} = this.state
     const error = loadError || this.props.saveDonorsError
 
     return (
@@ -87,14 +79,13 @@ class DonorCreate extends Component {
         </PageHeader>
         <PageBody error={error}>
           <form onSubmit={this.saveDonor}>
-            {donorModel && questionnaire &&
+            {questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
-                model={donorModel}
                 questionnaire={questionnaire}
-                loading={loading}
+                loading={loading || savingDonors}
                 onSubmit={this.saveDonor}
-                initialValues={toForm(donorModel, questionnaire)}
+                initialValues={toForm(this.donor, questionnaire)}
               />
             }
             <div className="text-right">

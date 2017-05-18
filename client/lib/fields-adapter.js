@@ -2,40 +2,60 @@ import {flatMap} from 'lodash'
 import {utc} from 'moment'
 
 /**
- * Convert api representation of client fields for populating forms
+ * Convert api representation of client model for populating forms
  *
  * @param {object} model
  * @param {object} questionnaire
- * @returns {object} map of field_ids -> values
+ * @returns {object} form compatible model
  */
 export const toForm = (model, questionnaire) => {
-  const fields = flatMap(questionnaire.sections, section => section.fields)
+  const qFields = flatMap(questionnaire.sections, section => section.fields)
 
-  const withValues = fields.map(field => {
-    const modelField = model.fields.find(f => f.meta._id === field._id)
+  return {
+    ...model,
+    fields: toFormFields(model, qFields),
+    household: householdToForm(model)
+  }
+}
 
-    if (!modelField) return {[field._id]: ''}
+/**
+ * Convert redux form representation of client model to nested api format
+ *
+ * @param {object} fields
+ * @returns {array<object>} api compatible model
+ */
+export const fromForm = form => ({
+  ...form,
+  fields: fromFormFields(form.fields)
+})
 
-    if (field.type === 'date')
-      return {[field._id]: utc(modelField.value).format('YYYY-MM-DD')}
+function toFormFields(model, qFields) {
+  const withValues = qFields.map(qField => {
+    const modelField = model.fields.find(field => field.meta._id === qField._id)
 
-    if (field.type === 'checkbox')
-      return {[field._id]: modelField.value.split(',').map(v => v.trim())}
+    if (!modelField) return {[qField._id]: ''}
 
-    return {[field._id]: modelField.value}
+    if (qField.type === 'date')
+      return {[qField._id]: utc(modelField.value).format('YYYY-MM-DD')}
+
+    if (qField.type === 'checkbox')
+      return {[qField._id]: modelField.value.split(',').map(v => v.trim())}
+
+    return {[qField._id]: modelField.value}
   })
 
   return Object.assign({}, ...withValues)
 }
 
-/**
- * Convert redux form representation of client fields to nested api format
- *
- * @param {object} fields
- * @returns {array<object>}
- */
-export const fromForm = fields =>
-  Object.keys(fields).map(k => {
+function householdToForm(model) {
+  return model.household && model.household.map(dependent => ({
+    ...dependent,
+    dateOfBirth: utc(dependent.dateOfBirth).format('YYYY-MM-DD')
+  }))
+}
+
+function fromFormFields(fields) {
+  return Object.keys(fields).map(k => {
     const field = fields[k]
     const value = Array.isArray(field) ? field.join(', ') : field
 
@@ -44,3 +64,4 @@ export const fromForm = fields =>
       meta: {_id: k}
     }
   })
+}

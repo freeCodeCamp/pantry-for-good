@@ -4,14 +4,24 @@ import {connect} from 'react-redux'
 import {reduxForm, formValueSelector} from 'redux-form'
 import {ButtonToolbar, Button, ListGroupItem} from 'react-bootstrap'
 
+import selectors from '../../../store/selectors'
 import {RFFieldGroup} from '../../../components/form'
 
 const selector = formValueSelector('fieldForm')
 const mapStateToProps = state => ({
-  fieldType: selector(state, 'type')
+  fieldType: selector(state, 'type'),
+  questionnaire: selectors.qEditor.getEditingQuestionnaire(state)
 })
 
-const FieldEdit = ({onSubmit, handleSubmit, onEdit, onDelete, onKeyUp, fieldType}) =>
+const FieldEdit = ({
+  onSubmit,
+  handleSubmit,
+  onEdit,
+  onDelete,
+  onKeyUp,
+  fieldType,
+  questionnaire
+}) =>
   <ListGroupItem
     onKeyUp={onKeyUp}
     style={{
@@ -40,9 +50,13 @@ const FieldEdit = ({onSubmit, handleSubmit, onEdit, onDelete, onKeyUp, fieldType
           <option value="checkbox">Checkboxes</option>
           <option disabled style={{fontSize: '1px'}}>{' '}</option>
           <option disabled style={{fontSize: '12px', color: '#aaa'}}>Widgets</option>
-          <option value="foodPreferences">Food Preferences</option>
-          <option value="household">Household</option>
           <option value="table">Table</option>
+          {questionnaire.identifier === 'qCustomers' &&
+            <option value="foodPreferences">Food Preferences</option>
+          }
+          {questionnaire.identifier === 'qCustomers' &&
+            <option value="household">Household</option>
+          }
         </RFFieldGroup>
       </div>
       <div style={{display: 'flex', flexGrow: 1, padding: '0 10px'}}>

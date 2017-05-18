@@ -3,34 +3,69 @@ import faker from 'faker'
 
 import config from '../config'
 
+const addRandomDate = item =>
+  ({...item, startDate: utc(faker.date.past(2)).startOf('isoWeek')})
 export const foodFields = [{
   category: 'Cheese',
   items: [
-    {name: 'Cheddar', quantity: 20, startDate: utc('2016-03-03').startOf('isoWeek'), frequency: 1},
-    {name: 'Mozarella', quantity: 35, startDate: utc('2016-03-10').startOf('isoWeek'), frequency: 2},
-    {name: 'Brie', quantity: 30, startDate: utc('2016-10-15').startOf('isoWeek'), frequency: 4}
-  ]
+    {name: 'Cheddar', quantity: 20, frequency: 1},
+    {name: 'Mozarella', quantity: 35, frequency: 2},
+    {name: 'Brie', quantity: 30, frequency: 4},
+    {name: 'Emmental', quantity: 20, frequency: 1},
+    {name: 'Monterey Jack', quantity: 20, frequency: 1},
+    {name: 'Stilton', quantity: 20, frequency: 1},
+    {name: 'Camembert', quantity: 20, frequency: 1},
+    {name: 'Port Salut', quantity: 20, frequency: 1},
+    {name: 'Gorgonzola', quantity: 20, frequency: 1},
+  ].map(addRandomDate)
 }, {
   category: 'Pasta, rice etc',
   items: [
-    {name: 'Penne pasta', quantity: 50, startDate: utc('2017-01-05').startOf('isoWeek'), frequency: 1},
-    {name: 'Basmati rice', quantity: 40, startDate: utc('2016-09-13').startOf('isoWeek'), frequency: 1},
-    {name: 'Fusilli pasta', quantity: 45, startDate: utc('2016-09-13').startOf('isoWeek'), frequency: 2}
-  ]
+    {name: 'Penne pasta', quantity: 50, frequency: 1},
+    {name: 'Basmati rice', quantity: 40, frequency: 1},
+    {name: 'Fusilli pasta', quantity: 45, frequency: 2},
+    {name: 'Couscous', quantity: 40, frequency: 1},
+    {name: 'Spagetti', quantity: 50, frequency: 1},
+    {name: 'Jasmine rice', quantity: 50, frequency: 1},
+  ].map(addRandomDate)
 }, {
   category: 'Meat',
   items: [
-    {name: 'Beef mince', quantity: 25, startDate: utc('2016-06-03').startOf('isoWeek'), frequency: 2},
-    {name: 'Chicken breast', quantity: 15, startDate: utc('2016-05-10').startOf('isoWeek'), frequency: 2},
-    {name: 'Pork chop', quantity: 20, startDate: utc('2016-04-10').startOf('isoWeek'), frequency: 2}
-  ]
+    {name: 'Beef mince', quantity: 25, frequency: 2},
+    {name: 'Chicken breast', quantity: 15, frequency: 2},
+    {name: 'Pork chop', quantity: 20, frequency: 2},
+    {name: 'T-Bone steak', quantity: 25, frequency: 2},
+    {name: 'Chicken thighs', quantity: 20, frequency: 2},
+    {name: 'Bacon', quantity: 20, frequency: 2},
+    {name: 'Salami', quantity: 15, frequency: 2},
+    {name: 'Pepperoni', quantity: 15, frequency: 2},
+  ].map(addRandomDate)
 }, {
   category: 'Vegetables',
   items: [
-    {name: 'Carrots', quantity: 30, startDate: utc('2016-07-12').startOf('isoWeek'), frequency: 1},
-    {name: 'Onions', quantity: 25, startDate: utc('2016-04-12').startOf('isoWeek'), frequency: 2},
-    {name: 'Squash', quantity: 25, startDate: utc('2016-03-02').startOf('isoWeek'), frequency: 4}
-  ]
+    {name: 'Carrots', quantity: 30, frequency: 1},
+    {name: 'Onions', quantity: 25, frequency: 2},
+    {name: 'Squash', quantity: 25, frequency: 4},
+    {name: 'Leek', quantity: 30, frequency: 1},
+    {name: 'Potatoes', quantity: 25, frequency: 2},
+    {name: 'Turnips', quantity: 25, frequency: 4},
+    {name: 'Cauliflower', quantity: 30, frequency: 1},
+    {name: 'Broccoli', quantity: 25, frequency: 2},
+    {name: 'Peas', quantity: 25, frequency: 4}
+  ].map(addRandomDate)
+}, {
+  category: 'Milk',
+  items: [
+    {name: 'Whole milk', quantity: 15, frequency: 1},
+    {name: 'Semi-skimmed milk', quantity: 15, frequency: 1}
+  ].map(addRandomDate)
+}, {
+  category: 'Snacks',
+  items: [
+    {name: 'Snickers', quantity: 20, frequency: 3},
+    {name: 'Mars bar', quantity: 20, frequency: 3},
+    {name: 'Potato chips', quantity: 20, frequency: 3},
+  ].map(addRandomDate)
 }]
 
 export const settingsFields = {
@@ -39,7 +74,8 @@ export const settingsFields = {
   instructions: '<p><strong>Please carefully read the following information:</strong>Boxes will be delivered by our volunteers every <strong>Wednesday</strong> evening between <strong>8:00PM and 11:00PM</strong>. Boxes will be left at your doorstep. Volunteers may knock on your door and quickly leave to keep anonymity. During holidays, or other special times, including severe weather conditions, time and day of delivery may change without notice.</p><p>We ask that you <strong>leave the empty box outside your door</strong> the following week, so it can be picked up by the volunteers and reused.</p><p>Volunteers do their best to check food items for expiry dates, however mistakes do occur. <strong>Please use your own judgment and discretion before consuming any food or contact the manufacturer directly if you have any concerns</strong>. If you find an item that is expired, you may throw it away. <strong>If there are items that you don\'t use, please leave them in the box, and we will make a note so that you will not receive them again</strong>.</p><p>If there is a change in your financial situation and you no longer need our assistance, if you will be away  for a certain period, if you have a change in contact information, or any other change, please inform us promptly.</p>',
   thanks: '<p>In the past year, over (amount) pounds of food was distributed on a weekly basis by our team of dedicated volunteers. Your assistance helps us respond to the ever-growing demand of our community. <strong>Thank you for taking the opportunity to help turn lives around.</strong></p><p>With your help, we are able to support the less fortunate families in our community, by providing them with nutritious food and energy to grow, learn, work, and give them hope for a better and brighter future.</p>',
   url: 'www.example.com',
-  foodBankAddress: `${faker.address.streetAddress(true)}`,
+  foodBankAddress: faker.fake(
+    '{{address.streetAddress}} {{address.city}} {{address.zipCode}}'),
   clientIntakeNumber: '07123 456 789',
   supportNumber: '07234 567 891',
   location: {

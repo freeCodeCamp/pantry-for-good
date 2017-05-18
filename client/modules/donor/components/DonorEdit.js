@@ -40,7 +40,6 @@ class DonorEdit extends Component {
   constructor(props) {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
-    this.state = {donorModel: null}
   }
 
   componentWillMount() {
@@ -49,47 +48,34 @@ class DonorEdit extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {getDonor, questionnaire, savingDonors, saveDonorsError} = nextProps
+    const {savingDonors, saveDonorsError} = nextProps
     if (!savingDonors && this.props.savingDonors && !saveDonorsError) {
       this.props.push(this.isAdmin ? '/donors' : '/')
     }
-
-    const donor = getDonor(nextProps.donorId)
-    if (donor && !this.state.donorModel && questionnaire) {
-      this.setState({
-        donorModel: {...donor}
-      })
-    }
   }
 
-  saveDonor = fields => {
-    if (!this.state.donorModel) return
-    this.props.saveDonor({
-      ...this.state.donorModel,
-      fields: fromForm(fields)
-    }, this.isAdmin)
-  }
+  saveDonor = form =>
+    this.props.saveDonor(fromForm(form), this.isAdmin)
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {donorModel} = this.state
-    const {questionnaire, loading} = this.props
+    const {getDonor, donorId, questionnaire, loading, savingDonors} = this.props
+    const donor = getDonor(donorId)
     const error = this.props.loadError || this.props.saveDonorsError
 
     return (
       <Page>
-        <PageHeader heading={donorModel && donorModel.fullName} />
+        <PageHeader heading={donor && donor.fullName} />
         <PageBody error={error}>
           <form onSubmit={this.saveDonor}>
-            {donorModel && questionnaire &&
+            {donor && questionnaire &&
               <Questionnaire
                 form={FORM_NAME}
-                model={donorModel}
                 questionnaire={questionnaire}
-                loading={loading}
+                loading={savingDonors}
                 onSubmit={this.saveDonor}
-                initialValues={toForm(donorModel, questionnaire)}
+                initialValues={toForm(donor, questionnaire)}
               />
             }
             <div className="text-right">
