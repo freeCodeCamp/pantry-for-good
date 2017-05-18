@@ -70,8 +70,8 @@ const SelectCustomersTable = ({
               <Checkbox
                 checked={allSelected}
                 onClick={allSelected ? handleDeselectAll : handleSelectAll}
-                style={{margin: '2px 0'}}
-              />
+                style={{marginBottom: '7px'}}
+              ><span></span></Checkbox>
             </th>
             <th>#</th>
             <th>Address</th>
@@ -86,7 +86,10 @@ const SelectCustomersTable = ({
               style={{cursor: 'pointer'}}
             >
               <td style={{padding: '0 0 0 4px'}}>
-                <Checkbox checked={isSelected(customer.id)} readOnly />
+                <Checkbox
+                  checked={isSelected(customer.id)}
+                  readOnly
+                ><span></span></Checkbox>
               </td>
               <td><span>{customer.id}</span></td>
               <td><span>
