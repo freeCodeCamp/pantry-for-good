@@ -26,7 +26,6 @@ const DriverRouter = ({match}) =>
         exact
         component={Owns(DriverUser)}
       />*/}
-    }
   </SwitchWithNotFound>
 
 export default DriverRouter
