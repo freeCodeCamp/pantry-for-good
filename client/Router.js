@@ -11,7 +11,6 @@ import Customers from './modules/customer/CustomerRouter'
 import Donors from './modules/donor/DonorRouter'
 import Drivers from './modules/driver/DriverRouter'
 import Foods from './modules/food/FoodRouter'
-import Media from './modules/media/MediaRouter'
 import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
 import Settings from './modules/settings/SettingsRouter'
 import Users from './modules/users/UserRouter'
@@ -34,7 +33,6 @@ const Router = ({history}) =>
           <Route path="/donors" component={Donors} />
           <Route path="/drivers" component={Drivers} />
           <Route path="/foods" component={IsAdmin(Foods)} />
-          <Route path="/media" component={IsAdmin(Media)} />
           <Route path="/questionnaires" component={IsAdmin(Questionnaire)} />
           <Route path="/settings" component={IsAdmin(Settings)} />
           <Route path="/users" component={Users} />

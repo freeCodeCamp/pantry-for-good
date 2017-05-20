@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import {compose, setPropTypes} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {Link} from 'react-router-dom'
-import {Button, Clearfix, Col, Row} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 
-import {RFFieldGroup} from '../../../components/form'
+import General from './General'
+import Keys from './Keys'
+import Images from './Images'
 
 const enhance = compose(
   setPropTypes({
@@ -21,96 +23,9 @@ const enhance = compose(
 
 const SettingsForm = ({handleSubmit}) =>
   <div>
-    <Row>
-      <Col lg={3}>
-        <RFFieldGroup
-          name="organization"
-          label="Organization"
-          type="text"
-          required
-        />
-      </Col>
-      <Clearfix visibleSmBlock visibleMdBlock />
-      <Col lg={3}>
-        <RFFieldGroup
-          name="url"
-          label="URL"
-          type="text"
-          required
-        />
-      </Col>
-      <Clearfix visibleSmBlock visibleMdBlock />
-      <Col lg={3}>
-        <RFFieldGroup
-          name="clientIntakeNumber"
-          label="Client intake number"
-          type="text"
-          required
-        />
-      </Col>
-      <Clearfix visibleSmBlock visibleMdBlock />
-      <Col lg={3}>
-        <RFFieldGroup
-          name="supportNumber"
-          label="Support number"
-          type="text"
-          required
-        />
-      </Col>
-    </Row>
-
-    <Row>
-      <Col lg={6}>
-        <RFFieldGroup
-          name="mission"
-          label="Mission"
-          type="textarea"
-          rows="5"
-        />
-      </Col>
-      <Clearfix visibleSmBlock visibleMdBlock />
-      <Col lg={6}>
-        <RFFieldGroup
-          name="instructions"
-          label="Instructions to clients"
-          type="textarea"
-          rows="5"
-        />
-      </Col>
-      <Clearfix />
-      <Col lg={6}>
-        <RFFieldGroup
-          name="thanks"
-          label="Thank you to donors"
-          type="textarea"
-          rows="5"
-        />
-      </Col>
-      <Clearfix visibleSmBlock visibleMdBlock />
-      <Col lg={6}>
-        <RFFieldGroup
-          name="foodBankAddress"
-          label="Address"
-          type="textarea"
-          rows="5"
-        />
-      </Col>
-    </Row>
-
-    <Row>
-      <Col lg={6}>
-        <RFFieldGroup
-          name="gmapsApiKey"
-          label="Google Maps API Key"
-        />
-      </Col>
-      <Col lg={6}>
-        <RFFieldGroup
-          name="gmapsClientId"
-          label="Google Maps Client ID"
-        />
-      </Col>
-    </Row>
+    <General />
+    <Images />
+    <Keys />
 
     <div className="text-right">
       <Button

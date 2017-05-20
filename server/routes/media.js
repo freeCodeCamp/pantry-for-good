@@ -1,32 +1,32 @@
-'use strict'
+import Router from 'express-promise-router'
+import multer from 'multer'
+import {last} from 'lodash'
 
-/**
- * Module dependencies
- */
-var express = require('express'),
-  media = require('../controllers/media'),
-  multer = require('multer')
+import mediaController from '../controllers/media'
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'assets/media')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    const ext = last(file.originalname.split('.'))
+    cb(null, `${file.fieldname}.${ext}`)
   }
 })
 
-var upload = multer({ storage: storage })
-var mediaRouter = express.Router({mergeParams: true})
+const upload = multer({storage})
 
-// Media routes
-mediaRouter.route('/media/uploadLogo')
-  .post(multer({storage:storage}).single('file'), media.uploadLogo)
+export default () => {
+  const mediaRouter = Router({mergeParams: true})
 
-mediaRouter.route('/media')
-  .post(media.save)
+  mediaRouter.route('/admin/media/upload')
+    .post(upload.fields([
+      {name: 'logo', maxCount: 1},
+      {name: 'signature', maxCount: 1}
+    ]), mediaController.upload)
 
-mediaRouter.route('/media')
-  .get(media.read)
+  mediaRouter.route('/media')
+    .get(mediaController.read)
 
-module.exports = mediaRouter
+  return mediaRouter
+}

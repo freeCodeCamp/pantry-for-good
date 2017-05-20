@@ -76,9 +76,6 @@ function getAdminMenuItems() {
       title: 'App Settings',
       link: 'settings',
     }, {
-      title: 'Media',
-      link: 'media',
-    }, {
       title: 'Application Forms',
       link: 'questionnaires',
     }

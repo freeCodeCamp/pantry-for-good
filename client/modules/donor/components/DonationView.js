@@ -117,7 +117,7 @@ const DonationView = ({
         </div>
         <p>
           Sincerely,<br /><br />
-          <img src="/media/brand/signature.png" alt="signature" />
+          <img src="/media/signature.png" alt="signature" />
         </p>
       </Modal.Body>
       <Modal.Footer>

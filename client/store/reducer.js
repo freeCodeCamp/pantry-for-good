@@ -10,10 +10,10 @@ import donor from '../modules/donor/reducers/donor'
 import delivery from '../modules/driver/reducers'
 import entities from './entities'
 import food from '../modules/food/reducers'
-import media from '../modules/media/reducer'
+import media from '../modules/settings/reducers/media'
 import questionnaire from '../modules/questionnaire/reducers/api'
 import questionnaireEditor from '../modules/questionnaire/reducers/editor'
-import settings from '../modules/settings/reducer'
+import settings from '../modules/settings/reducers/settings'
 import volunteer from '../modules/volunteer/reducer'
 
 export default combineReducers({

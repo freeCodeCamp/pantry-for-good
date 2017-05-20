@@ -1,22 +1,26 @@
-'use strict'
+import mongoose from 'mongoose'
 
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema
+const {Schema} = mongoose
 
 /**
  * Settings Schema
  */
-var MediaSchema = new Schema({
-  logoPath: {
+const MediaSchema = new Schema({
+  path: {
     type: String,
     default: 'media/'
   },
-  logoFile: {
+  logo: {
     type: String,
     default: 'logo.png'
+  },
+  signature: {
+    type: String,
+    default: 'signature.png'
+  },
+  favicon: {
+    type: String,
+    default: 'favicon.ico'
   }
 })
 

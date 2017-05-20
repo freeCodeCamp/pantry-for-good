@@ -3,10 +3,10 @@ import {createSelectors as createDonationSelectors} from '../modules/donor/reduc
 import {createSelectors as createDonorSelectors} from '../modules/donor/reducers/donor'
 import {createSelectors as createDeliverySelectors} from '../modules/driver/reducers'
 import {createSelectors as createFoodSelectors} from '../modules/food/reducers'
-import {createSelectors as createMediaSelectors} from '../modules/media/reducer'
+import {createSelectors as createMediaSelectors} from '../modules/settings/reducers/media'
 import {createSelectors as createQuestionnaireSelectors} from '../modules/questionnaire/reducers/api'
 import {createSelectors as createQEditorSelectors} from '../modules/questionnaire/reducers/editor'
-import {createSelectors as createSettingsSelectors} from '../modules/settings/reducer'
+import {createSelectors as createSettingsSelectors} from '../modules/settings/reducers/settings'
 import {createSelectors as createUserSelectors} from '../modules/users/reducer'
 import {createSelectors as createVolunteerSelectors} from '../modules/volunteer/reducer'
 

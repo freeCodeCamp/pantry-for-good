@@ -8,7 +8,6 @@ export default () => {
 
   const foodRouter = Router({mergeParams: true})
 
-  // TODO: protect these!
   foodRouter.route('/admin/foods')
     .get(foodController.list)
     .post(foodController.create)

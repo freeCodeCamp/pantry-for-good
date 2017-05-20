@@ -1,6 +1,6 @@
 import {get} from 'lodash'
 
-import {CALL_API} from '../../store/middleware/api'
+import {CALL_API} from '../../../store/middleware/api'
 
 export const LOAD_REQUEST = 'media/LOAD_REQUEST'
 export const LOAD_SUCCESS = 'media/LOAD_SUCCESS'
@@ -16,6 +16,8 @@ export const loadMedia = () => ({
   }
 })
 
+const saveMediaRequest = () => ({type: SAVE_REQUEST})
+
 const saveMediaSuccess = response => ({
   type: SAVE_SUCCESS,
   response
@@ -26,13 +28,17 @@ const saveMediaFailure = error => ({
   error
 })
 
-export const saveMedia = file => dispatch => {
+export const saveMedia = (type, file) => dispatch => {
   const formData = new FormData()
-  formData.append('file', file)
+  formData.append(type, file)
 
-  return fetch('/api/media/uploadLogo', {
+  dispatch(saveMediaRequest())
+
+  // not using callApi because it json encodes body
+  return fetch('/api/admin/media/upload', {
     method: 'POST',
-    body: formData
+    body: formData,
+    credentials: 'same-origin'
   })
     .then(response => response.json().then(json =>
       dispatch(saveMediaSuccess(json))

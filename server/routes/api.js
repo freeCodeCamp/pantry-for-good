@@ -23,7 +23,7 @@ export default (delay, errorProb) => apiRouter
   // uncomment to also test core components
   // .use(errorSimulator(errorProb))
   .use(usersRoutes())
-  .use(mediaRoutes)
+  .use(mediaRoutes())
   .use(settingsRoutes())
   // for testing non-core components
   .use(errorSimulator(errorProb))
