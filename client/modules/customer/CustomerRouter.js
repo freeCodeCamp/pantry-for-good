@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import Home from '../core/components/Home'
 import CustomerList from './components/CustomerList'
 import CustomerView from './components/CustomerView'
 import CustomerEdit from './components/CustomerEdit'
@@ -18,7 +19,8 @@ const Owns = ownerOrAdmin('customerId')
 
 const CustomerRouter = ({match}) =>
   <SwitchWithNotFound>
-    <Route path={match.url} exact component={IsAdmin(CustomerList)} />
+    <Route path={match.url} exact component={Home} />
+    <Route path={`${match.url}/list`} exact component={IsAdmin(CustomerList)} />
     <Route
       path={`${match.url}/create/success`}
       exact

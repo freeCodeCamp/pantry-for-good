@@ -11,6 +11,7 @@ import delivery from '../modules/driver/reducers'
 import entities from './entities'
 import food from '../modules/food/reducers'
 import media from '../modules/media/reducer'
+import page from '../modules/page/reducer'
 import questionnaire from '../modules/questionnaire/reducers/api'
 import questionnaireEditor from '../modules/questionnaire/reducers/editor'
 import settings from '../modules/settings/reducer'
@@ -27,6 +28,7 @@ export default combineReducers({
   food,
   form,
   media,
+  page,
   questionnaire,
   questionnaireEditor,
   router,

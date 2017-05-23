@@ -4,7 +4,7 @@ import {Button, ListGroupItem} from 'react-bootstrap'
 
 import selectors from '../../../../store/selectors'
 import {assignCustomers} from '../../reducers/assignment'
-import {clearRoute, requestRoute} from '../../reducers/route'
+import {clearRoute, requestRoute, requestDistances} from '../../reducers/route'
 
 const mapStateToProps = (state, ownProps) => ({
   settings: selectors.settings.getSettings(state),
@@ -19,7 +19,9 @@ const mapDispatchToProps = dispatch => ({
   assign: (customerIds, driverId) => dispatch(assignCustomers(customerIds, driverId)),
   clearRoute: () => dispatch(clearRoute()),
   requestRoute: (start, end, waypoints) =>
-    dispatch(requestRoute(start, end, waypoints))
+    dispatch(requestRoute(start, end, waypoints)),
+  requestDistances: (start, end, waypoints) =>
+    dispatch(requestDistances(start, end, waypoints))
 })
 
 const mergeProps = (stateProps, dispatchProps) => ({
@@ -29,6 +31,11 @@ const mergeProps = (stateProps, dispatchProps) => ({
     dispatchProps.assign(stateProps.selectedCustomerIds, stateProps.selectedDriverId),
   requestRoute: () => {
     dispatchProps.requestRoute(
+      stateProps.settings.location,
+      stateProps.driver.location,
+      stateProps.selectedCustomerIds.map(id => stateProps.getCustomer(id).location)
+    )
+    dispatchProps.requestDistances(
       stateProps.settings.location,
       stateProps.driver.location,
       stateProps.selectedCustomerIds.map(id => stateProps.getCustomer(id).location)

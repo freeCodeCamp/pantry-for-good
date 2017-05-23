@@ -4,6 +4,7 @@ import range from 'lodash/range'
 import {
   foodFields,
   settingsFields,
+  pages,
   customerQuestionnaire,
   donorQuestionnaire,
   volunteerQuestionnaire
@@ -18,6 +19,7 @@ const Volunteer = mongoose.model('Volunteer')
 const Questionnaire = mongoose.model('Questionnaire')
 const Food = mongoose.model('Food')
 const Settings = mongoose.model('Settings')
+const Page = mongoose.model('Page')
 
 const clientTypes = ['customer', 'volunteer', 'donor']
 
@@ -44,6 +46,7 @@ async function clearDb(replaceAdmin) {
     Donor.find().remove(),
     Volunteer.find().remove(),
     Food.find().remove(),
+    Page.find().remove(),
     Questionnaire.find().remove(),
     Settings.find().remove()
   ])
@@ -53,6 +56,7 @@ async function seedDb(env) {
   await seedAdmin()
   await seedQuestionnaires()
   await seedSettings()
+  await seedPages()
 
   // for development also seed clients and foods
   if (env !== 'production') {
@@ -107,6 +111,13 @@ async function seedSettings() {
   if (count) return
 
   await Settings.create(settingsFields)
+}
+
+async function seedPages() {
+  const count = await Page.count()
+  if (count) return
+
+  await Page.create(pages)
 }
 
 // Helpers

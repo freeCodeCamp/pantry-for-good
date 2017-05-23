@@ -43,7 +43,7 @@ function getAdminMenuItems() {
   return [
     {
       title: 'Client Database',
-      link: 'customers',
+      link: 'customers/list',
     }, {
       title: 'Volunteer Database',
       link: 'volunteers',
@@ -61,7 +61,7 @@ function getAdminMenuItems() {
       link: 'foods/inventory',
     }, {
       title: 'Drivers and Route Assignment',
-      link: 'drivers',
+      // link: 'drivers',
       menuItemType: 'treeview',
       items: [
         {
@@ -78,6 +78,9 @@ function getAdminMenuItems() {
     }, {
       title: 'Media',
       link: 'media',
+    }, {
+      title: 'Page Editor',
+      link: 'pages'
     }, {
       title: 'Application Forms',
       link: 'questionnaires',
