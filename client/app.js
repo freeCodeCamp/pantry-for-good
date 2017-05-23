@@ -6,8 +6,8 @@ import createHistory from 'history/createBrowserHistory'
 
 import createStore from './store'
 import {setUser} from './modules/users/reducer'
-import {loadMedia} from './modules/media/reducer'
-import {loadSettings} from './modules/settings/reducer'
+import {loadMedia} from './modules/settings/reducers/media'
+import {loadSettings} from './modules/settings/reducers/settings'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.css'

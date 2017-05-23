@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { saveSettings } from '../reducer'
+import { saveSettings } from '../reducers/settings'
 
 import selectors from '../../../store/selectors'
-import { Box, BoxBody, BoxHeader } from '../../../components/box'
-import { PageBody } from '../../../components/page'
+import { Page, PageBody, PageHeader } from '../../../components/page'
 import SettingsForm from './SettingsForm'
 
 const mapStateToProps = state => ({
@@ -21,17 +20,15 @@ class AppSettings extends React.Component {
   onSubmit = settings => this.props.saveSettings(settings)
 
   render = () =>
-    <PageBody>
-      <Box>
-        <BoxHeader heading="Change Settings" />
-        <BoxBody loading={this.props.loading} error={this.props.error}>
-          <SettingsForm
-            onSubmit={this.props.saveSettings}
-            initialValues={this.props.data}
-          />
-        </BoxBody>
-      </Box>
-    </PageBody>
+    <Page>
+      <PageHeader heading="Settings" />
+      <PageBody>
+        <SettingsForm
+          onSubmit={this.props.saveSettings}
+          initialValues={this.props.data}
+        />
+      </PageBody>
+    </Page>
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppSettings)

@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const {resolve} = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -47,10 +46,6 @@ module.exports = {
       template: resolve(__dirname, 'client', 'index.html'),
       inject: 'body'
     }),
-    new CopyWebpackPlugin([{
-      from: resolve(__dirname, 'assets'),
-      to: resolve(__dirname, 'dist', 'assets')
-    }]),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'vendor.js'

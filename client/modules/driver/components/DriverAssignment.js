@@ -5,7 +5,7 @@ import {Col} from 'react-bootstrap'
 import selectors from '../../../store/selectors'
 import {loadCustomers} from '../../customer/reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
-import {loadSettings} from '../../settings/reducer'
+import {loadSettings} from '../../settings/reducers/settings'
 import {loadVolunteers} from '../../volunteer/reducer'
 
 import {Page, PageBody} from '../../../components/page'

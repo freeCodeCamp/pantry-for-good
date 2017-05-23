@@ -1,5 +1,11 @@
 This repository is for the Food Bank application designed by Open Source for Good Contributors at [Free Code Camp](http://www.freecodecamp.com).
 
+You can test it out by deploying to [Heroku](https://www.heroku.com):
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+The button creates an admin account with username `admin` and password `password`.
+
 ------------
 ### Quick Start Steps:
 1. Install [Node.js](http://nodejs.org) and [MongoDB](https://docs.mongodb.com/manual/installation/#mongodb-community-edition)
@@ -31,10 +37,10 @@ Type `npm run dev` to start the application in development mode. If all goes wel
 
 To use all the features of this application you will need to obtain API keys and install them in the application. Make a copy of the `server/config/env/secrets-template.js` file in the same directory and rename it `secrets.js`.  After following the instructions below to obtain API Keys, put your keys in this file.
 
-#### 1. [gmapsApiKey](https://developers.google.com/maps/documentation/javascript/get-api-key) 
+#### 1. [gmapsApiKey](https://developers.google.com/maps/documentation/javascript/get-api-key)
 Google Maps API key required for the deliveries feature
 #### 2. [oauth](https://developers.google.com/identity/sign-in/web/devconsole-project)
-Google API that will allow the application to work with google accounts.  
+Google API that will allow the application to work with google accounts.
 When you create your Client ID for Web Application, add `http://localhost:8080/api/auth/google/callback` to the **Authorized Redirect URIs** section
 #### 3. [sendpulse](https://sendpulse.com/register)
 Sendpulse email service API.  Required for the password reset by email to work.
