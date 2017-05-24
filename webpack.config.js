@@ -6,11 +6,12 @@ module.exports = {
   entry: {
     vendor: ['react-hot-loader/patch',
       'admin-lte', 'bootstrap', 'history', 'lodash', 'moment', 'moment-recur',
-      'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react',
+      'redux', 'redux-thunk', 'normalizr', 'whatwg-fetch', 'react', 'prop-types',
       'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
       'react-hot-loader', 'react-bootstrap', 'react-bootstrap-autosuggest',
       'react-bootstrap-table', 'jquery', 'redux-form', 'reselect', 'recompose',
-      'react-dnd', 'react-dnd-html5-backend']
+      'react-dnd', 'react-dnd-html5-backend', '@mapbox/polyline', 'mapbox-gl',
+      'react-mapbox-gl']
   },
   module: {
     rules: [
@@ -33,8 +34,11 @@ module.exports = {
   },
   resolve: {
     alias: {
-      store: resolve(__dirname, 'client', 'store')
+      store: resolve(__dirname, 'client', 'store'),
     }
+  },
+  node: {
+    fs: "empty"
   },
   plugins: [
     new webpack.ProvidePlugin({

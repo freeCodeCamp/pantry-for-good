@@ -1,7 +1,6 @@
 import Router from 'express-promise-router'
 
 import customerController from '../controllers/customer'
-import foodController from '../controllers/food'
 import * as userController from '../controllers/users'
 
 export default () => {
@@ -12,7 +11,6 @@ export default () => {
 
   // Customer routes for user
   customerRouter.route('/customer')
-    .get(requiresLogin, foodController.list)
     .post(requiresLogin, customerController.create)
 
   customerRouter.route('/customer/:customerId')
@@ -27,9 +25,6 @@ export default () => {
     .get(customerController.read)
     .put(customerController.update)
     .delete(customerController.delete)
-
-  customerRouter.route('/admin/customers/assign')
-    .post(customerController.assign)
 
   // Finish by binding the customer middleware
   customerRouter.param('customerId', customerController.customerById)

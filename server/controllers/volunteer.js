@@ -90,7 +90,7 @@ export default {
    * Volunteer authorization middleware
    */
   async hasAuthorization(req, res, next) {
-    if (req.volunteer._id !== +req.user.id) {
+    if (!req.user.roles.find(r => r === 'admin') && req.volunteer._id !== +req.user.id) {
       return res.status(403).json({
         message: 'User is not authorized'
       })

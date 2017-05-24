@@ -41,6 +41,11 @@ var VolunteerSchema = new Schema({
     type: Number,
     ref: 'Customer'
   }],
+  optimized: {
+    type: Boolean,
+    default: false
+  },
+
   generalNotes: {
     type: String,
     trim: true

@@ -12,4 +12,5 @@ node_modules/
 .settings/
 typings/
 server/config/env/secrets.js
+server/lib/addresses.csv
 dist

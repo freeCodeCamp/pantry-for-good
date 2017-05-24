@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Table} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
+import {Button, Table} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {loadVolunteers} from '../../volunteer/reducer'
@@ -46,7 +47,8 @@ class DriverAdmin extends Component {
                     <th>ID</th>
                     <th>Full Name</th>
                     <th>Delivery Status</th>
-                    <th>General Notes</th>
+                    <th># Customers</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -58,7 +60,15 @@ class DriverAdmin extends Component {
                         <span className={labelClass(driver.deliveryStatus)}>{driver.deliveryStatus}
                         </span>
                       </td>
-                      <td><span>{driver.generalNotes}</span></td>
+                      <td><span>{driver.customers.length}</span></td>
+                      <td>
+                        <Link
+                          to={`/drivers/${driver.id}`}
+                          className="btn btn-xs btn-primary"
+                        >
+                          Route
+                        </Link>
+                      </td>
                     </tr>
                   )}
                   {!drivers &&
