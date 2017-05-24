@@ -2,13 +2,11 @@
 
 We welcome pull requests from Free Code Camp campers (our students) and seasoned JavaScript developers alike! Follow these steps to contribute:
 
-1. Find an issue that needs assistance by searching for the [Help Wanted](https://github.com/FreeCodeCamp/food-bank-app/labels/help%20wanted) tag.
+1. Find an issue that needs assistance by searching for the [Help Wanted](https://github.com/jspaine/food-bank-app/labels/help%20wanted) tag.
 
 2. Let us know you are working on it by posting a comment on the issue.
 
-3. Follow the [Contribution Guidelines](#contribution-guidelines) to start working on the issue.
-
-Our [wiki page](https://github.com/FreeCodeCamp/food-bank-app/wiki) has detailed information about the structure of the website.
+3. Read all the guidelines in this document before you start working on the issue.
 
 If you find a bug that is not listed as an issue, feel free to add a new issue.
 
@@ -18,9 +16,9 @@ If you find a bug that is not listed as an issue, feel free to add a new issue.
 
 - [Prerequisites](#prerequisites)
 - [Forking the Project](#forking-the-project)
+- [Setup Foodbank App](#setup-foodbank-app)
 - [Create a Branch](#create-a-branch)
 - [Setup Linting](#setup-linting)
-- [Setup Foodbank App](#setup-foodbank-app)
 - [Make Changes](#make-changes)
 - [Squash Your Commits](#squash-your-commits)
 - [Creating a Pull Request](#creating-a-pull-request)
@@ -33,11 +31,11 @@ If you find a bug that is not listed as an issue, feel free to add a new issue.
 | ------------------------------------------- | ------- |
 | [MongoDB](http://www.mongodb.org/downloads) | `~ ^3`  |
 | [Node.js](http://nodejs.org)                | `~ ^7`  |
-| npm (comes with Node)                       | `~ ^3`  |
+| [Git](https://git-scm.com/)
 
 You'll need to have the latest verison of node.js installed. Either use your OS's package manager or follow the installation instructions on the [official website](http://nodejs.org).
 
-This app uses MongoDB as its database engine. Follow [the instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-linux/) to install it locally.
+This app uses MongoDB as its database engine. Follow [the instructions](https://docs.mongodb.com/manual/installation/#mongodb-community-edition) to install it locally.
 
 If Node or MongoDB is already installed in your machine, run the following commands to validate the versions:
 
@@ -50,38 +48,30 @@ If your versions are lower than the prerequisite versions, you should update.
 
 ### Forking the Project
 
-#### Setting Up Your System
-
-1. Install [Git](https://git-scm.com/) or your favorite Git client.
-2. (Optional) [Setup an SSH Key](https://help.github.com/articles/generating-an-ssh-key/) for GitHub.
-3. Create a parent projects directory on your system.
-
-#### Forking Foodbank App
-
-1. Go to the top level Foodbank App repository: <https://github.com/FreeCodeCamp/food-bank-app>
+1. Go to the top level Foodbank App repository page on github: [https://github.com/jspaine/food-bank-app](https://github.com/jspaine/food-bank-app)
 2. Click the "Fork" Button in the upper right hand corner of the interface ([More Details Here](https://help.github.com/articles/fork-a-repo/))
 3. After the repository has been forked, you will be taken to your copy of the Foodbank App repo at `yourUsername/food-bank-app`
 
 #### Cloning Your Fork
 
-1. Open a Terminal / Command Line / Bash Shell in your projects directory (_i.e.: `/yourprojectdirectory/`_)
+1. Open a Terminal / Command Line / Bash Shell
 2. Clone your fork of Foodbank App
 
 ```shell
-$ git clone https://github.com/yourUsername/food-bank-app.git
+git clone https://github.com/yourUsername/food-bank-app.git
 ```
 
 ##### (make sure to replace `yourUsername` with your GitHub Username)
 
-This will download the entire Foodbank App repo to your projects directory.
+This will create a directory `food-bank-app` and download the entire Foodbank App repo to it.
 
 #### Setup Your Upstream
 
-1. Change directory to the new Foodbank App directory (`cd foodbank-app`)
-2. Add a remote to the official Foodbank App repo:
+1. Change directory to the new Foodbank App directory (`cd food-bank-app`)
+2. Use the git command to add a remote to the official Foodbank App repo:
 
 ```shell
-$ git remote add upstream https://github.com/FreeCodeCamp/food-bank-app.git
+git remote add upstream https://github.com/jspaine/food-bank-app.git
 ```
 
 Congratulations, you now have a local copy of the foodbank app repo!
@@ -124,9 +114,14 @@ Do this prior to every time you create a branch for a pull request:
 
   > This will overwrite the staging branch of your fork.
 
+### Setup Foodbank App
+
+Please follow the steps in the [README.md](README.md) document.
+
+
 ### Create a Branch
 
-Before you start working, you will need to create a separate branch specific to the issue / feature you're working on. You will push your work to this branch.
+Before you start working, you will need to create a separate git branch specific to the issue / feature you're working on. You will push your work to this branch. Do not work off the staging branch.
 
 #### Naming Your Branch
 
@@ -134,7 +129,7 @@ Name the branch something like `fix/xxx` or `feature/xxx` where `xxx` is a short
 
 #### Adding Your Branch
 
-To create a branch on your local machine (and switch to this branch):
+To create a git branch on your local machine (and switch to this branch):
 
 ```shell
 $ git checkout -b [name_of_your_new_branch]
@@ -146,46 +141,23 @@ and to push to GitHub:
 $ git push origin [name_of_your_new_branch]
 ```
 
-##### If you need more help with branching, take a look at _[this](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches)_.
+##### If you need more help with branching, take a look at _[this](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches).
+
 
 ### Setup Linting
 
-You should have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html), and it will highlight anything doesn't conform to our Foodbank App's coding style conventions. (you can find a summary of those rules [here](https://github.com/FreeCodeCamp/food-bank-app/blob/staging/.eslintrc)).
+We reccomend you have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html). It will highlight anything that doesn't conform to our Foodbank App's coding style conventions. (you can find a summary of those rules [here](https://github.com/jspaine/food-bank-app/blob/staging/.eslintrc)). 
+
+You can also check for linting errors by running the command
+```shell
+npm run lint
+```
 
 > Please do not ignore any linting errors, as they are meant to **help** you and to ensure a clean and simple code base.
 
-### Setup Foodbank App
-
-Move to the `food-bank-app` subdirectory and type `npm install`. This installs all of Foodbank Template's dependencies.
-
-Foodbank Template uses the Grunt taskrunner to automate build processes. Install it globally with `npm install -g grunt-cli`
-
-Now use a text editor to create a file named `.env`. Foodbank Template loads this file at startup to read your configuration settings. Add the following line
-
-`NODE_ENV=development`
-
-to indicate that you are running the app in development mode.
-
-By default, MongoDB it attaches to `mongodb://localhost:27017/fb-dev`. If you want to use a differently named database, or connect to a remote MongoDB instance, add the address to the `MONGODB_URI` variable in your `.env` file.
-
-Once MongoDB is set up, you should create an admin account. Edit the admin-config.json file to create a custom user, then run
-
-`$ grunt create-admin-user`
-
-to add him to your database.
-
-Finally, type `npm start` to start the application. If all goes well, it will be available at `http://localhost:3000`.
 
 ### Make Changes
-This bit is up to you!
-
-#### How to find the code in the Foodbank App codebase to fix/edit?
-
-The best way to find out any code you wish to change/add or remove is using
-the GitHub search bar at the top of the repository page. For example, you could
-search for a challenge name and the results will display all the files along
-with line numbers. Then you can proceed to the files and verify this is the area
-that you were looking forward to edit.
+This bit is up to you!  After you make changes be sure to fix any lint warnings or errors before submitting a pull request.
 
 ### Squash Your Commits
 When you make a pull request, all of your changes need to be in one commit.
@@ -239,9 +211,9 @@ nothing to commit, working directory clean
 
 7.  Squash your commits, if there are more than one.
 
-8.  Push your commits to your GitHub Fork: `git push -u origin branch/name-here`
+8.  Push your commits to your GitHub Fork: `git push -u origin your-branch-name`
 
-9.  Go to [Submitting a Pull Request](#submitting-a-pull-request)
+9.  Submit a Pull Request
 
 ### Submitting a Pull Request
 
