@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Table} from 'react-bootstrap'
-import {utc} from 'moment'
 import 'moment-recur'
 
 import {selectors} from '../../../store'
@@ -10,8 +9,6 @@ import {deliver} from '../../food/packing-reducer'
 import {loadVolunteer, saveVolunteer} from '../../volunteer/reducer'
 
 import Page from '../../../components/page/PageBody'
-
-const beginWeek = utc().startOf('isoWeek') // Store the date of this week's Monday
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -104,6 +101,7 @@ class DriverUser extends Component {
 
   render() {
     const {customers, driver, loading} = this.props
+    // eslint-disable-next-line no-unused-vars
     const {selectedCustomers, generalNotes} = this.state
     return (
       <Page heading="Route Assignment">

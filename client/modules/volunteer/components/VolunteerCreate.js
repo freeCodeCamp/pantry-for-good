@@ -2,8 +2,6 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
-import {utc} from 'moment'
-import {set} from 'lodash'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
@@ -15,7 +13,6 @@ import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import AssistanceInfo from '../../../components/AssistanceInfo'
 import {Page, PageBody, PageHeader} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
-import VolunteerWaiver from './VolunteerWaiver'
 
 const FORM_NAME = 'volunteerForm'
 

@@ -15,8 +15,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DonationCreate = ({
-  savingDonations,
-  saveDonationsError,
+  // savingDonations,
+  // saveDonationsError,
   saveDonation,
   show,
   close,
