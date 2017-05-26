@@ -5,13 +5,11 @@ heroku_5svv90mx
 npm-debug.log
 node_modules/
 .vscode
-public/lib
-public/dist
-app/tests/coverage/
-.bower-*/
 .idea/
 .c9/
 .env
 *.swp
 .settings/
 typings/
+server/config/env/secrets.js
+dist

@@ -1,9 +1,12 @@
 {
   "name": "FreeCodeCamp.com Food Bank App",
   "description": "A customizable food bank webapp",
-  "repository": "https://www.github.com/FreeCodeCamp/food-bank-app",
-  "addons": ["mongolab", "sendgrid"],
-  "scripts": {
-    "postdeploy": "node createAdminUser.js"
+  "repository": "https://github.com/jspaine/food-bank-app/tree/staging",
+  "addons": ["mongolab"],
+  "env": {
+    "SECRET": {
+      "description": "Session secret",
+      "generator": "secret"
+    }
   }
 }
