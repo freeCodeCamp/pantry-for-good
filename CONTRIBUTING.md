@@ -74,7 +74,7 @@ This will create a directory `Food-for-Good` and download the entire Food-for-Go
 git remote add upstream https://github.com/freeCodeCamp/Food-for-Good.git
 ```
 
-Congratulations, you now have a local copy of the foodbank app repo!
+Congratulations, you now have a local copy of the Food for Good repo!
 
 #### Maintaining Your Fork
 
@@ -141,7 +141,7 @@ and to push to GitHub:
 $ git push origin [name_of_your_new_branch]
 ```
 
-##### If you need more help with branching, take a look at _[this](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches).
+##### If you need more help with branching, take a look at [this](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches).
 
 
 ### Setup Linting
@@ -220,7 +220,7 @@ nothing to commit, working directory clean
 1.  Once the edits have been committed, you will be prompted to create a pull
     request on your fork's GitHub Page.
 
-2.  Submit a pull request from your branch to Food-for-Good's `staging` branch.
+2.  Submit a pull request from your branch to FreeCodeCamp's Food-for-Good `staging` branch.
 
 3.  The title (also called the subject) of your PR should be descriptive of your
     changes and succinctly indicates what is being fixed.

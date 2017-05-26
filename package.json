@@ -1,12 +1,12 @@
 {
-  "name": "foodbank-template",
+  "name": "food-for-good",
   "description": "A customizable food bank webapp",
   "version": "0.0.1",
   "author": "Peter Deal and Marco Früh",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:FreeCodeCamp/food-bank-app.git"
+    "url": "git@github.com:FreeCodeCamp/Food-for-Good.git"
   },
   "scripts": {
     "heroku-postbuild": "gulp build",

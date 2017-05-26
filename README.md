@@ -10,8 +10,8 @@ The button creates an admin account with username `admin` and password `password
 ### Quick Start Steps:
 1. Install [Node.js](http://nodejs.org) and [MongoDB](https://docs.mongodb.com/manual/installation/#mongodb-community-edition)
 2. Start MongoDB
-3. `git clone git@github.com:jspaine/food-bank-app.git`
-4. `cd food-bank-app`
+3. `git clone https://github.com/freeCodeCamp/Food-for-Good.git`
+4. `cd Food-for-Good`
 5. `npm install`
 6. `npm run dev`
 7. Open <http://localhost:8080> in your web browser
