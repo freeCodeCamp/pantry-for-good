@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    "transform-es2015-modules-commonjs",
+    "transform-async-to-generator",
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["babel-plugin-rewire"]
+    }
+  }
+}

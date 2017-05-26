@@ -1,0 +1,59 @@
+.questionnaireInput {
+  width: 100%;
+  padding: 10px;
+}
+
+@media (min-width:992px) {
+  .questionnaireInput {
+    width: 50%;
+  }
+}
+
+@media (min-width:1200px) {
+  .questionnaireInput {
+    width: 33%;
+  }
+}
+
+.questionnaireWidget {
+  width: 100%;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.foodItemContainer {
+  width: 50%;
+  margin: 0 0 0 10px;
+}
+
+.foodCategoryContainer {
+  width: 50%;
+  margin: 0 10px 0 0;
+}
+
+@media (min-width:992px) {
+  .foodItemContainer {
+    width: 67%;
+  }
+
+  .foodCategoryContainer {
+    width: 33%;
+  }
+}
+
+button.foodItem {
+  display: flex;
+  width: 100%;
+}
+
+@media (min-width:992px) {
+  button.foodItem {
+    width: 50%;
+  }
+}
+
+@media (min-width:1200px) {
+  button.foodItem {
+    width: 33%;
+  }
+}

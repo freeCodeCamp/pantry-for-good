@@ -1,0 +1,8 @@
+.googleMap{
+	height: calc(100vh - 130px);
+}
+
+.assignmentBox {
+	/*height: calc(100vh - 130px);*/
+	/*overflow-y: overlay;*/
+}
