@@ -1,11 +1,26 @@
 import sanitizeHtml from 'sanitize-html'
 import {extend} from 'lodash'
-import {writeFileSync} from 'fs'
-import {last} from 'lodash'
+import {writeFileSync, mkdirSync} from 'fs'
+import del from 'del'
 
 import Page from '../models/page'
 
 const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img'])
+const allowedAttributes = {
+  img: ['src', 'width', 'style'],
+  a: ['href']
+}
+
+const clientPath = '/media/pages'
+const serverPath = process.env.NODE_ENV === 'production' ?
+      'dist/client/media/pages' :
+      'assets/media/pages'
+
+try {
+  mkdirSync(serverPath)
+} catch (err) {
+  if (err.code !== 'EEXIST') throw err
+}
 
 export default {
   async list(req, res) {
@@ -14,39 +29,25 @@ export default {
   },
 
   async update(req, res) {
-    const {body} = req.body
+    const {body, identifier} = req.body
+    let keepImages = []
+
     const sanitizedBody = sanitizeHtml(body, {
       allowedTags,
-      allowedAttributes: {
-        img: ['src'],
-        a: ['href']
-      },
+      allowedAttributes,
       transformTags: {
-        img: function(tagName, attribs, x) {
-          console.log('tagName, attribs, x', tagName, attribs, x)
-          const filename = new Date().getTime()
-          const parts = attribs.src.split(';')
-          const ext = last(parts[0].split('/'))
-          const data = last(parts).replace('base64,', '')
-          writeFileSync(`assets/media/${filename}.${ext}`, data, 'base64')
-
-          return {
-            tagName,
-            attribs: {
-              src: `/media/${filename}.${ext}`
-            }
-          }
-        }
-      },
-      allowedSchemes: ['data', 'http', 'https'],
-      parser: {
-        lowerCaseTags: false
+        img: processImageTag(identifier, keepImages)
       }
     })
 
     const page = extend(req.page, {body: sanitizedBody})
-
     const updatedPage = await page.save()
+
+    // delete stale images
+    await del([
+      `${serverPath}/${identifier}-*`,
+      ...keepImages.map(img => `!${img}`)
+    ])
 
     res.json(updatedPage)
   },
@@ -64,4 +65,44 @@ export default {
     req.page = page
     next()
   }
+}
+
+/**
+ * create a sanitizeHtml transform function to save image data and update 'src'
+ * attribute to the path of the saved image
+ *
+ * @param {string} identifier page identifier
+ * @param {array} keepImages
+ * @returns {object}
+ */
+function processImageTag(identifier, keepImages) {
+  return (tagName, attribs) => {
+    const src = attribs.src.startsWith(clientPath) ?
+      attribs.src :
+      saveImage(identifier, attribs.src)
+
+    keepImages.push(src.replace(clientPath, serverPath))
+
+    return {
+      tagName,
+      attribs: {...attribs, src}
+    }
+  }
+}
+
+/**
+ * save a base64 image for a given page identifier
+ *
+ * @param {string} identifier
+ * @param {string} src
+ * @returns {string} updated src attribute
+ */
+function saveImage(identifier, src) {
+  // eslint-disable-next-line no-unused-vars
+  const [_, ext, data] = src.match(/^data:image\/(.+);base64(.+)/)
+  const filename = `${identifier}-${new Date().getTime()}.${ext}`
+
+  writeFileSync(`${serverPath}/${filename}`, data, 'base64')
+
+  return `${clientPath}/${filename}`
 }

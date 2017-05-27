@@ -15,7 +15,7 @@ const PageSelector = ({selectedPage, handlePageSelect, pages}) =>
     onSelect={handlePageSelect}
   >
     {pages && pages.map(page =>
-      <NavItem
+      page && <NavItem
         key={page.identifier}
         eventKey={page.identifier}
         title={page.title}

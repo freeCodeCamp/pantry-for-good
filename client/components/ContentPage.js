@@ -8,11 +8,12 @@ import {loadPage} from '../modules/page/reducer'
 
 const htmlToReactParser = new Parser()
 const processNodeDefinitions = new ProcessNodeDefinitions(React)
+
 const processingInstructions = [{
   // convert internal links to Link components
-  shouldProcessNode: node => node.name && node.name === 'a' && node.attribs.href.startsWith('/'),
-  processNode: (node, children) => {
-    console.log('node, children', node, children)
+  shouldProcessNode: node => node.name && node.name === 'a' &&
+    node.attribs.href.startsWith('/'),
+  processNode: function generateLink(node, children) {
     return React.createElement(Link, {to: node.attribs.href}, children)
   }
 }, {
@@ -30,22 +31,27 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class ContentPage extends Component {
+  constructor(props) {
+    super(props)
+    this.pageType = props.url.slice(1) || 'home'
+  }
+
   componentWillMount() {
-    const pageType = this.props.url.slice(1) || 'home'
-    this.props.loadPage(pageType)
+    this.props.loadPage(this.pageType)
   }
 
   render() {
-    const pageType = this.props.url.slice(1) || 'home'
-    const page = this.props.getPage(pageType)
-
+    const page = this.props.getPage(this.pageType)
     if (!page) return null
-    return <div
-      className="text-left"
-      style={{margin: '10px'}}
-    >
-      {htmlToReactParser.parseWithInstructions(page.body, () => true, processingInstructions)}
-    </div>
+
+    return (
+      <div
+        className="text-left"
+        style={{margin: '10px'}}
+      >
+        {htmlToReactParser.parseWithInstructions(page.body, () => true, processingInstructions)}
+      </div>
+    )
   }
 }
 

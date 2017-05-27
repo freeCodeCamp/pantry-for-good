@@ -1,6 +1,6 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
-import {get} from 'lodash'
+import {get, sortBy} from 'lodash'
 
 import {CALL_API} from '../../store/middleware/api'
 import {page as pageSchema, arrayOfPages} from '../../store/schemas'
@@ -43,8 +43,18 @@ export const createSelectors = path => {
     getAll: createSelector(
       state => get(state, path).ids,
       getEntities,
-      (pages, entities) =>
-        denormalize({pages}, {pages: arrayOfPages}, entities).pages
+      (pages, entities) => {
+        const allPages = denormalize({pages}, {pages: arrayOfPages}, entities).pages
+        if (!allPages.length) return
+
+        const homePage = allPages.find(page => page.identifier === 'home')
+        const clientPages = allPages.filter(page => page.identifier !== 'home')
+
+        return [
+          homePage,
+          ...sortBy(clientPages, 'identifier')
+        ]
+      }
     ),
     getOne: state => identifier => createSelector(
       getEntities,

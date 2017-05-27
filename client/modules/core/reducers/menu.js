@@ -46,10 +46,10 @@ function getAdminMenuItems() {
       link: 'customers/list',
     }, {
       title: 'Volunteer Database',
-      link: 'volunteers',
+      link: 'volunteers/list',
     }, {
       title: 'Donor Database and Tax Receipts',
-      link: 'donors',
+      link: 'donors/list',
     }, {
       title: 'Food Schedule',
       link: 'foods/schedule',

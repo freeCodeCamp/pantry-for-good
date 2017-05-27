@@ -25,7 +25,7 @@ const FoodItem = ({item, selected, handleItemsChange}) =>
     <Checkbox
       style={{margin: '0 0 0 -20px'}}
       checked={selected}
-      onClick={ev => ev.stopPropagation()}
+      onClick={handleItemsChange}
       readOnly
     >
       <span></span>

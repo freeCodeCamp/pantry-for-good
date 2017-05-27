@@ -10,7 +10,8 @@ import PageEditor from './PageEditor'
 
 const mapStateToProps = state => ({
   pages: selectors.page.getAll(state),
-  loading: selectors.page.loading(state) || selectors.page.saving(state),
+  loading: selectors.page.loading(state),
+  saving: selectors.page.saving(state),
   error: selectors.page.loadError(state) || selectors.page.saveError(state)
 })
 
@@ -39,7 +40,7 @@ class EditPages extends Component {
   handlePageSelect = identifier => this.setState({selectedPage: identifier})
 
   render() {
-    const {pages, loading, error} = this.props
+    const {loading, saving, error} = this.props
 
     return (
       <Page>
@@ -47,19 +48,17 @@ class EditPages extends Component {
         <PageBody>
           <Box>
             <BoxBody
-              loading={loading}
+              loading={loading || saving}
               error={error}
             >
               <PageSelector
                 selectedPage={this.state.selectedPage}
                 handlePageSelect={this.handlePageSelect}
               />
-              {pages &&
                 <PageEditor
                   selectedPage={this.state.selectedPage}
                   handlePageSave={this.props.savePage}
                 />
-              }
             </BoxBody>
           </Box>
         </PageBody>

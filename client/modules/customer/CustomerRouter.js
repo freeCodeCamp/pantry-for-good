@@ -19,7 +19,7 @@ const Owns = ownerOrAdmin('customerId')
 
 const CustomerRouter = ({match}) =>
   <SwitchWithNotFound>
-    <Route path={match.url} exact component={Home} />
+    <Route path={match.url} exact component={IsCustomer(Home)} />
     <Route path={`${match.url}/list`} exact component={IsAdmin(CustomerList)} />
     <Route
       path={`${match.url}/create/success`}

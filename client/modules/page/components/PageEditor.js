@@ -3,14 +3,14 @@ import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 import ReactQuill, {Quill} from 'react-quill'
 import {ImageDrop} from 'quill-image-drop-module'
-// https://github.com/kensnyder/quill-image-resize-module/issues/7
-// import {ImageResize} from 'quill-image-resize-module'
+import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
 import selectors from '../../../store/selectors'
+
+Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)
-// Quill.register('modules/imageResize', ImageResize)
 
 const quillModules = {
   toolbar: [
@@ -21,7 +21,7 @@ const quillModules = {
     ['clean']
   ],
   imageDrop: true,
-  // imageResize: {}
+  imageResize: {}
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -33,13 +33,6 @@ class PageEditor extends React.Component {
     super(props)
     this.state = {page: null}
   }
-
-  // componentWillMount() {
-  //   const page = this.props.pages.find(page => page.identifier === this.props.selectedPage)
-  //   this.setState({
-  //     text: page && page.body
-  //   })
-  // }
 
   componentWillReceiveProps(nextProps) {
     const {page} = nextProps
@@ -72,6 +65,7 @@ class PageEditor extends React.Component {
         <div className="text-right">
           <Button
             bsStyle="success"
+            disabled={!page}
             onClick={this.props.handlePageSave(page)}
             style={{margin: '10px 0'}}
           >
