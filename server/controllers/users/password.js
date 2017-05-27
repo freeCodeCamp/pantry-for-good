@@ -9,7 +9,7 @@ import errorHandler from '../errors'
 /**
  * Forgot for reset password (forgot POST)
  */
-exports.forgot = function(req, res, next) {
+exports.forgot = function(req, res) {
   if (!sendEmail) {
     return res.status(500).json({message: "This site does not have email capability at this time. Please contact the site owner for assistance."})
   }
@@ -95,7 +95,7 @@ exports.forgot = function(req, res, next) {
 /**
  * Reset password POST from email token
  */
-exports.reset = function (req, res, next) {
+exports.reset = function (req, res) {
 
   User.findOne({
     resetPasswordToken: req.params.token,

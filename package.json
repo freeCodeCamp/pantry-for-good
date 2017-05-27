@@ -13,7 +13,7 @@
     "dev": "gulp watch",
     "build": "gulp build",
     "clean": "rimraf dist",
-    "start": "[ -d dist ] || npm run build && cd dist && NODE_ENV=production node server/server.js",
+    "start": "node dist/server/server.js",
     "lint": "npm run lint:server; npm run lint:client",
     "lint:server": "eslint server",
     "lint:client": "eslint client",

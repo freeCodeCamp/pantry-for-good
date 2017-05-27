@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
-import {Button, Col, Row} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 
 import {toForm, fromForm} from '../../../lib/fields-adapter'
 import selectors from '../../../store/selectors'

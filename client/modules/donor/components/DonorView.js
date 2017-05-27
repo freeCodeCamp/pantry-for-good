@@ -92,6 +92,7 @@ class DonorView extends Component {
   }
 
   render() {
+    // eslint-disable-next-line no-unused-vars
     const {donorModel, donationModel, error} = this.state
     if (!donorModel) return null
     return (

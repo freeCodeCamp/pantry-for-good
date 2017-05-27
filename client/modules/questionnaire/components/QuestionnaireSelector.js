@@ -10,10 +10,6 @@ const mapStateToProps = state => ({
   selected: selectors.qEditor.getEditingQuestionnaire(state)
 })
 
-const mapDispatchToProps = dispatch => ({
-
-})
-
 const QuestionnaireSelector = ({
   questionnaires,
   selected,
@@ -31,4 +27,4 @@ const QuestionnaireSelector = ({
     )}
   </Nav>
 
-export default connect(mapStateToProps, mapDispatchToProps)(QuestionnaireSelector)
+export default connect(mapStateToProps)(QuestionnaireSelector)

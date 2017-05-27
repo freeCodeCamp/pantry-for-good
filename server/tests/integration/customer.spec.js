@@ -209,9 +209,9 @@ describe('Customer Api', function() {
           driverId: savedVolunteer._id
         })
         .expect(res => {
-          expect(res.body).to.be.an.array
-          expect(res.body).to.have.length(1)
-          expect(res.body[0]).to.have.property('assignedTo', savedVolunteer._id)
+          expect(res.body.customers).to.be.an('array')
+          expect(res.body.customers).to.have.length(1)
+          expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
         .expect(200)
     })
