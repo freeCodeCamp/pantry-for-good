@@ -10,6 +10,7 @@ import donor from '../modules/donor/reducers/donor'
 import delivery from '../modules/driver/reducers'
 import entities from './entities'
 import food from '../modules/food/reducers'
+import page from '../modules/page/reducer'
 import media from '../modules/settings/reducers/media'
 import questionnaire from '../modules/questionnaire/reducers/api'
 import questionnaireEditor from '../modules/questionnaire/reducers/editor'
@@ -27,6 +28,7 @@ export default combineReducers({
   food,
   form,
   media,
+  page,
   questionnaire,
   questionnaireEditor,
   router,

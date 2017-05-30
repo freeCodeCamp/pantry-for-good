@@ -5,6 +5,7 @@ import {push} from 'react-router-redux'
 
 import selectors from '../../../store/selectors'
 import {signIn, clearFlags} from '../reducer'
+import userClientRole from '../../../lib/user-client-role'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
@@ -25,7 +26,8 @@ class SignIn extends React.Component {
 
   redirectIfAlreadySignedIn(props) {
     if (props.user && props.user._id) {
-      props.push('/')
+      const role = userClientRole(props.user)
+      props.push(role ? `/${role}s` : '/')
     }
   }
 

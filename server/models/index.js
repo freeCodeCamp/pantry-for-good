@@ -3,6 +3,7 @@ export {default as Donation} from './donation'
 export {default as Donor} from './donor'
 export {default as Food} from './food'
 export {default as Media} from './media'
+export {default as Page} from './page'
 export {
   Field as Field,
   Section as Section,

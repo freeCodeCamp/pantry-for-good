@@ -43,13 +43,13 @@ function getAdminMenuItems() {
   return [
     {
       title: 'Client Database',
-      link: 'customers',
+      link: 'customers/list',
     }, {
       title: 'Volunteer Database',
-      link: 'volunteers',
+      link: 'volunteers/list',
     }, {
       title: 'Donor Database and Tax Receipts',
-      link: 'donors',
+      link: 'donors/list',
     }, {
       title: 'Food Schedule',
       link: 'foods/schedule',
@@ -61,7 +61,7 @@ function getAdminMenuItems() {
       link: 'foods/inventory',
     }, {
       title: 'Drivers and Route Assignment',
-      link: 'drivers',
+      // link: 'drivers',
       menuItemType: 'treeview',
       items: [
         {
@@ -75,6 +75,9 @@ function getAdminMenuItems() {
     }, {
       title: 'App Settings',
       link: 'settings',
+    }, {
+      title: 'Page Editor',
+      link: 'pages'
     }, {
       title: 'Application Forms',
       link: 'questionnaires',

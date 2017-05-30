@@ -10,13 +10,19 @@ module.exports = {
       'react-dom', 'react-redux', 'react-router-dom', 'react-router-redux',
       'react-hot-loader', 'react-bootstrap', 'react-bootstrap-autosuggest',
       'react-bootstrap-table', 'jquery', 'redux-form', 'reselect', 'recompose',
-      'react-dnd', 'react-dnd-html5-backend']
+      'react-dnd', 'react-dnd-html5-backend', 'react-quill', 'react-google-maps',
+      'quill-image-drop-module', 'quill-image-resize-module']
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        include: [
+          resolve(__dirname, 'client'),
+          resolve(__dirname, 'common'),
+          resolve(__dirname, 'node_modules', 'quill-image-drop-module'),
+          resolve(__dirname, 'node_modules', 'quill-image-resize-module')
+        ],
         loader: 'babel-loader',
         query: {
           presets: [['es2015', {modules: false}], 'stage-0', 'react'],
@@ -40,7 +46,8 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-      'window.jQuery': 'jquery'
+      'window.jQuery': 'jquery',
+      'window.Quill': 'quill'
     }),
     new HtmlWebpackPlugin({
       template: resolve(__dirname, 'client', 'index.html'),

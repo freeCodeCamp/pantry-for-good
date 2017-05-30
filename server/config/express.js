@@ -63,7 +63,8 @@ export default function() {
   app.use(bodyParser.urlencoded({
     extended: true
   }))
-  app.use(bodyParser.json())
+  app.use('/api/admin/pages', bodyParser.json({limit: '5mb'}))
+  app.use(bodyParser.json({}))
   app.use(methodOverride())
 
   // CookieParser should be above session

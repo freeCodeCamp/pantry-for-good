@@ -2,20 +2,25 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
+import selectors from '../../../store/selectors'
+import userClientRole from '../../../lib/user-client-role'
 import Navbar from './navbar/Navbar'
 
 const mapStateToProps = state => ({
-  auth: state.auth,
-  settings: state.settings.data,
-  fetchingSettings: state.settings.fetching,
-  media: state.media.data,
-  fetchingMedia: state.media.fetching
+  user: selectors.user.getUser(state),
+  settings: selectors.settings.getSettings(state)
 })
 
-const Header = ({settings, auth}) =>
-  <div className="main-header">
-    <Link to="/" className="logo">{settings && settings.organization}</Link>
-    <Navbar user={auth.user} />
-  </div>
+const Header = ({settings, user}) => {
+  const role = userClientRole(user)
+  const homeUrl = role ? `/${role}s` : '/'
+
+  return (
+    <div className="main-header">
+      <Link to={homeUrl} className="logo">{settings && settings.organization}</Link>
+      <Navbar user={user} />
+    </div>
+  )
+}
 
 export default connect(mapStateToProps)(Header)
