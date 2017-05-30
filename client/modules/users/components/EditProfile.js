@@ -15,7 +15,6 @@ class EditProfile extends React.Component {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,
       email: this.props.user.email,
-      username: this.props.user.username
     }
   }
 
@@ -34,7 +33,6 @@ class EditProfile extends React.Component {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
-      username: this.state.username,
     })
   }
 
@@ -68,13 +66,6 @@ class EditProfile extends React.Component {
                   onChange={this.onFieldChange}
                   value={this.state.email}
                   placeholder="Email"
-                />
-                <FieldGroup
-                  name="userName"
-                  label="User Name"
-                  onChange={this.onFieldChange}
-                  value={this.state.userName}
-                  placeholder="User Name"
                 />
 
                 <div className="text-center form-group">

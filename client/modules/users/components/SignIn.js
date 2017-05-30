@@ -15,7 +15,7 @@ class SignIn extends React.Component {
     super(props)
     this.redirectIfAlreadySignedIn(this.props)
     this.state = {
-      username: "",
+      email: "",
       password: ""
     }
   }
@@ -38,7 +38,7 @@ class SignIn extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
-    this.props.signIn(this.state.username, this.state.password)
+    this.props.signIn(this.state.email, this.state.password)
     this.setState({password: ""})
   }
 
@@ -56,9 +56,9 @@ class SignIn extends React.Component {
         error={this.props.fetchUserError}
       >
         <FieldGroup
-          name="username"
-          placeholder="Username"
-          value={this.state.username}
+          name="email"
+          placeholder="Email"
+          value={this.state.email}
           onChange={this.onFieldChange}
           icon="user"
         />
@@ -72,7 +72,7 @@ class SignIn extends React.Component {
         />
         <div className="text-center form-group">
           <button className="btn btn-primary btn-flat" onClick={this.onSubmit}
-            disabled={!this.state.username || !this.state.password}>Sign in
+            disabled={!this.state.email || !this.state.password}>Sign in
           </button>&nbsp; or&nbsp;
           <Link to="/users/signup">Sign up</Link>
           <br />
@@ -102,8 +102,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  signIn: (username, password) => {
-    dispatch(signIn({ username, password }))
+  signIn: (email, password) => {
+    dispatch(signIn({ email, password }))
   },
   clearFlags: () => dispatch(clearFlags()),
   push: location => dispatch(push(location))

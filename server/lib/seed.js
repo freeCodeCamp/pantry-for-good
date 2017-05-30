@@ -68,7 +68,19 @@ async function seedDb(env) {
 
 async function seedAdmin() {
   const adminCount = await User.count({accountType: 'admin'})
-  if (!adminCount) await User.create(createTestUser('Johnny Admin', 'admin'))
+  if (!adminCount) {
+    const adminUser = {
+      firstName: 'admin',
+      lastName: 'user',
+      displayName: 'admin',
+      accountType: ['admin'],
+      roles: ['admin'],
+      email: `admin@example.com`,
+      password: 'password',
+      provider: 'local'
+    }
+    await User.create(adminUser)
+  }
 }
 
 async function seedUsers() {
@@ -126,7 +138,6 @@ function createTestUser(name, type = null) {
   if (names.length !== 2) throw new Error('name should be "firstname lastname"')
   type = type || names[0]
   return {
-    username: type === 'admin' ? 'admin' : names.join(''),
     firstName: names[0],
     lastName: names[1],
     displayName: name,

@@ -19,7 +19,6 @@ export default function() {
 
       if (!user) {
         const newUser = await User.create({
-          username: profile.displayName,
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.email,

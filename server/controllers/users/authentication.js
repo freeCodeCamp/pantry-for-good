@@ -17,12 +17,10 @@ exports.signup = async function(req, res) {
   try {
     await user.save()
   } catch (error) {
-    // Check for unique key violation from either username or email
+    // Check for unique key violation from email
     if (error.code === 11000) {
       let errors
-      if (error.errmsg.match('username')) {
-        errors = {username: {message: 'Username already taken'}}
-      } else if (error.errmsg.match('email')) {
+      if (error.errmsg.match('email')) {
         errors = {email: {message: 'Email address already has an account'}}
       } else {
         errors = {message: 'A database unique key error occured'}
