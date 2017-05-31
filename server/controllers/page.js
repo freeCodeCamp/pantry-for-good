@@ -5,10 +5,14 @@ import del from 'del'
 
 import Page from '../models/page'
 
-const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img'])
+const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img', 'span'])
 const allowedAttributes = {
   img: ['src', 'width', 'style'],
+  span: ['style'],
   a: ['href']
+}
+const allowedClasses = {
+  p: ['ql-align-center', 'ql-align-right', 'ql-align-justify']
 }
 
 const clientPath = '/media/pages'
@@ -35,6 +39,7 @@ export default {
     const sanitizedBody = sanitizeHtml(body, {
       allowedTags,
       allowedAttributes,
+      allowedClasses,
       transformTags: {
         img: processImageTag(identifier, keepImages)
       }
