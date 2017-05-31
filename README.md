@@ -1,8 +1,8 @@
-This repository is for the Food Bank application designed by Open Source for Good Contributors at [Free Code Camp](http://www.freecodecamp.com).
+This repository is for the Food-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com).
 
 You can test it out by deploying to [Heroku](https://www.heroku.com):
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Food-for-Good/tree/staging)
 
 The button creates an admin account with username `admin` and password `password`.
 
@@ -10,8 +10,8 @@ The button creates an admin account with username `admin` and password `password
 ### Quick Start Steps:
 1. Install [Node.js](http://nodejs.org) and [MongoDB](https://docs.mongodb.com/manual/installation/#mongodb-community-edition)
 2. Start MongoDB
-3. `git clone git@github.com:jspaine/food-bank-app.git`
-4. `cd food-bank-app`
+3. `git clone https://github.com/freeCodeCamp/Food-for-Good.git`
+4. `cd Food-for-Good`
 5. `npm install`
 6. `npm run dev`
 7. Open <http://localhost:8080> in your web browser
@@ -25,9 +25,9 @@ You'll need to have the latest verison of **Node.js** installed. Either use your
 This app uses **MongoDB** as its database engine. Follow [these instructions](https://docs.mongodb.com/manual/installation/#mongodb-community-edition) to install it locally and start the MongoDB server on your machine.
 
 Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if it is not already installed. To clone this repository to your local machine, open a command line interface and navigate to the directory where you would like to the food-bank app directory to be in. Then run
-`git clone https://github.com/FreeCodeCamp/food-bank-app.git`
+`git clone https://github.com/freeCodeCamp/Food-for-Good.git`
 
-Move to the `food-bank-app` directory and run the `npm install` command to install the application dependencies.
+Move to the `Food-for-Good` directory and run the `npm install` command to install the application dependencies.
 
 Type `npm run dev` to start the application in development mode. If all goes well, it will be available at `http://localhost:8080`.  The application is pre-populated with an administrator account with username `admin` and password `password`.
 

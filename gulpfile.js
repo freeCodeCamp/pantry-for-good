@@ -53,6 +53,10 @@ gulp.task('minify', ['build-client'], function() {
     .pipe(uglify({
       compress: {warnings: false}
     }))
+    .on('error', function (err) {
+      // eslint-disable-next-line no-console
+      console.log('uglify error:', err.toString())
+    })
     .pipe(gulp.dest('dist/client', {
       overwrite: true
     }))

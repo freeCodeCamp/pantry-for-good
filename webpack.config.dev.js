@@ -4,8 +4,6 @@ const {resolve} = require('path')
 
 const common = require('./webpack.config')
 
-const OUTPUT_PATH = resolve(__dirname, 'dist', 'assets')
-
 module.exports = merge(common, {
   entry: {
     app: [
@@ -17,7 +15,7 @@ module.exports = merge(common, {
     ]
   },
   output: {
-    path: OUTPUT_PATH,
+    path: resolve(__dirname, 'dist', 'client'),
     filename: '[name].js',
     // http://stackoverflow.com/questions/34133808/webpack-ots-parsing-error-loading-fonts/34133809#34133809
     publicPath: 'http://localhost:8080/'
@@ -53,7 +51,7 @@ module.exports = merge(common, {
         proxyTimeout: 3000
       }
     },
-    contentBase: OUTPUT_PATH,
+    contentBase: resolve(__dirname, 'assets'),
     port: 8080,
     historyApiFallback: {
       index: 'http://localhost:8080/'

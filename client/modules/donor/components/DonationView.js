@@ -16,8 +16,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DonationView = ({
-  savingDonations,
-  saveDonationsError,
+  // savingDonations,
+  // saveDonationsError,
   settings,
   sendReceipt,
   show,

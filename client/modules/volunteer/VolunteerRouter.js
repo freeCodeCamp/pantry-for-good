@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import Home from '../core/components/Home'
 import VolunteerList from './components/VolunteerList'
 import VolunteerView from './components/VolunteerView'
 import VolunteerEdit from './components/VolunteerEdit'
@@ -16,7 +17,8 @@ const Owns = ownerOrAdmin('volunteerId')
 
 const VolunteerRouter = ({match}) =>
   <SwitchWithNotFound>
-    <Route path={match.url} exact component={IsAdmin(VolunteerList)} />
+    <Route path={match.url} exact component={IsVolunteer(Home)} />
+    <Route path={`${match.url}/list`} exact component={IsAdmin(VolunteerList)} />
     <Route
       path={`${match.url}/create/success`}
       exact

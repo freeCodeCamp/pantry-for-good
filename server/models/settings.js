@@ -9,18 +9,6 @@ const SettingsSchema = new Schema({
     type: String,
     trim: true
   },
-  mission: {
-    type: String,
-    trim: true
-  },
-  instructions: {
-    type: String,
-    trim: true
-  },
-  thanks: {
-    type: String,
-    trim: true
-  },
   url: {
     type: String,
     trim: true

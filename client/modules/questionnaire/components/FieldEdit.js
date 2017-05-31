@@ -14,7 +14,6 @@ const mapStateToProps = state => ({
 })
 
 const FieldEdit = ({
-  onSubmit,
   handleSubmit,
   onEdit,
   onDelete,

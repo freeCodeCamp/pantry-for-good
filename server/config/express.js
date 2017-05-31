@@ -63,7 +63,8 @@ export default function() {
   app.use(bodyParser.urlencoded({
     extended: true
   }))
-  app.use(bodyParser.json())
+  app.use('/api/admin/pages', bodyParser.json({limit: '5mb'}))
+  app.use(bodyParser.json({}))
   app.use(methodOverride())
 
   // CookieParser should be above session
@@ -95,7 +96,8 @@ export default function() {
   app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
   // Setting the static folder
-  app.use(express.static(path.resolve('./client')))
+  if (process.env.NODE_ENV === 'production')
+    app.use(express.static(path.resolve('./dist/client')))
 
   // Error handler
   app.use(function(err, req, res, next) {
@@ -113,10 +115,11 @@ export default function() {
     })
   })
 
-  // let the client handle it
-  app.use(function(req, res) {
-    res.sendFile(path.resolve('./client/index.html'))
-  })
+  if (process.env.NODE_ENV === 'production') {
+    app.use(function(req, res) {
+      res.sendFile(path.resolve('./dist/client/index.html'))
+    })
+  }
 
   // Return Express server instance
   return app

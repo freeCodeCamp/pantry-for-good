@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import Home from '../core/components/Home'
 import DonorList from './components/DonorList'
 import DonorView from './components/DonorView'
 import DonorEdit from './components/DonorEdit'
@@ -18,7 +19,8 @@ const Owns = ownerOrAdmin('donorId')
 
 const DonorRouter = ({match}) =>
   <SwitchWithNotFound>
-    <Route path={match.url} exact component={IsAdmin(DonorList)} />
+    <Route path={match.url} exact component={IsDonor(Home)} />
+    <Route path={`${match.url}/list`} exact component={IsAdmin(DonorList)} />
     <Route
       path={`${match.url}/create/success`}
       exact

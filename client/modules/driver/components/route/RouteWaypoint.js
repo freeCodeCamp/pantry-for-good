@@ -45,9 +45,9 @@ const waypointTarget = {
     props.moveWaypoint(waypoint, dropIndex)
     monitor.getItem().idx = dropIndex
   },
-  drop(props) {
-    props.requestRoute()
-  }
+  // drop(props) {
+  //   props.requestRoute()
+  // }
 }
 
 function collectSource(connect, monitor) {

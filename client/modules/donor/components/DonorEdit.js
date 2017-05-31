@@ -60,6 +60,7 @@ class DonorEdit extends Component {
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
+    // eslint-disable-next-line no-unused-vars
     const {getDonor, donorId, questionnaire, loading, savingDonors} = this.props
     const donor = getDonor(donorId)
     const error = this.props.loadError || this.props.saveDonorsError

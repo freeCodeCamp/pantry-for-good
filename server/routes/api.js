@@ -8,6 +8,7 @@ import foodRoutes from './food'
 import deliveryRoutes from './delivery'
 import mediaRoutes from './media'
 import packingRoutes from './packing'
+import pageRoutes from './page'
 import questionnaireRoutes from './questionnaire'
 import settingsRoutes from './settings'
 import usersRoutes from './users'
@@ -25,6 +26,7 @@ export default (delay, errorProb) => apiRouter
   // .use(errorSimulator(errorProb))
   .use(usersRoutes())
   .use(deliveryRoutes())
+  .use(pageRoutes())
   .use(mediaRoutes())
   .use(settingsRoutes())
   // for testing non-core components
