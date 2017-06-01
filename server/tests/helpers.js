@@ -42,7 +42,6 @@ export const initApp = function() {
  * @return {object}
  */
 export const createTestUser = (username, accountType, props = null) => ({
-  username,
   firstName: username,
   lastName: 'test',
   accountType: [accountType],

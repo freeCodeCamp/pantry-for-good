@@ -4,7 +4,7 @@ You can test it out by deploying to [Heroku](https://www.heroku.com):
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Food-for-Good/tree/staging)
 
-The button creates an admin account with username `admin` and password `password`.
+The button creates an admin account with username `admin@example.com` and password `password`.
 
 ------------
 ### Quick Start Steps:
@@ -15,7 +15,7 @@ The button creates an admin account with username `admin` and password `password
 5. `npm install`
 6. `npm run dev`
 7. Open <http://localhost:8080> in your web browser
-8. Login with username `admin` password `password`
+8. Login with username `admin@example.com` password `password`
 
 ------------
 ### Detailed local development installation steps
@@ -29,7 +29,7 @@ Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if 
 
 Move to the `Food-for-Good` directory and run the `npm install` command to install the application dependencies.
 
-Type `npm run dev` to start the application in development mode. If all goes well, it will be available at `http://localhost:8080`.  The application is pre-populated with an administrator account with username `admin` and password `password`.
+Type `npm run dev` to start the application in development mode. If all goes well, it will be available at `http://localhost:8080`.  The application is pre-populated with an administrator account with username `admin@example.com` and password `password`.
 
 
 ------------

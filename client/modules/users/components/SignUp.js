@@ -27,7 +27,6 @@ class SignUp extends React.Component {
       firstName: "",
       lastName: "",
       email: "",
-      username: "",
       password: "",
       passwordConfirm: ""
     }
@@ -56,7 +55,6 @@ class SignUp extends React.Component {
       "firstName": this.state.firstName,
       "lastName": this.state.lastName,
       "email": this.state.email,
-      "username": this.state.username,
       "password": this.state.password
     })
   }
@@ -104,14 +102,6 @@ class SignUp extends React.Component {
           onChange={this.onFieldChange}
           value={this.state.email}
           placeholder="Email"
-          required
-        />
-        <FieldGroup
-          name="username"
-          onChange={this.onFieldChange}
-          value={this.state.username}
-          placeholder="Username"
-          icon="user"
           required
         />
         <FieldGroup

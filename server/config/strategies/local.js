@@ -5,11 +5,11 @@ export default function() {
   const {User} = require('../../models')
 
   passport.use(new LocalStrategy({
-    usernameField: 'username',
+    usernameField: 'email',
     passwordField: 'password'
-  }, async function(username, password, done) {
+  }, async function(email, password, done) {
     try {
-      const user = await User.findOne({username})
+      const user = await User.findOne({email})
       if (!user || !user.authenticate(password)) {
         return done(null, false, {
           message: 'Unknown user or invalid password'
