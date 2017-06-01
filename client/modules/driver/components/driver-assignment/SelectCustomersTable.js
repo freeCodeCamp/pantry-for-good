@@ -1,11 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {take} from 'lodash'
-import {Checkbox, Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
 
 import selectors from '../../../../store/selectors'
 import {setFilter, selectCustomers, toggleCustomer} from '../../reducers/assignment'
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
+import {Checkbox} from '../../../../components/form'
 import FilterCustomers from './FilterCustomers'
 
 const mapStateToProps = state => ({
@@ -68,9 +69,9 @@ const SelectCustomersTable = ({
             <th style={{padding: '0 0 0 4px'}}>
               <Checkbox
                 checked={allSelected}
-                onClick={allSelected ? handleDeselectAll : handleSelectAll}
+                onChange={allSelected ? handleDeselectAll : handleSelectAll}
                 style={{marginBottom: '7px'}}
-              ><span></span></Checkbox>
+              />
             </th>
             <th>#</th>
             <th>Address</th>
@@ -88,7 +89,7 @@ const SelectCustomersTable = ({
                 <Checkbox
                   checked={isSelected(customer.id)}
                   readOnly
-                ><span></span></Checkbox>
+                />
               </td>
               <td><span>{customer.id}</span></td>
               <td><span>

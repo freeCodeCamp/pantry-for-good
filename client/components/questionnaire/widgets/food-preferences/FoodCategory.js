@@ -5,8 +5,10 @@ import {
   withProps,
   withPropsOnChange
 } from 'recompose'
-import {Checkbox, ListGroupItem} from 'react-bootstrap'
+import {ListGroupItem} from 'react-bootstrap'
 import {differenceBy, unionBy} from 'lodash'
+
+import {Checkbox} from '../../../form'
 
 const enhance = compose(
   withPropsOnChange(
@@ -44,9 +46,7 @@ const FoodCategorySelector = ({
       className={partiallySelected ? 'partial' : ''}
       checked={numSelected > 0}
       onChange={handleItemsChange}
-    >
-      <span></span>
-    </Checkbox>
+    />
     <span style={{flexGrow: 1}}>
       {category.category}
     </span>

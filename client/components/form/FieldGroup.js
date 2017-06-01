@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Checkbox,
   ControlLabel,
   Glyphicon,
   HelpBlock,
@@ -8,6 +7,8 @@ import {
   FormGroup,
   Radio
 } from 'react-bootstrap'
+
+import Checkbox from './Checkbox'
 
 const FieldGroup = ({
   name,
@@ -102,13 +103,11 @@ function renderCheckbox(options, inline, props) {
           checked={isChecked(props.value, option)}
           inline={inline}
         >
-          <span></span>
           {option.label || option}
         </Checkbox>
       )}
     </div> :
     <Checkbox {...props}>
-      <span></span>
       {options}
     </Checkbox>
 }
