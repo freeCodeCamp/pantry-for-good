@@ -11,7 +11,7 @@ export default class AddressGenerator {
       this.file = []
     }
 
-    this.indices = range(this.file.length - 1)
+    this.indices = this.file.length ? range(this.file.length - 1) : []
   }
 
   getOne() {
