@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Table} from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadVolunteers} from '../../volunteer/reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
-import {Box, BoxBody} from '../../../components/box'
-import {Page, PageBody, PageHeader} from '../../../components/page'
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
+import {Page, PageBody} from '../../../components/page'
 
 const mapStateToProps = state => ({
   drivers: selectors.volunteer.getAllDrivers(state),
@@ -28,46 +29,48 @@ class DriverAdmin extends Component {
     this.props.loadQuestionnaires()
   }
 
+  getStatusLabel = (_, driver) =>
+    <span className={labelClass(driver.deliveryStatus)}>
+      {driver.deliveryStatus}
+    </span>
+
   render() {
     const {drivers, loading, loadError} = this.props
 
     return (
       <Page>
-        <PageHeader heading="Drivers" />
         <PageBody>
           <Box>
+            <BoxHeader heading="Drivers" />
             <BoxBody
               loading={loading}
               error={loadError}
             >
-              <Table striped responsive>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Delivery Status</th>
-                    <th>General Notes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {drivers && drivers.map((driver, i) =>
-                    <tr key={i}>
-                      <td><span>{driver.id}</span></td>
-                      <td><span>{driver.fullName}</span></td>
-                      <td>
-                        <span className={labelClass(driver.deliveryStatus)}>{driver.deliveryStatus}
-                        </span>
-                      </td>
-                      <td><span>{driver.generalNotes}</span></td>
-                    </tr>
-                  )}
-                  {!drivers &&
-                    <tr>
-                      <td className="text-center" colSpan="4">No drivers yet.</td>
-                    </tr>
-                  }
-                </tbody>
-              </Table>
+              <BootstrapTable
+                data={drivers || []}
+                keyField="id"
+                options={{
+                  defaultSortName: "id",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'No drivers found'
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="deliveryStatus"
+                  dataFormat={this.getStatusLabel}
+                  dataAlign="center"
+                  width="90px"
+                  dataSort
+                >
+                  Status
+                </TableHeaderColumn>
+              </BootstrapTable>
             </BoxBody>
           </Box>
         </PageBody>

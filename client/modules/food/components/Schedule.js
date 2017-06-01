@@ -1,135 +1,111 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Table} from 'react-bootstrap'
+import {utc} from 'moment'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadFoods} from '../reducers/category'
 import {saveFoodItem} from '../reducers/item'
 
-import Page from '../../../components/page/PageBody'
-import ItemRow from './schedule/ItemRow'
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
+import {Page, PageBody} from '../../../components/page'
 
 const mapStateToProps = state => ({
   foodItems: selectors.food.item.getAll(state),
   foodCategories: selectors.food.category.getAll(state),
-  loadingFoods: selectors.food.category.loading(state),
-  loadFoodsError: selectors.food.category.loadError(state)
+  getFoodCategory: selectors.food.category.getOne(state),
+  loading: selectors.food.category.loading(state),
+  saving: selectors.food.item.saving(state),
+  error: selectors.food.category.loadError(state) || selectors.food.item.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadFoods: () => dispatch(loadFoods()),
-  saveFood: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem))
+  saveFood: foodItem => dispatch(saveFoodItem(foodItem.categoryId, {
+    ...foodItem,
+    startDate: utc(foodItem.startDate)
+  }))
 })
 
 class Schedule extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      itemModel: null,
-      showEdit: null,
-      error: null
-    }
-  }
-
   componentWillMount() {
     this.props.loadFoods()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.loadingFoods && this.props.loadFoods) {
-      this.setState({error: nextProps.loadFoodsError})
-    }
+  formatData = () => this.props.foodItems ?
+    this.props.foodItems.map(f => ({
+      ...f,
+      startDate: utc(f.startDate).format('YYYY-[W]ww')
+    })) :
+    []
+
+
+  getCategoryName = id => {
+    const category = this.props.getFoodCategory(id)
+    return category && category.category
   }
-
-  saveFood = () => {
-    const {itemModel} = this.state
-    if (!itemModel) return
-
-    const category = this.props.foodCategories.find(cat =>
-      cat.items.find(item => item._id === itemModel._id)
-    )
-
-    this.props.saveFood(category._id, itemModel)
-  }
-
-  handleShowEdit = item => () =>
-    this.setState({
-      itemModel: {...item},
-      showEdit: item && item._id
-    })
-
-  handleFieldChange = field => ev =>
-    this.setState({
-      itemModel: {
-        ...this.state.itemModel,
-        [field]: ev.target.value
-      }
-    })
 
   render() {
-    const {itemModel, error} = this.state
-    const {foodItems, loadingFoods, loadFoodsError} = this.props
+    const {loading, saving, error} = this.props
+
     return (
-      <Page heading="Food Schedule">
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title">Items</h3>
-                <div className="box-tools">
-                  <div className="form-group has-feedback">
-                    <input
-                      className="form-control"
-                      type="search"
-                      placeholder="Search"
-                    />
-                    <span className="glyphicon glyphicon-search form-control-feedback"></span>
-                  </div>
-                </div>
-              </div>
-              <div className="box-body table-responsive no-padding top-buffer">
-                <Table responsive>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Start date</th>
-                      <th>Frequency (in weeks)</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {foodItems && foodItems.map((item, i) =>
-                      <ItemRow
-                        key={i}
-                        item={item}
-                        model={itemModel}
-                        showEdit={this.state.showEdit === item._id}
-                        handleSave={this.saveFood}
-                        handleShowEdit={this.handleShowEdit}
-                        handleFieldChange={this.handleFieldChange}
-                      />
-                    )}
-                    {!foodItems &&
-                      <tr>
-                        <td className="text-center" colSpan="4">No food items yet.</td>
-                      </tr>
-                    }
-                  </tbody>
-                </Table>
-              </div>
-              {loadingFoods &&
-                <div className="overlay">
-                  <i className="fa fa-refresh fa-spin"></i>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-        {error &&
-          <div className="text-danger">
-            <strong>{loadFoodsError}</strong>
-          </div>
-        }
+      <Page>
+        <PageBody>
+          <Box>
+            <BoxHeader heading="Schedule Items" />
+            <BoxBody loading={loading || saving} error={error}>
+              <BootstrapTable
+                data={this.formatData()}
+                keyField="_id"
+                options={{
+                  defaultSortName: "name",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'No items found'
+                }}
+                cellEdit={{
+                  mode: 'click',
+                  blurToSave: true,
+                  afterSaveCell: this.props.saveFood
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn
+                  dataField="name"
+                  dataSort
+                  editable={false}
+                >
+                  Item
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="categoryId"
+                  dataFormat={this.getCategoryName}
+                  dataSort
+                  editable={false}
+                >
+                  Category
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="startDate"
+                  dataSort
+                  editable={{type: 'week'}}
+                >
+                  Start Date
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="frequency"
+                  dataSort
+                  editable={{type: 'number'}}
+                >
+                  Frequency
+                </TableHeaderColumn>
+              </BootstrapTable>
+            </BoxBody>
+          </Box>
+        </PageBody>
       </Page>
     )
   }

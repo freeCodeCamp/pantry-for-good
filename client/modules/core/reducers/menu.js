@@ -42,13 +42,13 @@ function getUserMenuItems(user) {
 function getAdminMenuItems() {
   return [
     {
-      title: 'Client Database',
+      title: 'Customers',
       link: 'customers/list',
     }, {
-      title: 'Volunteer Database',
+      title: 'Volunteers',
       link: 'volunteers/list',
     }, {
-      title: 'Donor Database and Tax Receipts',
+      title: 'Donors',
       link: 'donors/list',
     }, {
       title: 'Food Schedule',
@@ -60,7 +60,7 @@ function getAdminMenuItems() {
       title: 'Inventory',
       link: 'foods/inventory',
     }, {
-      title: 'Drivers and Route Assignment',
+      title: 'Delivery',
       // link: 'drivers',
       menuItemType: 'treeview',
       items: [
