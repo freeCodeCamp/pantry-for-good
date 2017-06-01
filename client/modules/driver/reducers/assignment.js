@@ -3,15 +3,15 @@ import {createSelector} from 'reselect'
 import {normalize} from 'normalizr'
 
 import {callApi} from '../../../store/middleware/api'
-import {arrayOfCustomers, volunteer} from '../../../store/schemas'
+import {arrayOfCustomers, arrayOfVolunteers} from '../../../store/schemas'
 
-const SET_FILTER = 'driver-assignment/SET_FILTER'
-const SET_DRIVER = 'driver-assignment/SET_DRIVER'
-const SELECT_CUSTOMERS = 'driver-assignment/SELECT_CUSTOMERS'
-const TOGGLE_SELECT_CUSTOMER = 'driver-assignment/TOGGLE_CUSTOMER'
-const ASSIGN_REQUEST = 'driver-assignment/ASSIGN_REQUEST'
-const ASSIGN_SUCCESS = 'driver-assignment/ASSIGN_SUCCESS'
-const ASSIGN_FAILURE = 'driver-assignment/ASSIGN_FAILURE'
+const SET_FILTER = 'delivery/assignment/SET_FILTER'
+const SET_DRIVER = 'delivery/assignment/SET_DRIVER'
+const SELECT_CUSTOMERS = 'delivery/assignment/SELECT_CUSTOMERS'
+const TOGGLE_SELECT_CUSTOMER = 'delivery/assignment/TOGGLE_CUSTOMER'
+const ASSIGN_REQUEST = 'delivery/assignment/ASSIGN_REQUEST'
+const ASSIGN_SUCCESS = 'delivery/assignment/ASSIGN_SUCCESS'
+const ASSIGN_FAILURE = 'delivery/assignment/ASSIGN_FAILURE'
 
 export const setFilter = filter => ({
   type: SET_FILTER,
@@ -57,14 +57,14 @@ export const selectCluster = (cluster, customers, selectedCustomerIds) => {
 export const assignCustomers = (customerIds, driverId) => dispatch => {
   const body = {customerIds, driverId}
   dispatch({type: ASSIGN_REQUEST})
-  callApi('admin/customers/assign', 'POST', body)
+  callApi('admin/delivery/assign', 'POST', body)
     .then(res => {
       dispatch({
         type: ASSIGN_SUCCESS,
         response: {
           entities: {
             customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-            volunteers: normalize(res.driver, volunteer).entities.volunteers
+            volunteers: normalize(res.drivers, arrayOfVolunteers).entities.volunteers
           }
         }
       })

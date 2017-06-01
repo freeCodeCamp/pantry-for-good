@@ -1,9 +1,8 @@
-import extend from 'lodash/extend'
+import {extend} from 'lodash'
 
 import config from '../config/index'
 import mailer from '../lib/mailer'
 import Customer from '../models/customer'
-import Volunteer from '../models/volunteer'
 import User from '../models/user'
 
 export default {
@@ -74,26 +73,6 @@ export default {
 
     res.json(req.customer)
   },
-
-  /**
-   * Assign customers to a driver
-   */
-  async assign(req, res) {
-    const {customerIds, driverId} = req.body
-
-    // TODO: make separate api for delivery
-    const customers = await Promise.all(
-      customerIds.map(async id =>
-        await Customer.findByIdAndUpdate(id, {$set: {assignedTo: driverId}}, {new: true}))
-    )
-
-    const numericCustomerIds = customerIds.map(id => Number(id))
-    const driver = await Volunteer.findByIdAndUpdate(driverId,
-      {$addToSet: {customers: {$each: numericCustomerIds}}}, {new: true})
-
-    res.json({customers, driver})
-  },
-
   /**
    * Customer middleware
    */

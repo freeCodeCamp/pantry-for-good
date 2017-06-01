@@ -9,9 +9,8 @@ import {loadSettings} from '../../settings/reducers/settings'
 import {loadVolunteers} from '../../volunteer/reducer'
 
 import {Page, PageBody} from '../../../components/page'
-import SelectCustomersTable from './driver-assignment/SelectCustomersTable'
-import AssignDriverForm from './driver-assignment/AssignDriverForm'
-import SelectCustomersMap from './driver-assignment/SelectCustomersMap'
+import AssignmentForm from './driver-assignment/AssignmentForm'
+import SelectCustomersMap from './driver-assignment/map/SelectCustomersMap'
 
 const mapStateToProps = state => ({
   assigning: selectors.delivery.assignment.isFetching(state),
@@ -21,11 +20,14 @@ const mapStateToProps = state => ({
   loading: selectors.customer.loading(state) ||
     selectors.questionnaire.loading(state) ||
     selectors.settings.fetching(state) ||
-    selectors.volunteer.loading(state),
+    selectors.volunteer.loading(state) ||
+    selectors.volunteer.saving(state),
   loadError: selectors.customer.loadError(state) ||
     selectors.questionnaire.loadError(state) ||
     selectors.volunteer.loadError(state) ||
-    selectors.settings.error(state)
+    selectors.volunteer.saveError(state) ||
+    selectors.settings.error(state),
+  route: selectors.delivery.route.getRoute(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -38,13 +40,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class DriverRoutes extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      showDrivers: true,
-      showCustomers: false
-    }
-  }
   componentWillMount() {
     this.props.load()
   }
@@ -62,24 +57,13 @@ class DriverRoutes extends Component {
     return (
       <Page>
         <PageBody>
-          <Col md={6} lg={5}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 'calc(100vh - 130px)',
-            }}
-          >
-            <AssignDriverForm
-              loading={loading || assigning || directing}
-              error={loadError || assignError || directingError}
-              style={{flexShrink: 1}}
-            />
-            <SelectCustomersTable
+          <Col sm={7} md={6} lg={5}>
+            <AssignmentForm
               loading={loading || assigning || directing}
               error={loadError || assignError || directingError}
             />
           </Col>
-          <Col md={6} lg={7}>
+          <Col sm={5} md={6} lg={7}>
             <SelectCustomersMap />
           </Col>
         </PageBody>

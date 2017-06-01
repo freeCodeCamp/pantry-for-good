@@ -2,8 +2,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import DrawingManager from 'react-google-maps/lib/drawing/DrawingManager'
 
-import selectors from '../../../../store/selectors'
-import {selectCustomers} from '../../reducers/assignment'
+import selectors from '../../../../../store/selectors'
+import {selectCustomers} from '../../../reducers/assignment'
 
 const mapStateToProps = state => ({
   customers: selectors.delivery.assignment.getFilteredCustomers(state),
