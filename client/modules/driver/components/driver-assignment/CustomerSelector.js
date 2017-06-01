@@ -1,13 +1,12 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {take} from 'lodash'
 import {Table} from 'react-bootstrap'
 import {Checkbox} from '../../../../components/form'
 
 import selectors from '../../../../store/selectors'
 import getAddress from '../../../../lib/get-address'
 import {setFilter, selectCustomers, toggleCustomer} from '../../reducers/assignment'
-import {addWaypoints, removeWaypoints, setWaypoints} from '../../reducers/route'
+import {addWaypoints, removeWaypoints} from '../../reducers/route'
 import FilterCustomers from './FilterCustomers'
 
 const mapStateToProps = state => ({

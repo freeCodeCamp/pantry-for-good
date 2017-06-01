@@ -67,7 +67,7 @@ function collectTarget(connect, monitor) {
 const RouteWaypoint = ({
   connectDragSource,
   connectDropTarget,
-  isDragging,
+  // isDragging,
   isOver,
   idx,
   waypoint
