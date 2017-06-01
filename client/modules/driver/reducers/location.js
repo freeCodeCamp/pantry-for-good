@@ -4,12 +4,12 @@ import {get} from 'lodash'
 // TODO: pass as param / proxy through api
 const LOCATION_URL = 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCASB95kRU_cIYk8LaG8tS-HY4pgV47hMU&address='
 
-const LOCATE_ADDRESS_REQUEST = 'location/LOCATE_ADDRESS_REQUEST'
-const LOCATE_ADDRESS_SUCCESS = 'location/LOCATE_ADDRESS_SUCCESS'
-const LOCATE_ADDRESS_FAILURE = 'location/LOCATE_ADDRESS_FAILURE'
-const LOCATE_USER_REQUEST = 'location/LOCATE_USER_REQUEST'
-const LOCATE_USER_SUCCESS = 'location/LOCATE_USER_SUCCESS'
-const LOCATE_USER_FAILURE = 'location/LOCATE_USER_FAILURE'
+const LOCATE_ADDRESS_REQUEST = 'delivery/location/LOCATE_ADDRESS_REQUEST'
+const LOCATE_ADDRESS_SUCCESS = 'delivery/location/LOCATE_ADDRESS_SUCCESS'
+const LOCATE_ADDRESS_FAILURE = 'delivery/location/LOCATE_ADDRESS_FAILURE'
+const LOCATE_USER_REQUEST = 'delivery/location/LOCATE_USER_REQUEST'
+const LOCATE_USER_SUCCESS = 'delivery/location/LOCATE_USER_SUCCESS'
+const LOCATE_USER_FAILURE = 'delivery/location/LOCATE_USER_FAILURE'
 
 const locateAddressRequest = () => ({type: LOCATE_ADDRESS_REQUEST})
 

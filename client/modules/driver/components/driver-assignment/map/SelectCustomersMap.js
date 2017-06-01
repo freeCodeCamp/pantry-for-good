@@ -1,10 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {DirectionsRenderer} from 'react-google-maps'
 import {noop} from 'lodash'
 
-import selectors from '../../../../store/selectors'
-import {toggleCustomer, selectCluster} from '../../reducers/assignment'
-import Map from '../Map'
+import selectors from '../../../../../store/selectors'
+import {toggleCustomer, selectCluster} from '../../../reducers/assignment'
+import Map, {getGoogleMapURL} from '../../Map'
 import Markers from './Markers'
 import DrawSelection from './DrawSelection'
 
@@ -27,8 +28,8 @@ const SelectCustomersMap = ({
   settings,
   route
 }) =>
-  settings ?
-    <div>
+  <div>
+    {settings &&
       <Map
         googleMapURL={getGoogleMapURL(settings)}
         loadingElement={loadingElement}
@@ -40,19 +41,11 @@ const SelectCustomersMap = ({
         route={route}
         defaultCenter={settings.location}
       >
-        <Markers />
+        {!route && <Markers />}
         {!route && <DrawSelection />}
+        {route && <DirectionsRenderer directions={route} />}
       </Map>
-    </div> :
-    null
+    }
+  </div>
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCustomersMap)
-
-function getGoogleMapURL(settings) {
-  const {gmapsApiKey, gmapsClientId} = settings
-  const baseUrl = 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing&'
-  return gmapsClientId ?
-    `${baseUrl}id=${gmapsClientId}` :
-    `${baseUrl}key=${gmapsApiKey}`
-}
-

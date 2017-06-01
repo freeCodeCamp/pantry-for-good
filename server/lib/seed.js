@@ -3,14 +3,16 @@ import range from 'lodash/range'
 
 import {
   foodFields,
-  settingsFields,
+  getSettingsFields,
   pages,
   customerQuestionnaire,
   donorQuestionnaire,
   volunteerQuestionnaire
 } from './seed-data'
 import seedClients from './seed-clients'
+import AddressGenerator from './address-generator'
 
+const addressGenerator = new AddressGenerator
 
 const User = mongoose.model('User')
 const Customer = mongoose.model('Customer')
@@ -62,7 +64,7 @@ async function seedDb(env) {
   if (env !== 'production') {
     await seedUsers()
     await seedFoods()
-    await seedClients()
+    await seedClients(addressGenerator)
   }
 }
 
@@ -110,7 +112,7 @@ async function seedSettings() {
   const count = await Settings.count()
   if (count) return
 
-  await Settings.create(settingsFields)
+  await Settings.create(getSettingsFields(addressGenerator))
 }
 
 async function seedPages() {

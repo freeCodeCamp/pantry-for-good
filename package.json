@@ -22,6 +22,7 @@
     "test:server": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/tests/**/*.spec.js' --watch"
   },
   "dependencies": {
+    "@mapbox/polyline": "^0.2.0",
     "admin-lte": "^2.3.11",
     "async": "~2.1.4",
     "babel-core": "^6.22.1",
@@ -59,8 +60,10 @@
     "helmet": "^3.1.0",
     "html-to-react": "^1.2.8",
     "html-webpack-plugin": "^2.26.0",
+    "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.1.1",
     "lodash": "~4.17.2",
+    "mapbox-gl": "^0.37.0",
     "method-override": "~2.3.0",
     "moment": "^2.10.2",
     "moment-recur": "^1.0.5",
@@ -87,6 +90,7 @@
     "react-dom": "^15.4.2",
     "react-google-maps": "^6.3.0",
     "react-hot-loader": "^3.0.0-beta.6",
+    "react-mapbox-gl": "^1.11.0",
     "react-quill": "^1.0.0-rc.2",
     "react-redux": "^4.4.8",
     "react-router-dom": "^4.0.0",
@@ -109,7 +113,8 @@
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5",
     "webpack-merge": "^4.1.0",
-    "whatwg-fetch": "^2.0.2"
+    "whatwg-fetch": "^2.0.2",
+    "yarn": "^0.24.5"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",
