@@ -176,6 +176,12 @@ class FoodItems extends React.Component {
     }
   }
 
+  updateSearchText = searchText => {
+    if (searchText && searchText !== this.state.searchText) {
+      this.setState({searchText})
+    }
+  }
+
   render = () => {
     // set options for react-bootstrap-table
     const tableOptions = {
@@ -187,7 +193,7 @@ class FoodItems extends React.Component {
         ? 'No foods in inventory. Add a category prior to adding a food'
         : 'No foods in inventory matching ' + this.state.searchText,
       // afterSearch specifies a function to call when the user changes the search box text
-      afterSearch: searchText => this.setState({searchText})
+      afterSearch: searchText => this.updateSearchText(searchText)
     }
     return (
       <div className="box">
