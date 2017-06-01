@@ -68,6 +68,20 @@ export const foodFields = [{
   ].map(addRandomDate)
 }]
 
+export const getSettingsFields = addressGenerator => {
+  const {lat, lng, street, city, zip} = addressGenerator.getOne()
+
+  return {
+    organization: 'Foodbank Template',
+    url: 'www.example.com',
+    foodBankAddress: `${street} ${city} ${zip}`,
+    clientIntakeNumber: '07123 456 789',
+    supportNumber: '07234 567 891',
+    location: {lat, lng},
+    gmapsApiKey: config.gmapsApiKey
+  }
+}
+
 export const pages = [{
   identifier: 'home',
   title: 'Home',
@@ -85,20 +99,6 @@ export const pages = [{
   title: 'Volunteers',
   body: '<p>In the past year, over (amount) pounds of food was distributed on a weekly basis by our team of dedicated volunteers. Your assistance helps us respond to the ever-growing demand of our community. <strong>Thank you for taking the opportunity to help turn lives around.</strong></p><p>With your help, we are able to support the less fortunate families in our community, by providing them with nutritious food and energy to grow, learn, work, and give them hope for a better and brighter future.</p>'
 }]
-
-export const settingsFields = {
-  organization: 'Foodbank Template',
-  url: 'www.example.com',
-  foodBankAddress: faker.fake(
-    '{{address.streetAddress}} {{address.city}} {{address.zipCode}}'),
-  clientIntakeNumber: '07123 456 789',
-  supportNumber: '07234 567 891',
-  location: {
-    lat: faker.finance.amount(51.5, 51.55, 6),
-    lng: faker.finance.amount(-3.15, -3.25, 6),
-  },
-  gmapsApiKey: config.gmapsApiKey
-}
 
 export const customerQuestionnaire = {
   name: 'Customer Application',
@@ -146,7 +146,6 @@ export const customerQuestionnaire = {
     ]
   }]
 }
-
 
 export const donorQuestionnaire = {
   name: 'Donor Application',

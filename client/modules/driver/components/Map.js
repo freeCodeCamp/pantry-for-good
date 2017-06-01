@@ -1,6 +1,14 @@
 import React from 'react'
-import {withGoogleMap, GoogleMap, DirectionsRenderer} from "react-google-maps"
-import withScriptjs from "react-google-maps/lib/async/withScriptjs"
+import {withGoogleMap, GoogleMap} from 'react-google-maps'
+import withScriptjs from 'react-google-maps/lib/async/withScriptjs'
+
+export const getGoogleMapURL = settings => {
+  const {gmapsApiKey, gmapsClientId} = settings
+  const baseUrl = 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing&'
+  return gmapsClientId ?
+    `${baseUrl}id=${gmapsClientId}` :
+    `${baseUrl}key=${gmapsApiKey}`
+}
 
 const Map = withScriptjs(withGoogleMap(
   props =>
@@ -11,7 +19,6 @@ const Map = withScriptjs(withGoogleMap(
       defaultOptions={props.defaultOptions}
       onClick={props.onMapClick}
     >
-      {props.route && <DirectionsRenderer directions={props.route} />}
       {props.children}
     </GoogleMap>
 ))

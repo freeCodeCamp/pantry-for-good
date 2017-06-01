@@ -3,17 +3,17 @@ import {connect} from 'react-redux'
 import {Marker} from 'react-google-maps'
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer'
 
-import selectors from '../../../../store/selectors'
-import {toggleCustomer, selectCluster, setDriver} from '../../reducers/assignment'
+import selectors from '../../../../../store/selectors'
+import {toggleCustomer, selectCluster, setDriver} from '../../../reducers/assignment'
 
-import selectedCustomerIcon from '../../images/gm-marker-pink.png'
-import customerIcon from '../../images/gm-marker-blue.png'
-import selectedDriverIcon from '../../images/gm-marker-orange.png'
-import driverIcon from '../../images/gm-marker-yellow.png'
-import foodbankIcon from '../../images/gm-marker-green.png'
-import unselectedClusterIcon from '../../images/m1-cyan.png'
-import partSelectedClusterIcon from '../../images/m1-purple.png'
-import selectedClusterIcon from '../../images/m1-pink.png'
+import selectedCustomerIcon from '../../../images/gm-marker-pink.png'
+import customerIcon from '../../../images/gm-marker-blue.png'
+import selectedDriverIcon from '../../../images/car-red2.png'
+import driverIcon from '../../../images/car-green2.png'
+import foodbankIcon from '../../../images/home2.png'
+import unselectedClusterIcon from '../../../images/m1-cyan.png'
+import partSelectedClusterIcon from '../../../images/m1-purple.png'
+import selectedClusterIcon from '../../../images/m1-pink.png'
 
 const mapStateToProps = state => ({
   settings: selectors.settings.getSettings(state),
@@ -21,8 +21,7 @@ const mapStateToProps = state => ({
   isSelected: selectors.delivery.assignment.isCustomerSelected(state),
   selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
   drivers: selectors.volunteer.getAllDrivers(state),
-  selectedDriverId: selectors.delivery.assignment.getDriverId(state),
-  route: selectors.delivery.route.getRoute(state)
+  selectedDriverId: selectors.delivery.assignment.getDriverId(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -48,7 +47,6 @@ const clusterStyles = [
 
 const Markers = ({
   settings,
-  route,
   customers,
   isSelected,
   toggleCustomer,
@@ -61,32 +59,35 @@ const Markers = ({
     <MarkerClusterer
       averageCenter
       enableRetinaIcons
-      gridSize={20}
+      gridSize={30}
       zoomOnClick={false}
       onClick={selectCluster}
       calculator={calculator}
       styles={clusterStyles}
     >
-      {!route && customers && customers.map(customer =>
-        customer.location ?
-          <Marker
-            key={customer.id}
-            icon={isSelected(customer.id) ? selectedCustomerIcon : customerIcon}
-            position={customer.location}
-            onClick={toggleCustomer(customer.id)}
-          /> :
-          null
+      {customers && customers.filter(c => c.location).map(customer =>
+        <Marker
+          key={customer.id}
+          icon={isSelected(customer.id) ? selectedCustomerIcon : customerIcon}
+          position={customer.location}
+          onClick={toggleCustomer(customer.id)}
+        />
       )}
     </MarkerClusterer>
-    {!route && drivers && drivers.map(driver =>
+    {drivers && drivers.map(driver =>
       <Marker
         key={driver.id}
         icon={isDriverSelected(driver.id) ? selectedDriverIcon : driverIcon}
         position={driver.location}
         onClick={selectDriver(driver.id)}
+        title={driver.fullName}
       />
     )}
-    <Marker icon={foodbankIcon} position={settings.location} />
+    <Marker
+      icon={foodbankIcon}
+      position={settings.location}
+      title={settings.organization}
+    />
   </div>
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Markers)

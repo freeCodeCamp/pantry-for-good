@@ -12,7 +12,7 @@ const Questionnaire = mongoose.model('Questionnaire')
 
 const clientTypes = ['customer', 'volunteer', 'donor']
 
-export default async function seedClients() {
+export default async function seedClients(addressGenerator) {
   await clientTypes.map(async type => {
     const Model = mongoose.model(capitalize(type))
     const count = await Model.count()
@@ -24,7 +24,7 @@ export default async function seedClients() {
     await Promise.all(
       users.map(async user => {
         const client = new Model(user.toObject())
-        const seededClient = await seedClientFields(client)
+        const seededClient = await seedClientFields(client, addressGenerator)
 
         await seededClient.save()
         await User.findOneAndUpdate({_id: client._id}, {$set: {hasApplied: true }})
@@ -39,15 +39,8 @@ export default async function seedClients() {
  * @param {mongoose.Document} client
  * @returns {Promise<mongoose.Document>}
  */
-async function seedClientFields(client) {
-  const address = {
-    lat: faker.finance.amount(51.5, 51.55, 6),
-    lng: faker.finance.amount(-3.15, -3.25, 6),
-    street: faker.address.streetAddress(),
-    city: faker.address.city(),
-    state: faker.address.state(),
-    zip: faker.address.zipCode()
-  }
+async function seedClientFields(client, addressGenerator) {
+  const address = addressGenerator.getOne()
   const dynamicFields = await seedDynamicFields(client, address)
   const staticFields = await seedStaticFields(client, dynamicFields[0].value, address)
 

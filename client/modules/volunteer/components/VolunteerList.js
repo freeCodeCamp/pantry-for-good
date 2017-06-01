@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Table} from 'react-bootstrap'
+import {ButtonToolbar} from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadVolunteers} from '../reducer'
@@ -9,7 +11,7 @@ import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
-import {Page, PageBody, PageHeader} from '../../../components/page'
+import {Page, PageBody} from '../../../components/page'
 
 const mapStateToProps = state => ({
   volunteers: selectors.volunteer.getAll(state),
@@ -30,54 +32,71 @@ class VolunteerList extends Component {
     this.props.loadQuestionnaires()
   }
 
+  getStatusLabel = (_, volunteer) => <ClientStatusLabel client={volunteer} />
+
+  getActionButtons = (_, volunteer) =>
+    <ButtonToolbar>
+      <Link
+        to={`/volunteers/${volunteer.id}`}
+        className="btn btn-info btn-sm"
+      ><i className="fa fa-eye" /></Link>
+      <Link
+        to={`/volunteers/${volunteer.id}/edit`}
+        className="btn btn-primary btn-sm"
+      ><i className="fa fa-pencil" /></Link>
+    </ButtonToolbar>
+
+  formatData = () => this.props.volunteers ?
+    this.props.volunteers.map(v => ({
+      ...v,
+      address: getAddress(v)
+    })) :
+    []
+
   render() {
-    const {volunteers, loading, loadError} = this.props
+    const {loading, loadError} = this.props
 
     return (
       <Page>
-        <PageHeader heading="Volunteer Database" />
         <PageBody>
           <Box>
-            <BoxHeader heading="Applications" />
+            <BoxHeader heading="Volunteers" />
             <BoxBody
               loading={loading}
               error={loadError}
             >
-              <Table responsive>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Full Address</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody role="alert" aria-live="polite" aria-relevant="all">
-                  {volunteers && volunteers.map(volunteer =>
-                    <tr key={volunteer.id}>
-                      <td><span>{volunteer.id}</span></td>
-                      <td><span>{volunteer.fullName}</span></td>
-                      <td><span>{getAddress(volunteer)}</span></td>
-                      <td><span>{volunteer.telephoneNumber}</span></td>
-                      <td><span>{volunteer.email}</span></td>
-                      <td><ClientStatusLabel client={volunteer} /></td>
-                      <td>
-                        <Link
-                          to={`/volunteers/${volunteer.id}`}
-                          className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</Link>
-                        <Link
-                          to={`/volunteers/${volunteer.id}/edit`}
-                          className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</Link>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
+              <BootstrapTable
+                data={this.formatData()}
+                keyField="id"
+                options={{
+                  defaultSortName: "id",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'No volunteers found'
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="address">Address</TableHeaderColumn>
+                <TableHeaderColumn dataField="email" dataSort>Email</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="status"
+                  dataFormat={this.getStatusLabel}
+                  dataAlign="center"
+                  width="90px"
+                  dataSort
+                >
+                  Status
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getActionButtons}
+                  dataAlign="center"
+                  width="90px"
+                />
+              </BootstrapTable>
             </BoxBody>
           </Box>
         </PageBody>
