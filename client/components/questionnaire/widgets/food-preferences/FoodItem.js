@@ -1,6 +1,8 @@
 import React from 'react'
 import {compose, withHandlers, withPropsOnChange} from 'recompose'
-import {Checkbox, ListGroupItem} from 'react-bootstrap'
+import {ListGroupItem} from 'react-bootstrap'
+
+import {Checkbox} from '../../../form'
 
 const enhance = compose(
   withPropsOnChange(
@@ -25,11 +27,8 @@ const FoodItem = ({item, selected, handleItemsChange}) =>
     <Checkbox
       style={{margin: '0 0 0 -20px'}}
       checked={selected}
-      onClick={handleItemsChange}
       readOnly
-    >
-      <span></span>
-    </Checkbox>
+    />
     <span>
       {item.name}
     </span>

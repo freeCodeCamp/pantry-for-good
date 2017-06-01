@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {take} from 'lodash'
-import {Checkbox, Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap'
+import {Checkbox} from '../../../../components/form'
 
 import selectors from '../../../../store/selectors'
 import getAddress from '../../../../lib/get-address'
@@ -78,7 +79,7 @@ const CustomerSelector = ({
               checked={allSelected}
               onChange={allSelected ? handleDeselectAll : handleSelectAll}
               style={{marginBottom: '7px'}}
-            ><span></span></Checkbox>
+            />
           </th>
           <th>#</th>
           <th>Address</th>
@@ -96,7 +97,7 @@ const CustomerSelector = ({
               <Checkbox
                 checked={isSelected(customer.id)}
                 readOnly
-              ><span></span></Checkbox>
+              />
             </td>
             <td><span>{customer.id}</span></td>
             <td><span>

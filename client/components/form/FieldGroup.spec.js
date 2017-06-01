@@ -1,7 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 import {
-  Checkbox,
   ControlLabel,
   FormControl,
   FormGroup,
@@ -11,6 +10,7 @@ import {
 } from 'react-bootstrap'
 
 import FieldGroup from './FieldGroup'
+import Checkbox from './Checkbox'
 
 describe('FieldGroup', function() {
   it('renders an input', function() {
@@ -82,7 +82,7 @@ describe('FieldGroup', function() {
     expect(checkboxes.last()).to.have.prop('value', 'bar')
   })
 
-  /*it('renders a checkbox group of label, value pairs', function() {
+  it('renders a checkbox group of label, value pairs', function() {
     const options = [
       {label: 'Foo', value: 'foo'},
       {label: 'Bar', value: 'bar'}
@@ -101,7 +101,7 @@ describe('FieldGroup', function() {
     expect(checkboxes.first()).to.have.prop('value', 'foo')
     expect(checkboxes.last().childAt(0)).to.have.text('Bar')
     expect(checkboxes.last()).to.have.prop('value', 'bar')
-  })*/
+  })
 
   it('renders a radio group', function() {
     const wrapper = shallow(
