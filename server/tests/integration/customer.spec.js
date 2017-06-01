@@ -203,17 +203,17 @@ describe('Customer Api', function() {
       const savedVolunteer = (await volunteerReq.post('/api/volunteer')
         .send(newVolunteer)).body
 
-      return adminReq.post('/api/admin/customers/assign')
+      return adminReq.post('/api/admin/delivery/assign')
         .send({
           customerIds: [savedCustomer._id],
           driverId: savedVolunteer._id
         })
+        .expect(200)
         .expect(res => {
           expect(res.body.customers).to.be.an('array')
           expect(res.body.customers).to.have.length(1)
           expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
-        .expect(200)
     })
   })
 })
