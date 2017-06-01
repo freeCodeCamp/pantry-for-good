@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Table} from 'react-bootstrap'
+import {ButtonToolbar} from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadCustomers} from '../reducer'
@@ -9,7 +11,7 @@ import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
-import {Page, PageBody, PageHeader} from '../../../components/page'
+import {Page, PageBody} from '../../../components/page'
 
 const mapStateToProps = state => ({
   customers: selectors.customer.getAll(state),
@@ -30,56 +32,79 @@ class CustomerList extends Component {
     this.props.loadQuestionnaires()
   }
 
+  getStatusLabel = (_, customer) => <ClientStatusLabel client={customer} />
+
+  getActionButtons = (_, customer) =>
+    <ButtonToolbar>
+      <Link
+        to={`/customers/${customer.id}`}
+        className="btn btn-info btn-sm"
+      ><i className="fa fa-eye" /></Link>
+      <Link
+        to={`/customers/${customer.id}/edit`}
+        className="btn btn-primary btn-sm"
+      ><i className="fa fa-pencil" /></Link>
+    </ButtonToolbar>
+
+  formatData = () => this.props.customers ?
+    this.props.customers.map(c => ({
+      ...c,
+      address: getAddress(c),
+      assignedTo: c.assignedTo && c.assignedTo.fullName
+    })) :
+    []
+
   render() {
-    const {customers, loading, loadError} = this.props
+    const {loading, loadError} = this.props
 
     return (
       <Page>
-        <PageHeader heading="Client Database" />
         <PageBody>
           <Box>
-            <BoxHeader heading="Applications" />
+            <BoxHeader heading="Customers" />
             <BoxBody
               loading={loading}
               error={loadError}
             >
-              <Table responsive>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Email</th>
-                    <th>Household</th>
-                    <th>Assigned Driver</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {customers && customers.map(customer =>
-                    <tr key={customer.id}>
-                      <td><span>{customer.id}</span></td>
-                      <td><span>{customer.fullName}</span></td>
-                      <td><span>{getAddress(customer)}</span></td>
-                      <td><span>{customer.email}</span></td>
-                      <td><span>{customer.householdSummary}</span></td>
-                      <td><span>{customer.assignedTo && customer.assignedTo.fullName}</span></td>
-                      <td><ClientStatusLabel client={customer} /></td>
-                      <td>
-                        <Link
-                          to={`/customers/${customer.id}`}
-                          className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</Link>
-                        <Link
-                          to={`/customers/${customer.id}/edit`}
-                          className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</Link>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
+              <BootstrapTable
+                data={this.formatData()}
+                keyField="id"
+                options={{
+                  defaultSortName: "id",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'No customers found'
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
+                <TableHeaderColumn dataField="address">Address</TableHeaderColumn>
+                <TableHeaderColumn dataField="email" dataSort>Email</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="householdSummary"
+                  width="90px"
+                >
+                  Household
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="assignedTo" dataSort>Driver</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="status"
+                  dataFormat={this.getStatusLabel}
+                  dataAlign="center"
+                  width="90px"
+                  dataSort
+                >
+                  Status
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getActionButtons}
+                  dataAlign="center"
+                  width="90px"
+                />
+              </BootstrapTable>
             </BoxBody>
           </Box>
         </PageBody>

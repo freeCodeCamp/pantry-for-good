@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Table} from 'react-bootstrap'
+import {Button, ButtonToolbar} from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadDonors, deleteDonor} from '../reducers/donor'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
-import {Page, PageBody, PageHeader} from '../../../components/page'
+import {Page, PageBody} from '../../../components/page'
 
 const mapStateToProps = state => ({
   donors: selectors.donor.getAll(state),
@@ -32,64 +34,76 @@ class DonorList extends Component {
     this.props.loadQuestionnaires()
   }
 
-  totalDonations = donor => {
+  totalDonations = (_, donor) => {
     if (!donor || !donor.donations) return 0
     return donor.donations.reduce((acc, x) => acc + x.eligibleForTax || 0, 0)
   }
 
   deleteDonor = donor => () => this.props.deleteDonor(donor)
 
+  formatData = () => this.props.donors ?
+    this.props.donors.map(d => ({
+      ...d,
+      address: getAddress(d)
+    })) :
+    []
+
+  getActionButtons = (_, donor) =>
+    <ButtonToolbar>
+      <Link
+        to={`/donors/${donor.id}`}
+        className="btn btn-info btn-sm"
+      ><i className="fa fa-eye" /></Link>
+      <Link
+        to={`/donors/${donor.id}/edit`}
+        className="btn btn-primary btn-sm"
+      ><i className="fa fa-pencil" /></Link>
+      <Button bsStyle="danger" bsSize="sm" onClick={this.deleteDonor(donor)}>
+        <i className="fa fa-trash" />
+      </Button>
+    </ButtonToolbar>
+
   render() {
-    const {donors, loading, loadError, savingDonors, saveDonorsError} = this.props
+    const {loading, loadError, savingDonors, saveDonorsError} = this.props
     return (
       <Page>
-        <PageHeader heading="Donor Database" />
         <PageBody>
           <Box>
-            <BoxHeader heading="Applications" />
+            <BoxHeader heading="Donors" />
             <BoxBody
               loading={loading || savingDonors}
               error={loadError || saveDonorsError}
             >
-              <Table responsive>
-                <thead>
-                  <tr role="row">
-                    <th>ID</th>
-                    <th>Full Name</th>
-                    <th>Total Donated</th>
-                    <th>Full Address</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody role="alert" aria-live="polite" aria-relevant="all">
-                  {donors && donors.map((donor, i) =>
-                    <tr key={i}>
-                      <td><span>{donor.id}</span></td>
-                      <td><span>{donor.fullName}</span></td>
-                      <td><span>{this.totalDonations(donor)}</span></td>
-                      <td><span>{getAddress(donor)}</span></td>
-                      <td><span>{donor.telephoneNumber}</span></td>
-                      <td><span>{donor.email}</span></td>
-                      <td>
-                        <Link
-                          to={`/donors/${donor.id}`}
-                          className="btn btn-info btn-flat btn-xs"
-                        ><i className="fa fa-eye"></i> View</Link>
-                        <Link
-                          to={`/donors/${donor.id}/edit`}
-                          className="btn btn-primary btn-flat btn-xs"
-                        ><i className="fa fa-pencil"></i> Edit</Link>
-                        <button
-                          className="btn btn-danger btn-flat btn-xs"
-                          onClick={this.deleteDonor(donor)}
-                        ><i className="fa fa-trash-o"></i> Delete</button>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </Table>
+              <BootstrapTable
+                data={this.formatData()}
+                keyField="id"
+                options={{
+                  defaultSortName: "id",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'No donors found'
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.totalDonations}
+                  dataAlign="right"
+                  width="150px"
+                >
+                  Amount Donated
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="address">Address</TableHeaderColumn>
+                <TableHeaderColumn dataField="email" dataSort>Email</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getActionButtons}
+                  dataAlign="center"
+                  width="135px"
+                />
+              </BootstrapTable>
             </BoxBody>
           </Box>
         </PageBody>
