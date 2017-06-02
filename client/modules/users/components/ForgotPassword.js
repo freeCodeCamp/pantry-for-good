@@ -22,10 +22,8 @@ class ForgotPassword extends React.Component {
     this.props.clearFlags()
   }
 
-  redirectIfAlreadySignedIn(props) {
-    if (props.user && props.user._id) {
-      props.push('/')
-    }
+  componentWillReceiveProps = nextProps => {
+    this.redirectIfAlreadySignedIn(nextProps)
   }
 
   onFieldChange = e => {
@@ -38,17 +36,19 @@ class ForgotPassword extends React.Component {
     this.props.resetPassword(this.state.email)
   }
 
-  componentWillReceiveProps = nextProps => {
-    this.redirectIfAlreadySignedIn(nextProps)
+  redirectIfAlreadySignedIn(props) {
+    if (props.user && props.user._id) {
+      props.push('/')
+    }
   }
 
   render = () => {
     if (this.props.success) {
       return (
         <Row>
-          <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+          <Col xs={8} xsOffset={2} md={4} mdOffset={4}>
             <div className="text-center text-success">
-              <br/><strong>{this.props.success.message}</strong>
+              <br /><strong>{this.props.success.message}</strong>
             </div>
           </Col>
         </Row>
@@ -61,7 +61,7 @@ class ForgotPassword extends React.Component {
               <h3 className="text-center">Reset your password</h3>
             </Col>
             <p className="text-center">Enter your email address.</p>
-            <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
+            <Col xs={8} xsOffset={2} md={4} mdOffset={4}>
               <LoadingWrapper loading={this.props.fetching}>
                 <form className="signin form-horizontal" autoComplete="off">
                   <fieldset>

@@ -22,6 +22,12 @@ class ChangePassword extends React.Component {
     this.props.clearFlags()
   }
 
+  componentWillReceiveProps = nextProps => {
+    if (nextProps.success) {
+      this.setState({currentPassword: "", newPassword: "", verifyPassword: ""})
+    }
+  }
+
   onFieldChange = e => {
     const { name, value } = e.target
     this.setState({ [name]: value })
@@ -38,8 +44,8 @@ class ChangePassword extends React.Component {
         <Col md={12}>
           <h3 className="col-md-12 text-center">Change your password</h3>
         </Col>
-        <Col xs={8} xsOffset={2} md={2} mdOffset={5}>
-          <LoadingWrapper loading={this.props.auth.fetching}>
+        <Col xs={8} xsOffset={2} md={4} mdOffset={4}>
+          <LoadingWrapper loading={this.props.fetching}>
             <form className="signin form-horizontal" autoComplete="off">
               <fieldset>
                 <FieldGroup
@@ -66,17 +72,31 @@ class ChangePassword extends React.Component {
                   value={this.state.verifyPassword}
                   placeholder="Verify Password"
                 />
+                {this.state.newPassword !== this.state.verifyPassword &&
+                  <div className="alert alert-danger">Passwords do not match</div>
+                }
                 <div className="text-center form-group">
-                  <button onClick={this.onSubmit} className="btn btn-large btn-primary">Save Password</button>
+                  <button
+                    onClick={this.onSubmit}
+                    className="btn btn-large btn-primary"
+                    disabled={
+                      !this.state.currentPassword ||
+                      !this.state.newPassword ||
+                      !this.state.verifyPassword ||
+                      this.state.newPassword !== this.state.verifyPassword
+                    }
+                  >
+                    Save Password
+                  </button>
                 </div>
-                {this.props.auth.success &&
+                {this.props.success &&
                   <div className="text-center text-success">
-                    <strong>{this.props.auth.success.message}</strong>
+                    <strong>{this.props.success.message}</strong>
                   </div>
                 }
-                {this.props.auth.error &&
+                {this.props.error &&
                   <div className="text-center text-danger">
-                    <strong>{this.props.auth.error}</strong>
+                    <strong>{this.props.error}</strong>
                   </div>
                 }
               </fieldset>
@@ -88,7 +108,9 @@ class ChangePassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  auth: selectors.user.getUser(state)
+  fetching: selectors.user.fetching(state),
+  error: selectors.user.error(state),
+  success: selectors.user.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({
