@@ -1,6 +1,8 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {difference, get, union} from 'lodash'
+import {utc} from 'moment'
+import 'moment-recur'
 
 import {
   foodCategory as foodCategorySchema,
@@ -87,19 +89,26 @@ export default (state = {
 
 export const createSelectors = path => {
   const getEntities = state => state.entities
+  const getAll = createSelector(
+    state => get(state, path).ids,
+    getEntities,
+    (foodItems, entities) =>
+      denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
+  )
 
   return {
-    getAll: createSelector(
-      state => get(state, path).ids,
-      getEntities,
-      (foodItems, entities) =>
-        denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
-    ),
+    getAll,
     getOne: state => id => createSelector(
       getEntities,
       entities =>
         denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems
     )(state),
+    getScheduled: createSelector(
+      getAll,
+      items => items.filter(i =>
+        i.frequency && utc(i.startDate).recur().every(i.frequency).weeks()
+          .matches(utc().startOf('isoWeek')))
+    ),
     saving: state => get(state, path).saving,
     saveError: state => get(state, path).saveError
   }
