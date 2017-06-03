@@ -7,13 +7,13 @@ export default function() {
   const {User} = require('../models')
   // Serialize sessions
   passport.serializeUser(function(user, done) {
-    done(null, user.id)
+    done(null, {_id: user._id, roles: user.roles})
   })
 
   // Deserialize sessions
-  passport.deserializeUser(async function(id, done) {
+  passport.deserializeUser(async function({_id}, done) {
     try {
-      const user = await User.findById(id, '-salt -password')
+      const user = await User.findById(_id, '-salt -password')
       done(null, user)
     } catch (err) {
       done(err)

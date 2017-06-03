@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
 import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
-import {CALL_API, callApi} from '../../store/middleware/api'
+import {CALL_API, WS, callApi} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('customer')
@@ -35,6 +35,10 @@ export const saveCustomer = (customer, admin) => {
       body: customer,
       schema: customerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+    },
+    [WS]: {
+      syncTo: ['volunteer'],
+      schema: 'customer'
     }
   }
 }
