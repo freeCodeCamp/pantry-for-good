@@ -35,7 +35,6 @@ export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
     endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
-    responseSchema: foodCategorySchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 })
@@ -51,16 +50,19 @@ export default (state = {
         saving: true,
         saveError: null
       }
-    case actions.SAVE_SUCCESS:
-    case actions.DELETE_SUCCESS: {
-      // save (and delete?) returns the whole updated food category
+    case actions.SAVE_SUCCESS: {
+      // save returns the whole updated food category
       const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
-
       return {
         ...state,
-        ids: action.type === actions.DELETE_SUCCESS ?
-                              difference(state.ids, result) :
-                              union(state.ids, result),
+        ids: union(state.ids, result),
+        saving: false
+      }
+    }
+    case actions.DELETE_SUCCESS: {
+      return {
+        ...state,
+        ids: difference(state.ids, [action.response.deletedItemId]),
         saving: false
       }
     }
