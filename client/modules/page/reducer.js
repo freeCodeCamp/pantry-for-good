@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {get, sortBy} from 'lodash'
 
 import {CALL_API} from '../../store/middleware/api'
-import {page as pageSchema, arrayOfPages} from '../../store/schemas'
+import {page as pageSchema, arrayOfPages} from '../../../common/schemas'
 import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('page')

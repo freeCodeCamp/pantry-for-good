@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {normalize} from 'normalizr'
 
 import {callApi} from '../../../store/middleware/api'
-import {arrayOfCustomers, arrayOfVolunteers} from '../../../store/schemas'
+import {arrayOfCustomers, arrayOfVolunteers} from '../../../../common/schemas'
 
 const SET_FILTER = 'delivery/assignment/SET_FILTER'
 const SET_DRIVER = 'delivery/assignment/SET_DRIVER'
@@ -57,14 +57,24 @@ export const selectCluster = (cluster, customers, selectedCustomerIds) => {
 export const assignCustomers = (customerIds, driverId) => dispatch => {
   const body = {customerIds, driverId}
   dispatch({type: ASSIGN_REQUEST})
-  callApi('admin/delivery/assign', 'POST', body)
+
+  const sync = {
+    syncTo: ['volunteer'],
+    successType: ASSIGN_SUCCESS,
+    schema: {
+      customers: 'arrayOfCustomers',
+      volunteers: 'arrayOfVolunteers'
+    }
+  }
+
+  callApi('admin/delivery/assign', 'POST', body, null, null, sync)
     .then(res => {
       dispatch({
         type: ASSIGN_SUCCESS,
         response: {
           entities: {
             customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-            volunteers: normalize(res.drivers, arrayOfVolunteers).entities.volunteers
+            volunteers: normalize(res.volunteers, arrayOfVolunteers).entities.volunteers
           }
         }
       })

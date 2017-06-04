@@ -33,7 +33,7 @@ export default {
 
       res.json({
         customers: updatedCustomers,
-        items: updatedItems
+        foodItems: updatedItems
       })
     } catch (err) {
       next(err)

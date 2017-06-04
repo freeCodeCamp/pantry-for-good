@@ -8,8 +8,8 @@ import {
   foodCategory as foodCategorySchema,
   foodItem as foodItemSchema,
   arrayOfFoodItems
-} from '../../../store/schemas'
-import {CALL_API} from '../../../store/middleware/api'
+} from '../../../../common/schemas'
+import {CALL_API, WS} from '../../../store/middleware/api'
 import {actions as foodCategoryActions} from './category'
 import {crudActions} from '../../../store/utils'
 
@@ -27,6 +27,10 @@ export const saveFoodItem = (categoryId, foodItem) => {
       schema: foodItemSchema,
       responseSchema: foodCategorySchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+    },
+    [WS]: {
+      syncTo: ['volunteer'],
+      schema: 'foodCategory'
     }
   }
 }
@@ -36,6 +40,9 @@ export const deleteFoodItem = (categoryId, foodItemId) => ({
     endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
+  },
+  [WS]: {
+    syncTo: ['volunteer']
   }
 })
 

@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {get} from 'lodash'
 import {utc} from 'moment'
 
-import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
+import {customer as customerSchema, arrayOfCustomers} from '../../../common/schemas'
 import {CALL_API, WS, callApi} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 
@@ -50,6 +50,10 @@ export const deleteCustomer = id => ({
     method: 'DELETE',
     schema: customerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
+  },
+  [WS]: {
+    syncTo: ['volunteer'],
+    schema: 'customer'
   }
 })
 

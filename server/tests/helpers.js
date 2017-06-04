@@ -18,7 +18,7 @@ export const createUserSession = async function(userModel) {
     await new User(userModel).save()
 
   const mockApp = express()
-  mockApp.all('*', mockSessionMiddleware(user._id))
+  mockApp.all('*', mockSessionMiddleware(user))
   mockApp.use(app())
 
   return {
@@ -51,10 +51,10 @@ export const createTestUser = (username, accountType, props = null) => ({
   ...props
 })
 
-function mockSessionMiddleware(userId) {
+function mockSessionMiddleware({_id, roles}) {
   return (req, res, next) => {
     req.session = {
-      passport: {user: userId}
+      passport: {user: {_id, roles}}
     }
 
     next()

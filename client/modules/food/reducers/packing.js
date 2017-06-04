@@ -2,7 +2,7 @@ import {normalize} from 'normalizr'
 import {get} from 'lodash'
 
 import {callApi} from '../../../store/middleware/api'
-import {arrayOfCustomers, arrayOfFoodItems} from '../../../store/schemas'
+import {arrayOfCustomers, arrayOfFoodItems} from '../../../../common/schemas'
 
 const PACK_REQUEST = 'packing/PACK_REQUEST'
 const PACK_SUCCESS = 'packing/PACK_SUCCESS'
@@ -19,12 +19,22 @@ const packFailure = error => ({type: PACK_FAILURE, error})
 
 export const pack = (customers, items) => dispatch => {
   dispatch(packRequest())
-  callApi('admin/packing', 'PUT', {customers, items})
+
+  const sync = {
+    syncTo: ['volunteer'],
+    successType: PACK_SUCCESS,
+    schema: {
+      customers: 'arrayOfCustomers',
+      foodItems: 'arrayOfFoodItems'
+    }
+  }
+
+  callApi('admin/packing', 'PUT', {customers, items}, null, null, sync)
     .then(res => {
       dispatch(packSuccess({
         entities: {
           customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-          foodItems: normalize(res.items, arrayOfFoodItems).entities.foodItems
+          foodItems: normalize(res.foodItems, arrayOfFoodItems).entities.foodItems
         }
       }))
     })

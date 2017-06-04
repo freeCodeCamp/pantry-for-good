@@ -27,9 +27,11 @@ import Router from './Router'
 delete AppContainer.prototype.unstable_handleError
 
 const history = createHistory({})
-const store = createStore(history)
+const socket = process.env.NODE_ENV === 'production' ?
+  io() : io('http://localhost:3000')
 
-const socket = io('http://localhost:3000')
+const store = createStore(history, socket)
+
 socket.on('action', store.dispatch)
 
 const root = document.getElementById('app')
