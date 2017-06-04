@@ -1,6 +1,8 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {difference, get, union} from 'lodash'
+import {utc} from 'moment'
+import 'moment-recur'
 
 import {
   foodCategory as foodCategorySchema,
@@ -33,7 +35,6 @@ export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
     endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
-    responseSchema: foodCategorySchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 })
@@ -49,16 +50,19 @@ export default (state = {
         saving: true,
         saveError: null
       }
-    case actions.SAVE_SUCCESS:
-    case actions.DELETE_SUCCESS: {
-      // save (and delete?) returns the whole updated food category
+    case actions.SAVE_SUCCESS: {
+      // save returns the whole updated food category
       const result = action.response.entities.foodItems ? Object.keys(action.response.entities.foodItems) : []
-
       return {
         ...state,
-        ids: action.type === actions.DELETE_SUCCESS ?
-                              difference(state.ids, result) :
-                              union(state.ids, result),
+        ids: union(state.ids, result),
+        saving: false
+      }
+    }
+    case actions.DELETE_SUCCESS: {
+      return {
+        ...state,
+        ids: difference(state.ids, [action.response.deletedItemId]),
         saving: false
       }
     }
@@ -87,19 +91,26 @@ export default (state = {
 
 export const createSelectors = path => {
   const getEntities = state => state.entities
+  const getAll = createSelector(
+    state => get(state, path).ids,
+    getEntities,
+    (foodItems, entities) =>
+      denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
+  )
 
   return {
-    getAll: createSelector(
-      state => get(state, path).ids,
-      getEntities,
-      (foodItems, entities) =>
-        denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
-    ),
+    getAll,
     getOne: state => id => createSelector(
       getEntities,
       entities =>
         denormalize({foodItems: id}, {foodItems: foodItemSchema}, entities).foodItems
     )(state),
+    getScheduled: createSelector(
+      getAll,
+      items => items.filter(i =>
+        i.frequency && utc(i.startDate).recur().every(i.frequency).weeks()
+          .matches(utc().startOf('isoWeek')))
+    ),
     saving: state => get(state, path).saving,
     saveError: state => get(state, path).saveError
   }

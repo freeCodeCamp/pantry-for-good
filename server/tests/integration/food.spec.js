@@ -235,12 +235,20 @@ describe('Food Api', function() {
 
       const itemId = savedCategoryWithItem.items[0]._id
 
-      return request.delete(`/api/admin/foods/${savedCategory._id}/items/${itemId}`)
-        .expect(res => {
-          expect(res.body).to.have.property('items')
-          expect(res.body.items).to.have.length(0)
-        })
+      await request.delete(`/api/admin/foods/${savedCategory._id}/items/${itemId}`)
         .expect(200)
+        .expect(res => {
+          expect(res.body).to.have.property('deletedItemId')
+          expect(res.body.deletedItemId).to.equal(itemId)
+        })
+
+      // Fetch the foods to make sure it is not still there
+      return request.get('/api/admin/foods')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.have.length(1)
+          expect(res.body[0].items).to.have.length(0)
+        })
     })
   })
 })
