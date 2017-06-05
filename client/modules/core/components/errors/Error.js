@@ -11,7 +11,8 @@ const ErrorPage = ({msg, description, color, status}) =>
           {msg}
         </h3>
         <p>
-          {description} <br />Meanwhile, you may <Link to="/">return to the dashboard.</Link>
+          {description}
+          <br />Meanwhile, you may <Link to="/">return to the dashboard.</Link>
         </p>
       </div>
     </div>

@@ -1,16 +1,13 @@
 import {intersection} from 'lodash'
 
-import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
+import {LOAD_SUCCESS, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
 
 export default (state = {items: []}, action) => {
   switch (action.type) {
-    case SET_USER:
-      return {
-        items: getMenuItems(action.user)
-      }
     case CLEAR_USER:
     case SIGNIN_SUCCESS:
     case SIGNUP_SUCCESS:
+    case LOAD_SUCCESS:
       return {
         items: getMenuItems(action.response)
       }
