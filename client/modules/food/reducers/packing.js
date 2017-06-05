@@ -19,7 +19,7 @@ const packFailure = error => ({type: PACK_FAILURE, error})
 
 export const pack = (customers, items) => dispatch => {
   dispatch(packRequest())
-  callApi('admin/packing', 'PUT', {customers, items})
+  callApi('packing', 'PUT', {customers, items})
     .then(res => {
       dispatch(packSuccess({
         entities: {

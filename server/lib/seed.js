@@ -144,7 +144,7 @@ function createTestUser(name, type = null) {
     lastName: names[1],
     displayName: name,
     accountType: [type],
-    roles: [type],
+    roles: names[0] === 'driver' ? ['driver', 'volunteer'] : [type],
     email: `${names.join('')}@${type}.com`,
     password: 'password',
     provider: 'local'

@@ -3,7 +3,7 @@ import packingController from '../controllers/packing'
 
 const packingRouter = express.Router({mergeParams: true})
 
-packingRouter.route('/admin/packing')
-  .put(packingController.pack)
+packingRouter.route('/packing')
+  .put(packingController.hasAuthorization, packingController.pack)
 
 export default packingRouter

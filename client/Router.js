@@ -10,7 +10,9 @@ import Home from './modules/core/components/Home'
 import Customers from './modules/customer/CustomerRouter'
 import Donors from './modules/donor/DonorRouter'
 import Drivers from './modules/driver/DriverRouter'
-import Foods from './modules/food/FoodRouter'
+import Inventory from './modules/food/components/Inventory'
+import Schedule from './modules/food/components/Schedule'
+import Packing from './modules/food/components/Packing'
 import Page from './modules/page/PageRouter'
 import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
 import Settings from './modules/settings/SettingsRouter'
@@ -21,6 +23,7 @@ import requireRole from './components/router/requireRole'
 import SwitchWithNotFound from './components/router/SwitchWithNotFound'
 
 const IsAdmin = requireRole(['admin'])
+const IsVolunteer = requireRole(['admin', 'volunteer'])
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -33,7 +36,9 @@ const Router = ({history}) =>
           <Route path="/customers" component={Customers} />
           <Route path="/donors" component={Donors} />
           <Route path="/drivers" component={Drivers} />
-          <Route path="/foods" component={IsAdmin(Foods)} />
+          <Route path="/inventory" exact component={IsVolunteer(Inventory)} />
+          <Route path="/packing" exact component={IsVolunteer(Packing)} />
+          <Route path="/schedule" exact component={IsVolunteer(Schedule)} />
           <Route path="/pages" component={IsAdmin(Page)} />
           <Route path="/questionnaires" component={IsAdmin(Questionnaire)} />
           <Route path="/settings" component={IsAdmin(Settings)} />

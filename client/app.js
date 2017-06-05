@@ -58,6 +58,9 @@ store.dispatch(loadSettings())
 fetch('/api/users/me', {credentials: 'same-origin'})
   .then(res =>
     res.json().then(user => {
+      if (user && user.roles.find(r => r === 'admin')) {
+        $('body').removeClass('layout-top-nav')
+      }
       store.dispatch(setUser(user))
       render(Router)
     }))

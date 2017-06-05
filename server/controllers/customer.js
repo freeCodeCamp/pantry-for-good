@@ -91,7 +91,12 @@ export default {
    * Customer authorization middleware
    */
   hasAuthorization(req, res, next) {
-    if (req.customer._id !== +req.user.id) {
+    if (req.user && req.user.roles.find(r =>
+        r === 'admin' || r === 'volunteer')) {
+      return next()
+    }
+
+    if (!req.customer || req.customer._id !== +req.user.id) {
       return res.status(403).json({
         message: 'User is not authorized'
       })

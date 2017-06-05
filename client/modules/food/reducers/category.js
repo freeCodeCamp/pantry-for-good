@@ -18,7 +18,7 @@ export const loadFoods = () => ({
 
 export const saveFood = food => ({
   [CALL_API]: {
-    endpoint: food._id ? `admin/foods/${food._id}` : `admin/foods`,
+    endpoint: food._id ? `foods/${food._id}` : 'foods',
     method: food._id ? 'PUT' : 'POST',
     body: food,
     schema: foodCategory,
@@ -28,7 +28,7 @@ export const saveFood = food => ({
 
 export const deleteFood = id => ({
   [CALL_API]: {
-    endpoint: `admin/foods/${id}`,
+    endpoint: `foods/${id}`,
     method: 'DELETE',
     schema: foodCategory,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]

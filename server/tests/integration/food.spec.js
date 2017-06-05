@@ -38,7 +38,7 @@ describe('Food Api', function() {
         ]
       }
 
-      await adminRequest.post('/api/admin/foods')
+      await adminRequest.post('/api/foods')
         .send(testFood)
 
       return userRequest.get('/api/foods')
@@ -59,7 +59,7 @@ describe('Food Api', function() {
 
       const testFood = {category: 'test food'}
 
-      return request.post('/api/admin/foods')
+      return request.post('/api/foods')
         .send(testFood)
         .expect(res => {
           expect(res.body).to.be.an('object')
@@ -75,10 +75,10 @@ describe('Food Api', function() {
 
       const testFood = {category: 'test food'}
 
-      await request.post('/api/admin/foods')
+      await request.post('/api/foods')
         .send(testFood)
 
-      return request.get('/api/admin/foods')
+      return request.get('/api/foods')
         .expect(res => {
           expect(res.body).to.be.an('array')
           expect(res.body).to.have.length(1)
@@ -94,12 +94,12 @@ describe('Food Api', function() {
 
       const testFood = {category: 'test food'}
 
-      const savedFood = (await request.post('/api/admin/foods')
+      const savedFood = (await request.post('/api/foods')
         .send(testFood)).body
 
       const updatedFood = {category: 'new category'}
 
-      return request.put(`/api/admin/foods/${savedFood._id}`)
+      return request.put(`/api/foods/${savedFood._id}`)
         .send(updatedFood)
         .expect(res => {
           expect(res.body).to.be.an('object')
@@ -115,10 +115,10 @@ describe('Food Api', function() {
 
       const testFood = {category: 'test food'}
 
-      const savedFood = (await request.post('/api/admin/foods')
+      const savedFood = (await request.post('/api/foods')
         .send(testFood)).body
 
-      return request.delete(`/api/admin/foods/${savedFood._id}`)
+      return request.delete(`/api/foods/${savedFood._id}`)
         .expect(res => {
           expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('category', 'test food')
@@ -134,10 +134,10 @@ describe('Food Api', function() {
       const testCategory = {category: 'test food'}
       const testItem = {name: 'test item'}
 
-      const savedCategory = (await request.post('/api/admin/foods')
+      const savedCategory = (await request.post('/api/foods')
         .send(testCategory)).body
 
-      return request.post(`/api/admin/foods/${savedCategory._id}/items`)
+      return request.post(`/api/foods/${savedCategory._id}/items`)
         .send(testItem)
         .expect(res => {
           expect(res.body).to.be.an('object')
@@ -157,11 +157,11 @@ describe('Food Api', function() {
       const testCategory = {category: 'test category'}
       const testItem = {name: 'test item'}
 
-      const savedCategory = (await request.post('/api/admin/foods')
+      const savedCategory = (await request.post('/api/foods')
         .send(testCategory)).body
 
       const savedCategoryWithItem = (await request
-        .post(`/api/admin/foods/${savedCategory._id}/items`)
+        .post(`/api/foods/${savedCategory._id}/items`)
         .send(testItem)
       ).body
 
@@ -171,7 +171,7 @@ describe('Food Api', function() {
       }
 
       const itemId = savedCategoryWithItem.items[0]._id
-      return request.put(`/api/admin/foods/${savedCategory._id}/items/${itemId}`)
+      return request.put(`/api/foods/${savedCategory._id}/items/${itemId}`)
         .send(updatedItem)
         .expect(res => {
           expect(res.body).to.have.property('items')
@@ -189,14 +189,14 @@ describe('Food Api', function() {
       const testCategory2 = {category: 'test category 2'}
       const testItem = {name: 'test item'}
 
-      const savedCategory1 = (await request.post('/api/admin/foods')
+      const savedCategory1 = (await request.post('/api/foods')
         .send(testCategory1)).body
 
-      const savedCategory2 = (await request.post('/api/admin/foods')
+      const savedCategory2 = (await request.post('/api/foods')
         .send(testCategory2)).body
 
       const savedCategoryWithItem = (await request
-        .post(`/api/admin/foods/${savedCategory1._id}/items`)
+        .post(`/api/foods/${savedCategory1._id}/items`)
         .send(testItem)
       ).body
 
@@ -208,7 +208,7 @@ describe('Food Api', function() {
         categoryId: savedCategory2._id
       }
 
-      return request.put(`/api/admin/foods/${savedCategory1._id}/items/${savedItem._id}`)
+      return request.put(`/api/foods/${savedCategory1._id}/items/${savedItem._id}`)
         .send(updatedItem)
         .expect(res => {
           expect(res.body).to.have.property('_id', savedCategory2._id)
@@ -225,17 +225,17 @@ describe('Food Api', function() {
       const testCategory = {category: 'test category'}
       const testItem = {name: 'test item'}
 
-      const savedCategory = (await request.post('/api/admin/foods')
+      const savedCategory = (await request.post('/api/foods')
         .send(testCategory)).body
 
       const savedCategoryWithItem = (await request
-        .post(`/api/admin/foods/${savedCategory._id}/items`)
+        .post(`/api/foods/${savedCategory._id}/items`)
         .send(testItem)
       ).body
 
       const itemId = savedCategoryWithItem.items[0]._id
 
-      return request.delete(`/api/admin/foods/${savedCategory._id}/items/${itemId}`)
+      return request.delete(`/api/foods/${savedCategory._id}/items/${itemId}`)
         .expect(res => {
           expect(res.body).to.have.property('items')
           expect(res.body.items).to.have.length(0)

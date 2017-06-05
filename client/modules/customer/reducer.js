@@ -3,31 +3,29 @@ import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
 import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
-import {CALL_API, callApi} from '../../store/middleware/api'
+import {CALL_API} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('customer')
 
 export const loadCustomers = () => ({
   [CALL_API]: {
-    endpoint: 'admin/customers',
+    endpoint: 'customer',
     schema: arrayOfCustomers,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
 })
 
-export const loadCustomer = (id, admin) => ({
+export const loadCustomer = id => ({
   [CALL_API]: {
-    endpoint: admin ? `admin/customers/${id}` : `customer/${id}`,
+    endpoint: `customer/${id}`,
     schema: customerSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
 })
 
-export const saveCustomer = (customer, admin) => {
-  let endpoint
-  if (admin) endpoint = customer.id ? `admin/customers/${customer.id}` : `admin/customers`
-  else endpoint = customer.id ? `customer/${customer.id}` : `customer`
+export const saveCustomer = customer => {
+  const endpoint = customer.id ? `customer/${customer.id}` : `customer`
   return {
     [CALL_API]: {
       endpoint,
@@ -47,16 +45,6 @@ export const deleteCustomer = id => ({
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
   }
 })
-
-// TODO: maybe better way to do this
-export const assignCustomers = (customerIds, driverId) => dispatch => {
-  const body = {customerIds, driverId}
-  callApi('admin/customers/assign', 'POST', body, null, arrayOfCustomers)
-    .then(response => {
-      dispatch({type: actions.SAVE_SUCCESS, response})
-    })
-    .catch(error => dispatch({type: actions.SAVE_FAILURE, error}))
-}
 
 export default crudReducer('customer')
 

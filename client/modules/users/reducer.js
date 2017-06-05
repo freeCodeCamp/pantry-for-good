@@ -118,7 +118,14 @@ export default (state = {user: null}, action) => {
       }
     case SET_PROFILE_SUCCESS:
     case SIGNUP_SUCCESS:
-    case SIGNIN_SUCCESS:
+    case SIGNIN_SUCCESS: {
+      // TODO: remove this! need App component
+      const user = action.response || state.user
+      if (user && user.roles.find(r => r === 'admin')) {
+        $('body').removeClass('layout-top-nav')
+      } else {
+        $('body').addClass('layout-top-nav')
+      }
       return {
         ...state,
         fetching: false,
@@ -126,6 +133,7 @@ export default (state = {user: null}, action) => {
         user: action.response || state.user,
         error: null
       }
+    }
     case SET_PASSWORD_SUCCESS:
     case FORGOT_PASSWORD_SUCCESS:
     case RESET_PASSWORD_SUCCESS:

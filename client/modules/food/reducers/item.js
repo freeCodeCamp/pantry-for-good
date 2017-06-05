@@ -19,7 +19,7 @@ export const clearFlags = () => ({type: CLEAR_FLAGS})
 export const saveFoodItem = (categoryId, foodItem) => {
   return {
     [CALL_API]: {
-      endpoint: foodItem._id ? `admin/foods/${categoryId}/items/${foodItem._id}` : `admin/foods/${categoryId}/items`,
+      endpoint: foodItem._id ? `foods/${categoryId}/items/${foodItem._id}` : `foods/${categoryId}/items`,
       method: foodItem._id ? 'PUT' : 'POST',
       body: foodItem,
       schema: foodItemSchema,
@@ -31,7 +31,7 @@ export const saveFoodItem = (categoryId, foodItem) => {
 
 export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
-    endpoint: `admin/foods/${categoryId}/items/${foodItemId}`,
+    endpoint: `foods/${categoryId}/items/${foodItemId}`,
     method: 'DELETE',
     responseSchema: foodCategorySchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]

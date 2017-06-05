@@ -8,21 +8,17 @@ export default () => {
 
   const foodRouter = Router({mergeParams: true})
 
-  foodRouter.route('/admin/foods')
-    .get(foodController.list)
-    .post(foodController.create)
-  foodRouter.route('/admin/foods/:foodId')
-    .put(foodController.update)
-    .delete(foodController.delete)
-  foodRouter.route('/admin/foods/:foodId/items')
-    .post(foodController.createItem)
-  foodRouter.route('/admin/foods/:foodId/items/:itemId')
-    .put(foodController.updateItem)
-    .delete(foodController.deleteItem)
-
-  // Food routes for user
   foodRouter.route('/foods')
     .get(requiresLogin, foodController.list)
+    .post(foodController.hasAuthorization, foodController.create)
+  foodRouter.route('/foods/:foodId')
+    .put(foodController.hasAuthorization, foodController.update)
+    .delete(foodController.hasAuthorization, foodController.delete)
+  foodRouter.route('/foods/:foodId/items')
+    .post(foodController.hasAuthorization, foodController.createItem)
+  foodRouter.route('/foods/:foodId/items/:itemId')
+    .put(foodController.hasAuthorization, foodController.updateItem)
+    .delete(foodController.hasAuthorization, foodController.deleteItem)
 
   // Finish by binding the food middleware
   foodRouter.param('foodId', foodController.foodById)
