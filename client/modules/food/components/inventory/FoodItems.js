@@ -31,7 +31,7 @@ class FoodItems extends React.Component {
     }
   }
 
-  openModal = _id => {
+  openModal = _id => () => {
     if (typeof _id !== 'string') {
       // Open the modal in 'add' mode
       this.setState({
@@ -73,22 +73,20 @@ class FoodItems extends React.Component {
   }
 
   /**
-   * Used by react-bootstrap-table to get the food item edit buttons
+   * Used by react-bootstrap-table to get the action buttons
    */
-  getEditButton = (cell, row) => (
-    <button onClick={() => { this.openModal(row._id) }} className="btn btn-primary btn-flat btn-xs"><i className="fa fa-pencil"></i>Edit</button>
-  )
-
-  /**
-   * Used by react-bootstrap-table to get the food item delete buttons
-   */
-  getDeleteButton = (cell, row) => (
-    <button
-      onClick={() => { this.props.deleteFoodItem(row.categoryId, row._id) }}
-      className="btn btn-danger btn-flat btn-xs">
-      <i className="fa fa-trash"></i>Delete
-    </button>
-  )
+  getActionButtons = (cell, row) =>
+    <div>
+      <Button onClick={this.openModal(row._id)} bsStyle="primary" bsSize="xs">
+        <i className="fa fa-pencil" style={{marginRight: '8px'}} />Edit
+      </Button>
+      {' '}
+      <Button
+        onClick={this.props.deleteFoodItem(row.categoryId, row._id)}
+        bsStyle="danger" bsSize="xs">
+        <i className="fa fa-trash" style={{marginRight: '8px'}} />Delete
+      </Button>
+    </div>
 
   /**
    * Used by react-bootstrap-table to get the table header
@@ -100,7 +98,7 @@ class FoodItems extends React.Component {
           <h3 className='box-title'>Foods</h3>
         </div>
         <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
-          <Button onClick={this.openModal} className='btn-success' disabled={this.props.foodCategories.length === 0} style={{ color: 'white', width: '200px' }}>Add to Inventory</Button>
+          <Button onClick={this.openModal()} className='btn-success' disabled={this.props.foodCategories.length === 0} style={{ color: 'white', width: '200px' }}>Add to Inventory</Button>
         </div>
         <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
           {props.components.searchPanel}
@@ -199,11 +197,10 @@ class FoodItems extends React.Component {
       <div className="box">
 
         <BootstrapTable data={this.props.foodItems} pagination keyField='_id' options={tableOptions} striped search>
-          <TableHeaderColumn dataField="name" width='33%' dataSort>Name</TableHeaderColumn>
-          <TableHeaderColumn dataField="categoryId" width='33%' dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
-          <TableHeaderColumn dataField="quantity" width='15%' dataSort>Qty</TableHeaderColumn>
-          <TableHeaderColumn width='5%' dataAlign='center' dataFormat={this.getEditButton}></TableHeaderColumn>
-          <TableHeaderColumn width='5%' dataAlign='center' dataFormat={this.getDeleteButton}></TableHeaderColumn>
+          <TableHeaderColumn dataField="name" dataSort>Name</TableHeaderColumn>
+          <TableHeaderColumn dataField="categoryId" dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
+          <TableHeaderColumn dataField="quantity" width='70px' dataAlign="right" dataSort>Qty</TableHeaderColumn>
+          <TableHeaderColumn width="140px" dataAlign="center" dataFormat={this.getActionButtons}></TableHeaderColumn>
         </BootstrapTable>
 
         <Modal show={!!this.state.showModal} onHide={this.closeModal}>
@@ -298,7 +295,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   saveFoodItem: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
-  deleteFoodItem: (categoryId, _id) => dispatch(deleteFoodItem(categoryId, _id)),
+  deleteFoodItem: (categoryId, _id) => () => dispatch(deleteFoodItem(categoryId, _id)),
   clearFlags: () => dispatch(clearFlags())
 })
 

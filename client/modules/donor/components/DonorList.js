@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {Button, ButtonToolbar} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
@@ -49,19 +49,21 @@ class DonorList extends Component {
     []
 
   getActionButtons = (_, donor) =>
-    <ButtonToolbar>
+    <div>
       <Link
         to={`/donors/${donor.id}`}
         className="btn btn-info btn-sm"
       ><i className="fa fa-eye" /></Link>
+      {' '}
       <Link
         to={`/donors/${donor.id}/edit`}
         className="btn btn-primary btn-sm"
       ><i className="fa fa-pencil" /></Link>
+      {' '}
       <Button bsStyle="danger" bsSize="sm" onClick={this.deleteDonor(donor)}>
         <i className="fa fa-trash" />
       </Button>
-    </ButtonToolbar>
+    </div>
 
   render() {
     const {loading, loadError, savingDonors, saveDonorsError} = this.props
