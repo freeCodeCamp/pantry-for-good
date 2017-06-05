@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {ButtonToolbar} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
@@ -35,16 +34,17 @@ class VolunteerList extends Component {
   getStatusLabel = (_, volunteer) => <ClientStatusLabel client={volunteer} />
 
   getActionButtons = (_, volunteer) =>
-    <ButtonToolbar>
+    <div>
       <Link
         to={`/volunteers/${volunteer.id}`}
         className="btn btn-info btn-sm"
       ><i className="fa fa-eye" /></Link>
+      {' '}
       <Link
         to={`/volunteers/${volunteer.id}/edit`}
         className="btn btn-primary btn-sm"
       ><i className="fa fa-pencil" /></Link>
-    </ButtonToolbar>
+    </div>
 
   formatData = () => this.props.volunteers ?
     this.props.volunteers.map(v => ({
@@ -94,7 +94,7 @@ class VolunteerList extends Component {
                 <TableHeaderColumn
                   dataFormat={this.getActionButtons}
                   dataAlign="center"
-                  width="90px"
+                  width="100px"
                 />
               </BootstrapTable>
             </BoxBody>
