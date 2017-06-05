@@ -1,6 +1,7 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
+import {utc} from 'moment'
 
 import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
 import {CALL_API} from '../../store/middleware/api'
@@ -50,19 +51,28 @@ export default crudReducer('customer')
 
 export const createSelectors = path => {
   const getEntities = state => state.entities
+  const getAll = createSelector(
+    state => get(state, path).ids,
+    getEntities,
+    (customers, entities) =>
+      denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
+  )
 
   return {
-    getAll: createSelector(
-      state => get(state, path).ids,
-      getEntities,
-      (customers, entities) =>
-        denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
-    ),
+    getAll,
     getOne: state => id => createSelector(
       getEntities,
       entities =>
         denormalize({customers: id}, {customers: customerSchema}, entities).customers
     )(state),
+    getScheduled: createSelector(
+      getAll,
+      customers => {
+        const beginWeek = utc().startOf('isoWeek')
+        return customers.filter(customer =>
+          customer.status === 'Accepted' && !utc(customer.lastPacked).isSame(beginWeek))
+      }
+    ),
     loading: state => get(state, path).fetching,
     loadError: state => get(state, path).fetchError,
     saving: state => get(state, path).saving,

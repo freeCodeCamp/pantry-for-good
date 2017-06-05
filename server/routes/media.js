@@ -6,7 +6,8 @@ import mediaController from '../controllers/media'
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'assets/media')
+    const mediaRoot = process.env.NODE_ENV === 'production' ? 'dist/client' : 'assets'
+    cb(null, `${mediaRoot}/media`)
   },
   filename: function (req, file, cb) {
     const ext = last(file.originalname.split('.'))

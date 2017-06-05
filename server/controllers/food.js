@@ -119,17 +119,10 @@ export default {
    * Delete a food item
    */
   async deleteItem(req, res) {
-    const id = req.food._id
-
-    const savedFood = await Food.findByIdAndUpdate(
-      id,
-      { $pull: { items: { _id: req.itemId } } }, {new: true}
-    ).lean()
-
-    // const deletedItem = savedFood.items.filter(item =>
-    //   item._id.toString() === req.itemId)
-
-    res.json(savedFood)
+    const categoryId = req.food._id
+    const foodItemId = req.itemId
+    await Food.findByIdAndUpdate(categoryId, { $pull: { items: { _id: foodItemId } } })
+    res.json({deletedItemId: req.itemId})
   },
 
   /**

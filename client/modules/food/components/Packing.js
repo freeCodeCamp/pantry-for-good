@@ -1,258 +1,176 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {utc} from 'moment'
-import 'moment-recur'
-import {Table} from 'react-bootstrap'
+import {compose, withProps} from 'recompose'
+import {Button} from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadCustomers} from '../../customer/reducer'
 import {loadFoods} from '../reducers/category'
 import {pack} from '../reducers/packing'
 
-import Page from '../../../components/page/PageBody'
+import {Box, BoxBody, BoxHeader} from '../../../components/box'
+import {Page, PageBody} from '../../../components/page'
+import {Checkbox} from '../../../components/form'
 
 const mapStateToProps = state => ({
-  customers: selectors.customer.getAll(state),
-  items: selectors.food.item.getAll(state),
+  customers: selectors.customer.getScheduled(state),
+  items: selectors.food.item.getScheduled(state),
   loading: selectors.customer.loading(state) ||
     selectors.food.category.loading(state),
-  loadError: selectors.customer.loadError(state) ||
+  error: selectors.customer.loadError(state) ||
     selectors.food.category.loadError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  loadCustomers: () => dispatch(loadCustomers()),
-  loadFoods: () => dispatch(loadFoods()),
+  load: () => {
+    dispatch(loadCustomers())
+    dispatch(loadFoods())
+  },
   pack: (customers, items) => dispatch(pack(customers, items))
 })
+
+const withPackedCustomers = withProps(({customers, items}) =>
+  getPackedCustomersAndItems(customers, items))
 
 class PackingList extends Component {
   constructor(props) {
     super(props)
-    this.beginWeek = utc().startOf('isoWeek')
     this.state = {
-      error: null,
-      customers: null,
-      items: null,
-      allSelected: false
+      selected: []
     }
   }
 
   componentWillMount() {
-    this.props.loadCustomers()
-    this.props.loadFoods()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const allCustomers = nextProps.customers
-    const allItems = nextProps.items
-    const {
-      loading,
-      loadCustomersError,
-      loadFoodsError
-    } = nextProps
-
-    if (!loading && this.props.loading) {
-      if (loadFoodsError) this.setState({error: loadFoodsError})
-      else if (loadCustomersError) this.setState({error: loadCustomersError})
-      else {
-        const scheduledCustomers = getScheduledCustomers(allCustomers, this.beginWeek)
-        const scheduledItems = getScheduledItems(allItems, this.beginWeek)
-
-        // generate packing lists for the customers
-        const {customers} = getPackedCustomersAndItems(
-          scheduledCustomers,
-          scheduledItems
-        )
-
-        this.setState({customers, items: scheduledItems})
-      }
-    }
+    this.props.load()
   }
 
   pack = () => {
     // generate packing lists for selected customers and updated item counts
-    const {customers, items} = getPackedCustomersAndItems(
-      this.state.customers.filter(customer => customer.isChecked),
-      this.state.items
+    const {packedCustomers, updatedItems} = getPackedCustomersAndItems(
+      this.state.selected.map(id => this.props.customers.find(c => c.id === id)),
+      this.props.items
     )
 
-    this.props.pack(customers, items)
+    this.props.pack(packedCustomers, updatedItems)
   }
 
-  // Determine column span of empty cells
-  getColSpan = customer => {
-    if (this.state.items && customer.packingList) {
-      return this.state.items.length - customer.packingList.length
-    }
-    return 1
-  };
+  getItemList = items => items.map(i => i.name).join(', ')
 
-  // Select all checkboxes
-  selectAll = () => {
-    this.setState({
-      customers: this.state.customers.map(customer => ({
-        ...customer,
-        isChecked: !this.state.allSelected
-      })),
-      allSelected: !this.state.allSelected
-    })
+  select(props) {
+    const {type, checked, disabled, onChange, rowIndex} = props
+
+    return rowIndex === 'Header' ?
+      <Checkbox
+        type={type}
+        name="checkboxAll"
+        checked={checked}
+        disabled={disabled}
+        className={props.indeterminate ? 'partial' : ''}
+        onChange={onChange}
+        style={{margin: '0 0 0 -8px'}}
+      /> :
+      <Checkbox
+        type={type}
+        name={'checkbox' + rowIndex}
+        checked={checked}
+        disabled={disabled}
+        onChange={e => onChange(e, rowIndex)}
+        style={{margin: '0 0 0 -8px'}}
+      />
   }
 
-  // toggle selected for customer with id
-  handleSelect = id => () =>
-    this.setState({
-      customers: selectCustomer(this.state.customers, id)
-    })
+  handleSelect = (customer, isSelected) => this.setState({
+    selected: isSelected ?
+      [...this.state.selected, customer.id] :
+      this.state.selected.filter(id => id !== customer.id)
+  })
 
-  // Enable submit button if any of the checkboxes are checked
-  isDisabled = () =>
-    !this.state.customers || !this.state.customers.find(customer => customer.isChecked)
+  handleSelectAll = isSelected => {
+    const {selected} = this.state
+    const {customers} = this.props
+    this.setState({
+      selected: isSelected || selected.length < customers.length ?
+        customers.map(c => c.id) : []
+    })
+  }
 
   render() {
-    const {customers, items, error, allSelected} = this.state
-    const {loading} = this.props
-    if (!customers || !items) return null
+    const {loading, error, packedCustomers} = this.props
+    const {selected} = this.state
+    const itemsToPack = packedCustomers.reduce((acc, c) =>
+      acc + c.packingList.length, 0)
     return (
-      <Page heading="Packing List">
-        <div className="row">
-          <div className="col-xs-12">
-            <div className="box">
-              <div className="box-header">
-                <h3 className="box-title">Current week</h3>
-                <div className="box-tools">
-                  <div className="form-group has-feedback">
-                    <input
-                      className="form-control"
-                      type="search"
-                      placeholder="Search"
-                    />
-                    <span className="glyphicon glyphicon-search form-control-feedback"></span>
-                  </div>
-                </div>
-              </div>
-              <div className="box-body table-responsive no-padding top-buffer">
-                <Table responsive>
-                  <thead>
-                    <tr>
-                      <th>
-                        <input
-                          type="checkbox"
-                          checked={allSelected}
-                          onChange={this.selectAll}
-                        />
-                        Packed ?
-                      </th>
-                      <th>Client ID</th>
-                      <th>Household</th>
-                      {items.map((item, i) =>
-                        <th key={i}>Item {i + 1}</th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {customers.map((customer, i) =>
-                      <tr key={i}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={customer.isChecked || false}
-                            onChange={this.handleSelect(customer.id)}
-                          />
-                        </td>
-                        <td><span>{customer.id}</span></td>
-                        <td><span>{customer.householdSummary}</span></td>
-                        {customer.packingList && customer.packingList.map((item, i) =>
-                          <td key={i}><span>{item.name}</span></td>
-                        )}
-                        {items.length !== customer.packingList.length &&
-                          <td colSpan={this.getColSpan(customer)}>
-                            N/A
-                          </td>
-                        }
-                      </tr>
-                    )}
-                    {!customers.length &&
-                      <tr>
-                        <td className="text-center" colSpan={items.length + 3}>
-                          All food packages have been packed!
-                        </td>
-                      </tr>
-                    }
-                  </tbody>
-                </Table>
-              </div>
-              <div className="box-footer">
-                <div className="row">
-                  <div className="col-sm-6 col-md-4 col-lg-2">
-                    <button
-                      className="btn btn-primary btn-flat btn-block"
-                      onClick={this.pack}
-                      disabled={this.isDisabled()}
-                    >
-                      Send packages
-                    </button>
-                  </div>
-                  <div className="col-sm-6 col-md-4 col-lg-2 col-md-offset-4 col-lg-offset-8">
-                    <button className="btn btn-default btn-flat btn-block">
-                      <i className="fa fa-print"></i> Print
-                    </button>
-                  </div>
-                </div>
-              </div>
-              {loading &&
-                <div className="overlay">
-                  <i className="fa fa-refresh fa-spin"></i>
+      <Page>
+        <PageBody>
+          <Box>
+            <BoxHeader heading="Packing List" />
+            <BoxBody loading={loading} error={error}>
+              {packedCustomers &&
+                <div style={{color: '#aaa'}}>
+                  {itemsToPack} items for {packedCustomers.length} customers
                 </div>
               }
-            </div>
-          </div>
-        </div>
-        {error &&
-          <div className="text-danger">
-            <strong>{error}</strong>
-          </div>
-        }
+              <BootstrapTable
+                data={packedCustomers || []}
+                keyField="id"
+                options={{
+                  defaultSortName: "id",
+                  defaultSortOrder: 'desc',
+                  noDataText: loading ? '' : 'Nothing to pack'
+                }}
+                selectRow={{
+                  mode: 'checkbox',
+                  customComponent: this.select,
+                  onSelect: this.handleSelect,
+                  onSelectAll: this.handleSelectAll,
+                  selected,
+                  clickToSelect: true,
+                  columnWidth: '55px'
+                }}
+                hover
+                striped
+                pagination
+                search
+              >
+                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="householdSummary" width="90px">
+                  Household
+                </TableHeaderColumn>
+                <TableHeaderColumn dataField="packingList" dataFormat={this.getItemList}>
+                  Items
+                </TableHeaderColumn>
+              </BootstrapTable>
+              <div className="box-footer text-right">
+                <Button
+                  bsStyle="success"
+                  onClick={this.pack}
+                  disabled={!packedCustomers.length}
+                >
+                  Mark Packed
+                </Button>
+              </div>
+            </BoxBody>
+          </Box>
+        </PageBody>
       </Page>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PackingList)
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withPackedCustomers
+)(PackingList)
 
-
-// 2. Select all items that are scheduled for distribution this week
-function getScheduledItems(items, beginWeek) {
-  return items.filter(item => {
-    // Check if the item has a schedule planned
-    if (item.frequency) {
-      // Construct a moment recurring object based on the starting date and frequency from schedule
-      const interval = utc(item.startDate).recur()
-        .every(item.frequency).days()
-      // Return true only if the current week matches one of the recurring dates
-      return interval.matches(beginWeek)
-    }
-  })
-}
-
-// 3. Find a list of customers and filter based on status and last packed date
-function getScheduledCustomers(customers, beginWeek) {
-  // If the packed date equals this week's date then the customer package
-  // has already been packed for this week
-  return customers.filter(customer =>
-    !utc(customer.lastPacked).isSame(beginWeek) &&
-      (customer.status === 'Accepted')
-  )
-}
-
-// 4. Figure out which food items should be in the packing list
-function getPackedCustomersAndItems(scheduledCustomers, scheduledItems) {
-  let itemCounts = scheduledItems.map(item => item.quantity)
+function getPackedCustomersAndItems(customers, items) {
+  let itemCounts = items.map(item => item.quantity)
 
   // generate a packing list for each customer
-  const customers = scheduledCustomers.map(customer => ({
+  const packedCustomers = customers.map(customer => ({
     ...customer,
-    packingList: scheduledItems.map((item, i) => {
+    packingList: items.map((item, i) => {
       // If the item is in the customer's food preferences and in stock
       // add it to customers packing list and decrement its count
       if (customer.foodPreferences.find(equalIds(item)) && itemCounts[i] > 0) {
@@ -263,25 +181,12 @@ function getPackedCustomersAndItems(scheduledCustomers, scheduledItems) {
   }))
 
   // generate a list of updated items after packing
-  const items = scheduledItems.map((item, i) => ({
+  const updatedItems = items.map((item, i) => ({
     ...item,
     quantity: itemCounts[i]
   }))
 
-  return {customers, items}
-}
-
-// get customers list after toggling selected on matching id
-function selectCustomer(customers, id) {
-  return customers.map(customer => {
-    if (customer.id === id)
-      return {
-        ...customer,
-        isChecked: !customer.isChecked
-      }
-
-    return {...customer}
-  })
+  return {packedCustomers, updatedItems}
 }
 
 function equalIds(thing) {
