@@ -29,9 +29,9 @@ class Category extends React.Component {
         <tr>
           <td>
             <div className="input-group">
-              <input type="text" className="form-control" value={this.state.editedName} onChange={e => this.onChange(e)} required />
+              <input type="text" className="form-control" value={this.state.editedName} onChange={this.onChange} required />
               <span className="input-group-btn">
-                <button className="btn btn-success btn-flat" onClick={() => this.onClickSubmitEdit()} disabled={this.state.editedName.trim() === ""}>
+                <button className="btn btn-success btn-flat" onClick={this.onClickSubmitEdit} disabled={this.state.editedName.trim() === ""}>
                   <i className="fa fa-check"></i>
                 </button>
               </span>
@@ -45,8 +45,8 @@ class Category extends React.Component {
           <td>
             <span>{this.props.category}</span>
             <div className="tools">
-              <i className="fa fa-edit text-blue" onClick={() => this.onClickShowEdit()}></i>
-              <i className="fa fa-trash-o text-red" onClick={() => this.onClickRemove()}></i>
+              <i className="fa fa-edit text-blue" onClick={this.onClickShowEdit}></i>
+              <i className="fa fa-trash-o text-red" onClick={this.onClickRemove}></i>
             </div>
           </td>
         </tr>

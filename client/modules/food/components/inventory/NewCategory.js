@@ -33,7 +33,7 @@ class NewCategory extends React.Component {
                 className="form-control"
                 placeholder="Add category"
                 value={this.state.inputFieldValue}
-                onChange={e => this.onChange(e)} />
+                onChange={this.onChange} />
             <span className="input-group-btn">
                 <button className="btn btn-success btn-flat" disabled={!this.state.validInput}
                     onClick={this.onClick}>

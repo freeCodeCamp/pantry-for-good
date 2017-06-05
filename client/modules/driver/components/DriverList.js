@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
@@ -34,6 +35,14 @@ class DriverAdmin extends Component {
     <span className={labelClass(driver.deliveryStatus)}>
       {driver.deliveryStatus}
     </span>
+
+  getActionButtons = (_, driver) =>
+    <div>
+      <Link to={`/drivers/${driver.id}`} className="btn btn-primary btn-sm">
+        <i className="fa fa-road" style={{marginRight: '8px'}}/>{' '}
+        Route
+      </Link>
+    </div>
 
   render() {
     const {drivers, loading, loadError} = this.props
@@ -71,6 +80,11 @@ class DriverAdmin extends Component {
                 >
                   Status
                 </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getActionButtons}
+                  dataAlign="center"
+                  width="100px"
+                />
               </BootstrapTable>
 
             </BoxBody>
