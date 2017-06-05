@@ -19,7 +19,7 @@ import config from './index'
 import getErrorMessage from '../lib/error-messages'
 import '../models'
 import seed from '../lib/seed'
-import websocketMiddleware, {addUser} from '../lib/websocket-middleware'
+import {addUser} from '../lib/websocket-middleware'
 
 // set api delay and failure probablility for testing
 const API_DELAY = 0
@@ -98,7 +98,7 @@ export default function(io) {
   app.use(helmet())
   app.disable('x-powered-by')
 
-  app.use('/api', websocketMiddleware, apiRoutes(API_DELAY, API_FAILURE_RATE))
+  app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
   // Setting the static folder
   if (process.env.NODE_ENV === 'production')

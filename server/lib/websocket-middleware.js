@@ -1,50 +1,51 @@
-import {normalize} from 'normalizr'
+import {normalize, schema} from 'normalizr'
 import {intersection} from 'lodash'
-
-import * as schemas from '../../common/schemas'
 
 let users = []
 
-export default (req, res, next) => {
-  const {websocket, body} = req.body || {}
-  if (!websocket) return next()
+export default sync => {
+  if (!sync.syncTo) sync.syncTo = []
+  if (typeof(sync.type) !== 'string')
+    throw new Error('action type must be a string')
 
-  req.body = body
-  const oldJson = res.json
+  return (req, res, next) => {
+    const oldJson = res.json
 
-  res.json = json => {
-    oldJson.call(res, json)
-    if (res.statusCode !== 200) return
+    res.json = json => {
+      oldJson.call(res, json)
+      if (res.statusCode !== 200) return
 
-    json = JSON.parse(JSON.stringify(json))
-    let response
+      json = JSON.parse(JSON.stringify(json))
+      let response
 
-    if (!websocket.schema) {
-      response = json
-    } else if (typeof websocket.schema === 'string') {
-      response = normalize(json, schemas[websocket.schema])
-    } else {
-      const entities = Object.assign({},
-        ...Object.keys(websocket.schema).map(k => {
-          const schema = schemas[websocket.schema[k]]
-          return {[k]: normalize(json[k], schema).entities[k]}
-        })
-      )
-      response = {entities}
+      if (!sync.schema) {
+        response = json
+      } else if (Object.keys(schema).some(type => sync.schema instanceof schema[type])) {
+        // schema is a normalizr schema
+        response = normalize(json, sync.schema)
+      } else {
+        // schema is a map of entity types to schemas
+        const entities = Object.assign({},
+          ...Object.keys(sync.schema).map(k => ({
+            [k]: normalize(json[k], sync.schema[k]).entities[k]
+          }))
+        )
+        response = {entities}
+      }
+
+      const action = {type: sync.type, response}
+      const syncTo = sync.syncTo.concat('admin')
+
+      users.forEach(user => {
+        if (user.socket.id === req.headers['socket-id']) return
+        if (intersection(user.roles, syncTo).length) {
+          user.socket.emit('action', action)
+        }
+      })
     }
 
-    const action = {type: websocket.successType, response}
-    const syncTo = ['admin', ...websocket.syncTo]
-
-    users.forEach(user => {
-      if (user.socket.id === req.headers['socket-id']) return
-      if (intersection(user.roles, syncTo).length) {
-        user.socket.emit('action', action)
-      }
-    })
+    next()
   }
-
-  next()
 }
 
 export const addUser = (user, socket) => users.push({...user, socket})

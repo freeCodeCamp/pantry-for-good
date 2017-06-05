@@ -2,6 +2,18 @@ import Router from 'express-promise-router'
 
 import foodController from '../controllers/food'
 import * as userController from '../controllers/users'
+import websocketMiddleware from '../lib/websocket-middleware'
+import {foodCategory} from '../../common/schemas'
+
+const sync = {
+  syncTo: ['volunteer'],
+  schema: foodCategory
+}
+
+const saveCatSchema = {...sync, type: 'foodCategory/SAVE_SUCCESS'}
+const deleteCatSchema = {...sync, type: 'foodCategory/DELETE_SUCCESS'}
+const saveItemSchema = {...sync, type: 'foodItem/SAVE_SUCCESS'}
+const deleteItemSchema = {syncTo: ['volunteer'], type: 'foodItem/DELETE_SUCCESS'}
 
 export default () => {
   const {requiresLogin} = userController
@@ -10,15 +22,15 @@ export default () => {
 
   foodRouter.route('/admin/foods')
     .get(foodController.list)
-    .post(foodController.create)
+    .post(websocketMiddleware(saveCatSchema), foodController.create)
   foodRouter.route('/admin/foods/:foodId')
-    .put(foodController.update)
-    .delete(foodController.delete)
+    .put(websocketMiddleware(saveCatSchema), foodController.update)
+    .delete(websocketMiddleware(deleteCatSchema), foodController.delete)
   foodRouter.route('/admin/foods/:foodId/items')
-    .post(foodController.createItem)
+    .post(websocketMiddleware(saveItemSchema), foodController.createItem)
   foodRouter.route('/admin/foods/:foodId/items/:itemId')
-    .put(foodController.updateItem)
-    .delete(foodController.deleteItem)
+    .put(websocketMiddleware(saveItemSchema), foodController.updateItem)
+    .delete(websocketMiddleware(deleteItemSchema), foodController.deleteItem)
 
   // Food routes for user
   foodRouter.route('/foods')

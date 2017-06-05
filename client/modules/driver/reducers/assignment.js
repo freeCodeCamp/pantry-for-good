@@ -58,16 +58,7 @@ export const assignCustomers = (customerIds, driverId) => dispatch => {
   const body = {customerIds, driverId}
   dispatch({type: ASSIGN_REQUEST})
 
-  const sync = {
-    syncTo: ['volunteer'],
-    successType: ASSIGN_SUCCESS,
-    schema: {
-      customers: 'arrayOfCustomers',
-      volunteers: 'arrayOfVolunteers'
-    }
-  }
-
-  callApi('admin/delivery/assign', 'POST', body, null, null, sync)
+  callApi('admin/delivery/assign', 'POST', body)
     .then(res => {
       dispatch({
         type: ASSIGN_SUCCESS,

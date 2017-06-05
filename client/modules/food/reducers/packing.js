@@ -20,16 +20,7 @@ const packFailure = error => ({type: PACK_FAILURE, error})
 export const pack = (customers, items) => dispatch => {
   dispatch(packRequest())
 
-  const sync = {
-    syncTo: ['volunteer'],
-    successType: PACK_SUCCESS,
-    schema: {
-      customers: 'arrayOfCustomers',
-      foodItems: 'arrayOfFoodItems'
-    }
-  }
-
-  callApi('admin/packing', 'PUT', {customers, items}, null, null, sync)
+  callApi('admin/packing', 'PUT', {customers, items})
     .then(res => {
       dispatch(packSuccess({
         entities: {

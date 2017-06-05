@@ -22,13 +22,13 @@ const API_ROOT = process.env.NODE_ENV === 'production' ?
  * @param {any} responseSchema for when the response type differs
  * @returns promise
  */
-export function callApi(endpoint, method = 'GET', body, schema, responseSchema, websocket) {
+export function callApi(endpoint, method = 'GET', body, schema, responseSchema) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
 
   return fetch(fullUrl, {
     method,
     headers: generateRequestHeaders(method),
-    body: formatRequestBody(body, method, schema, websocket),
+    body: formatRequestBody(body, method, schema),
     credentials: 'same-origin'
   })
     .then(response =>
@@ -43,7 +43,6 @@ export function callApi(endpoint, method = 'GET', body, schema, responseSchema, 
 
 // Action key that carries API call info interpreted by this Redux middleware.
 export const CALL_API = 'Call API'
-export const WS = 'websocket'
 
 // A Redux middleware that interprets actions with CALL_API info specified.
 // Performs the call and promises when such actions are dispatched.
@@ -56,7 +55,6 @@ export default socket => {
     }
 
     let {endpoint} = callAPI
-    let websocket = action[WS]
 
     const {schema, responseSchema, types, method, body} = callAPI
 
@@ -84,12 +82,9 @@ export default socket => {
 
     const [ requestType, successType, failureType ] = types
 
-    if (typeof websocket !== 'undefined')
-      websocket = {...websocket, successType}
-
     next(actionWith({ type: requestType }))
 
-    return callApi(endpoint, method, body, schema, responseSchema, websocket).then(
+    return callApi(endpoint, method, body, schema, responseSchema).then(
       response => next(actionWith({
         response,
         type: successType
@@ -116,9 +111,8 @@ export default socket => {
   }
 }
 
-function formatRequestBody(body, method, schema, websocket) {
-  if (!body && !websocket) return
-  if (!body) return JSON.stringify({websocket})
+function formatRequestBody(body, method, schema) {
+  if (!body) return
 
   if (schema) {
     // renormalize body before put/post
@@ -136,9 +130,9 @@ function formatRequestBody(body, method, schema, websocket) {
       throw new Error('Tried to PUT but entity has no _id attribute')
     }
 
-    return websocket ? JSON.stringify({body: entity, websocket}) : JSON.stringify(entity)
+    return JSON.stringify(entity)
   } else {
-    return websocket ? JSON.stringify({body, websocket}) : JSON.stringify(body)
+    return JSON.stringify(body)
   }
 }
 

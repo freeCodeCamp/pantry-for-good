@@ -4,7 +4,7 @@ import {get} from 'lodash'
 import {utc} from 'moment'
 
 import {customer as customerSchema, arrayOfCustomers} from '../../../common/schemas'
-import {CALL_API, WS, callApi} from '../../store/middleware/api'
+import {CALL_API, callApi} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('customer')
@@ -36,10 +36,6 @@ export const saveCustomer = (customer, admin) => {
       body: customer,
       schema: customerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-    },
-    [WS]: {
-      syncTo: ['volunteer'],
-      schema: 'customer'
     }
   }
 }
@@ -50,10 +46,6 @@ export const deleteCustomer = id => ({
     method: 'DELETE',
     schema: customerSchema,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
-  },
-  [WS]: {
-    syncTo: ['volunteer'],
-    schema: 'customer'
   }
 })
 

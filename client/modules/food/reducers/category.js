@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
 import {foodCategory, arrayOfFoodCategories} from '../../../../common/schemas'
-import {CALL_API, WS} from '../../../store/middleware/api'
+import {CALL_API} from '../../../store/middleware/api'
 import {crudActions, crudReducer} from '../../../store/utils'
 
 export const actions = crudActions('foodCategory')
@@ -23,10 +23,6 @@ export const saveFood = food => ({
     body: food,
     schema: foodCategory,
     types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-  },
-  [WS]: {
-    syncTo: ['volunteer'],
-    schema: 'foodCategory'
   }
 })
 
@@ -36,10 +32,6 @@ export const deleteFood = id => ({
     method: 'DELETE',
     schema: foodCategory,
     types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
-  },
-  [WS]: {
-    syncTo: ['volunteer'],
-    schema: 'foodCategory'
   }
 })
 
