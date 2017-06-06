@@ -9,9 +9,9 @@ import reducer from './reducer'
  * Create redux store
  * @param {History} history
  */
-export default history => {
+export default (history, socket) => {
   const routerMiddleware = createRouterMiddleware(history)
-  const middleware = [thunk, routerMiddleware, apiMiddleware]
+  const middleware = [thunk, routerMiddleware, apiMiddleware(socket)]
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 

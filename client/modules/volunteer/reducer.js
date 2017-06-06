@@ -2,7 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
-import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../store/schemas'
+import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../../common/schemas'
 import {CALL_API} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 

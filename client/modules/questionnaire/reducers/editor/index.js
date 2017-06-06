@@ -2,7 +2,7 @@ import {normalize, denormalize} from 'normalizr'
 import {get} from 'lodash'
 import uuid from 'uuid'
 
-import {questionnaire as questionnaireSchema} from '../../../../store/schemas'
+import {questionnaire as questionnaireSchema} from '../../../../../common/schemas'
 import sections from './sections'
 import fields from './fields'
 
