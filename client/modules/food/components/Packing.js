@@ -20,7 +20,9 @@ const mapStateToProps = state => ({
   loading: selectors.customer.loading(state) ||
     selectors.food.category.loading(state),
   error: selectors.customer.loadError(state) ||
-    selectors.food.category.loadError(state)
+    selectors.food.category.loadError(state),
+  packing: selectors.food.packing.saving(state),
+  packError: selectors.food.packing.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -44,6 +46,11 @@ class PackingList extends Component {
 
   componentWillMount() {
     this.props.load()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.packing && !nextProps.packing && !nextProps.packError)
+      this.setState({selected: []})
   }
 
   pack = () => {
@@ -97,7 +104,7 @@ class PackingList extends Component {
   }
 
   render() {
-    const {loading, error, packedCustomers} = this.props
+    const {loading, packing, error, packError, packedCustomers} = this.props
     const {selected} = this.state
     const itemsToPack = packedCustomers.reduce((acc, c) =>
       acc + c.packingList.length, 0)
@@ -106,7 +113,7 @@ class PackingList extends Component {
         <PageBody>
           <Box>
             <BoxHeader heading="Packing List" />
-            <BoxBody loading={loading} error={error}>
+            <BoxBody loading={loading || packing} error={error || packError}>
               {packedCustomers &&
                 <div style={{color: '#aaa'}}>
                   {itemsToPack} items for {packedCustomers.length} customers

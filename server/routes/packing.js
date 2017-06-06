@@ -1,9 +1,21 @@
-import express from 'express'
-import packingController from '../controllers/packing'
+import Router from 'express-promise-router'
 
-const packingRouter = express.Router({mergeParams: true})
+import packingController from '../controllers/packing'
+import websocketMiddleware from '../lib/websocket-middleware'
+import {arrayOfCustomers, arrayOfFoodItems} from '../../common/schemas'
+
+const packingRouter = Router({mergeParams: true})
+
+const sync = {
+  syncTo: ['volunteer'],
+  type: 'packing/PACK_SUCCESS',
+  schema: {
+    customers: arrayOfCustomers,
+    foodItems: arrayOfFoodItems
+  }
+}
 
 packingRouter.route('/packing')
-  .put(packingController.hasAuthorization, packingController.pack)
+  .put(packingController.hasAuthorization, websocketMiddleware(sync), packingController.pack)
 
 export default packingRouter

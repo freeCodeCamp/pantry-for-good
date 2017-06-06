@@ -2,7 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get, union} from 'lodash'
 
-import {donation as donationSchema, arrayOfDonations} from '../../../store/schemas'
+import {donation as donationSchema, arrayOfDonations} from '../../../../common/schemas'
 import {callApi} from '../../../store/middleware/api'
 import {saveDonor} from './donor'
 

@@ -2,7 +2,7 @@ import {normalize} from 'normalizr'
 import {get} from 'lodash'
 
 import {callApi} from '../../../store/middleware/api'
-import {arrayOfCustomers, arrayOfFoodItems} from '../../../store/schemas'
+import {arrayOfCustomers, arrayOfFoodItems} from '../../../../common/schemas'
 
 const PACK_REQUEST = 'packing/PACK_REQUEST'
 const PACK_SUCCESS = 'packing/PACK_SUCCESS'
@@ -24,7 +24,7 @@ export const pack = (customers, items) => dispatch => {
       dispatch(packSuccess({
         entities: {
           customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-          foodItems: normalize(res.items, arrayOfFoodItems).entities.foodItems
+          foodItems: normalize(res.foodItems, arrayOfFoodItems).entities.foodItems
         }
       }))
     })

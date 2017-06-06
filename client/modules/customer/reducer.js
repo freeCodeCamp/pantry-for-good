@@ -3,7 +3,7 @@ import {createSelector} from 'reselect'
 import {get} from 'lodash'
 import {utc} from 'moment'
 
-import {customer as customerSchema, arrayOfCustomers} from '../../store/schemas'
+import {customer as customerSchema, arrayOfCustomers} from '../../../common/schemas'
 import {CALL_API} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
 

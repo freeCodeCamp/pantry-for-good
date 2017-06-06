@@ -8,7 +8,7 @@ import {
   foodCategory as foodCategorySchema,
   foodItem as foodItemSchema,
   arrayOfFoodItems
-} from '../../../store/schemas'
+} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
 import {actions as foodCategoryActions} from './category'
 import {crudActions} from '../../../store/utils'

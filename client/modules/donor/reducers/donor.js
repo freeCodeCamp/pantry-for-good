@@ -2,7 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
-import {donor as donorSchema, arrayOfDonors} from '../../../store/schemas'
+import {donor as donorSchema, arrayOfDonors} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
 import {crudActions, crudReducer} from '../../../store/utils'
 

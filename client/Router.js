@@ -6,6 +6,7 @@ import Sidebar from './modules/core/components/sidebar/Sidebar'
 import Header from './modules/core/components/Header'
 import Footer from './modules/core/components/Footer'
 import Home from './modules/core/components/Home'
+import Dialog from './modules/core/components/Dialog'
 
 import Customers from './modules/customer/CustomerRouter'
 import Donors from './modules/donor/DonorRouter'
@@ -30,6 +31,7 @@ const Router = ({history}) =>
     <div>
       <Sidebar />
       <Header />
+      <Dialog />
       <div className="content-wrapper">
         <SwitchWithNotFound>
           <Route exact path="/" component={Home} />

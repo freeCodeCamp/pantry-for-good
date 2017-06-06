@@ -12,12 +12,14 @@ import nunjucks from 'nunjucks'
 import passport from 'passport'
 import path from 'path'
 import session from 'express-session'
+import {get} from 'lodash'
 
 import apiRoutes from '../routes/api'
 import config from './index'
 import getErrorMessage from '../lib/error-messages'
 import '../models'
 import seed from '../lib/seed'
+import {addUser} from '../lib/websocket-middleware'
 
 // set api delay and failure probablility for testing
 const API_DELAY = 0
@@ -25,8 +27,20 @@ const API_FAILURE_RATE = 0
 
 const mongoStore = connectMongo({session})
 
-export default function() {
+export default function(io) {
   const app = express()
+
+  const sharedSession = session({
+    saveUninitialized: false,
+    resave: true,
+    secret: config.sessionSecret,
+    store: new mongoStore({
+      mongooseConnection: mongoose.connection,
+      collection: config.sessionCollection
+    })
+  })
+
+  app.set('sharedSession', sharedSession)
 
   // call with true or delete db to seed
   seed(process.env.NODE_ENV, false)
@@ -71,15 +85,7 @@ export default function() {
   app.use(cookieParser())
 
   // Express MongoDB session storage
-  app.use(session({
-    saveUninitialized: false,
-    resave: true,
-    secret: config.sessionSecret,
-    store: new mongoStore({
-      mongooseConnection: mongoose.connection,
-      collection: config.sessionCollection
-    })
-  }))
+  app.use(sharedSession)
 
   // use passport session
   app.use(passport.initialize())
@@ -92,7 +98,6 @@ export default function() {
   app.use(helmet())
   app.disable('x-powered-by')
 
-  // Use api routes
   app.use('/api', apiRoutes(API_DELAY, API_FAILURE_RATE))
 
   // Setting the static folder
@@ -118,6 +123,13 @@ export default function() {
   if (process.env.NODE_ENV === 'production') {
     app.use(function(req, res) {
       res.sendFile(path.resolve('./dist/client/index.html'))
+    })
+  }
+
+  if (io) {
+    io.on('connection', socket => {
+      const user = get(socket.handshake.session, 'passport.user')
+      if (user) addUser(user, socket)
     })
   }
 

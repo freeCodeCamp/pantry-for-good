@@ -52,7 +52,7 @@ export default {
 
     res.json({
       customers: [...unassignedCustomers, ...assignedCustomers],
-      drivers: [driver, ...values(updatedDrivers)]
+      volunteers: [driver, ...values(updatedDrivers)]
     })
   },
   async hasAuthorization(req, res, next) {

@@ -2,7 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
-import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../../store/schemas'
+import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
 import {crudActions, crudReducer} from '../../../store/utils'
 

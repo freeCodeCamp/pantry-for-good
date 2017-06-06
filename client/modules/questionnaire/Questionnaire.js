@@ -9,8 +9,10 @@ import {Button, Col} from 'react-bootstrap'
 import selectors from '../../store/selectors'
 import {loadQuestionnaires, saveQuestionnaire} from './reducers/api'
 import {init, selectSection, editField} from './reducers/editor/index'
+import {showConfirmDialog, hideDialog} from '../core/reducers/dialog'
 import {Page, PageBody} from '../../components/page'
 import {Box, BoxBody, BoxHeader} from '../../components/box'
+import withConfirmNavigation from '../../components/withConfirmNavigation'
 import QuestionnaireSelector from './components/QuestionnaireSelector'
 import SectionForm from './components/SectionForm'
 import FieldForm from './components/FieldForm'
@@ -25,7 +27,8 @@ const mapStateToProps = state => ({
   error: selectors.questionnaire.loadError(state) ||
     selectors.questionnaire.saveError(state),
   completeQuestionnaire: selectors.qEditor.getCompleteQuestionnaire(state),
-  sectionIds: selectors.qEditor.getSectionIds(state)
+  sectionIds: selectors.qEditor.getSectionIds(state),
+  dirty: selectors.qEditor.isDirty(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -33,7 +36,9 @@ const mapDispatchToProps = dispatch => ({
   saveQuestionnaire: questionnaire => dispatch(saveQuestionnaire(questionnaire)),
   init: questionnaire => dispatch(init(questionnaire)),
   selectSection: sectionId => dispatch(selectSection(sectionId)),
-  editField: fieldId => dispatch(editField(fieldId))
+  editField: fieldId => dispatch(editField(fieldId)),
+  showDialog: (cancel, confirm) => dispatch(showConfirmDialog(cancel, confirm)),
+  hideDialog: () => dispatch(hideDialog())
 })
 
 class Questionnaire extends Component {
@@ -51,11 +56,19 @@ class Questionnaire extends Component {
   }
 
   handleQuestionnaireSelect = identifier => {
+    if (this.props.dirty)
+      this.props.showDialog(this.props.hideDialog, this.selectQuestionnaire(identifier))
+    else
+      this.selectQuestionnaire(identifier)()
+  }
+
+  selectQuestionnaire = identifier => () => {
     const questionnaire = this.props.questionnaires.find(q =>
       q.identifier === identifier)
 
     this.props.init(questionnaire)
     this.props.selectSection(questionnaire.sections[0]._id)
+    this.props.hideDialog()
   }
 
   handleSave = () => {
@@ -88,8 +101,6 @@ class Questionnaire extends Component {
                   </Button>
                 </div>
               </Col>
-                {/*</div>*/}
-              {/*}*/}
             </BoxBody>
           </Box>
         </PageBody>
@@ -100,5 +111,6 @@ class Questionnaire extends Component {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
+  withConfirmNavigation,
   DragDropContext(HTML5Backend)
 )(Questionnaire)

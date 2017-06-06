@@ -36,3 +36,7 @@ li.treeview > a > span::after {
 li.treeview.active > a > span::after {
   content: '\f077';
 }
+
+.smallModal > .modal-dialog {
+  width: 300px;
+}

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {AppContainer} from 'react-hot-loader'
 import createHistory from 'history/createBrowserHistory'
+import io from 'socket.io-client'
 
 import createStore from './store'
 
@@ -23,7 +24,12 @@ import Application from './Application'
 delete AppContainer.prototype.unstable_handleError
 
 const history = createHistory({})
-const store = createStore(history)
+const socket = process.env.NODE_ENV === 'production' ?
+  io() : io('http://localhost:3000')
+
+const store = createStore(history, socket)
+
+socket.on('action', store.dispatch)
 
 const root = document.getElementById('app')
 
