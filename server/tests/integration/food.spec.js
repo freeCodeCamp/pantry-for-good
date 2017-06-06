@@ -243,7 +243,7 @@ describe('Food Api', function() {
         })
 
       // Fetch the foods to make sure it is not still there
-      return request.get('/api/admin/foods')
+      return request.get('/api/foods')
         .expect(200)
         .expect(res => {
           expect(res.body).to.have.length(1)
