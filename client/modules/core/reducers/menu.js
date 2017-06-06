@@ -1,6 +1,6 @@
 import {SET_USER, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
 
-export default (state, action) => {
+export default (state = {items: []}, action) => {
   switch (action.type) {
     case SET_USER:
       return getMenu(action.user)
