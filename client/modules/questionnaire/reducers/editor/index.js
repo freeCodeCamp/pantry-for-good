@@ -105,7 +105,8 @@ export default (state = {questionnaires: {}}, action) => {
         questionnaires: action.questionnaires,
         sections: _sections,
         fields: fields(null, action),
-        selectedSection: _sections.length && _sections[0]._id
+        selectedSection: _sections.length && _sections[0]._id,
+        dirty: false,
       }
     }
     case actions.EDIT_SECTION:
@@ -122,6 +123,20 @@ export default (state = {questionnaires: {}}, action) => {
       return {
         ...state,
         selectedSection: action.sectionId
+      }
+    case actions.ADD_FIELD:
+    case actions.ADD_SECTION:
+    case actions.DELETE_FIELD:
+    case actions.DELETE_SECTION:
+    case actions.MOVE_FIELD:
+    case actions.MOVE_SECTION:
+    case actions.UPDATE_FIELD:
+    case actions.UPDATE_SECTION:
+      return {
+        ...state,
+        dirty: true,
+        fields: fields(state.fields, action),
+        sections: sections(state.sections, action)
       }
     default:
       return {
@@ -165,7 +180,8 @@ export const createSelectors = path => ({
         fields: fields.byId
       }
     ).questionnaires
-  }
+  },
+  isDirty: state => get(state, path).dirty
 })
 
 // Order section ids in questionnaire by order listed in state

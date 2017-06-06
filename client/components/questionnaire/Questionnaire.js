@@ -1,9 +1,11 @@
 import React from 'react'
+import {compose} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {flatMap} from 'lodash'
 import {utc} from 'moment'
 
 import {Box, BoxHeader, BoxBody} from '../box'
+import withConfirmNavigation from '../withConfirmNavigation'
 import Section from './Section'
 import validate from '../../../common/validators'
 
@@ -28,9 +30,13 @@ const Questionnaire = ({
     )}
   </div>
 
-export default reduxForm({
-  validate: validateForm
-})(Questionnaire)
+export default compose(
+  reduxForm({
+    validate: validateForm,
+    enableReinitialize: true
+  }),
+  withConfirmNavigation
+)(Questionnaire)
 
 function validateForm(values, props) {
   const allFields = flatMap(props.questionnaire.sections, section => section.fields)

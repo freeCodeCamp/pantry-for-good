@@ -144,3 +144,6 @@ td:hover .tools {
   color: #ffffff;
 }
 
+.smallModal > .modal-dialog {
+  width: 300px;
+}

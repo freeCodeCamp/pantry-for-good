@@ -8,6 +8,7 @@ import {Button} from 'react-bootstrap'
 import General from './General'
 import Keys from './Keys'
 import Images from './Images'
+import withConfirmNavigation from '../../../components/withConfirmNavigation'
 
 const enhance = compose(
   setPropTypes({
@@ -16,9 +17,11 @@ const enhance = compose(
   }),
   reduxForm({
     form: 'settingsForm',
+    enableReinitialize: true,
     validate,
     warn
-  })
+  }),
+  withConfirmNavigation
 )
 
 const SettingsForm = ({handleSubmit}) =>

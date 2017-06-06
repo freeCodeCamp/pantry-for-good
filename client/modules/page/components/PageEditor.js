@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import {Button} from 'react-bootstrap'
 import ReactQuill, {Quill} from 'react-quill'
 import {ImageDrop} from 'quill-image-drop-module'
@@ -8,6 +9,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
 import selectors from '../../../store/selectors'
+import withConfirmNavigation from '../../../components/withConfirmNavigation'
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)
@@ -39,20 +41,23 @@ class PageEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {page} = nextProps
-    if (page) {
-      this.setState({
-        page: {...page}
-      })
+    const {page, selectedPage} = nextProps
+
+    if (selectedPage !== this.props.selectedPage) {
+      this.setState({page: {...page}})
     }
   }
 
-  handleChange = value => this.setState({
-    page: {
-      ...this.state.page,
-      body: value
-    }
-  })
+  handleChange = (value, _, source) => {
+    this.setState({
+      page: {
+        ...this.state.page,
+        body: value
+      }
+    })
+
+    if (source === 'user') this.props.setDirty(true)
+  }
 
   render() {
     const {page} = this.state
@@ -69,7 +74,7 @@ class PageEditor extends React.Component {
         <div className="text-right">
           <Button
             bsStyle="success"
-            disabled={!page}
+            disabled={!page || !this.props.dirty}
             onClick={this.props.handlePageSave(page)}
             style={{margin: '10px 0'}}
           >
@@ -81,4 +86,7 @@ class PageEditor extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(PageEditor)
+export default compose(
+  connect(mapStateToProps),
+  withConfirmNavigation
+)(PageEditor)

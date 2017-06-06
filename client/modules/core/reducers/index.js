@@ -1,7 +1,13 @@
+import {combineReducers} from 'redux'
+
+import dialog, {createSelectors as createDialogSelectors} from './dialog'
 import menu from './menu'
 
-export default (state = {
-  menu: menu({}, {type: 'INIT'})
-}, action) => ({
-  menu: menu(state.menu, action)
+export default combineReducers({
+  dialog,
+  menu
+})
+
+export const createSelectors = path => ({
+  dialog: createDialogSelectors(`${path}.dialog`)
 })
