@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const autoprefixer = require('autoprefixer')
 const {resolve} = require('path')
 
 const common = require('./webpack.config')
@@ -9,6 +10,7 @@ const common = require('./webpack.config')
 module.exports = merge(common, {
   entry: {
     app: [
+      'babel-polyfill',
       'whatwg-fetch',
       resolve(__dirname, 'client', 'app.js')
     ]
@@ -22,14 +24,19 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract('css-loader?sourceMap')
+        use: ExtractTextPlugin.extract('css-loader?sourceMap&postcss-loader')
       }
     ]
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({
       minimize: true,
-      debug: false
+      debug: false,
+      options: {
+        postcss: [
+          autoprefixer(),
+        ]
+      }
     }),
     new webpack.DefinePlugin({
       'process.env': {

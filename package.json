@@ -27,11 +27,13 @@
     "@mapbox/polyline": "^0.2.0",
     "admin-lte": "^2.3.11",
     "async": "~2.1.4",
+    "autoprefixer": "^7.1.1",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
@@ -81,6 +83,7 @@
     "passport": "~0.3.2",
     "passport-google-oauth2": "^0.1.6",
     "passport-local": "~1.0.0",
+    "postcss-loader": "^2.0.5",
     "prop-types": "^15.5.10",
     "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module": "^3.0.0",
@@ -117,8 +120,7 @@
     "webpack": "^2.4.1",
     "webpack-dev-server": "^2.4.5",
     "webpack-merge": "^4.1.0",
-    "whatwg-fetch": "^2.0.2",
-    "yarn": "^0.24.5"
+    "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",

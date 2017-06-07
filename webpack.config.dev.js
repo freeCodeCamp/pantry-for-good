@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const {resolve} = require('path')
+const autoprefixer = require('autoprefixer')
 
 const common = require('./webpack.config')
 
@@ -26,7 +27,8 @@ module.exports = merge(common, {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader?sourceMap'
+          'css-loader?sourceMap',
+          {loader: 'postcss-loader', options: {plugins: () => [autoprefixer]}}
         ]
       }
     ]
