@@ -6,9 +6,6 @@ import createHistory from 'history/createBrowserHistory'
 import io from 'socket.io-client'
 
 import createStore from './store'
-import {setUser} from './modules/users/reducer'
-import {loadMedia} from './modules/settings/reducers/media'
-import {loadSettings} from './modules/settings/reducers/settings'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.css'
@@ -21,7 +18,7 @@ import 'admin-lte/plugins/fastclick/fastclick'
 import './application.css'
 import './modules/core/css/core.css'
 
-import Router from './Router'
+import Application from './Application'
 
 //disable redbox
 delete AppContainer.prototype.unstable_handleError
@@ -45,25 +42,13 @@ function render(Component) {
     </AppContainer>,
     root
   )
-
-  // for admin-lte
-  window.dispatchEvent(new Event('resize'))
 }
 
 if (module.hot) {
-  module.hot.accept('./Router', () => {
-    const Next = require('./Router').default
-    render(Next)
+  module.hot.accept('./Application', () => {
+    // const Next = require('./Application').default
+    render(Application)
   })
 }
 
-
-store.dispatch(loadMedia())
-store.dispatch(loadSettings())
-
-fetch('/api/users/me', {credentials: 'same-origin'})
-  .then(res =>
-    res.json().then(user => {
-      store.dispatch(setUser(user))
-      render(Router)
-    }))
+render(Application)

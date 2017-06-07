@@ -1,8 +1,7 @@
 import moment from 'moment'
 import Customer from '../models/customer'
 import Food from '../models/food'
-// const Customer = mongoose.model('Customer');
-// const Food = mongoose.model('Food');
+
 const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
@@ -51,5 +50,14 @@ export default {
     } catch (err) {
       next(err)
     }
+  },
+  hasAuthorization(req, res, next) {
+    if (req.user && req.user.roles.find(r =>
+        r === 'admin' || r === 'volunteer')) {
+      return next()
+    }
+    return res.status(403).json({
+      message: 'User is not authorized'
+    })
   }
 }

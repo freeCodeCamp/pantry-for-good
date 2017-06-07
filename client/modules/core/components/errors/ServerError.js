@@ -1,19 +1,19 @@
-import angular from 'angular'
 import React from 'react'
-import {react2angular} from 'react2angular'
-
-import ErrorPage from './Error'
 
 const ServerErrorPage = () =>
-  <ErrorPage
-    color="red"
-    status="500"
-    msg="Oops! Something went wrong."
-    description="We will work on fixing that right away."
-  />
+  <section className="content" style={{backgroundColor: 'white'}}>
+    <div className="error-page">
+      <h2 className="headline text-red">500}</h2>
+      <div className="error-content">
+        <h3>
+          <i className="fa fa-warning text-red" />
+          Oops! Something went wrong.
+        </h3>
+        <p>
+          We will work on fixing that right away.
+        </p>
+      </div>
+    </div>
+  </section>
 
 export default ServerErrorPage
-
-export const old = angular.module('core')
-  .component('serverError', react2angular(ServerErrorPage))
-  .name

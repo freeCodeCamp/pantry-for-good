@@ -15,7 +15,7 @@ const Owns = ownerOrAdmin('driverId')
 
 const DriverRouter = ({match}) =>
   <SwitchWithNotFound>
-      <Route path={match.url} exact component={IsAdmin(DriverAdmin)} />
+      <Route path={`${match.url}/list`} exact component={IsAdmin(DriverAdmin)} />
       <Route
         path={`${match.url}/routes`}
         exact

@@ -1,39 +1,32 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {push} from 'react-router-redux'
 
+import selectors from '../../../../store/selectors'
+import userClientRole from '../../../../lib/user-client-role'
 import SidebarMenu from './SidebarMenu'
 
 const mapStateToProps = state => ({
-  auth: state.auth,
+  user: selectors.user.getUser(state),
   menu: state.app.menu,
   route: state.router.location
 })
 
-const mapDispatchToProps = dispatch => ({
-  push: route => dispatch(push(route))
-})
-
 const Sidebar = ({
-  auth,
+  user,
   menu,
   route,
-  push
 }) => {
-  const path = route.pathname.split('/').filter(s => s.length)[0]
+  const path = route.pathname.split('/').filter(s => s.length)
+  const clientRole = userClientRole(user)
 
+  if (!user || clientRole) return null
   return (
     <div className="main-sidebar">
       <section className="sidebar">
-        <SidebarMenu
-          user={auth.user}
-          menu={menu}
-          path={path}
-          push={push}
-        />
+        <SidebarMenu menu={menu} path={path} />
       </section>
     </div>
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
+export default connect(mapStateToProps)(Sidebar)

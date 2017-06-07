@@ -15,7 +15,7 @@ const sync = {
   }
 }
 
-packingRouter.route('/admin/packing')
-  .put(websocketMiddleware(sync), packingController.pack)
+packingRouter.route('/packing')
+  .put(packingController.hasAuthorization, websocketMiddleware(sync), packingController.pack)
 
 export default packingRouter

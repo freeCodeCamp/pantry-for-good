@@ -1,39 +1,29 @@
 import React from 'react'
-import {Link, NavLink} from 'react-router-dom'
+import {Link} from 'react-router-dom'
+import {head, tail} from 'lodash'
 
-const SidebarMenuItem = ({item, path}) =>
-  <div>
-    {item.menuItemType === 'treeview' ?
-      <div>
-        <NavLink
-          to={`/${item.link}`}
-          className="main-menuitem"
-        >
-          <span>{item.title}</span>
-          <i className="fa fa-angle-left pull-right"></i>
-        </NavLink>
+const SidebarMenuItem = ({item, path, depth}) => {
+  const active = item.link.split('/')[depth] === head(path) ? 'active' : ''
 
-        <ul className="treeview-menu">
-          {item.items.map((subitem, i) =>
-            <li
-              className={subitem.link === path && 'active'}
-              key={i}
-            >
-              <Link
-                to={`/${subitem.link}`}
-                className="sub-menuitem"
-              >
-                {subitem.title}
-              </Link>
-            </li>
-          )}
-
-        </ul>
-      </div> :
-      <Link to={`/${item.link}`} className="main-menuitem">
+  return item.menuItemType === 'treeview' ?
+    <li className={`treeview ${active}`}>
+      <a href="/#"
+        className={!depth ? 'main-menuitem' : 'sub-menuitem'}
+      >
+        {item.title}
+        <span></span>
+      </a>
+      <ul className="treeview-menu">
+        {item.items && item.items.map((subitem, i) =>
+          <SidebarMenuItem key={i} item={subitem} path={tail(path)} depth={depth + 1} />
+        )}
+      </ul>
+    </li> :
+    <li className={active}>
+      <Link to={`/${item.link}`} className={!depth ? 'main-menuitem' : 'sub-menuitem'}>
         <span>{item.title}</span>
       </Link>
-    }
-  </div>
+    </li>
+}
 
 export default SidebarMenuItem

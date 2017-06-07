@@ -142,6 +142,16 @@ export default {
   itemById(req, res, next, id) {
     req.itemId = id
     next()
+  },
+
+  hasAuthorization(req, res, next) {
+    if (req.user && req.user.roles.find(r =>
+        r === 'admin' || r === 'volunteer')) {
+      return next()
+    }
+    return res.status(403).json({
+      message: 'User is not authorized'
+    })
   }
 }
 

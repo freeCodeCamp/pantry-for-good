@@ -141,7 +141,7 @@ describe('Customer Api', function() {
       await customerReq.post('/api/customer')
         .send(customer.user)
 
-      return adminReq.get(`/api/admin/customers`)
+      return adminReq.get(`/api/customer`)
         .expect(res => {
           expect(res.body).to.be.an.array
           expect(res.body).to.have.lengthOf(1)
@@ -156,7 +156,7 @@ describe('Customer Api', function() {
 
       const customerReq = supertest.agent(customer.app)
 
-      return customerReq.get(`/api/admin/customers`)
+      return customerReq.get(`/api/customer`)
         .expect(res => {
           expect(res.body).to.be.an.object
           expect(res.body).to.have.property('message', 'User is not authorized')

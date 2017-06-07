@@ -2,7 +2,6 @@ import {get} from 'lodash'
 
 import {CALL_API} from '../../store/middleware/api'
 
-export const SET_USER = 'auth/SET_USER'
 export const CLEAR_USER = 'auth/CLEAR_USER'
 export const CLEAR_FLAGS = 'auth/CLEAR_FLAGS'
 export const SET_PROFILE_REQUEST = 'auth/SET_PROFILE_REQUEST'
@@ -23,11 +22,9 @@ export const SIGNUP_FAILURE = 'auth/SIGNUP_FAILURE'
 export const SIGNIN_REQUEST = 'auth/SIGNIN_REQUEST'
 export const SIGNIN_SUCCESS = 'auth/SIGNIN_SUCCESS'
 export const SIGNIN_FAILURE = 'auth/SIGNIN_FAILURE'
-
-export const setUser = user => ({
-  type: SET_USER,
-  user
-})
+export const LOAD_REQUEST = 'auth/LOAD_REQUEST'
+export const LOAD_SUCCESS = 'auth/LOAD_SUCCESS'
+export const LOAD_FAILURE = 'auth/LOAD_FAILURE'
 
 export const clearUser = () => ({type: CLEAR_USER})
 
@@ -87,12 +84,15 @@ export const signIn = credentials => ({
   }
 })
 
+export const loadUser = () => ({
+  [CALL_API]: {
+    endpoint: 'users/me',
+    types: [LOAD_REQUEST, LOAD_SUCCESS, LOAD_FAILURE]
+  }
+})
+
 export default (state = {user: null}, action) => {
   switch (action.type) {
-    case SET_USER:
-      return {
-        user: action.user
-      }
     case CLEAR_USER:
       return {
         user: null
@@ -110,6 +110,7 @@ export default (state = {user: null}, action) => {
     case RESET_PASSWORD_REQUEST:
     case SIGNUP_REQUEST:
     case SIGNIN_REQUEST:
+    case LOAD_REQUEST:
       return {
         ...state,
         success: null,
@@ -119,6 +120,7 @@ export default (state = {user: null}, action) => {
     case SET_PROFILE_SUCCESS:
     case SIGNUP_SUCCESS:
     case SIGNIN_SUCCESS:
+    case LOAD_SUCCESS:
       return {
         ...state,
         fetching: false,
@@ -141,6 +143,7 @@ export default (state = {user: null}, action) => {
     case RESET_PASSWORD_FAILURE:
     case SIGNUP_FAILURE:
     case SIGNIN_FAILURE:
+    case LOAD_FAILURE:
       return {
         ...state,
         fetching: false,
