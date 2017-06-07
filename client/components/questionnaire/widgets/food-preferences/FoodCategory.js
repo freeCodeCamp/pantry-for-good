@@ -37,22 +37,23 @@ const FoodCategorySelector = ({
   handleCategorySelect,
 }) =>
   <ListGroupItem
-    style={{display: 'flex'}}
     className={selectedCategoryId === category._id ? 'active' : ''}
     onClick={handleCategorySelect(category._id)}
   >
-    <Checkbox
-      style={{margin: '0 0 0 -20px'}}
-      className={partiallySelected ? 'partial' : ''}
-      checked={numSelected > 0}
-      onChange={handleItemsChange}
-    />
-    <span style={{flexGrow: 1}}>
-      {category.category}
-    </span>
-    <span style={{color: selectedCategoryId === category._id ? '#ccc' : '#999'}}>
-      {`${numSelected} / ${category.items.length}`}
-    </span>
+    <div style={{display: 'flex'}}>
+      <Checkbox
+        style={{margin: '0 0 0 -20px'}}
+        className={partiallySelected ? 'partial' : ''}
+        checked={numSelected > 0}
+        onChange={handleItemsChange}
+      />
+      <span style={{flexGrow: 1}}>
+        {category.category}
+      </span>
+      <span style={{color: selectedCategoryId === category._id ? '#ccc' : '#999'}}>
+        {`${numSelected} / ${category.items.length}`}
+      </span>
+    </div>
   </ListGroupItem>
 
 export default enhance(FoodCategorySelector)

@@ -23,9 +23,7 @@ const FieldEdit = ({
 }) =>
   <ListGroupItem
     onKeyUp={onKeyUp}
-    style={{
-      border: 'none'
-    }}
+    style={{border: 'none'}}
   >
     <div style={{display: 'flex', flexWrap: 'wrap'}}>
       <div style={{display: 'flex', flexGrow: 1, flexBasis: '100%'}}>
@@ -41,21 +39,24 @@ const FieldEdit = ({
           type="select"
           name="type"
         >
-          <option value="text">Text</option>
-          <option value="address">Address</option>
-          <option value="textarea">Long Text</option>
-          <option value="date">Date</option>
-          <option value="radio">Radio Buttons</option>
-          <option value="checkbox">Checkboxes</option>
-          <option disabled style={{fontSize: '1px'}}>{' '}</option>
-          <option disabled style={{fontSize: '12px', color: '#aaa'}}>Widgets</option>
-          <option value="table">Table</option>
-          {questionnaire.identifier === 'qCustomers' &&
-            <option value="foodPreferences">Food Preferences</option>
-          }
-          {questionnaire.identifier === 'qCustomers' &&
-            <option value="household">Household</option>
-          }
+          <optgroup label="Inputs">
+            <option value="text">Text</option>
+            <option value="address">Address</option>
+            <option value="textarea">Long Text</option>
+            <option value="date">Date</option>
+            <option value="radio">Radio Buttons</option>
+            <option value="checkbox">Checkboxes</option>
+          </optgroup>
+          <optgroup label="Widgets">
+            {/*TODO*/}
+            {/*<option value="table">Table</option>*/}
+            {questionnaire.identifier === 'qCustomers' &&
+              <option value="foodPreferences">Food Preferences</option>
+            }
+            {questionnaire.identifier === 'qCustomers' &&
+              <option value="household">Household</option>
+            }
+          </optgroup>
         </RFFieldGroup>
       </div>
       <div style={{display: 'flex', flexGrow: 1, padding: '0 10px'}}>
