@@ -9,25 +9,26 @@ const DriverList = ({drivers, setDriver, selectedDriverId}) =>
       .map(driver =>
         <ListGroupItem
           key={driver.id}
-          style={{display: 'flex'}}
           onClick={setDriver(driver.id)}
         >
-          <img
-            src={driverIcon}
-            style={{
-              marginRight: '10px',
-              width: '24px',
-              height: '24px'
-            }}
-          />
-          <div style={{flexGrow: 2}}>
-            {driver.fullName}
-          </div>
-          <div>
-            <span style={{padding: '0 8px'}}>
-              {driver.customers.length}
-            </span>
-            <i className="fa fa-users" style={{color: '#777'}} />
+          <div style={{display: 'flex'}}>
+            <img
+              src={driverIcon}
+              style={{
+                marginRight: '10px',
+                width: '24px',
+                height: '24px'
+              }}
+            />
+            <div style={{flexGrow: 2}}>
+              {driver.fullName}
+            </div>
+            <div>
+              <span style={{padding: '0 8px'}}>
+                {driver.customers.length}
+              </span>
+              <i className="fa fa-users" style={{color: '#777'}} />
+            </div>
           </div>
         </ListGroupItem>
       )
