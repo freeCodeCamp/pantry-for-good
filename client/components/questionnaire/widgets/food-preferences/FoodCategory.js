@@ -5,7 +5,6 @@ import {
   withProps,
   withPropsOnChange
 } from 'recompose'
-import {ListGroupItem} from 'react-bootstrap'
 import {differenceBy, unionBy} from 'lodash'
 
 import {Checkbox} from '../../../form'
@@ -36,25 +35,24 @@ const FoodCategorySelector = ({
   selectedCategoryId,
   handleCategorySelect,
 }) =>
-  <ListGroupItem
-    className={selectedCategoryId === category._id ? 'active' : ''}
+  <div
+    className={selectedCategoryId === category._id ? 'active list-group-item' : 'list-group-item'}
     onClick={handleCategorySelect(category._id)}
+    style={{display: 'flex'}}
   >
-    <div style={{display: 'flex'}}>
-      <Checkbox
-        style={{margin: '0 0 0 -20px'}}
-        className={partiallySelected ? 'partial' : ''}
-        checked={numSelected > 0}
-        onChange={handleItemsChange}
-      />
-      <span style={{flexGrow: 1}}>
-        {category.category}
-      </span>
-      <span style={{color: selectedCategoryId === category._id ? '#ccc' : '#999'}}>
-        {`${numSelected} / ${category.items.length}`}
-      </span>
-    </div>
-  </ListGroupItem>
+    <Checkbox
+      style={{margin: '0 0 0 -20px'}}
+      className={partiallySelected ? 'partial' : ''}
+      checked={numSelected > 0}
+      onChange={handleItemsChange}
+    />
+    <span style={{flexGrow: 1}}>
+      {category.category}
+    </span>
+    <span style={{color: selectedCategoryId === category._id ? '#ccc' : '#999'}}>
+      {`${numSelected} / ${category.items.length}`}
+    </span>
+  </div>
 
 export default enhance(FoodCategorySelector)
 
