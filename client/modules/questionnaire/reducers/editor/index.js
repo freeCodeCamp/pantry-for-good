@@ -1,5 +1,5 @@
 import {normalize, denormalize} from 'normalizr'
-import {get} from 'lodash'
+import {get, values} from 'lodash'
 import uuid from 'uuid'
 
 import {questionnaire as questionnaireSchema} from '../../../../../common/schemas'
@@ -157,7 +157,7 @@ export const createSelectors = path => ({
   },
   getFieldById: state => id => get(state, path).fields.byId[id],
   getEditingQuestionnaire: state => {
-    const questionnaires = Object.values(get(state, path).questionnaires)
+    const questionnaires = values(get(state, path).questionnaires)
     if (!questionnaires.length) return
     return questionnaires[0]
   },
@@ -166,7 +166,7 @@ export const createSelectors = path => ({
   getSelectedSection: state => get(state, path).selectedSection,
   getCompleteQuestionnaire: state => {
     const {sections, fields} = get(state, path)
-    const questionnaires = Object.values(get(state, path).questionnaires)
+    const questionnaires = values(get(state, path).questionnaires)
     if (!questionnaires.length) return
 
     const questionnaire = questionnaires[0]

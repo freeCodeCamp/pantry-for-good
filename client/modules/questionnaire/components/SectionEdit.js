@@ -39,6 +39,7 @@ class SectionEdit extends Component {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}
+        className="list-group-item active"
       >
         <FieldGroup
           type="text"
@@ -52,16 +53,17 @@ class SectionEdit extends Component {
           formGroupClass="form-group-no-margin"
           style={{lineHeight: '1rem'}}
         />
-        <div>
+        <div style={{marginLeft: '5px', flexShrink: 0}}>
           <i
             className="fa fa-save"
+            style={{marginRight: '5px'}}
             onClick={valid !== 'error' && onSave(updatedSection)}
-          ></i>
+          />
           {' '}
           <i
             className="fa fa-times"
             onClick={onCancel(section)}
-          ></i>
+          />
         </div>
       </div>
     )

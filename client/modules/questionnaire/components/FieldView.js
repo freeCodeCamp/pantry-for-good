@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {capitalize} from 'lodash'
 import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
-import {ListGroupItem} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {moveField} from '../reducers/editor/index'
@@ -61,17 +60,20 @@ const FieldView = ({
   onSelect
 }) => connectDragSource(
   connectDropTarget(
-    <div>
-      <ListGroupItem
-        header={field.label}
-        onClick={onSelect}
-        style={{
-          border: 'none',
-          opacity: isDragging || isOver ? '0.5' : 1
-        }}
-      >
+    <div
+      onClick={onSelect}
+      style={{
+        border: 'none',
+        opacity: isDragging || isOver ? '0.5' : 1
+      }}
+      className="list-group-item"
+    >
+      <h4 className="list-group-item-heading">
+        {field.label}
+      </h4>
+      <p className="list-group-item-text">
         {mapTypeToDescription(field.type)}
-      </ListGroupItem>
+      </p>
     </div>
   )
 )

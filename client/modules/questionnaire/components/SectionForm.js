@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Nav, NavItem} from 'react-bootstrap'
+import {ListGroup} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {
@@ -40,7 +40,7 @@ class SectionForm extends Component {
       this.props.deleteSection(section._id)
   }
 
-  handleSelect = section => {
+  handleSelect = section => () => {
     if (this.props.editing !== section._id)
       this.props.editSection()
     this.props.selectSection(section)
@@ -85,35 +85,26 @@ class SectionForm extends Component {
             Add Section
           </button>
         </div>
-        <Nav
-          bsStyle="pills"
-          stacked
-          className="bs-default-nav"
-          activeKey={selected}
-          onSelect={this.handleSelect}
-        >
-          {sectionIds.map((id, idx) =>
-            <NavItem
-              key={id}
-              eventKey={id}
-            >
-              {id === editing ?
-                <SectionEdit
-                  id={id}
-                  onCancel={this.handleCancel}
-                  onSave={this.handleUpdate}
-                  onKeyUp={this.handleKeyUp}
-                /> :
-                <SectionView
-                  idx={idx}
-                  section={getSection(id)}
-                  onEdit={this.handleEdit(id)}
-                  onDelete={this.handleDelete(id)}
-                />
-              }
-            </NavItem>
+        <ListGroup>
+          {sectionIds.map((id, idx) => id === editing ?
+            <SectionEdit
+              key={idx}
+              id={id}
+              onCancel={this.handleCancel}
+              onSave={this.handleUpdate}
+              onKeyUp={this.handleKeyUp}
+            /> :
+            <SectionView
+              key={idx}
+              idx={idx}
+              section={getSection(id)}
+              onEdit={this.handleEdit(id)}
+              onDelete={this.handleDelete(id)}
+              onSelect={this.handleSelect(id)}
+              selected={selected}
+            />
           )}
-        </Nav>
+        </ListGroup>
 
       </div>
     )

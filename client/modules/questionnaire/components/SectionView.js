@@ -55,11 +55,12 @@ function collectTarget(connect, monitor) {
 const SectionView = ({
   connectDragSource,
   connectDropTarget,
-  isDragging,
   isOver,
   section,
   onEdit,
-  onDelete
+  onDelete,
+  onSelect,
+  selected
 }) => connectDragSource(
   connectDropTarget(
     <div
@@ -67,20 +68,23 @@ const SectionView = ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        opacity: isDragging || isOver ? '0.5' : 1
+        opacity: isOver ? '0.5' : 1
       }}
+      className={selected === section._id ? 'list-group-item active' : 'list-group-item'}
       onDoubleClick={onEdit}
+      onClick={onSelect}
     >
       {section.name}
-      <span>
+      <span style={{marginLeft: '5px'}}>
         <i
           className="fa fa-edit"
+          style={{marginRight: '5px'}}
           onClick={onEdit}
-        ></i>{' '}
+        />{' '}
         <i
           className="fa fa-trash-o"
           onClick={onDelete}
-        ></i>
+        />
       </span>
     </div>
   )
