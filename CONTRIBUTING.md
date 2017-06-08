@@ -20,7 +20,6 @@ If you find a bug that is not listed as an issue, feel free to add a new issue.
 - [Create a Branch](#create-a-branch)
 - [Setup Linting](#setup-linting)
 - [Make Changes](#make-changes)
-- [Squash Your Commits](#squash-your-commits)
 - [Creating a Pull Request](#creating-a-pull-request)
 - [Submitting a Pull Request](#submitting-a-pull-request)
 - [Next Steps](#next-steps)
@@ -158,13 +157,6 @@ npm run lint
 
 ### Make Changes
 This bit is up to you!  After you make changes be sure to fix any lint warnings or errors before submitting a pull request.
-
-### Squash Your Commits
-When you make a pull request, all of your changes need to be in one commit.
-
-If you have made more then one commit, then you will need to _squash_ your commits.
-
-To do this, see [Squashing Your Commits](http://forum.freecodecamp.com/t/how-to-squash-multiple-commits-into-one-with-git/13231).
 
 ### Creating a Pull Request
 
