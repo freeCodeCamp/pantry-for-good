@@ -52,7 +52,7 @@ class VolunteerEdit extends Component {
     const {savingVolunteers, saveVolunteersError} = nextProps
 
     if (!savingVolunteers && this.props.savingVolunteers && !saveVolunteersError) {
-      this.props.push(this.isAdmin ? '/volunteers' : '/')
+      // this.props.push(this.isAdmin ? '/volunteers' : '/')
     }
   }
 
