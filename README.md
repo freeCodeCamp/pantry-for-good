@@ -2,7 +2,7 @@ This repository is for the Food-for-Good application designed by Open Source for
 
 You can test it out by deploying to [Heroku](https://www.heroku.com):
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Food-for-Good/tree/staging)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/jspaine/food-bank-app/tree/demo)
 
 The button creates an admin account with username `admin@example.com` and password `password`.
 
