@@ -99,10 +99,8 @@ function handleSendgridError(err) {
     const message = errors.map(error => get(error, 'message'))
       .filter(errMsg => errMsg)
       .join(', ')
-    // eslint-disable-next-line no-console
     console.error('sendgrid error %d:', err.statusCode, message)
   } else {
-    // eslint-disable-next-line no-console
     console.error('sendgrid error', err.statusCode)
   }
 }
