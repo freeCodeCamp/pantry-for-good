@@ -44,10 +44,10 @@ class Category extends React.Component {
         <tr>
           <td>
             <span>{this.props.category}</span>
-            <div className="tools">
-              <i className="fa fa-edit text-blue" onClick={this.onClickShowEdit}></i>
+            <span className="tools" style={{float: 'right', marginRight: '8px'}}>
+              <i className="fa fa-edit text-blue" onClick={this.onClickShowEdit} style={{marginRight: '8px'}}></i>
               <i className="fa fa-trash-o text-red" onClick={this.onClickRemove}></i>
-            </div>
+            </span>
           </td>
         </tr>
       )

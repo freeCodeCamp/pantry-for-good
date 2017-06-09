@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import range from 'lodash/range'
+import faker from 'faker'
 
 import {
   foodFields,
@@ -89,9 +90,9 @@ async function seedUsers() {
   const clientCount = await User.count({accountType: {$in: clientTypes}})
   if (clientCount) return
 
-  const customers = range(40).map(i => createTestUser(`customer ${i + 1}`))
-  const volunteers = range(15).map(i => createTestUser(`volunteer ${i + 1}`))
-  const donors = range(15).map(i => createTestUser(`donor ${i + 1}`))
+  const customers = range(45).map(i => createTestUser(`customer ${i + 1}`))
+  const volunteers = range(8).map(i => createTestUser(`volunteer ${i + 1}`))
+  const donors = range(5).map(i => createTestUser(`donor ${i + 1}`))
   const drivers = range(5).map(i => createTestUser(`driver ${i + 1}`, 'volunteer'))
 
   await User.create([
@@ -140,12 +141,12 @@ function createTestUser(name, type = null) {
   if (names.length !== 2) throw new Error('name should be "firstname lastname"')
   type = type || names[0]
   return {
-    firstName: names[0],
-    lastName: names[1],
-    displayName: name,
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    // displayName: name,
     accountType: [type],
     roles: names[0] === 'driver' ? ['driver', 'volunteer'] : [type],
-    email: `${names.join('')}@${type}.com`,
+    email: `${names.join('')}@example.com`,
     password: 'password',
     provider: 'local'
   }
