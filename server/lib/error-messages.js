@@ -1,6 +1,6 @@
 export default function getErrorMessage(err) {
   const defaultResponse = {
-    message: 'Something went wrong',
+    message: 'Something went wrong on the server',
     status: 500
   }
 
