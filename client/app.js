@@ -46,7 +46,6 @@ function render(Component) {
 
 if (module.hot) {
   module.hot.accept('./Application', () => {
-    // const Next = require('./Application').default
     render(Application)
   })
 }

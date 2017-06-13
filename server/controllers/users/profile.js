@@ -1,24 +1,20 @@
-'use strict'
+import {extend} from 'lodash'
+import errorHandler from '../errors'
 import User from '../../models/user'
-/**
- * Module dependencies.
- */
-var _ = require('lodash'),
-  errorHandler = require('../errors')
 
 /**
  * Update user details
  */
-exports.update = function(req, res) {
+export const update = function(req, res) {
   // Init Variables
-  var user = req.user
+  let user = req.user
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles
 
   if (user) {
     // Merge existing user
-    user = _.extend(user, req.body)
+    user = extend(user, req.body)
     user.updated = Date.now()
     user.displayName = user.firstName + ' ' + user.lastName
 
@@ -47,7 +43,7 @@ exports.update = function(req, res) {
 /**
  * Send User
  */
-exports.me = function(req, res) {
+export const me = function(req, res) {
   if (!req.session.passport) return res.json(null)
   User.findById(req.session.passport.user, '-password -salt', function(err, response) {
     if (err) return res.json(null)

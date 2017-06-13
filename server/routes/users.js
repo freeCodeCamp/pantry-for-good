@@ -1,6 +1,6 @@
 import Router from 'express-promise-router'
 import passport from 'passport'
-import * as users from '../controllers/users'
+import users from '../controllers/users'
 
 const userRouter = Router({mergeParams: true})
 

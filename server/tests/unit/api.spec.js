@@ -1,11 +1,11 @@
+import apiRouterFactory from '../../routes/api'
+
 describe('Api router', function() {
-  let apiRouterFactory
   let userControllerMock
   let apiRouterMock
 
   before(async function() {
     await initDb()
-    apiRouterFactory = require('../../routes/api').default
   })
 
   beforeEach(function() {

@@ -2,9 +2,9 @@ import passport from 'passport'
 import localStrategy from './strategies/local'
 import googleStrategy from './strategies/google'
 import config from './index.js'
+import User from '../models/user'
 
 export default function() {
-  const {User} = require('../models')
   // Serialize sessions
   passport.serializeUser(function(user, done) {
     done(null, {_id: user._id, roles: user.roles})

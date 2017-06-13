@@ -1,18 +1,14 @@
-'use strict'
 import Donation from '../models/donation'
 import Donor from '../models/donor'
 import Settings from '../models/settings'
-/**
- * Module dependencies
- */
-var errorHandler = require('./errors'),
-  mailHelper = require('sendgrid').mail,
-  config = require('../config/index')
+import errorHandler from './errors'
+import sendgrid, {mail as mailHelper} from 'sendgrid'
+import config from '../config/index'
 
 /**
  * Create a donation
  */
-exports.create = function(req, res) {
+export const create = function(req, res) {
   var donation = new Donation(req.body)
 
   donation.save(function(err) {
@@ -29,13 +25,13 @@ exports.create = function(req, res) {
 /**
  * Send email receipt
  */
-exports.sendEmail = function(req, res, next) {
-  var donation = req.body
+export const sendEmail = function(req, res, next) {
+  const donation = req.body
 
-  var temp = new Date(donation.dateIssued).toDateString().split(' ').splice(1)
+  const temp = new Date(donation.dateIssued).toDateString().split(' ').splice(1)
   donation.dateIssued = temp[0] + ' ' + temp[1] + ', ' + temp[2]
 
-  var donorId = req.params.donorId
+  const donorId = req.params.donorId
   Donor.findById(donorId, function(err, donor) {
     if (err) return next(err)
 
@@ -45,13 +41,13 @@ exports.sendEmail = function(req, res, next) {
 
       donation.tconfig = settings
 
-      res.render('templates/donation-attachment-email', donation, function(err, email) {
-        var from_email = new mailHelper.Email(config.mailer.from)
-        var to_email = new mailHelper.Email(donor.email)
-        var sg = require('sendgrid')(config.mailer.sendgridKey)
-        var sgContent = new mailHelper.Content('text/html', email)
-        var mail = new mailHelper.Mail(from_email, "Tax Receipt", to_email, sgContent)
-        var request = sg.emptyRequest({
+      res.render('templates/donation-attachment-email', donation, (err, email) => {
+        const from_email = new mailHelper.Email(config.mailer.from)
+        const to_email = new mailHelper.Email(donor.email)
+        const sg = sendgrid(config.mailer.sendgridKey)
+        const sgContent = new mailHelper.Content('text/html', email)
+        const mail = new mailHelper.Mail(from_email, "Tax Receipt", to_email, sgContent)
+        const request = sg.emptyRequest({
           method: 'POST',
           path: '/v3/mail/send',
           body: mail.toJSON()

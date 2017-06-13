@@ -1,13 +1,11 @@
-'use strict'
-
 /**
  * Get unique error field name
  */
-var getUniqueErrorMessage = function(err) {
-  var output
+const getUniqueErrorMessage = function(err) {
+  let output
 
   try {
-    var fieldName = err.err.substring(err.err.lastIndexOf('.$') + 2, err.err.lastIndexOf('_1'))
+    const fieldName = err.err.substring(err.err.lastIndexOf('.$') + 2, err.err.lastIndexOf('_1'))
     output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + ' already exists'
 
   } catch (ex) {
@@ -20,8 +18,8 @@ var getUniqueErrorMessage = function(err) {
 /**
  * Get the error message from error object
  */
-exports.getErrorMessage = function(err) {
-  var message = ''
+export const getErrorMessage = function(err) {
+  let message = ''
 
   if (err.code) {
     switch (err.code) {

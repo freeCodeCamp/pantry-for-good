@@ -1,7 +1,7 @@
 import Router from 'express-promise-router'
 
 import donorController from '../controllers/donor'
-import * as userController from '../controllers/users'
+import userController from '../controllers/users'
 
 export default () => {
   const {requiresLogin} = userController
