@@ -6,6 +6,7 @@ import {ButtonToolbar, Button} from 'react-bootstrap'
 import selectors from '../../../store/selectors'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageBody, PageHeader} from '../../../components/page'
@@ -30,8 +31,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
-  deleteVolunteer: volunteer => dispatch(deleteVolunteer(volunteer.id)),
-  loadQuestionnaires: () => dispatch(loadQuestionnaires())
+  deleteVolunteer: volunteer => () => dispatch(deleteVolunteer(volunteer.id)),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  showDialog: (cancel, confirm, message) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
+  hideDialog: () => dispatch(hideDialog())
 })
 
 class VolunteerView extends Component {
@@ -64,7 +68,11 @@ class VolunteerView extends Component {
     }, this.isAdmin)
   }
 
-  deleteVolunteer = volunteer => () => this.props.deleteVolunteer(volunteer)
+  deleteVolunteer = volunteer => () => this.props.showDialog(
+    this.props.hideDialog,
+    this.props.deleteVolunteer(volunteer),
+    `Volunteer ${volunteer.fullName} will be permanently deleted`
+  )
 
   render() {
     const {
@@ -139,7 +147,7 @@ class VolunteerView extends Component {
               {' '}
               <Link
                 className="btn btn-primary"
-                to={this.isAdmin ? '/volunteers' : '/'}
+                to={this.isAdmin ? '/volunteers/list' : '/volunteers'}
               >
                 Cancel
               </Link>

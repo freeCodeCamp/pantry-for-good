@@ -25,7 +25,7 @@ export const showDialog = dialog => ({
  * @param {function} cancelAction
  * @param {function} confirmAction
  */
-export const showConfirmDialog = (cancelAction, confirmAction) =>
+export const showNavDialog = (cancelAction, confirmAction) =>
   showDialog({
     header: 'Are you sure?',
     message: 'Your changes will be lost',
@@ -36,6 +36,27 @@ export const showConfirmDialog = (cancelAction, confirmAction) =>
     }, {
       style: 'danger',
       text: 'Leave',
+      onClick: confirmAction
+    }]
+  })
+
+/**
+ * @param {function} cancelAction
+ * @param {function} confirmAction
+ * @param {string} message
+ * @param {string} confirmLabel
+ */
+export const showConfirmDialog = (cancelAction, confirmAction, message, confirmLabel) =>
+  showDialog({
+    header: 'Are you sure?',
+    message,
+    actions: [{
+      style: 'primary',
+      text: 'Cancel',
+      action: cancelAction
+    }, {
+      style: 'danger',
+      text: confirmLabel,
       onClick: confirmAction
     }]
   })

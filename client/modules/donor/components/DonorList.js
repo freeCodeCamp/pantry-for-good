@@ -8,6 +8,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 import selectors from '../../../store/selectors'
 import {loadDonors, deleteDonor} from '../reducers/donor'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
+import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import {Page, PageBody} from '../../../components/page'
@@ -24,8 +25,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadDonors: () => dispatch(loadDonors()),
-  deleteDonor: donor => dispatch(deleteDonor(donor.id)),
-  loadQuestionnaires: () => dispatch(loadQuestionnaires())
+  deleteDonor: donor => () => dispatch(deleteDonor(donor.id)),
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  showDialog: (cancel, confirm, message) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
+  hideDialog: () => dispatch(hideDialog())
 })
 
 class DonorList extends Component {
@@ -39,7 +43,11 @@ class DonorList extends Component {
     return donor.donations.reduce((acc, x) => acc + x.eligibleForTax || 0, 0)
   }
 
-  deleteDonor = donor => () => this.props.deleteDonor(donor)
+  deleteDonor = donor => () => this.props.showDialog(
+    this.props.hideDialog,
+    this.props.deleteDonor(donor),
+    `Donor ${donor.fullName} will be permanently deleted`
+  )
 
   formatData = () => this.props.donors ?
     this.props.donors.map(d => ({
