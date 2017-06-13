@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   questionnaires: [
     {"_id": "58274849e6becb2a88ae19ca","name":"Client Questionnaire","description":"Information on clients","identifier":"qClients","logicReq":true},
     {"_id": "58274849e6becb2a88ae1900","name":"Volunteer Questionnaire","description":"Information on volunteers","identifier":"qVolunteers","logicReq":true},

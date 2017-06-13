@@ -5,7 +5,7 @@ import {User} from '../../models'
 /**
  * Signup
  */
-exports.signup = async function(req, res) {
+export const signup = async function(req, res) {
   // Init Variables
   let user = new User({
     ...req.body,
@@ -50,7 +50,7 @@ exports.signup = async function(req, res) {
 /**
  * Signin after passport authentication
  */
-exports.signin = function(req, res, next) {
+export const signin = function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err || !user) {
       res.status(400).send(info)
@@ -70,7 +70,7 @@ exports.signin = function(req, res, next) {
 /**
  * Signout
  */
-exports.signout = function(req, res) {
+export const signout = function(req, res) {
   req.logout()
   req.session.destroy(function() {
     res.redirect('/')

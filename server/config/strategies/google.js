@@ -1,10 +1,10 @@
 import passport from 'passport'
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2'
 
+import User from '../../models/user'
 import config from '../index'
 
 export default function() {
-  const {User} = require('../../models')
   const appUrl = config.host === 'localhost' ?
     `${config.protocol}://${config.host}:8080` :
     `${config.protocol}://${config.host}`

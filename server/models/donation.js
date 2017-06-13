@@ -1,11 +1,6 @@
-'use strict'
-
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  autoIncrement = require('mongoose-auto-increment')
+import mongoose from 'mongoose'
+import autoIncrement from 'mongoose-auto-increment'
+const Schema = mongoose.Schema
 
 /**
  * Donation Schema

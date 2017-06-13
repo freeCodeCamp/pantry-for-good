@@ -1,13 +1,11 @@
 import Customer from '../../models/customer'
-import {createTestUser, initApp} from '../helpers'
-
-let User, app
+import {createTestUser} from '../helpers'
+import app from '../../config/express'
+import User from '../../models/user'
 
 describe('User Api', function() {
   before(async function() {
     await initDb()
-    app = initApp()
-    User = require('../../models/user').default
     await Customer.find().remove()
     await User.find().remove()
   })
