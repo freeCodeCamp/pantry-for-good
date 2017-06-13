@@ -1,12 +1,10 @@
 import Food from '../../models/food'
 import {createUserSession, createTestUser} from '../helpers'
-
-let User
+import User from '../../models/user'
 
 describe('Food Api', function() {
   before(async function() {
     await initDb()
-    User = require('../../models/user').default
     await Food.find().remove()
     await User.find().remove()
   })

@@ -1,12 +1,7 @@
-'use strict'
+import express from 'express'
+import * as donation from '../controllers/donation'
 
-/**
- * Module dependencies
- */
-var express = require('express'),
-  donation = require('../controllers/donation')
-
-var donationRouter = express.Router({mergeParams: true})
+const donationRouter = express.Router({mergeParams: true})
 
 // Donation routes for admin
 donationRouter.route('/admin/donations')
@@ -15,4 +10,4 @@ donationRouter.route('/admin/donations')
 donationRouter.route('/admin/donations/:donorId')
   .put(donation.sendEmail)
 
-module.exports = donationRouter
+export default donationRouter

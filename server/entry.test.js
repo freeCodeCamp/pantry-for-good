@@ -7,8 +7,7 @@ import sinonChai from 'sinon-chai'
 import chaiAsPromised from 'chai-as-promised'
 import supertest from 'supertest'
 
-import config from './config/index'
-
+import config from './config'
 global.expect = chai.expect
 global.sinon = sinon
 global.supertest = supertest

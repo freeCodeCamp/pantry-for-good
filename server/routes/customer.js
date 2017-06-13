@@ -1,7 +1,7 @@
 import Router from 'express-promise-router'
 
 import customerController from '../controllers/customer'
-import * as userController from '../controllers/users'
+import userController from '../controllers/users'
 import websocketMiddleware from '../lib/websocket-middleware'
 import {customer} from '../../common/schemas'
 

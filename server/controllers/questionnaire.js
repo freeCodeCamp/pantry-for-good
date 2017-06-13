@@ -20,7 +20,7 @@ export default {
   },
 
   // Delete a questionnaire
-  // exports.delete = function(req, res) {
+  // export const delete = function(req, res) {
   //   var questionnaire = req.questionnaire
 
   //   // Prevent remove if there are sections for the questionnaire

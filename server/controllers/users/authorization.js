@@ -3,7 +3,7 @@ import intersection from 'lodash/intersection'
 /**
  * User middleware
  */
-exports.userByID = function(req, res, next, id) {
+export const userByID = function(req, res, next, id) {
   User.findOne({
     _id: id
   }).exec(function(err, user) {
@@ -17,7 +17,7 @@ exports.userByID = function(req, res, next, id) {
 /**
  * Require login routing middleware
  */
-exports.requiresLogin = function(req, res, next) {
+export const requiresLogin = function(req, res, next) {
   if (!req.isAuthenticated()) {
     return res.status(401).send({
       message: 'User is not logged in'
@@ -29,7 +29,7 @@ exports.requiresLogin = function(req, res, next) {
 /**
  * User authorizations routing middleware
  */
-exports.hasAuthorization = function(roles) {
+export const hasAuthorization = function(roles) {
   return (req, res, next) => {
     this.requiresLogin(req, res, function() {
       if (intersection(req.user.roles, roles).length) {
