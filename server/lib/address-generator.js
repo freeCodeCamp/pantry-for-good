@@ -27,10 +27,10 @@ export default class AddressGenerator {
     return {
       lat: line[0],
       lng: line[1],
-      street: `${line[2]} ${line[3]}`,
-      city: `${line[4]}`,
-      state: `${line[5]}`,
-      zip: `${line[6]}`
+      street: line[2],
+      city: line[3],
+      state: line[4],
+      zip: line[5]
     }
   }
 }

@@ -18,17 +18,14 @@ class Questionnaire extends Component {
   }
 
   render() {
-    const {questionnaire, loading, onSubmit} = this.props
+    const {questionnaire, loading} = this.props
     return (
       <div>
         {questionnaire && questionnaire.sections.map((section, i) =>
           <Box key={i}>
             <BoxHeader heading={section.name} />
             <BoxBody loading={loading}>
-              <Section
-                section={section}
-                onSubmit={onSubmit}
-              />
+              <Section section={section} />
             </BoxBody>
           </Box>
         )}
@@ -71,11 +68,11 @@ function validateHousehold(values, allFields) {
 }
 
 function validateQuestionnaireFields(values, allFields) {
-  return Object.keys(values.fields).reduce((errors, k) => {
-    const value = values.fields[k]
-    const field = allFields.find(f => f._id === k)
-
-    if (!field) return errors
-    return Object.assign(errors, validate(value, field))
+  return allFields.reduce((errors, qField) => {
+    const fieldId = Object.keys(values.fields).find(id => id === qField._id)
+    return {
+      ...errors,
+      ...validate(values.fields[fieldId], qField)
+    }
   }, {})
 }
