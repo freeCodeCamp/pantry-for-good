@@ -3,10 +3,10 @@ import {connect} from 'react-redux'
 import {compose} from 'recompose'
 import {withRouter} from 'react-router-dom'
 
-import {showConfirmDialog, hideDialog} from '../modules/core/reducers/dialog'
+import {showNavDialog, hideDialog} from '../modules/core/reducers/dialog'
 
 const mapDispatchToProps = dispatch => ({
-  showDialog: (cancel, confirm) => dispatch(showConfirmDialog(cancel, confirm)),
+  showDialog: (cancel, confirm) => dispatch(showNavDialog(cancel, confirm)),
   hideDialog: () => dispatch(hideDialog())
 })
 
@@ -26,12 +26,33 @@ const withConfirmNavigation = WrappedComponent => enhance(
       })
     }
 
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.dirty) this.addUnloadListener()
+      else this.removeUnloadListener()
+    }
+
     componentWillUnmount() {
       this.unblock()
+      this.removeUnloadListener()
+    }
+
+    addUnloadListener() {
+      window.addEventListener('beforeunload', this.confirmUnload)
+    }
+
+    removeUnloadListener() {
+      window.removeEventListener('beforeunload', this.confirmUnload)
+    }
+
+    confirmUnload(ev) {
+      const message = 'Are you sure? Your changes will be lost.'
+      ev.returnValue = message
+      return message
     }
 
     unblockAndGo = location => () => {
       this.unblock()
+      this.removeUnloadListener()
       this.props.hideDialog()
       this.props.history.push(location)
     }

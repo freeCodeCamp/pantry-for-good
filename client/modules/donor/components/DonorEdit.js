@@ -47,15 +47,11 @@ class DonorEdit extends Component {
     this.props.loadQuestionnaires()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {savingDonors, saveDonorsError} = nextProps
-    if (!savingDonors && this.props.savingDonors && !saveDonorsError) {
-      this.props.push(this.isAdmin ? '/donors' : '/')
-    }
-  }
-
   saveDonor = form =>
     this.props.saveDonor(fromForm(form), this.isAdmin)
+
+  handleSubmitSuccess = () =>
+    this.props.push(this.isAdmin ? '/donors/list' : '/donors')
 
   submit = () => this.props.submit(FORM_NAME)
 
@@ -76,6 +72,7 @@ class DonorEdit extends Component {
                 questionnaire={questionnaire}
                 loading={savingDonors}
                 onSubmit={this.saveDonor}
+                onSubmitSuccess={this.handleSubmitSuccess}
                 initialValues={toForm(donor, questionnaire)}
               />
             }
@@ -88,7 +85,7 @@ class DonorEdit extends Component {
               {' '}
               <Link
                 className="btn btn-primary"
-                to={this.isAdmin ? '/donors' : '/'}
+                to={this.isAdmin ? '/donors/list' : '/donors'}
               >Cancel</Link>
             </div>
           </form>
