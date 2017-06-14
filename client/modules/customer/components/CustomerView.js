@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {ButtonToolbar, Button} from 'react-bootstrap'
 
@@ -36,11 +37,26 @@ const mapDispatchToProps = dispatch => ({
   },
   showDialog: (cancel, confirm, message) =>
     dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
-  hideDialog: () => dispatch(hideDialog())
+  hideDialog: () => dispatch(hideDialog()),
+  push: route => dispatch(push(route))
 })
 
 class CustomerView extends Component {
-  isAdmin = this.props.user.roles.find(r => r === 'admin')
+  constructor(props) {
+    super(props)
+    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.state = {deleting: false}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.savingCustomers && !nextProps.savingCustomers && this.state.deleting) {
+      this.setState({deleting: false})
+
+      if (!nextProps.saveCustomersError) {
+        this.props.push('/customers/list')
+      }
+    }
+  }
 
   componentWillMount() {
     this.props.loadCustomer(this.props.customerId, this.isAdmin)
@@ -56,21 +72,27 @@ class CustomerView extends Component {
     }, this.isAdmin)
   }
 
-  deleteCustomer = customer => () => this.props.showDialog(
+  confirmDelete = customer => () => this.props.showDialog(
     this.props.hideDialog,
-    this.props.deleteCustomer(customer.id),
+    this.deleteCustomer(customer.id),
     `Customer ${customer.fullName} will be permanently deleted`
   )
 
+  deleteCustomer = id => () => {
+    this.setState({deleting: true})
+    this.props.deleteCustomer(id)
+    this.props.hideDialog()
+  }
+
   render() {
-    const {getCustomer, questionnaire} = this.props
+    const {getCustomer, questionnaire, saveCustomersError} = this.props
     const customer = getCustomer(this.props.customerId)
     const loading = this.props.loading || this.props.savingCustomers
 
     return (
       <Page>
         <PageHeader heading={customer && customer.fullName} />
-        <PageBody>
+        <PageBody error={saveCustomersError}>
           {customer && questionnaire &&
             <QuestionnaireView
               model={customer}
@@ -116,7 +138,7 @@ class CustomerView extends Component {
             <div className="text-right">
               <Button
                 bsStyle="danger"
-                onClick={this.deleteCustomer(customer)}
+                onClick={this.confirmDelete(customer)}
               >
                 Delete
               </Button>
