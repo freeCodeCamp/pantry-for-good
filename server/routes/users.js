@@ -20,24 +20,37 @@ export default () => {
   userRouter.route('/auth/signout').get(users.signout)
 
   // Setting the google oauth routes
-  userRouter.route('/auth/google').get(passport.authenticate('google', {
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email'
-    ]
-  }))
+  userRouter.route('/auth/google').get(
+    (req, res, next) => {
+      const action = req.query.action || 'login'
+      passport.authenticate('google',
+        {
+          scope: [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email'],
+          state: JSON.stringify({action: action, accountType: req.query.accountType})
+        }
+      )(req, res, next)
+    }
+  )
+
   userRouter.route('/auth/google/callback').get(
     (req, res, next) => passport.authenticate('google', {
       scope: [
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/userinfo.email'
       ]
-    }, (err, user, info) => {
-      if (err || !user) return res.status(400).json(info)
-      req.login(user, err => {
-        if (err) return res.status(400).json(err)
-        return res.redirect('/')
-      })
+    }, (err, user) => {
+      if (err) {
+        return res.status(500).send(err.message)
+      } else if (!user) {
+        return res.status(500).send("Server error. Could not login the user")        
+      } else {
+        req.login(user, err => {
+          if (err) return res.status(500).send(err.message)
+          return res.redirect('/')
+        })
+      }
     })(req, res, next)
   )
 
