@@ -11,8 +11,7 @@ const Section = ({section}) =>
   </div>
 
 Section.propTypes = {
-  section: PropTypes.object.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  section: PropTypes.object.isRequired
 }
 
 export default Section
@@ -26,7 +25,7 @@ function renderField(field) {
   if (inputTypes.find(t => t === type)) {
     return <RFFieldGroup
       key={field._id}
-      name={`fields['${field._id}']`}
+      name={`fields[${field._id}]`}
       label={field.label}
       type={type}
       required={field.required}
