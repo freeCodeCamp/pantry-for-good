@@ -1,7 +1,7 @@
 import Router from 'express-promise-router'
 
 import foodController from '../controllers/food'
-import * as userController from '../controllers/users'
+import userController from '../controllers/users'
 import websocketMiddleware from '../lib/websocket-middleware'
 import {foodCategory} from '../../common/schemas'
 

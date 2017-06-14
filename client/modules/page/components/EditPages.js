@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import selectors from '../../../store/selectors'
 import {loadPages, savePage} from '../reducer'
-import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
+import {showNavDialog, hideDialog} from '../../core/reducers/dialog'
 import {Page, PageBody, PageHeader} from '../../../components/page'
 import {Box, BoxBody} from '../../../components/box'
 import PageSelector from './PageSelector'
@@ -19,7 +19,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadPages: () => dispatch(loadPages()),
   savePage: page => () => dispatch(savePage(page)),
-  showDialog: (cancel, confirm) => dispatch(showConfirmDialog(cancel, confirm)),
+  showDialog: (cancel, confirm) => dispatch(showNavDialog(cancel, confirm)),
   hideDialog: () => dispatch(hideDialog())
 })
 

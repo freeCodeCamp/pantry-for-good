@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {compose} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {flatMap} from 'lodash'
@@ -11,20 +11,28 @@ import validate from '../../../common/validators'
 
 import './questionnaire.css'
 
-const Questionnaire = ({
-  questionnaire,
-  loading
-}) =>
-  <div>
-    {questionnaire && questionnaire.sections.map((section, i) =>
-      <Box key={i}>
-        <BoxHeader heading={section.name} />
-        <BoxBody loading={loading}>
-          <Section section={section} />
-        </BoxBody>
-      </Box>
-    )}
-  </div>
+class Questionnaire extends Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.onSubmitSuccess && nextProps.submitSucceeded && !this.props.dirty)
+      nextProps.onSubmitSuccess()
+  }
+
+  render() {
+    const {questionnaire, loading} = this.props
+    return (
+      <div>
+        {questionnaire && questionnaire.sections.map((section, i) =>
+          <Box key={i}>
+            <BoxHeader heading={section.name} />
+            <BoxBody loading={loading}>
+              <Section section={section} />
+            </BoxBody>
+          </Box>
+        )}
+      </div>
+    )
+  }
+}
 
 export default compose(
   reduxForm({

@@ -7,6 +7,7 @@ import selectors from '../../../store/selectors'
 import {loadCustomer, saveCustomer, deleteCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {loadFoods} from '../../food/reducers/category'
+import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
 
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageHeader, PageBody} from '../../../components/page'
@@ -32,7 +33,10 @@ const mapDispatchToProps = dispatch => ({
   loadFormData: () => {
     dispatch(loadFoods())
     dispatch(loadQuestionnaires())
-  }
+  },
+  showDialog: (cancel, confirm, message) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
+  hideDialog: () => dispatch(hideDialog())
 })
 
 class CustomerView extends Component {
@@ -52,7 +56,11 @@ class CustomerView extends Component {
     }, this.isAdmin)
   }
 
-  deleteCustomer = customer => () => this.props.deleteCustomer(customer.id)
+  deleteCustomer = customer => () => this.props.showDialog(
+    this.props.hideDialog,
+    this.props.deleteCustomer(customer.id),
+    `Customer ${customer.fullName} will be permanently deleted`
+  )
 
   render() {
     const {getCustomer, questionnaire} = this.props
@@ -122,7 +130,7 @@ class CustomerView extends Component {
               {' '}
               <Link
                 className="btn btn-primary"
-                to="/customers"
+                to="/customers/list"
               >
                 Cancel
               </Link>
@@ -130,12 +138,12 @@ class CustomerView extends Component {
             <div className="text-right">
               <Link
                 className="btn btn-success"
-                to={`/customer/${customer.id}/edit`}
+                to={`/customers/${customer.id}/edit`}
               >
                 Edit
               </Link>
               {' '}
-              <Link className="btn btn-primary" to="/">Cancel</Link>
+              <Link className="btn btn-primary" to="/customers">Cancel</Link>
             </div>
           )}
         </PageBody>

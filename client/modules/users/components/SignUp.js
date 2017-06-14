@@ -6,6 +6,7 @@ import {push} from 'react-router-redux'
 import selectors from '../../../store/selectors'
 import {signUp, clearFlags} from '../reducer'
 import userClientRole from '../../../lib/user-client-role'
+import {showDialog, hideDialog} from '../../core/reducers/dialog'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
@@ -57,6 +58,40 @@ class SignUp extends React.Component {
       "email": this.state.email,
       "password": this.state.password
     })
+  }
+
+  onGoogleSignupClick = e => {
+    e.preventDefault()
+    const dialogOptions = {
+      message: 'Which account type are you registering for?',
+      actions: [
+        {
+          style: 'primary',
+          text: 'Customer',
+          action: () => this.googleSignup('customer')
+        },       
+        {
+          style: 'primary',
+          text: 'Volunteer',
+          action: () => this.googleSignup('volunteer')
+        },       
+        {
+          style: 'primary',
+          text: 'Donor',
+          action: () => this.googleSignup('donor')
+        }, 
+        {
+          style: 'danger',
+          text: 'Cancel',
+          onClick: this.props.hideDialog
+        }
+      ]
+    }
+    this.props.showDialog(dialogOptions)
+  }
+
+  googleSignup = accountType => {
+    window.location = `/api/auth/google?action=signup&accountType=${accountType}`
   }
 
   componentWillReceiveProps = nextProps => {
@@ -136,10 +171,10 @@ class SignUp extends React.Component {
             <div>
               or
               <br />
-              <a href="/api/auth/google"  className="btn btn-default">
+              <button onClick={this.onGoogleSignupClick} className="btn btn-default">
                 <i className="fa fa-google" />{' '}
                 Sign up with Google
-              </a>
+              </button>
             </div>
           }
           <br/><br/>Already have an account?&nbsp;&nbsp;
@@ -157,11 +192,11 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  signUp: user => {
-    dispatch(signUp(user))
-  },
+  signUp: user => dispatch(signUp(user)),
   clearFlags: () => dispatch(clearFlags()),
-  push: location => dispatch(push(location))
+  push: location => dispatch(push(location)),
+  showDialog: dialogOptions => dispatch(showDialog(dialogOptions)),
+  hideDialog: () => dispatch(hideDialog())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

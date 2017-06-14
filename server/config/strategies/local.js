@@ -1,8 +1,8 @@
 import passport from 'passport'
 import {Strategy as LocalStrategy} from 'passport-local'
+import User from '../../models/user'
 
 export default function() {
-  const {User} = require('../../models')
 
   passport.use(new LocalStrategy({
     usernameField: 'email',

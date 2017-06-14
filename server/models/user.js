@@ -1,12 +1,7 @@
-'use strict'
-
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  crypto = require('crypto'),
-  autoIncrement = require('mongoose-auto-increment')
+import mongoose from 'mongoose'
+import crypto from 'crypto'
+import autoIncrement from 'mongoose-auto-increment'
+const Schema = mongoose.Schema
 
 /**
  * A Validation function for local strategy properties
@@ -128,6 +123,7 @@ UserSchema.methods.authenticate = function(password) {
 /**
  * Schema plugins
  */
+autoIncrement.initialize(mongoose.connection)
 UserSchema.plugin(autoIncrement.plugin, {
   model: 'User',
   startAt: 10000

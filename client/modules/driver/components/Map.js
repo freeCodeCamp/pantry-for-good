@@ -5,8 +5,9 @@ import withScriptjs from 'react-google-maps/lib/async/withScriptjs'
 export const getGoogleMapURL = settings => {
   const {gmapsApiKey, gmapsClientId} = settings
   const baseUrl = 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing&'
+
   return gmapsClientId ?
-    `${baseUrl}id=${gmapsClientId}` :
+    `${baseUrl}client=${gmapsClientId}` :
     `${baseUrl}key=${gmapsApiKey}`
 }
 
