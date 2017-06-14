@@ -93,7 +93,7 @@ class VolunteerEdit extends Component {
               {' '}
               <Link
                 className="btn btn-primary"
-                to={this.isAdmin ? "/volunteers/list" : "/volunteers"}
+                to={this.isAdmin ? '/volunteers/list' : '/volunteers'}
               >Cancel</Link>
             </div>
           </form>

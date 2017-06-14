@@ -51,6 +51,9 @@ class CustomerCreate extends Component {
   saveCustomer = form =>
     this.props.saveCustomer(fromForm(form), this.isAdmin)
 
+  handleSubmitSuccess = () =>
+    this.props.push(this.isAdmin ? '/customers/list' : '/customers')
+
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
@@ -84,6 +87,7 @@ class CustomerCreate extends Component {
                 questionnaire={questionnaire}
                 loading={savingCustomers}
                 onSubmit={this.saveCustomer}
+                onSubmitSuccess={this.handleSubmitSuccess}
                 initialValues={toForm(this.customer, questionnaire)}
               />
             }
@@ -97,7 +101,7 @@ class CustomerCreate extends Component {
               </Button>
               {' '}
               <Link
-                to="/"
+                to={this.isAdmin ? '/customers/list' : '/'}
                 className="btn btn-primary"
               >
                 Cancel
