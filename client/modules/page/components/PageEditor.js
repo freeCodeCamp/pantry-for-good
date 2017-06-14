@@ -27,7 +27,7 @@ const quillModules = {
     ['clean']
   ],
   imageDrop: true,
-  imageResize: {modules: ['Resize', 'DisplaySize']}
+  imageResize: {}
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -48,15 +48,26 @@ class PageEditor extends React.Component {
     }
   }
 
+  getResizeModule = el => {
+    this.resizeModule = el ? el.getEditor().getModule('imageResize') : null
+  }
+
   handleChange = (value, _, source) => {
+    if (this.resizeModule && this.resizeModule.img) {
+      this.resizeModule.onUpdate()
+    }
+
+    if (source === 'user' && typeof this.props.setDirty === 'function' &&
+        !this.props.dirty) {
+      this.props.setDirty(true)
+    }
+
     this.setState({
       page: {
         ...this.state.page,
         body: value
       }
     })
-
-    if (source === 'user') this.props.setDirty(true)
   }
 
   render() {
@@ -69,6 +80,7 @@ class PageEditor extends React.Component {
             value={page.body}
             onChange={this.handleChange}
             modules={quillModules}
+            ref={this.getResizeModule}
           />
         }
         <div className="text-right">
