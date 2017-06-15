@@ -45,6 +45,16 @@ export default function(io) {
   // call with true or delete db to seed
   seed(process.env.NODE_ENV, false)
 
+  // force https
+  if (process.env.NODE_ENV === 'production') {
+    app.use(function(req, res, next) {
+      if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(301, `https://${req.hostname}${req.url}`)
+      }
+      next()
+    })
+  }
+
   // Should be placed before express.static
   app.use(compress({
     filter: function(req, res) {
