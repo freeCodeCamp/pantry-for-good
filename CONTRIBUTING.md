@@ -2,7 +2,7 @@
 
 We welcome pull requests from Free Code Camp campers (our students) and seasoned JavaScript developers alike! Follow these steps to contribute:
 
-1. Find an issue that needs assistance by searching for the [Help Wanted](https://github.com/freeCodeCamp/Food-for-Good/labels/help%20wanted) tag.
+1. Find an issue that needs assistance by searching for the [Help Wanted](https://github.com/freeCodeCamp/Pantry-for-Good/labels/help%20wanted) tag.
 
 2. Let us know you are working on it by posting a comment on the issue.
 
@@ -16,7 +16,7 @@ If you find a bug that is not listed as an issue, feel free to add a new issue.
 
 - [Prerequisites](#prerequisites)
 - [Forking the Project](#forking-the-project)
-- [Setup Food-for-Good](#setup-food-for-good)
+- [Setup Pantry-for-Good](#setup-pantry-for-good)
 - [Create a Branch](#create-a-branch)
 - [Setup Linting](#setup-linting)
 - [Make Changes](#make-changes)
@@ -47,30 +47,30 @@ If your versions are lower than the prerequisite versions, you should update.
 
 ### Forking the Project
 
-1. Go to the top level Food-for-Good repository page on github: [https://github.com/freeCodeCamp/Food-for-Good](https://github.com/freeCodeCamp/Food-for-Good)
+1. Go to the top level Pantry-for-Good repository page on github: [https://github.com/freeCodeCamp/Pantry-for-Good](https://github.com/freeCodeCamp/Pantry-for-Good)
 2. Click the "Fork" Button in the upper right hand corner of the interface ([More Details Here](https://help.github.com/articles/fork-a-repo/))
-3. After the repository has been forked, you will be taken to your copy of the Food-for-Good repo at `yourUsername/Food-for-Good`
+3. After the repository has been forked, you will be taken to your copy of the Pantry-for-Good repo at `yourUsername/Pantry-for-Good`
 
 #### Cloning Your Fork
 
 1. Open a Terminal / Command Line / Bash Shell
-2. Clone your fork of Food-for-Good
+2. Clone your fork of Pantry-for-Good
 
 ```shell
-git clone https://github.com/yourUsername/Food-for-Good.git
+git clone https://github.com/yourUsername/Pantry-for-Good.git
 ```
 
 ##### (make sure to replace `yourUsername` with your GitHub Username)
 
-This will create a directory `Food-for-Good` and download the entire Food-for-Good repo to it.
+This will create a directory `Pantry-for-Good` and download the entire Pantry-for-Good repo to it.
 
 #### Setup Your Upstream
 
-1. Change directory to the new Food-for-Good directory (`cd Food-for-Good`)
-2. Use the git command to add a remote to the official Food-for-Good repo:
+1. Change directory to the new Pantry-for-Good directory (`cd Pantry-for-Good`)
+2. Use the git command to add a remote to the official Pantry-for-Good repo:
 
 ```shell
-git remote add upstream https://github.com/freeCodeCamp/Food-for-Good.git
+git remote add upstream https://github.com/freeCodeCamp/Pantry-for-Good.git
 ```
 
 Congratulations, you now have a local copy of the Food for Good repo!
@@ -113,7 +113,7 @@ Do this prior to every time you create a branch for a pull request:
 
   > This will overwrite the staging branch of your fork.
 
-### Setup Food-for-Good
+### Setup Pantry-for-Good
 
 Please follow the steps in the [README.md](README.md) document.
 
@@ -145,7 +145,7 @@ $ git push origin [name_of_your_new_branch]
 
 ### Setup Linting
 
-We reccomend you have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html). It will highlight anything that doesn't conform to our Food-for-Good's coding style conventions. (you can find a summary of those rules [here](https://github.com/freeCodeCamp/Food-for-Good/blob/staging/.eslintrc)).
+We reccomend you have [ESLint running in your editor](http://eslint.org/docs/user-guide/integrations.html). It will highlight anything that doesn't conform to our Pantry-for-Good's coding style conventions. (you can find a summary of those rules [here](https://github.com/freeCodeCamp/Pantry-for-Good/blob/staging/.eslintrc)).
 
 You can also check for linting errors by running the command
 ```shell
@@ -162,7 +162,7 @@ This bit is up to you!  After you make changes be sure to fix any lint warnings 
 
 #### What is a Pull Request?
 
-A pull request (PR) is a method of submitting proposed changes to a GitHub repository. You will make changes to copies of the files which make up Food-for-Good in a personal fork, then apply to have them accepted by Food-for-Good proper.
+A pull request (PR) is a method of submitting proposed changes to a GitHub repository. You will make changes to copies of the files which make up Pantry-for-Good in a personal fork, then apply to have them accepted by Pantry-for-Good proper.
 
 #### Important: ALWAYS EDIT ON A BRANCH
 
@@ -212,7 +212,7 @@ nothing to commit, working directory clean
 1.  Once the edits have been committed, you will be prompted to create a pull
     request on your fork's GitHub Page.
 
-2.  Submit a pull request from your branch to FreeCodeCamp's Food-for-Good `staging` branch.
+2.  Submit a pull request from your branch to FreeCodeCamp's Pantry-for-Good `staging` branch.
 
 3.  The title (also called the subject) of your PR should be descriptive of your
     changes and succinctly indicates what is being fixed.

@@ -7,22 +7,18 @@ import config from '../index'
 const VALID_ACCOUNT_TYPES = ['customer', 'volunteer', 'donor']
 
 export default function() {
-  const appUrl = config.host === 'localhost' ?
-    `${config.protocol}://${config.host}:8080` :
-    `${config.protocol}://${config.host}`
-
   passport.use(new GoogleStrategy(
     {
       clientID: config.oauth.googleClientID,
       clientSecret: config.oauth.googleClientSecret,
-      callbackURL: appUrl + config.oauth.googleCallbackURL,
+      callbackURL: config.oauth.googleCallbackURL,
       passReqToCallback: true
-    }, 
+    },
     async function(req, accessToken, refreshToken, profile, cb) {
       const query = JSON.parse(req.query.state)
       const action = query.action
       const accountType = query.accountType
-      
+
       try {
         const user = await User.findOne({'google.id': profile.id})
         if (action === 'login') {
@@ -62,14 +58,14 @@ const signup = (user, profile, accountType, cb) => {
         accountType: [accountType],
         roles: [accountType],
         google: {id: profile.id}
-      }, 
+      },
       (err, newUser) => {
         if (err) {
           throw err
         } else {
           cb(null, newUser)
         }
-      } 
+      }
     )
   }
 }

@@ -8,10 +8,12 @@ export default {
     const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
       '+gmapsApiKey +gmapsClientId' : ''
 
-    const settings = await Settings.findOne().select(projection).lean()
+    let settings = await Settings.findOne().select(projection).lean()
 
     // Add property to indicate if google authentication is available
-    Object.assign(settings, {googleAuthentication: !!(config.oauth)})
+    Object.assign(settings, {
+      googleAuthentication: !!(config.oauth.googleClientID && config.oauth.googleClientSecret)
+    })
 
     // Remove unnecessary info before sending off the object to the client
     delete settings.__v
