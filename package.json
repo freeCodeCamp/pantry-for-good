@@ -10,6 +10,7 @@
   },
   "scripts": {
     "heroku-postbuild": "gulp build",
+    "postinstall": "cp -n server/config/env/secrets-template.js server/config/env/secrets.js",
     "dev": "gulp watch",
     "build": "gulp build",
     "build:server": "gulp build-server",

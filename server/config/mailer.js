@@ -8,7 +8,7 @@ import config from './index.js'
 
 let sendEmail = null
 
-if (config.sendpulse) {
+if (config.sendpulse.API_USER_ID && config.sendpulse.API_SECRET) {
   const sp_config = config.sendpulse
 
   sendpulse.init(sp_config.API_USER_ID, sp_config.API_SECRET, sp_config.TOKEN_STORAGE)

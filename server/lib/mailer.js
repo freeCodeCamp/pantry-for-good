@@ -7,7 +7,7 @@ import config from '../config/index'
 import Settings from '../models/settings'
 
 const render = thenify(_render)
-const sg = sendgrid(config.mailer.sendgridKey)
+const sg = sendgrid('')
 const sgApi = thenify(sg.client.API)
 
 export default {

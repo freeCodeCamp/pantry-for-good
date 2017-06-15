@@ -24,7 +24,7 @@ export default function() {
   // Initialize strategies
   localStrategy()
 
-  if (config.oauth) {
+  if (config.oauth.googleClientID && config.oauth.googleClientSecret) {
     googleStrategy()
   } else if (process.env.NODE_ENV !== 'test') {
     console.warn()

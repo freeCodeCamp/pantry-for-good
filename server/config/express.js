@@ -49,7 +49,11 @@ export default function(io) {
   if (process.env.NODE_ENV === 'production') {
     app.use(function(req, res, next) {
       if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect(301, `https://${req.hostname}${req.url}`)
+        if (req.method === 'GET') {
+          return res.redirect(301, `https://${req.hostname}${req.url}`)
+        } else {
+          return res.status(400).end()
+        }
       }
       next()
     })
