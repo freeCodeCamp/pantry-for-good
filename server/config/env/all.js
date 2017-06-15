@@ -4,9 +4,12 @@ export default {
   port: process.env.PORT || 3000,
   templateEngine: 'nunjucks',
   sessionCollection: 'sessions',
-  mailer: {
-    from: process.env.MAILER_FROM || 'MAILER_FROM',
-    to: process.env.MAILER_TO || 'MAILER_TO',
-    sendgridKey: process.env.SENDGRID_API_KEY || 'SEND_GRID_API_KEY'
+  oauth: {
+    googleCallbackURL: '/api/auth/google/callback'
+  },
+  sendpulse: {
+    name: 'FoodBank App', // TODO: get this from settings
+    email: process.env.SENDPULSE_EMAIL || 'a2388865@mvrht.net',
+    TOKEN_STORAGE: '/tmp/'
   }
 }

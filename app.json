@@ -7,6 +7,31 @@
     "SECRET": {
       "description": "Session secret",
       "generator": "secret"
+    },
+    "GOOGLE_CLIENT_ID": {
+      "description": "Google+ Client ID",
+      "value": "",
+      "required": false
+    },
+    "GOOGLE_CLIENT_SECRET": {
+      "description": "Google+ Client Secret",
+      "value": "",
+      "required": false
+    },
+    "SENDPULSE_USER_ID": {
+      "description": "Sendpulse User ID",
+      "value": "",
+      "required": false
+    },
+    "SENDPULSE_SECRET": {
+      "description": "Sendpulse Secret",
+      "value": "",
+      "required": false
+    },
+    "SENDPULSE_EMAIL": {
+      "description": "Sendpulse Email Address",
+      "value": "",
+      "required": false
     }
   }
 }
