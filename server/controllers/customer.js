@@ -19,7 +19,7 @@ export default {
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
 
-    await mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
+    // await mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**
@@ -39,9 +39,9 @@ export default {
     const newCustomer = await customer.save()
 
     if (newCustomer.status !== oldCustomer.status) {
-      await mailer.sendStatus(newCustomer)
+      // await mailer.sendStatus(newCustomer)
     } else {
-      await mailer.sendUpdate(newCustomer)
+      // await mailer.sendUpdate(newCustomer)
     }
 
     if (newCustomer.status === 'Accepted') {
