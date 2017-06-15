@@ -1,12 +1,37 @@
 {
-  "name": "FreeCodeCamp Food-for-Good App",
+  "name": "FreeCodeCamp Pantry-for-Good",
   "description": "A customizable food bank webapp",
-  "repository": "https://github.com/freeCodeCamp/Food-for-Good",
+  "repository": "https://github.com/freeCodeCamp/Pantry-for-Good",
   "addons": ["mongolab"],
   "env": {
+    "HOST_NAME": {
+      "description": "The hostname your site will be accessible at",
+      "value": "pantry-for-good.herokuapp.com",
+      "required": true
+    },
     "SECRET": {
       "description": "Session secret",
       "generator": "secret"
+    },
+    "GOOGLE_CLIENT_ID": {
+      "description": "Google+ Client ID",
+      "required": false
+    },
+    "GOOGLE_CLIENT_SECRET": {
+      "description": "Google+ Client Secret",
+      "required": false
+    },
+    "SENDPULSE_USER_ID": {
+      "description": "Sendpulse User ID",
+      "required": false
+    },
+    "SENDPULSE_SECRET": {
+      "description": "Sendpulse Secret",
+      "required": false
+    },
+    "SENDPULSE_EMAIL": {
+      "description": "Sendpulse Email Address",
+      "required": false
     }
   }
 }

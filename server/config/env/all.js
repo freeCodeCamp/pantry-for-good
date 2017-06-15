@@ -1,12 +1,23 @@
+const production = process.env.NODE_ENV === 'production'
+
+const protocol = production ? 'https' : 'http'
+const host = process.env.HOST_NAME || 'localhost'
+const port = process.env.PORT || 3000
+
+const url = `${protocol}://${host}` + production ? '' : `:${port}`
+
 export default {
-  protocol: process.env.PROTOCOL || 'http',
-  host: process.env.HOST || 'localhost',
-  port: process.env.PORT || 3000,
+  protocol: process.env.PROTOCOL || protocol,
+  host,
+  port,
   templateEngine: 'nunjucks',
   sessionCollection: 'sessions',
-  mailer: {
-    from: process.env.MAILER_FROM || 'MAILER_FROM',
-    to: process.env.MAILER_TO || 'MAILER_TO',
-    sendgridKey: process.env.SENDGRID_API_KEY || 'SEND_GRID_API_KEY'
+  oauth: {
+    googleCallbackURL: `${url}/api/auth/google/callback`
+  },
+  sendpulse: {
+    name: 'FoodBank App', // TODO: get this from settings
+    email: process.env.SENDPULSE_EMAIL || 'a2388865@mvrht.net',
+    TOKEN_STORAGE: '/tmp/'
   }
 }

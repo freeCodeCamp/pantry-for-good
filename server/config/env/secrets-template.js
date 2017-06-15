@@ -1,16 +1,11 @@
 export default {
-  gmapsApiKey: '',
   oauth: {
-    googleClientID: '',
-    googleClientSecret: '',
-    googleCallbackURL: '/api/auth/google/callback'
+    googleClientID: process.env.GOOGLE_CLIENT_ID || '',
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
   },
   // Account info for using the sendpulse.com email service
   sendpulse: {
-    name: '',
-    email: '',
-    API_USER_ID: '',
-    API_SECRET: '',
-    TOKEN_STORAGE: '/tmp/'
+    API_USER_ID: process.env.SENDPULSE_USER_ID || '',
+    API_SECRET: process.env.SENDPULSE_API_SECRET || ''
   }
 }
