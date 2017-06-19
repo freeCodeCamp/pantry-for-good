@@ -1,7 +1,7 @@
 import {extend} from 'lodash'
 
 import config from '../config/index'
-import mailer from '../lib/mailer'
+import mailer from '../lib/mail-helpers'
 import Customer from '../models/customer'
 import User from '../models/user'
 
@@ -19,7 +19,7 @@ export default {
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
 
-    await mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
+    mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**
@@ -39,9 +39,9 @@ export default {
     const newCustomer = await customer.save()
 
     if (newCustomer.status !== oldCustomer.status) {
-      await mailer.sendStatus(newCustomer)
+      mailer.sendStatus(newCustomer)
     } else {
-      await mailer.sendUpdate(newCustomer)
+      mailer.sendUpdate(newCustomer)
     }
 
     if (newCustomer.status === 'Accepted') {

@@ -8,9 +8,9 @@ import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('page')
 
-export const loadPages = () => ({
+export const loadPages = type => ({
   [CALL_API]: {
-    endpoint: 'admin/pages',
+    endpoint: `admin/pages${type ? '?type=' + type : ''}`,
     schema: arrayOfPages,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }
@@ -40,22 +40,26 @@ export const createSelectors = path => {
   const getEntities = state => state.entities
 
   return {
-    getAll: createSelector(
+    getAll: state => type => createSelector(
       state => get(state, path).ids,
       getEntities,
       (pages, entities) => {
         const allPages = denormalize({pages}, {pages: arrayOfPages}, entities).pages
-        if (!allPages.length) return
+        if (!allPages.length) return []
+
+        if (type === 'email')
+          return allPages.filter(page => page.type === 'email')
 
         const homePage = allPages.find(page => page.identifier === 'home')
-        const clientPages = allPages.filter(page => page.identifier !== 'home')
+        const clientPages = allPages.filter(page =>
+          page.identifier !== 'home' && page.type === 'page')
 
         return [
           homePage,
           ...sortBy(clientPages, 'identifier')
         ]
       }
-    ),
+    )(state),
     getOne: state => identifier => createSelector(
       getEntities,
       entities => {

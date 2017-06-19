@@ -11,9 +11,17 @@ const PageSchema = new Schema({
     type: String,
     required: true
   },
-  body: {
-    type: String
-  }
+  type: {
+    type: String,
+    enum: ['page', 'email'],
+    default: 'page'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  },
+  subject: String,
+  body: String
 })
 
 export default mongoose.model('Page', PageSchema)

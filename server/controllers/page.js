@@ -4,16 +4,7 @@ import {writeFileSync, mkdirSync} from 'fs'
 import del from 'del'
 
 import Page from '../models/page'
-
-const allowedTags = sanitizeHtml.defaults.allowedTags.concat(['img', 'span'])
-const allowedAttributes = {
-  img: ['src', 'width', 'style'],
-  span: ['style'],
-  a: ['href']
-}
-const allowedClasses = {
-  p: ['ql-align-center', 'ql-align-right', 'ql-align-justify']
-}
+import sanitizeHtmlConfig from '../lib/sanitizehtml-config'
 
 const clientPath = '/media/pages'
 const serverPath = process.env.NODE_ENV === 'production' ?
@@ -28,7 +19,8 @@ try {
 
 export default {
   async list(req, res) {
-    const pages = await Page.find()
+    const {type} = req.query
+    const pages = await Page.find(type ? {type} : {})
     res.json(pages)
   },
 
@@ -37,9 +29,7 @@ export default {
     let keepImages = []
 
     const sanitizedBody = sanitizeHtml(body, {
-      allowedTags,
-      allowedAttributes,
-      allowedClasses,
+      ...sanitizeHtmlConfig,
       transformTags: {
         img: processImageTag(identifier, keepImages)
       }

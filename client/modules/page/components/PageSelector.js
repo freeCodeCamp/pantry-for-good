@@ -4,8 +4,8 @@ import {Nav, NavItem} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 
-const mapStateToProps = state => ({
-  pages: selectors.page.getAll(state)
+const mapStateToProps = (state, ownProps) => ({
+  pages: selectors.page.getAll(state)(ownProps.type)
 })
 
 const PageSelector = ({selectedPage, handlePageSelect, pages}) =>

@@ -9,12 +9,20 @@ import {loadPage} from '../modules/page/reducer'
 const htmlToReactParser = new Parser()
 const processNodeDefinitions = new ProcessNodeDefinitions(React)
 
-const processingInstructions = [{
+const getProcessingInstructions = bindings => [{
   // convert internal links to Link components
   shouldProcessNode: node => node.name && node.name === 'a' &&
     node.attribs.href.startsWith('/'),
   processNode: function generateLink(node, children) {
-    return React.createElement(Link, {to: node.attribs.href}, children)
+    return <Link to={node.attribs.href}>{children}</Link>
+  }
+}, {
+  // bind placeholders
+  shouldProcessNode: node => node.name && node.name === 'span' &&
+    node.attribs.class === 'ql-placeholder-content',
+  processNode: function insertPlaceholder(node) {
+    const content = bindings[node.attribs['data-id']] || '{{missing}}'
+    return <span>{content}</span>
   }
 }, {
   shouldProcessNode: () => true,
@@ -23,7 +31,8 @@ const processingInstructions = [{
 
 const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
-  getPage: selectors.page.getOne(state)
+  getPage: selectors.page.getOne(state),
+  settings: selectors.settings.getSettings(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -49,7 +58,11 @@ class ContentPage extends Component {
         className="text-left"
         style={{margin: '10px'}}
       >
-        {htmlToReactParser.parseWithInstructions(page.body, () => true, processingInstructions)}
+        {htmlToReactParser.parseWithInstructions(
+          page.body,
+          () => true,
+          getProcessingInstructions(this.props.settings)
+        )}
       </div>
     )
   }

@@ -13,7 +13,7 @@ const SettingsSchema = new Schema({
     type: String,
     trim: true
   },
-  foodBankAddress:{
+  address:{
     type: String,
     trim: true
   },

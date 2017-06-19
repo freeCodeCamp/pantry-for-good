@@ -243,7 +243,7 @@ function makeWaypoint(obj) {
   return {
     lat: obj.location.lat,
     lng: obj.location.lng,
-    address: obj.foodBankAddress || obj.fields && getAddress(obj, 2),
+    address: obj.address || obj.fields && getAddress(obj, 2),
     _id: obj.id || obj._id
   }
 }
