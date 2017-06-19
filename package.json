@@ -1,15 +1,16 @@
 {
-  "name": "food-for-good",
+  "name": "pantry-for-good",
   "description": "A customizable food bank webapp",
   "version": "0.0.1",
   "author": "Peter Deal and Marco Früh",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:FreeCodeCamp/Food-for-Good.git"
+    "url": "git@github.com:FreeCodeCamp/Pantry-for-Good.git"
   },
   "scripts": {
     "heroku-postbuild": "gulp build",
+    "postinstall": "cp -n server/config/env/secrets-template.js server/config/env/secrets.js",
     "dev": "gulp watch",
     "build": "gulp build",
     "build:server": "gulp build-server",

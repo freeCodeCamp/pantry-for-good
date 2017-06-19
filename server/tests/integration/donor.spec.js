@@ -1,14 +1,11 @@
 // have to import separately or user model will be imported and blow up
 import Donor from '../../models/donor'
 import {createUserSession, createTestUser} from '../helpers'
-
-let User
+import User from '../../models/user'
 
 describe('Donor Api', function() {
   before(async function() {
     await initDb()
-    // can't import user before init db because of autoincrement plugin
-    User = require('../../models/user').default
     await Donor.find().remove()
     await User.find().remove()
   })

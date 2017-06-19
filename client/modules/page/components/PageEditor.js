@@ -22,7 +22,7 @@ Quill.register('modules/placeholder', Placeholder)
 const quillBodyModules = {
   toolbar: {container: '#quill-body-toolbar'},
   imageDrop: true,
-  imageResize: {modules: ['Resize', 'DisplaySize']},
+  imageResize: {},
   placeholder: {placeholders}
 }
 
@@ -55,6 +55,10 @@ class PageEditor extends React.Component {
   }
 
   handleEditorChange = editor => (value, _, source) => {
+    if (this.resizeModule && this.resizeModule.img) {
+      this.resizeModule.onUpdate()
+    }
+
     this.setState({
       page: {
         ...this.state.page,
@@ -62,7 +66,6 @@ class PageEditor extends React.Component {
         body: editor === 'body' ? value : this.state.page.body
       }
     })
-    console.log('source, this.props.dirty', source, this.props.dirty)
 
     if (source === Quill.sources.USER && !this.props.dirty) {
       this.props.setDirty(true)
@@ -72,6 +75,9 @@ class PageEditor extends React.Component {
   getEditorInstance = editor => el => {
     if (el) this[`${editor}Quill`] = el.getEditor()
     else this[`${editor}Quill`] = null
+
+    if (editor === 'body') this.resizeModule = el ?
+      el.getEditor().getModule('imageResize') : null
   }
 
   render() {

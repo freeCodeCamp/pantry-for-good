@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
-import {flatMap} from 'lodash'
 
-import Questionnaire from './questionnaire'
-import validate from '../../common/validators'
+import questionnaireValidator from '../lib/questionnaire-validator'
 
 const {Schema} = mongoose
 
@@ -41,23 +39,8 @@ var DonorSchema = new Schema({
   }
 })
 
-DonorSchema.path('fields').validate(async function(fields) {
-  const questionnaire = await Questionnaire.findOne({'identifier': 'qDonors'})
-  if (!questionnaire) return true
-
-  const qFields = flatMap(questionnaire.sections, section => section.fields)
-  // TODO: reduce qFields instead
-  return fields.reduce((valid, field) => {
-    if (!valid) return false
-
-    const qField = qFields.find(f => String(f._id) === String(field.meta))
-    if (!qField) return false
-
-    const error = validate(field.value, qField)
-    return !Object.keys(error).length
-  }, true)
-}, 'Invalid field')
-
+DonorSchema.path('fields')
+  .validate(questionnaireValidator('qDonors'), 'Invalid field')
 
 /**
  * Virtual getters & setters

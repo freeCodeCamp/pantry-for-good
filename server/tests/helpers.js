@@ -1,6 +1,8 @@
 import express from 'express'
 
 import setupPassport from '../config/passport'
+import app from '../config/express'
+import User from '../models/user'
 
 /**
  * returns a user and express app where the user is authenticated
@@ -9,8 +11,6 @@ import setupPassport from '../config/passport'
  * @return {promise<object>}
  */
 export const createUserSession = async function(userModel) {
-  const app = require('../config/express').default
-  const {User} = require('../models')
   setupPassport()
 
   const user = userModel._id ?
@@ -25,12 +25,6 @@ export const createUserSession = async function(userModel) {
     user,
     app: mockApp
   }
-}
-
-export const initApp = function() {
-  const app = require('../config/express').default
-  require('../config/passport')
-  return app
 }
 
 /**

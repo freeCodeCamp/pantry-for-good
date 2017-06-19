@@ -6,9 +6,9 @@ import socketIOSession from 'express-socket.io-session'
 
 import config from './config'
 import setupPassport from './config/passport'
+import setupExpress from './config/express'
 
-/* eslint-disable no-console */
-process.on('unhandledRejection', err => console.log(err))
+process.on('unhandledRejection', err => console.error(err))
 
 mongoose.Promise = global.Promise
 mongoose.connect(config.db)
@@ -19,11 +19,11 @@ db.on('error', function(err) {
 })
 
 db.once('open', function() {
-  console.log('Connected to', config.db)
+  console.info('Connected to', config.db)
   autoIncrement.initialize(db)
 
   const io = socketIO()
-  const app = require('./config/express').default(io)
+  const app = setupExpress(io)
   const server = http.createServer(app).listen(config.port)
 
   setupPassport()
@@ -31,5 +31,5 @@ db.once('open', function() {
   io.listen(server)
   io.use(socketIOSession(app.get('sharedSession')))
 
-  console.log('Application started on port', config.port)
+  console.info('Application started on port', config.port)
 })

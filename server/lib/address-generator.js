@@ -27,10 +27,10 @@ export default class AddressGenerator {
     return {
       lat: line[0],
       lng: line[1],
-      street: `${line[2]} ${line[3]}`,
-      city: `${line[4]}`,
-      state: `${line[7]}`,
-      zip: `${line[9]}`
+      street: line[2],
+      city: line[3],
+      state: line[4],
+      zip: line[5]
     }
   }
 }
@@ -39,7 +39,7 @@ function randomAddress() {
   return {
     lat: faker.finance.amount(51.5, 51.55, 6),
     lng: faker.finance.amount(-3.15, -3.25, 6),
-    street: `${faker.random.number(1-50)} ${faker.address.streetAddress()}`,
+    street: `${faker.address.streetAddress()}`,
     city: faker.address.city(),
     state: faker.address.state(),
     zip: faker.address.zipCode()

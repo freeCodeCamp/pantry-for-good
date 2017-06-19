@@ -1,11 +1,10 @@
 import mongoose from 'mongoose'
 import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
-import {head, flatMap} from 'lodash'
+import {head} from 'lodash'
 
-import Questionnaire from './questionnaire'
 import locationSchema from './location-schema'
-import validate from '../../common/validators'
+import questionnaireValidator from '../lib/questionnaire-validator'
 
 const {Schema} = mongoose
 
@@ -81,22 +80,8 @@ const CustomerSchema = new Schema({
   }
 })
 
-CustomerSchema.path('fields').validate(async function(fields) {
-  const questionnaire = await Questionnaire.findOne({'identifier': 'qCustomers'})
-  if (!questionnaire) return true
-
-  const qFields = flatMap(questionnaire.sections, section => section.fields)
-  // TODO: reduce qFields instead
-  return fields.reduce((valid, field) => {
-    if (!valid) return false
-
-    const qField = qFields.find(f => String(f._id) === String(field.meta))
-    if (!qField) return false
-
-    const error = validate(field.value, qField)
-    return !Object.keys(error).length
-  }, true)
-}, 'Invalid field')
+CustomerSchema.path('fields')
+  .validate(questionnaireValidator('qCustomers'), 'Invalid field')
 
 // Initialize geocoder options for pre save method
 const geocoder = nodeGeocoder({

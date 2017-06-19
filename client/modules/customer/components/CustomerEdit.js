@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {submit} from 'redux-form'
+import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
@@ -34,7 +35,8 @@ const mapDispatchToProps = dispatch => ({
   saveCustomer: (customer, admin) => dispatch(saveCustomer(customer, admin)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   loadFoods: () => dispatch(loadFoods()),
-  submit: form => dispatch(submit(form))
+  submit: form => dispatch(submit(form)),
+  push: to => dispatch(push(to))
 })
 
 class CustomerEdit extends Component {
@@ -49,16 +51,11 @@ class CustomerEdit extends Component {
     this.props.loadFoods()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {savingCustomers, saveCustomersError} = nextProps
-
-    if (!savingCustomers && this.props.savingCustomers && !saveCustomersError) {
-      // this.props.push(this.isAdmin ? '/customers' : '/')
-    }
-  }
-
   saveCustomer = form =>
     this.props.saveCustomer(fromForm(form), this.isAdmin)
+
+  handleSubmitSuccess = () =>
+    this.props.push(this.isAdmin ? '/customers/list' : '/customers')
 
   submit = () => this.props.submit(FORM_NAME)
 
@@ -85,6 +82,7 @@ class CustomerEdit extends Component {
                 questionnaire={questionnaire}
                 loading={savingCustomers}
                 onSubmit={this.saveCustomer}
+                onSubmitSuccess={this.handleSubmitSuccess}
                 initialValues={toForm(customer, questionnaire)}
               />
             }
@@ -99,7 +97,7 @@ class CustomerEdit extends Component {
               {' '}
               <Link
                 className="btn btn-primary"
-                to={this.isAdmin ? '/customers' : '/'}
+                to={this.isAdmin ? '/customers/list' : '/customers'}
               >
                 Cancel
               </Link>

@@ -68,15 +68,16 @@ export const foodFields = [{
   ].map(addRandomDate)
 }]
 
-export const getSettingsFields = addressGenerator => {
-  const {lat, lng, street, city, zip} = addressGenerator.getOne()
+export const getSettingsFields = () => {
+  const [lat, lng, street, city, zip, country] =
+    [40.720230, -73.984029, '176 Stanton St', 'New York', 'NY 10002', 'USA']
 
   return {
     organization: 'Foodbank Template',
     url: 'www.example.com',
     address: `${street} ${city} ${zip}`,
-    clientIntakeNumber: '07123 456 789',
-    supportNumber: '07234 567 891',
+    clientIntakeNumber: faker.phone.phoneNumber(),
+    supportNumber: faker.phone.phoneNumber(),
     location: {lat, lng},
     gmapsApiKey: config.gmapsApiKey
   }
@@ -190,14 +191,13 @@ export const customerQuestionnaire = {
       {type: 'address', label: 'Town/City', required: true},
       {type: 'address', label: 'State/Province', required: true},
       {type: 'address', label: 'Zip/Post Code', required: true},
-      {type: 'text', label: 'Telephone Number', required: true},
+      {type: 'text', label: 'Telephone Number'},
       {type: 'date', label: 'Date of Birth', required: true},
-      {type: 'radio', choices: 'Male, Female', label: 'Gender', required: true},
+      {type: 'radio', choices: 'Male, Female', label: 'Gender'},
       {type: 'radio', choices: 'Rental, Own, Subsidized, Other', label: 'Accommodation Type'},
       {type:'radio', choices: 'Phone, Email', label: 'Best way to contact'},
-      {type: 'textarea', label: 'Delivery instructions', required: true},
-      {type: 'textarea', label: 'Other organizations you are currently receiving assistance from'},
-      {type: 'checkbox', choices: 'Foo, Bar', label: 'foo'}
+      {type: 'textarea', label: 'Delivery instructions'},
+      {type: 'textarea', label: 'Other organizations you are currently receiving assistance from'}
     ]
   }, {
     name: 'Employment',
@@ -213,12 +213,12 @@ export const customerQuestionnaire = {
       {type:'textarea', label: 'Please list any food allergies or sensitivities'},
       {type: 'textarea', label: 'Other food preferences'},
     ]
-  }, {
-    name: 'Financial Assessment',
-    fields: [
-      {label:'Monthly Gross Income', rows: 'Employment Income, Employment Insurance Benefits, Social Assistance, Spousal/Child Support, Self Employment, Pension Income (eg. Employer Plan), Disability Income, Pension Plan, Child Tax Benefits, Income from Rental Property, Severance/Termination Pay, Other income not listed above', columns: 'Self, Other', type: 'table'},
-      {label: 'Monthly Living Expenses', rows: 'Rent mortgage or room and board, Food, Utilities, Transportation, Dependant Care (eg. day care), Disability Needs, Spousal/Child support, Loans, Leases, Insurance, Credit card debt, Property taxes, Other costs not listed above', columns: 'Household', type: 'table'}
-    ]
+  // }, {
+  //   name: 'Financial Assessment',
+  //   fields: [
+  //     {label:'Monthly Gross Income', rows: 'Employment Income, Employment Insurance Benefits, Social Assistance, Spousal/Child Support, Self Employment, Pension Income (eg. Employer Plan), Disability Income, Pension Plan, Child Tax Benefits, Income from Rental Property, Severance/Termination Pay, Other income not listed above', columns: 'Self, Other', type: 'table'},
+  //     {label: 'Monthly Living Expenses', rows: 'Rent mortgage or room and board, Food, Utilities, Transportation, Dependant Care (eg. day care), Disability Needs, Spousal/Child support, Loans, Leases, Insurance, Credit card debt, Property taxes, Other costs not listed above', columns: 'Household', type: 'table'}
+  //   ]
   }, {
     name: 'Household',
     fields: [
@@ -237,7 +237,7 @@ export const donorQuestionnaire = {
       {type: 'address', label: 'Town/City', required:true},
       {type: 'address', label: 'State/Province', required:true},
       {type: 'address', label: 'Zip/Post Code', required:true},
-      {type: 'text', label: 'Telephone Number', required:true},
+      {type: 'text', label: 'Telephone Number'},
       {type: 'textarea', label: 'How did you hear about us?'}
     ]
   }]
@@ -253,7 +253,7 @@ export const volunteerQuestionnaire = {
       {type: 'address', label: 'Town/City', required:true},
       {type: 'address', label: 'State/Province', required:true},
       {type: 'address', label: 'Zip/Post Code', required:true},
-      {type: 'text', label: 'Telephone Number', required:true},
+      {type: 'text', label: 'Telephone Number'},
       {type: 'date', label: 'Date of Birth', required:true},
       {type: 'radio', choices: 'Phone, Email', label: 'Best way to contact'},
       {type: 'textarea', label: 'How did you hear about us?'},

@@ -29,7 +29,7 @@ const SelectCustomersMap = ({
   route
 }) =>
   <div>
-    {settings &&
+    {(settings.gmapsApiKey || settings.gmapsClientId) &&
       <Map
         googleMapURL={getGoogleMapURL(settings)}
         loadingElement={loadingElement}

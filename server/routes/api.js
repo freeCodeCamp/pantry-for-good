@@ -1,6 +1,5 @@
 import express from 'express'
-
-import * as users from '../controllers/users'
+import users from '../controllers/users'
 import customerRoutes from './customer'
 import donationRoutes from './donation'
 import donorRoutes from './donor'

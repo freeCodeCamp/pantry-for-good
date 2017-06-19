@@ -104,8 +104,9 @@ async function seedStaticFields(client, dateOfBirth, address) {
       'Inactive': 0.2
     })
 
-    if (client.firstName === 'driver') {
+    if (client.email.startsWith('driver')) {
       properties.driver = true
+      properties.status = 'Active'
       properties.location = {lat, lng}
     }
   }

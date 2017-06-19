@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {compose} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {flatMap} from 'lodash'
@@ -11,24 +11,28 @@ import validate from '../../../common/validators'
 
 import './questionnaire.css'
 
-const Questionnaire = ({
-  questionnaire,
-  loading,
-  onSubmit
-}) =>
-  <div>
-    {questionnaire && questionnaire.sections.map((section, i) =>
-      <Box key={i}>
-        <BoxHeader heading={section.name} />
-        <BoxBody loading={loading}>
-          <Section
-            section={section}
-            onSubmit={onSubmit}
-          />
-        </BoxBody>
-      </Box>
-    )}
-  </div>
+class Questionnaire extends Component {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.onSubmitSuccess && nextProps.submitSucceeded && !this.props.dirty)
+      nextProps.onSubmitSuccess()
+  }
+
+  render() {
+    const {questionnaire, loading} = this.props
+    return (
+      <div>
+        {questionnaire && questionnaire.sections.map((section, i) =>
+          <Box key={i}>
+            <BoxHeader heading={section.name} />
+            <BoxBody loading={loading}>
+              <Section section={section} />
+            </BoxBody>
+          </Box>
+        )}
+      </div>
+    )
+  }
+}
 
 export default compose(
   reduxForm({
@@ -64,11 +68,11 @@ function validateHousehold(values, allFields) {
 }
 
 function validateQuestionnaireFields(values, allFields) {
-  return Object.keys(values.fields).reduce((errors, k) => {
-    const value = values.fields[k]
-    const field = allFields.find(f => f._id === k)
-
-    if (!field) return errors
-    return Object.assign(errors, validate(value, field))
+  return allFields.reduce((errors, qField) => {
+    const fieldId = Object.keys(values.fields).find(id => id === qField._id)
+    return {
+      ...errors,
+      ...validate(values.fields[fieldId], qField)
+    }
   }, {})
 }

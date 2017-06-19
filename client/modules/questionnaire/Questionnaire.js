@@ -9,7 +9,8 @@ import {Button, Col} from 'react-bootstrap'
 import selectors from '../../store/selectors'
 import {loadQuestionnaires, saveQuestionnaire} from './reducers/api'
 import {init, selectSection, editField} from './reducers/editor/index'
-import {showConfirmDialog, hideDialog} from '../core/reducers/dialog'
+import {showConfirmDialog, showNavDialog, hideDialog} from '../core/reducers/dialog'
+
 import {Page, PageBody} from '../../components/page'
 import {Box, BoxBody, BoxHeader} from '../../components/box'
 import withConfirmNavigation from '../../components/withConfirmNavigation'
@@ -37,7 +38,9 @@ const mapDispatchToProps = dispatch => ({
   init: questionnaire => dispatch(init(questionnaire)),
   selectSection: sectionId => dispatch(selectSection(sectionId)),
   editField: fieldId => dispatch(editField(fieldId)),
-  showDialog: (cancel, confirm) => dispatch(showConfirmDialog(cancel, confirm)),
+  showNavDialog: (cancel, confirm) => dispatch(showNavDialog(cancel, confirm)),
+  showConfirmDialog: (cancel, confirm, message) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, 'Save')),
   hideDialog: () => dispatch(hideDialog())
 })
 
@@ -57,7 +60,7 @@ class Questionnaire extends Component {
 
   handleQuestionnaireSelect = identifier => {
     if (this.props.dirty)
-      this.props.showDialog(this.props.hideDialog, this.selectQuestionnaire(identifier))
+      this.props.showNavDialog(this.props.hideDialog, this.selectQuestionnaire(identifier))
     else
       this.selectQuestionnaire(identifier)()
   }
@@ -71,7 +74,13 @@ class Questionnaire extends Component {
     this.props.hideDialog()
   }
 
-  handleSave = () => {
+  handleSave = () => this.props.showConfirmDialog(
+    this.props.hideDialog,
+    this.saveQuestionnaire(),
+    'Any deleted fields will be permanently lost'
+  )
+
+  saveQuestionnaire = () => {
     this.props.editField(null)
     this.props.saveQuestionnaire(this.props.completeQuestionnaire)
   }
@@ -96,7 +105,11 @@ class Questionnaire extends Component {
               </Col>
               <Col xs={12}>
                 <div className="text-right">
-                  <Button bsStyle="success" onClick={this.handleSave}>
+                  <Button
+                    bsStyle="success"
+                    onClick={this.handleSave}
+                    disabled={!this.props.dirty}
+                  >
                     Save
                   </Button>
                 </div>

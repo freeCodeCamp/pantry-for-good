@@ -47,16 +47,11 @@ class VolunteerCreate extends Component {
     this.props.loadQuestionnaires()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {savingVolunteers, saveVolunteersError} = nextProps
-
-    if (!savingVolunteers && this.props.savingVolunteers && !saveVolunteersError) {
-      this.props.push(this.isAdmin ? '/volunteers' : '/')
-    }
-  }
-
   saveVolunteer = form =>
     this.props.saveVolunteer(fromForm(form), this.isAdmin)
+
+  handleSubmitSuccess = () =>
+    this.props.push(this.isAdmin ? '/volunteers/list' : '/volunteers')
 
   submit = () => this.props.submit(FORM_NAME)
 
@@ -81,6 +76,7 @@ class VolunteerCreate extends Component {
                 questionnaire={questionnaire}
                 loading={savingVolunteers}
                 onSubmit={this.saveVolunteer}
+                onSubmitSuccess={this.handleSubmitSuccess}
                 initialValues={toForm(this.volunteer, questionnaire)}
               />
             }
@@ -97,7 +93,10 @@ class VolunteerCreate extends Component {
                 onClick={this.submit}
               >Submit</Button>
               {' '}
-              <Link className="btn btn-primary" to="/">Cancel</Link>
+              <Link
+                className="btn btn-primary"
+                to={this.isAdmin ? '/volunteers/list' : '/'}
+              >Cancel</Link>
             </div>
           </form>
         </PageBody>
