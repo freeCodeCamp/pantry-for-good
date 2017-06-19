@@ -69,17 +69,23 @@ function getMenuItems(user) {
       link: 'drivers/routes',
     }]
   }, {
-    title: 'App Settings',
+    title: 'Settings',
     link: 'settings',
-    roles: ['admin']
-  }, {
-    title: 'Page Editor',
-    link: 'pages',
-    roles: ['admin']
-  }, {
-    title: 'Application Forms',
-    link: 'questionnaires',
-    roles: ['admin']
+    menuItemType: 'treeview',
+    roles: ['admin'],
+    items: [{
+      title: 'General',
+      link: 'settings'
+    }, {
+      title: 'Pages',
+      link: 'settings/pages'
+    }, {
+      title: 'Emails',
+      link: 'settings/emails'
+    }, {
+      title: 'Applications',
+      link: 'settings/questionnaires'
+    }]
   }]
 
   return items.filter(item => intersection(item.roles, user.roles).length > 0)

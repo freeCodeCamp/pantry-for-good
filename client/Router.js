@@ -14,8 +14,6 @@ import Drivers from './modules/driver/DriverRouter'
 import Inventory from './modules/food/components/Inventory'
 import Schedule from './modules/food/components/Schedule'
 import Packing from './modules/food/components/Packing'
-import Page from './modules/page/PageRouter'
-import Questionnaire from './modules/questionnaire/QuestionnaireRouter'
 import Settings from './modules/settings/SettingsRouter'
 import Users from './modules/users/UserRouter'
 import Volunteers from './modules/volunteer/VolunteerRouter'
@@ -41,8 +39,6 @@ const Router = ({history}) =>
           <Route path="/inventory" exact component={IsVolunteer(Inventory)} />
           <Route path="/packing" exact component={IsVolunteer(Packing)} />
           <Route path="/schedule" exact component={IsVolunteer(Schedule)} />
-          <Route path="/pages" component={IsAdmin(Page)} />
-          <Route path="/questionnaires" component={IsAdmin(Questionnaire)} />
           <Route path="/settings" component={IsAdmin(Settings)} />
           <Route path="/users" component={Users} />
           <Route path="/volunteers" component={Volunteers} />
