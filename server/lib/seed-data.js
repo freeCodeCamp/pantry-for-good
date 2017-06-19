@@ -69,8 +69,8 @@ export const foodFields = [{
 }]
 
 export const getSettingsFields = () => {
-  const [lat, lng, street, city, zip, country] =
-    [40.720230, -73.984029, '176 Stanton St', 'New York', 'NY 10002', 'USA']
+  const [lat, lng, street, city, zip] =
+    [40.720230, -73.984029, '176 Stanton St', 'New York', 'NY 10002']
 
   return {
     organization: 'Foodbank Template',
