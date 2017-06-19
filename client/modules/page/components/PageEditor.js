@@ -9,25 +9,26 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
 import selectors from '../../../store/selectors'
+import placeholders, {getPlaceholders} from '../../../../common/placeholders'
+import Placeholder from '../../../lib/quill-placeholder'
 import withConfirmNavigation from '../../../components/withConfirmNavigation'
+import QuillBodyToolbar from './QuillBodyToolbar'
+import QuillSubjectToolbar from './QuillSubjectToolbar'
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)
+Quill.register('modules/placeholder', Placeholder)
 
-const quillModules = {
-  toolbar: [
-    [{'header': [1, 2, 3, false]}],
-    ['bold', 'italic', 'underline','strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-    ['link', 'image', 'video'],
-    [{'color': []}, {'background': []}],
-    [{'font': []}],
-    [{'size': ['small', false, 'large', 'huge']}],
-    [{'align': []}],
-    ['clean']
-  ],
+const quillBodyModules = {
+  toolbar: {container: '#quill-body-toolbar'},
   imageDrop: true,
-  imageResize: {}
+  imageResize: {},
+  placeholder: {placeholders}
+}
+
+const quillSubjectModules = {
+  toolbar: {container: '#quill-subject-toolbar'},
+  placeholder: {placeholders}
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -45,43 +46,70 @@ class PageEditor extends React.Component {
 
     if (selectedPage !== this.props.selectedPage) {
       this.setState({page: {...page}})
+      // TODO: better way to clear undo history when editor changed and initialized
+      setTimeout(() => {
+        this.subjectQuill && this.subjectQuill.getModule('history').clear()
+        this.bodyQuill && this.bodyQuill.getModule('history').clear()
+      }, 50)
     }
   }
 
-  getResizeModule = el => {
-    this.resizeModule = el ? el.getEditor().getModule('imageResize') : null
-  }
-
-  handleChange = (value, _, source) => {
+  handleEditorChange = editor => (value, _, source) => {
     if (this.resizeModule && this.resizeModule.img) {
       this.resizeModule.onUpdate()
-    }
-
-    if (source === 'user' && typeof this.props.setDirty === 'function' &&
-        !this.props.dirty) {
-      this.props.setDirty(true)
     }
 
     this.setState({
       page: {
         ...this.state.page,
-        body: value
+        subject: editor === 'subject' ? value : this.state.page.subject,
+        body: editor === 'body' ? value : this.state.page.body
       }
     })
+
+    if (source === Quill.sources.USER && !this.props.dirty) {
+      this.props.setDirty(true)
+    }
+  }
+
+  getEditorInstance = editor => el => {
+    if (el) this[`${editor}Quill`] = el.getEditor()
+    else this[`${editor}Quill`] = null
+
+    if (editor === 'body') this.resizeModule = el ?
+      el.getEditor().getModule('imageResize') : null
   }
 
   render() {
     const {page} = this.state
+    const {type, selectedPage} = this.props
+    const placeholders = getPlaceholders(type, selectedPage)
     return (
       <div>
+        {type === 'email' && page &&
+          <div>
+            <QuillSubjectToolbar placeholders={placeholders} />
+            <ReactQuill
+              theme="snow"
+              value={page.subject}
+              onChange={this.handleEditorChange('subject')}
+              modules={quillSubjectModules}
+              placeholder="Subject"
+              ref={this.getEditorInstance('subject')}
+            />
+          </div>
+        }
         {page &&
-          <ReactQuill
-            theme="snow"
-            value={page.body}
-            onChange={this.handleChange}
-            modules={quillModules}
-            ref={this.getResizeModule}
-          />
+          <div>
+            <QuillBodyToolbar placeholders={getPlaceholders(type)} />
+            <ReactQuill
+              theme="snow"
+              value={page.body}
+              onChange={this.handleEditorChange('body')}
+              modules={quillBodyModules}
+              ref={this.getEditorInstance('body')}
+            />
+          </div>
         }
         <div className="text-right">
           <Button

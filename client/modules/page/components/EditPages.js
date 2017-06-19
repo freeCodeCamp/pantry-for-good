@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {compose, withProps} from 'recompose'
+import {capitalize, last} from 'lodash'
 
 import selectors from '../../../store/selectors'
 import {loadPages, savePage} from '../reducer'
@@ -9,15 +11,19 @@ import {Box, BoxBody} from '../../../components/box'
 import PageSelector from './PageSelector'
 import PageEditor from './PageEditor'
 
-const mapStateToProps = state => ({
-  pages: selectors.page.getAll(state),
+const withPageType = withProps(({location}) => ({
+  type: last(location.pathname.split('/')) === 'emails' ? 'email' : 'page'
+}))
+
+const mapStateToProps = (state, ownProps) => ({
+  pages: selectors.page.getAll(state)(ownProps.type),
   loading: selectors.page.loading(state),
   saving: selectors.page.saving(state),
   error: selectors.page.loadError(state) || selectors.page.saveError(state)
 })
 
-const mapDispatchToProps = dispatch => ({
-  loadPages: () => dispatch(loadPages()),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  loadPages: () => dispatch(loadPages(ownProps.type)),
   savePage: page => () => dispatch(savePage(page)),
   showDialog: (cancel, confirm) => dispatch(showNavDialog(cancel, confirm)),
   hideDialog: () => dispatch(hideDialog())
@@ -59,11 +65,11 @@ class EditPages extends Component {
   setPageDirty = dirty => this.setState({dirty})
 
   render() {
-    const {loading, saving, error} = this.props
+    const {loading, saving, error, type} = this.props
 
     return (
       <Page>
-        <PageHeader heading="Edit Pages" />
+        <PageHeader heading={`Edit ${capitalize(type)}s`} />
         <PageBody>
           <Box>
             <BoxBody
@@ -73,12 +79,14 @@ class EditPages extends Component {
               <PageSelector
                 selectedPage={this.state.selectedPage}
                 handlePageSelect={this.handlePageSelect}
+                type={type}
               />
                 <PageEditor
                   selectedPage={this.state.selectedPage}
                   handlePageSave={this.props.savePage}
                   setDirty={this.setPageDirty}
                   dirty={this.state.dirty}
+                  type={type}
                 />
             </BoxBody>
           </Box>
@@ -88,4 +96,7 @@ class EditPages extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPages)
+export default compose(
+  withPageType,
+  connect(mapStateToProps, mapDispatchToProps)
+)(EditPages)

@@ -6,7 +6,7 @@ import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 const PageRouter = ({match}) =>
   <SwitchWithNotFound>
-    <Route path={match.url} exact component={EditPages} />
+    <Route path={match.url} component={EditPages} />
   </SwitchWithNotFound>
 
 export default PageRouter

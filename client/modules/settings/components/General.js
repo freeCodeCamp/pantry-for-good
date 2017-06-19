@@ -50,7 +50,7 @@ const General = () =>
         <Clearfix visibleSmBlock visibleMdBlock />
         <Col lg={6}>
           <RFFieldGroup
-            name="foodBankAddress"
+            name="address"
             label="Address"
             type="textarea"
             rows="5"

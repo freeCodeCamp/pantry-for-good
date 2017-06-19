@@ -57,8 +57,8 @@ function validate(values) {
     errors.url = 'URL is required'
   }
 
-  if (!values.foodBankAddress) {
-    errors.foodBankAddress = 'Address is required'
+  if (!values.address) {
+    errors.address = 'Address is required'
   }
 
   if (!values.clientIntakeNumber) {

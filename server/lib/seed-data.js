@@ -75,7 +75,7 @@ export const getSettingsFields = () => {
   return {
     organization: 'Foodbank Template',
     url: 'www.example.com',
-    foodBankAddress: `${street} ${city} ${zip} ${country}`,
+    address: `${street} ${city} ${zip}`,
     clientIntakeNumber: faker.phone.phoneNumber(),
     supportNumber: faker.phone.phoneNumber(),
     location: {lat, lng},
@@ -86,7 +86,7 @@ export const getSettingsFields = () => {
 export const pages = [{
   identifier: 'home',
   title: 'Home',
-  body: '<p>Foodbank Template is a volunteer run organization based in (location) with the mission of helping families who are in need. We provide weekly non-perishable and freshly baked goods, to ensure that every family has delicious meals.</p><p>The organization was founded in (year) in memory of (founder), who was very kind and sensitive to the needs of others.</p><p><a href="/customers">Customer Information (internal link)</a></p><p><a href="http://google.com">Google (external link)</a></p>'
+  body: '<p><span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is a volunteer run organization based in (location) with the mission of helping families who are in need. We provide weekly non-perishable and freshly baked goods, to ensure that every family has delicious meals.</p><p>The organization was founded in (year) in memory of (founder), who was very kind and sensitive to the needs of others.</p><p><a href="/customers">Customer Information (internal link)</a></p><p><a href="http://google.com">Google (external link)</a></p>'
 }, {
   identifier: 'customers',
   title: 'Customers',
@@ -99,6 +99,86 @@ export const pages = [{
   identifier: 'volunteers',
   title: 'Volunteers',
   body: '<p>In the past year, over (amount) pounds of food was distributed on a weekly basis by our team of dedicated volunteers. Your assistance helps us respond to the ever-growing demand of our community. <strong>Thank you for taking the opportunity to help turn lives around.</strong></p><p>With your help, we are able to support the less fortunate families in our community, by providing them with nutritious food and energy to grow, learn, work, and give them hope for a better and brighter future.</p>'
+}, {
+  identifier: 'accept-customer',
+  title: 'Accept Customer',
+  type: 'email',
+  subject: '<p>Your <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> application was accepted<p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+<p>We are pleased to inform you that based on the information provided in your application, you are eligible to receive our assistance.</p>
+<p>Sincerely,</p>
+<p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
+<br />
+<p>
+  <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
+</p>
+<p>If you have any questions or concerns, feel free to contact us.</p>`
+}, {
+  identifier: 'reject-customer',
+  title: 'Reject Customer',
+  type: 'email',
+  subject: '<p>Your <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> application was rejected</p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+<p>We regret to inform you that based on the information provided in your application, you are not eligible to receive our assistance.</p>
+<p>If your circumstances change please edit your application and we will reevaluate your request</p>
+<p>Sincerely,</p>
+<p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
+<br />
+<p>
+  <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
+</p>
+<p>If you have any questions or concerns, feel free to contact us.</p>`
+}, {
+  identifier: 'customer-application',
+  title: 'Customer Application',
+  type: 'email',
+  subject: '<p>A new customer has applied</p>',
+  body: `<p>Dear Admin,</p>
+<p>A new client application has been created.</p>
+<p>Please visit <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span> and login with your admin credentials.</p>`
+}, {
+  identifier: 'customer-update',
+  title: 'Customer Updated',
+  type: 'email',
+  subject: '<p>A customers details have changed</p>',
+  body: `<p>Dear Admin,</p>
+<p>This is a notification email to notify you that either <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span> with application ID
+{id}} or an admin has changed his/her personal information.</p>
+<p>Please visit <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span> and login with your admin credentials.</p>`
+}, {
+  identifier: 'password-reset',
+  title: 'Password Reset',
+  type: 'email',
+  subject: '<p><span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Password Reset</p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+<p>You have requested to have your password reset for your account at <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>
+<p>Please visit this url to reset your password:</p>
+<p><span class="ql-placeholder-content" data-id="passwordResetToken" data-label="Password Reset Link" data-required="true"></span></p>
+<strong>If you didn't make this request, you can ignore this email.</strong>
+<br>
+<br>
+<p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> support team</p>`
+}, {
+  identifier: 'donation-received',
+  title: 'Donation Received',
+  type: 'email',
+  subject: '<p>Thank You for Your Donation to <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+<p>Thank you for your generous donation.</p>
+<p>Sincerely,</p>
+<p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
+<br />
+<p>
+  <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
+</p>
+<p>If you have any questions or concerns, feel free to contact us.</p>`
+}, {
+  identifier: 'donation-receipt',
+  title: 'Donation Receipt',
+  type: 'email',
+  subject: '<p>Receipt for Your Donation to <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+`
 }]
 
 export const customerQuestionnaire = {
