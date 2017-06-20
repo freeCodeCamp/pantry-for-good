@@ -10,7 +10,7 @@
   },
   "scripts": {
     "heroku-postbuild": "gulp build",
-    "postinstall": "cp -n server/config/env/secrets-template.js server/config/env/secrets.js",
+    "postinstall": "shx cp -n server/config/env/secrets-template.js server/config/env/secrets.js",
     "dev": "gulp watch",
     "build": "gulp build",
     "build:server": "gulp build-server",
@@ -138,6 +138,7 @@
     "jsdom": "^10.1.0",
     "mocha": "^3.2.0",
     "react-test-renderer": "^15.5.4",
+    "shx": "^0.2.2",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "supertest": "^2.0.1"
