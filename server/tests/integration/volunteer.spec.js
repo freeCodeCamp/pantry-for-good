@@ -2,12 +2,18 @@
 import Volunteer from '../../models/volunteer'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
+import Questionnaire from '../../models/questionnaire'
 
 describe('Volunteer Api', function() {
   before(async function() {
     await initDb()
     await Volunteer.find().remove()
     await User.find().remove()
+    await Questionnaire.find().remove()
+    await new Questionnaire({
+      name: 'Volunteer Application',
+      identifier: 'qVolunteers',
+    }).save()
   })
 
   afterEach(async function() {
@@ -16,6 +22,7 @@ describe('Volunteer Api', function() {
   })
 
   after(async function() {
+    await Questionnaire.find().remove()
     await resetDb()
   })
 
