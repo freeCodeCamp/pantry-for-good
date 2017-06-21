@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {submit, isValid, isPristine, hasSubmitSucceeded} from 'redux-form'
 import {ListGroup} from 'react-bootstrap'
+import {flatMap} from 'lodash'
 
 import selectors from '../../../store/selectors'
 import {
@@ -13,14 +14,17 @@ import {
 
 import FieldEdit from './FieldEdit'
 import FieldView from './FieldView'
+import LinkField from './LinkField'
 
 const FORM_NAME = 'fieldForm'
 
 const mapStateToProps = state => ({
   fieldIds: selectors.qEditor.getFieldIds(state),
   getField: selectors.qEditor.getFieldById(state),
+  getLinkableFields: selectors.questionnaire.getLinkableFields(state),
   editing: selectors.qEditor.getEditingField(state),
   section: selectors.qEditor.getSelectedSection(state),
+  questionnaire: selectors.qEditor.getEditingQuestionnaire(state),
   submitSucceeded: hasSubmitSucceeded(FORM_NAME)(state),
   isValid: isValid(FORM_NAME)(state),
   isPristine: isPristine(FORM_NAME)(state)
@@ -29,7 +33,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   editField: id => dispatch(editField(id)),
   deleteField: (field, sectionId) => dispatch(deleteField(field, sectionId)),
-  addField: (field, sectionId) => dispatch(addField(field, sectionId)),
+  addField: (field, sectionId, edit) => dispatch(addField(field, sectionId, edit)),
   updateField: field => dispatch(updateField(field)),
   submit: form => dispatch(submit(form))
 })
@@ -48,6 +52,14 @@ class FieldForm extends Component {
   handleCancel = () => () => this.props.editField()
 
   handleAdd = () => this.props.addField({}, this.props.section)
+
+  handleLink = fieldId => {
+    const linkableFields = this.props.getLinkableFields(this.props.questionnaire.identifier)
+    const allFields = flatMap(linkableFields, q => q.fields)
+    const field = allFields.find(f => f._id === fieldId)
+
+    this.props.addField(field, this.props.section, false)
+  }
 
   handleDelete = id => () => {
     this.handleCancel()()
@@ -84,12 +96,22 @@ class FieldForm extends Component {
           }}
         >
           <h4>Fields</h4>
-          <button
-            className="btn btn-success"
-            onClick={this.handleAdd}
-          >
-            Add Field
-          </button>
+          <div style={{
+            display: 'flex',
+            margin: '0 10px'
+          }}>
+            <LinkField
+              questionnaire={this.props.questionnaire}
+              handleLink={this.handleLink}
+            />
+            <button
+              className="btn btn-success"
+              onClick={this.handleAdd}
+              style={{marginLeft: '10px'}}
+            >
+              Add Field
+            </button>
+          </div>
         </div>
         <ListGroup>
           {sectionFields && sectionFields.map((id, idx) =>

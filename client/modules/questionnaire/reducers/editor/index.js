@@ -5,6 +5,7 @@ import uuid from 'uuid'
 import {questionnaire as questionnaireSchema} from '../../../../../common/schemas'
 import sections from './sections'
 import fields from './fields'
+import {actions as apiActions} from '../api'
 
 export const actions = {
   INIT: 'qEditor/INIT',
@@ -143,6 +144,11 @@ export default (state = {questionnaires: {}}, action) => {
         dirty: true,
         fields: fields(state.fields, action),
         sections: sections(state.sections, action)
+      }
+    case apiActions.SAVE_SUCCESS:
+      return {
+        ...state,
+        dirty: false
       }
     default:
       return {
