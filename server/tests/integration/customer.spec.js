@@ -2,13 +2,22 @@
 import Customer from '../../models/customer'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
-
+import Questionnaire from '../../models/questionnaire'
 
 describe('Customer Api', function() {
   before(async function() {
     await initDb()
     await Customer.find().remove()
     await User.find().remove()
+    await Questionnaire.find().remove()
+    await new Questionnaire({
+      "name" : "Customer Application",
+      "identifier" : "qCustomers",
+    }).save()    
+    await new Questionnaire({
+      name: 'Volunteer Application',
+      identifier: 'qVolunteers',
+    }).save()
   })
 
   afterEach(async function() {
@@ -17,6 +26,7 @@ describe('Customer Api', function() {
   })
 
   after(async function() {
+    await Questionnaire.find().remove()
     await resetDb()
   })
 
