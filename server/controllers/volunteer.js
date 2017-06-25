@@ -12,7 +12,7 @@ export default {
     volunteer._id = req.user.id
 
     // Update user's hasApplied property to restrict them from applying again
-    await User.findOneAndUpdate({_id: volunteer._id}, {$set: {hasApplied: true }})
+    await User.findOneAndUpdate({_id: volunteer._id}, {$push: {roles: 'volunteer'}})
 
     const savedVolunteer = await volunteer.save()
     res.json(savedVolunteer)
@@ -40,10 +40,15 @@ export default {
     else if (newVolunteer.status === 'Inactive') role = 'user'
     else role = 'volunteer'
 
-    if (oldVolunteer.driver !== newVolunteer.driver ||
-        oldVolunteer.status !== newVolunteer.status) {
-      await User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: [role]}})
+    // if (oldVolunteer.status !== newVolunteer.status) {
+    //   await User.findOneAndUpdate({_id: volunteer._id}, {$set: {roles: [role]}})
+    // }
+    if (newVolunteer.driver && !oldVolunteer.driver) {
+      await User.findOneAndUpdate({_id: volunteer._id}, {$push: {roles: 'driver'}})
+    } else if (!newVolunteer.driver && oldVolunteer.driver) {
+      await User.findOneAndUpdate({_id: volunteer._id}, {$pull: {roles: 'driver'}})
     }
+    // oldVolunteer.driver !== newVolunteer.driver ||
 
     res.json(newVolunteer)
   },

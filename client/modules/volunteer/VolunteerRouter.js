@@ -27,7 +27,7 @@ const VolunteerRouter = ({match}) =>
     <Route
       path={`${match.url}/create`}
       exact
-      component={IsVolunteer(VolunteerCreate)}
+      component={VolunteerCreate}
     />
     <Route
       path={`${match.url}/:volunteerId/edit`}

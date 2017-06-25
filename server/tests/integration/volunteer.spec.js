@@ -29,7 +29,7 @@ describe('Volunteer Api', function() {
         .send(user)
         .expect(res => {
           expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('status', 'Inactive')
+          expect(res.body).to.have.property('status', 'Pending')
         })
         .expect(200)
     })
@@ -45,7 +45,7 @@ describe('Volunteer Api', function() {
       return request.get(`/api/volunteer/${newVolunteer._id}`)
         .expect(res => {
           expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('status', 'Inactive')
+          expect(res.body).to.have.property('status', 'Pending')
         })
         .expect(200)
     })

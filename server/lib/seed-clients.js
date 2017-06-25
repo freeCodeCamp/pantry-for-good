@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import capitalize from 'lodash/capitalize'
+import {capitalize, head, intersection} from 'lodash'
 import extend from 'lodash/extend'
 import random from 'lodash/random'
 import range from 'lodash/range'
@@ -10,24 +10,24 @@ const Donation = mongoose.model('Donation')
 const Food = mongoose.model('Food')
 const Questionnaire = mongoose.model('Questionnaire')
 
-const clientTypes = ['customer', 'volunteer', 'donor']
+const clientRoles = ['customer', 'volunteer', 'donor']
 
 export default async function seedClients(addressGenerator) {
-  await clientTypes.map(async type => {
+  await clientRoles.map(async type => {
     const Model = mongoose.model(capitalize(type))
     const count = await Model.count()
     if (count) return
 
-    const users = await User.find({accountType: [type]})
+    const users = await User.find({roles: type})
       .select('-salt -password -__v')
 
     await Promise.all(
       users.map(async user => {
         const client = new Model(user.toObject())
-        const seededClient = await seedClientFields(client, addressGenerator)
+        const seededClient = await seedClientFields(client, user, addressGenerator)
 
         await seededClient.save()
-        await User.findOneAndUpdate({_id: client._id}, {$set: {hasApplied: true }})
+        // await User.findOneAndUpdate({_id: client._id}, {$set: {hasApplied: true }})
       })
     )
   })
@@ -39,10 +39,10 @@ export default async function seedClients(addressGenerator) {
  * @param {mongoose.Document} client
  * @returns {Promise<mongoose.Document>}
  */
-async function seedClientFields(client, addressGenerator) {
+async function seedClientFields(client, user, addressGenerator) {
   const address = addressGenerator.getOne()
-  const dynamicFields = await seedDynamicFields(client, address)
-  const staticFields = await seedStaticFields(client, dynamicFields[0].value, address)
+  const dynamicFields = await seedDynamicFields(client, user, address)
+  const staticFields = await seedStaticFields(client, user, dynamicFields[0].value, address)
 
   return extend(client, staticFields, {fields: dynamicFields})
 }
@@ -53,8 +53,10 @@ async function seedClientFields(client, addressGenerator) {
  * @param {object} client
  * @returns {array}
  */
-async function seedDynamicFields(client, address) {
-  const identifier = `q${capitalize(client.accountType)}s`
+async function seedDynamicFields(client, user, address) {
+  const clientRole = head(intersection(user.roles, clientRoles))
+  const identifier = `q${capitalize(clientRole)}s`
+
   const questionnaire = await Questionnaire
     .findOne({identifier})
     .lean()
@@ -94,31 +96,31 @@ async function seedDynamicFields(client, address) {
  * @param {string} dateOfBirth
  * @returns {object}
  */
-async function seedStaticFields(client, dateOfBirth, address) {
+async function seedStaticFields(client, user, dateOfBirth, address) {
   const {lat, lng} = address
   let properties = {}
 
-  if (client.accountType.find(type => type === 'volunteer')) {
+  if (user.roles.find(role => role === 'volunteer')) {
     properties.status = randomIn({
       'Active': 0.8,
       'Inactive': 0.2
     })
 
-    if (client.email.startsWith('driver')) {
+    if (user.email.startsWith('driver')) {
       properties.driver = true
       properties.status = 'Active'
       properties.location = {lat, lng}
     }
   }
 
-  if (client.accountType.find(type => type === 'donor')) {
+  if (user.roles.find(role => role === 'donor')) {
     properties = {
       ...properties,
       ...await populateDonorFields(client)
     }
   }
 
-  if (client.accountType.find(type => type === 'customer')) {
+  if (user.roles.find(role => role === 'customer')) {
     properties = {
       ...properties,
       ...await populateCustomerFields(client, dateOfBirth, address)
@@ -149,7 +151,7 @@ async function populateDonorFields(client) {
       type,
       dateReceived,
       eligibleForTax: random(10, 1000),
-      donorName: client.displayName
+      donorName: `${client.firstName} ${client.lastName}`
     }
   })
 

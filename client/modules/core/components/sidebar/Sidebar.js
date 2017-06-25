@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import selectors from '../../../../store/selectors'
-import userClientRole from '../../../../lib/user-client-role'
 import SidebarMenu from './SidebarMenu'
 
 const mapStateToProps = state => ({
@@ -17,9 +16,9 @@ const Sidebar = ({
   route,
 }) => {
   const path = route.pathname.split('/').filter(s => s.length)
-  const clientRole = userClientRole(user)
+  const isAdmin = user && user.roles.find(r => r === 'admin')
 
-  if (!user || clientRole) return null
+  if (!isAdmin) return null
   return (
     <div className="main-sidebar">
       <section className="sidebar">

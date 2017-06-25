@@ -5,9 +5,10 @@ import {head, tail} from 'lodash'
 const SidebarMenuItem = ({item, path, depth}) => {
   const active = item.link.split('/')[depth] === head(path) ? 'active' : ''
 
-  return item.menuItemType === 'treeview' ?
+  return item.type === 'treeview' ?
     <li className={`treeview ${active}`}>
-      <a href="/#"
+      <a
+        href="/#"
         className={!depth ? 'main-menuitem' : 'sub-menuitem'}
       >
         {item.title}

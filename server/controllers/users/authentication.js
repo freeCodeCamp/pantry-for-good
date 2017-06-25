@@ -9,7 +9,7 @@ export const signup = async function(req, res) {
   // Init Variables
   let user = new User({
     ...req.body,
-    roles: [req.body.accountType].filter(role => role !== 'admin'),
+    roles: [],
     provider: 'local',
     displayName: `${req.body.firstName} ${req.body.lastName}`
   })

@@ -1,14 +1,19 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {submit} from 'redux-form'
+import {submit, initialize} from 'redux-form'
+import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
 import {fromForm, toForm} from '../../../lib/fields-adapter'
+import userClientRole from '../../../lib/user-client-role'
 import selectors from '../../../store/selectors'
 import {saveCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {loadFoods} from '../../food/reducers/category'
+import {loadDonor} from '../../donor/reducers/donor'
+import {loadVolunteer} from '../../volunteer/reducer'
+import {loadUser} from '../../users/reducer'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import AssistanceInfo from '../../../components/AssistanceInfo'
@@ -25,39 +30,87 @@ const mapStateToProps = state => ({
     selectors.settings.fetching(state) || selectors.food.category.loading(state),
   loadError: selectors.questionnaire.loadError(state) ||
     selectors.settings.error(state) || selectors.food.category.loadError(state),
+  loadingUserData: selectors.donor.loading(state) || selectors.volunteer.loading(state),
+  loadingUser: selectors.user.fetching(state),
   settings: selectors.settings.getSettings(state),
+  getDonor: selectors.donor.getOne(state),
+  getVolunteer: selectors.volunteer.getOne(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   saveCustomer: customer => dispatch(saveCustomer(customer)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   loadFoods: () => dispatch(loadFoods()),
-  submit: form => dispatch(submit(form))
+  loadDonor: id => dispatch(loadDonor(id)),
+  loadVolunteer: id => dispatch(loadVolunteer(id)),
+  loadUser: () => dispatch(loadUser()),
+  push: route => dispatch(push(route)),
+  submit: form => dispatch(submit(form)),
+  initialize: (form, values) => dispatch(initialize(form, values, false))
 })
 
 class CustomerCreate extends Component {
-  isAdmin = this.props.user.roles.find(r => r === 'admin')
-  customer = {
-    ...this.props.user,
-    household: [],
-    foodPreferences: [],
-    fields: []
+  constructor(props) {
+    super(props)
+    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.state = {
+      customer: {
+        ...this.props.user,
+        household: [],
+        foodPreferences: [],
+        fields: []
+      }
+    }
   }
   componentWillMount() {
     this.props.loadQuestionnaires()
     this.props.loadFoods()
+    const role = userClientRole(this.props.user)
+    if (role === 'donor') this.props.loadDonor(this.props.user._id)
+    if (role === 'volunteer') this.props.loadVolunteer(this.props.user._id)
   }
 
-  saveCustomer = form =>
-    this.props.saveCustomer(fromForm(form), this.isAdmin)
+  componentWillReceiveProps(nextProps) {
+    const {loadingUserData, getVolunteer, getDonor, user} = nextProps
+    if (this.props.loadingUserData && !loadingUserData) {
+      const role = userClientRole(user)
+      if (!role) return
 
-  handleSubmitSuccess = () =>
-    this.props.push(this.isAdmin ? '/customers/list' : '/customers')
+      const userData = {
+        donor: getDonor(user._id),
+        volunteer: getVolunteer(user._id)
+      }
+
+      this.setState({
+        customer: {
+          ...this.state.customer,
+          fields: [...userData[role].fields, ...this.state.customer.fields]
+        }
+      })
+    }
+
+    if (this.props.savingCustomers && !nextProps.savingCustomers &&
+        !nextProps.saveCustomersError) {
+      this.props.loadUser()
+      this.props.initialize(FORM_NAME, toForm(this.state.customer, this.props.questionnaire))
+    }
+
+    if (this.props.loadingUser && !nextProps.loadingUser) {
+      this.props.push(this.isAdmin ? '/customers/list' : '/customers')
+    }
+  }
+
+  saveCustomer = form => {
+    // this.props.initialize(FORM_NAME, form)
+    const customer = fromForm(form)
+    this.setState({customer})
+    this.props.saveCustomer(customer, this.isAdmin)
+  }
 
   submit = () => this.props.submit(FORM_NAME)
 
   render() {
-    const {settings, questionnaire, loading, savingCustomers} = this.props
+    const {settings, questionnaire, loading, loadingUser, savingCustomers} = this.props
     const error = this.props.saveCustomersError || this.props.loadError
 
     return (
@@ -85,10 +138,9 @@ class CustomerCreate extends Component {
               <Questionnaire
                 form={FORM_NAME}
                 questionnaire={questionnaire}
-                loading={savingCustomers}
+                loading={savingCustomers || loadingUser}
                 onSubmit={this.saveCustomer}
-                onSubmitSuccess={this.handleSubmitSuccess}
-                initialValues={toForm(this.customer, questionnaire)}
+                initialValues={toForm(this.state.customer, questionnaire)}
               />
             }
             <div className="text-right">

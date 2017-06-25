@@ -31,14 +31,14 @@ export const createUserSession = async function(userModel) {
  * create a user model
  *
  * @param {string} username
- * @param {string} accountType
+ * @param {string} role
  * @param {object} props additional properties to set
  * @return {object}
  */
-export const createTestUser = (username, accountType, props = null) => ({
+export const createTestUser = (username, role, props = null) => ({
   firstName: username,
   lastName: 'test',
-  accountType: [accountType],
+  roles: [role],
   email: `${username}@test.com`,
   password: 'password',
   provider: 'local',

@@ -16,7 +16,8 @@ export default {
     const savedDonor = await donor.save()
 
     // Update user's role to donor and mark as this user as having applied
-    await User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true }})
+    // await User.findOneAndUpdate({_id: donor._id}, {$set: {hasApplied: true }})
+    await User.findOneAndUpdate({_id: donor._id}, {$push: {roles: 'donor'}})
 
     res.json(savedDonor)
   },
