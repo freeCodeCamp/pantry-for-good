@@ -19,7 +19,7 @@ export default {
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
 
-    mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
+    // mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**

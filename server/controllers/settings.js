@@ -5,8 +5,10 @@ import config from '../config'
 export default {
   async read (req, res) {
     const {user} = req
-    const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
-      '+gmapsApiKey +gmapsClientId' : ''
+    let projection = user && intersection(user.roles, ['admin', 'driver']).length ?
+      '+gmapsApiKey +gmapsClientId ' : ''
+
+    projection += user && intersection(user.roles, ['admin']).length ? '+keys' : ''
 
     let settings = await Settings.findOne().select(projection).lean()
 
@@ -35,7 +37,7 @@ export default {
       Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
       Settings.create(req.body)
 
-    const settings = await query.select('+gmapsApiKey +gmapsClientId')
+    const settings = await query.select('+gmapsApiKey +gmapsClientId +keys')
     res.json(settings)
   }
 }

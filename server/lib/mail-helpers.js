@@ -1,4 +1,4 @@
-import {sendEmail} from '../config/mailer'
+import sendEmail from '../config/mailer'
 import Settings from '../models/settings'
 import mailGenerator from './mail-generator'
 

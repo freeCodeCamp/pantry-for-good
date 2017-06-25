@@ -4,6 +4,17 @@ import locationSchema from './location-schema'
 
 const {Schema} = mongoose
 
+const KeysSchema = new Schema({
+  mailService: String,
+  mailUsername: {
+    type: String,
+    trim: true
+  },
+  mailPassword: String
+}, {
+  _id: false
+})
+
 const SettingsSchema = new Schema({
   organization: {
     type: String,
@@ -34,6 +45,10 @@ const SettingsSchema = new Schema({
   gmapsClientId: {
     type: String,
     trim: true,
+    select: false
+  },
+  keys: {
+    type: KeysSchema,
     select: false
   }
 })
