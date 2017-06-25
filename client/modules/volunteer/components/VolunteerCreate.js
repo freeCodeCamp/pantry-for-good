@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {submit, initialize} from 'redux-form'
+import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
@@ -41,8 +41,7 @@ const mapDispatchToProps = dispatch => ({
   loadDonor: id => dispatch(loadDonor(id)),
   loadUser: () => dispatch(loadUser()),
   push: route => dispatch(push(route)),
-  submit: form => dispatch(submit(form)),
-  initialize: (form, values) => dispatch(initialize(form, values, false))
+  submit: form => dispatch(submit(form))
 })
 
 class VolunteerCreate extends Component {
@@ -53,7 +52,8 @@ class VolunteerCreate extends Component {
       volunteer: {
         ...this.props.user,
         fields: []
-      }
+      },
+      pendingVolunteer: {}
     }
   }
 
@@ -86,7 +86,7 @@ class VolunteerCreate extends Component {
     if (this.props.savingVolunteers && !nextProps.savingVolunteers &&
         !nextProps.saveVolunteersError) {
       this.props.loadUser()
-      this.props.initialize(FORM_NAME, toForm(this.state.volunteer, this.props.questionnaire))
+      this.setState({volunteer: this.state.pendingVolunteer})
     }
 
     if (this.props.loadingUser && !nextProps.loadingUser) {
@@ -95,10 +95,9 @@ class VolunteerCreate extends Component {
   }
 
   saveVolunteer = form => {
-    // this.props.initialize(FORM_NAME, form)
-    const volunteer = fromForm(form)
-    this.setState({volunteer})
-    this.props.saveVolunteer(volunteer, this.isAdmin)
+    const pendingVolunteer = fromForm(form)
+    this.setState({pendingVolunteer})
+    this.props.saveVolunteer(pendingVolunteer, this.isAdmin)
   }
 
   handleSubmitSuccess = () => {

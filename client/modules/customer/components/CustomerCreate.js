@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {submit, initialize} from 'redux-form'
+import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
@@ -45,8 +45,7 @@ const mapDispatchToProps = dispatch => ({
   loadVolunteer: id => dispatch(loadVolunteer(id)),
   loadUser: () => dispatch(loadUser()),
   push: route => dispatch(push(route)),
-  submit: form => dispatch(submit(form)),
-  initialize: (form, values) => dispatch(initialize(form, values, false))
+  submit: form => dispatch(submit(form))
 })
 
 class CustomerCreate extends Component {
@@ -59,7 +58,8 @@ class CustomerCreate extends Component {
         household: [],
         foodPreferences: [],
         fields: []
-      }
+      },
+      pendingCustomer: {}
     }
   }
   componentWillMount() {
@@ -92,7 +92,9 @@ class CustomerCreate extends Component {
     if (this.props.savingCustomers && !nextProps.savingCustomers &&
         !nextProps.saveCustomersError) {
       this.props.loadUser()
-      this.props.initialize(FORM_NAME, toForm(this.state.customer, this.props.questionnaire))
+      // delay updating state.customer and causing form reinitialization, clearing
+      // dirty prop, until save succeeds
+      this.setState({customer: this.state.pendingCustomer})
     }
 
     if (this.props.loadingUser && !nextProps.loadingUser) {
@@ -101,10 +103,9 @@ class CustomerCreate extends Component {
   }
 
   saveCustomer = form => {
-    // this.props.initialize(FORM_NAME, form)
-    const customer = fromForm(form)
-    this.setState({customer})
-    this.props.saveCustomer(customer, this.isAdmin)
+    const pendingCustomer = fromForm(form)
+    this.setState({pendingCustomer})
+    this.props.saveCustomer(pendingCustomer, this.isAdmin)
   }
 
   submit = () => this.props.submit(FORM_NAME)

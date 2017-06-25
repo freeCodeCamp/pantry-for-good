@@ -62,7 +62,6 @@ const FieldView = ({
   connectDragSource,
   connectDragPreview,
   connectDropTarget,
-  isDragging,
   isOver,
   canDrop,
   field,

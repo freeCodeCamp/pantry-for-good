@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {submit, initialize} from 'redux-form'
+import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
@@ -44,8 +44,7 @@ const mapDispatchToProps = dispatch => ({
   loadVolunteer: id => dispatch(loadVolunteer(id)),
   loadUser: () => dispatch(loadUser()),
   push: route => dispatch(push(route)),
-  submit: form => dispatch(submit(form)),
-  initialize: (form, values) => dispatch(initialize(form, values, false))
+  submit: form => dispatch(submit(form))
 })
 
 class DonorCreate extends Component {
@@ -56,7 +55,8 @@ class DonorCreate extends Component {
       donor: {
         ...this.props.user,
         fields: []
-      }
+      },
+      pendingDonor: {}
     }
   }
 
@@ -89,7 +89,7 @@ class DonorCreate extends Component {
     if (this.props.savingDonors && !nextProps.savingDonors &&
         !nextProps.saveDonorsError) {
       this.props.loadUser()
-      this.props.initialize(FORM_NAME, toForm(this.state.donor, this.props.questionnaire))
+      this.setState({donor: this.state.pendingDonor})
     }
 
     if (this.props.loadingUser && !nextProps.loadingUser) {
@@ -98,10 +98,9 @@ class DonorCreate extends Component {
   }
 
   saveDonor = form => {
-    // this.props.initialize(FORM_NAME, form)
-    const donor = fromForm(form)
-    this.setState({donor})
-    this.props.saveDonor(donor, this.isAdmin)
+    const pendingDonor = fromForm(form)
+    this.setState({pendingDonor})
+    this.props.saveDonor(pendingDonor, this.isAdmin)
   }
 
   submit = () => this.props.submit(FORM_NAME)

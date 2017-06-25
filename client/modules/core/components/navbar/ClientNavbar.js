@@ -33,7 +33,7 @@ const ClientNavbar = ({items, user, settings, path, active, setActive}) =>
     <nav className="navbar navbar-static-top">
       <div className="container-fluid">
         <div className="navbar-header">
-          <Link to='/' className="navbar-brand active">
+          <Link to="/" className="navbar-brand">
             {settings && settings.organization}
           </Link>
           <button
