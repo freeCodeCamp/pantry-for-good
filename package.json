@@ -114,6 +114,7 @@
     "sanitize-html": "^1.14.1",
     "sendgrid": "^5.1.0",
     "sendpulse-api": "^1.0.2",
+    "shx": "^0.2.2",
     "socket.io": "^2.0.2",
     "striptags": "^3.0.1",
     "style-loader": "^0.13.1",
@@ -138,7 +139,6 @@
     "jsdom": "^10.1.0",
     "mocha": "^3.2.0",
     "react-test-renderer": "^15.5.4",
-    "shx": "^0.2.2",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "supertest": "^2.0.1"
