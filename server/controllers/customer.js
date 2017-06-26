@@ -1,6 +1,5 @@
 import {extend} from 'lodash'
 
-import config from '../config/index'
 import mailer from '../lib/mail-helpers'
 import Customer from '../models/customer'
 import User from '../models/user'
@@ -13,13 +12,12 @@ export default {
     let customer = new Customer(req.body)
     customer._id = req.user.id
 
-    // Update user's hasApplied property to restrict them from applying again
-    await User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true }})
+    await User.findOneAndUpdate({_id: customer._id}, {$push: {roles: 'customer'}})
 
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
 
-    mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
+    // mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**
@@ -42,10 +40,6 @@ export default {
       mailer.sendStatus(newCustomer)
     } else {
       mailer.sendUpdate(newCustomer)
-    }
-
-    if (newCustomer.status === 'Accepted') {
-      await User.findByIdAndUpdate(customer._id, {$set: {roles: ['customer']}})
     }
 
     res.json(newCustomer)

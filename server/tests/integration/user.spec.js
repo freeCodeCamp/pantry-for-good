@@ -25,14 +25,13 @@ describe('User Api', function() {
   })
 
   describe('signup', function() {
-    it('signs up customers', async function() {
+    it('signs up users', async function() {
       const request = supertest.agent(app())
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       return await request.post('/api/auth/signup')
         .send(newUser)
@@ -43,51 +42,6 @@ describe('User Api', function() {
           expect(res.body.firstName).to.equal('Frank')
           expect(res.body.lastName).to.equal('Harper')
           expect(res.body.email).to.equal('fharper@example.com')
-          expect(res.body.accountType).to.eql(['customer'])
-        })
-    })
-
-    it('signs up volunteers', async function() {
-      const request = supertest.agent(app())
-      const newUser = {
-        firstName: 'Bill',
-        lastName: 'Lyon',
-        email: 'blyon@example.com',
-        password: '12345678',
-        accountType: 'volunteer',
-      }
-      return await request.post('/api/auth/signup')
-        .send(newUser)
-        .expect(200)
-        .expect(res => {
-          expect(res.body).to.be.an.object
-          expect(res.body).to.have.property('_id')
-          expect(res.body.firstName).to.equal('Bill')
-          expect(res.body.lastName).to.equal('Lyon')
-          expect(res.body.email).to.equal('blyon@example.com')
-          expect(res.body.accountType).to.eql(['volunteer'])
-        })
-    })
-
-    it('signs up donors', async function() {
-      const request = supertest.agent(app())
-      const newUser = {
-        firstName: 'Margaret',
-        lastName: 'Willis',
-        email: 'mwillis@example.com',
-        password: '12345678',
-        accountType: 'donor',
-      }
-      return await request.post('/api/auth/signup')
-        .send(newUser)
-        .expect(200)
-        .expect(res => {
-          expect(res.body).to.be.an.object
-          expect(res.body).to.have.property('_id')
-          expect(res.body.firstName).to.equal('Margaret')
-          expect(res.body.lastName).to.equal('Willis')
-          expect(res.body.email).to.equal('mwillis@example.com')
-          expect(res.body.accountType).to.eql(['donor'])
         })
     })
 
@@ -96,8 +50,7 @@ describe('User Api', function() {
       const newUser = {
         lastName: 'Willis',
         email: 'mwillis@example.com',
-        password: '12345678',
-        accountType: 'donor',
+        password: '12345678'
       }
       return await request.post('/api/auth/signup')
         .send(newUser)
@@ -112,8 +65,7 @@ describe('User Api', function() {
       const newUser = {
         firstName: 'Willis',
         email: 'mwillis@example.com',
-        password: '12345678',
-        accountType: 'donor',
+        password: '12345678'
       }
       return await request.post('/api/auth/signup')
         .send(newUser)
@@ -128,8 +80,7 @@ describe('User Api', function() {
       const newUser = {
         firstName: 'Margaret',
         lastName: 'Willis',
-        email: 'mwillis@example.com',
-        accountType: 'donor',
+        email: 'mwillis@example.com'
       }
       return await request.post('/api/auth/signup')
         .send(newUser)
@@ -145,8 +96,7 @@ describe('User Api', function() {
         firstName: 'Margaret',
         lastName: 'Willis',
         email: 'mwillis@example.com',
-        password: '12345',
-        accountType: 'donor',
+        password: '12345'
       }
       return await request.post('/api/auth/signup')
         .send(newUser)
@@ -156,32 +106,15 @@ describe('User Api', function() {
         })
     })
 
-    it('requires an account type', async function() {
-      const request = supertest.agent(app())
-      const newUser = {
-        firstName: 'Frank',
-        lastName: 'Harper',
-        password: '12345678',
-        email: 'mwillis@example.com'
-      }
-      return await request.post('/api/auth/signup')
-        .send(newUser)
-        .expect(400)
-        .expect(res => {
-          expect(res.body.error.errors.accountType.message).to.equal('Please select account type')
-        })
-    })
-
     it('does not allow signup if email address already has an account', async function() {
       const request = supertest.agent(app())
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
-      
+
       await request.post('/api/auth/signup')
         .send(newUser)
 
@@ -189,8 +122,7 @@ describe('User Api', function() {
         firstName: 'Francine',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       return await request.post('/api/auth/signup')
         .send(newUser2)
@@ -201,14 +133,13 @@ describe('User Api', function() {
     })
   })
 
-  describe('loggin in', function() {
+  describe('logging in', function() {
     it('signs in', async function() {
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       const request = supertest.agent(app())
       await request.post('/api/auth/signup')
@@ -228,8 +159,7 @@ describe('User Api', function() {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       const request = supertest.agent(app())
       await request.post('/api/auth/signup')
@@ -249,8 +179,7 @@ describe('User Api', function() {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       const request = supertest.agent(app())
       await request.post('/api/auth/signup')
@@ -270,8 +199,7 @@ describe('User Api', function() {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
-        password: '12345678',
-        accountType: 'customer',
+        password: '12345678'
       }
       const request = supertest.agent(app())
       await request.post('/api/auth/signup')
@@ -285,5 +213,5 @@ describe('User Api', function() {
           expect(res.body.message).to.equal('Unknown user or invalid password')
         })
     })
-  })  
+  })
 })

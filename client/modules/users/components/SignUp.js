@@ -13,18 +13,11 @@ import {LoginBox} from '../../../components/login'
 
 import './signup.css'
 
-const accountTypes = [
-  {label: 'Customer', value: 'customer'},
-  {label: 'Donor', value: 'donor'},
-  {label: 'Volunteer', value: 'volunteer'}
-]
-
 class SignUp extends React.Component {
   constructor(props) {
     super(props)
     this.redirectIfAlreadySignedIn(this.props)
     this.state = {
-      accountType: undefined,
       firstName: "",
       lastName: "",
       email: "",
@@ -52,46 +45,15 @@ class SignUp extends React.Component {
   onSubmit = e => {
     e.preventDefault()
     this.props.signUp({
-      "accountType": this.state.accountType,
-      "firstName": this.state.firstName,
-      "lastName": this.state.lastName,
-      "email": this.state.email,
-      "password": this.state.password
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      password: this.state.password
     })
   }
 
-  onGoogleSignupClick = e => {
-    e.preventDefault()
-    const dialogOptions = {
-      message: 'Which account type are you registering for?',
-      actions: [
-        {
-          style: 'primary',
-          text: 'Customer',
-          action: () => this.googleSignup('customer')
-        },       
-        {
-          style: 'primary',
-          text: 'Volunteer',
-          action: () => this.googleSignup('volunteer')
-        },       
-        {
-          style: 'primary',
-          text: 'Donor',
-          action: () => this.googleSignup('donor')
-        }, 
-        {
-          style: 'danger',
-          text: 'Cancel',
-          onClick: this.props.hideDialog
-        }
-      ]
-    }
-    this.props.showDialog(dialogOptions)
-  }
-
-  googleSignup = accountType => {
-    window.location = `/api/auth/google?action=signup&accountType=${accountType}`
+  googleSignup = () => {
+    window.location = `/api/auth/google?action=signup`
   }
 
   componentWillReceiveProps = nextProps => {
@@ -107,16 +69,6 @@ class SignUp extends React.Component {
         loading={this.props.fetchingUser}
         error={this.props.fetchUserError}
       >
-        <FieldGroup
-          name="accountType"
-          type="radio"
-          label="Please select an account to create"
-          options={accountTypes}
-          value={this.state.accountType}
-          onChange={this.onFieldChange}
-          required
-          inline
-        />
         <FieldGroup
           name="firstName"
           onChange={this.onFieldChange}
@@ -171,7 +123,7 @@ class SignUp extends React.Component {
             <div>
               or
               <br />
-              <button onClick={this.onGoogleSignupClick} className="btn btn-default">
+              <button type="button" onClick={this.googleSignup} className="btn btn-default">
                 <i className="fa fa-google" />{' '}
                 Sign up with Google
               </button>

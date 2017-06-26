@@ -76,13 +76,14 @@ class Questionnaire extends Component {
 
   handleSave = () => this.props.showConfirmDialog(
     this.props.hideDialog,
-    this.saveQuestionnaire(),
+    this.saveQuestionnaire,
     'Any deleted fields will be permanently lost'
   )
 
   saveQuestionnaire = () => {
     this.props.editField(null)
     this.props.saveQuestionnaire(this.props.completeQuestionnaire)
+    this.props.hideDialog()
   }
 
   render() {

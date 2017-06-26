@@ -24,7 +24,7 @@ const Food = mongoose.model('Food')
 const Settings = mongoose.model('Settings')
 const Page = mongoose.model('Page')
 
-const clientTypes = ['customer', 'volunteer', 'donor']
+const clientRoles = ['customer', 'volunteer', 'donor']
 
 /**
  * populate empty collections with seed data
@@ -42,7 +42,7 @@ export default async function seed(env, replace, replaceAdmin = false) {
 
 async function clearDb(replaceAdmin) {
   if (replaceAdmin) await User.find().remove()
-  else await User.find({accountType: {$in: clientTypes}}).remove()
+  else await User.find({roles: {$in: clientRoles}}).remove()
 
   await Promise.all([
     Customer.find().remove(),
@@ -70,13 +70,12 @@ async function seedDb(env) {
 }
 
 async function seedAdmin() {
-  const adminCount = await User.count({accountType: 'admin'})
+  const adminCount = await User.count({roles: 'admin'})
   if (!adminCount) {
     const adminUser = {
       firstName: 'admin',
       lastName: 'user',
       displayName: 'admin',
-      accountType: ['admin'],
       roles: ['admin'],
       email: `admin@example.com`,
       password: 'password',
@@ -87,13 +86,13 @@ async function seedAdmin() {
 }
 
 async function seedUsers() {
-  const clientCount = await User.count({accountType: {$in: clientTypes}})
+  const clientCount = await User.count({roles: {$in: clientRoles}})
   if (clientCount) return
 
   const customers = range(45).map(i => createTestUser(`customer ${i + 1}`))
   const volunteers = range(8).map(i => createTestUser(`volunteer ${i + 1}`))
   const donors = range(5).map(i => createTestUser(`donor ${i + 1}`))
-  const drivers = range(5).map(i => createTestUser(`driver ${i + 1}`, 'volunteer'))
+  const drivers = range(5).map(i => createTestUser(`driver ${i + 1}`))
 
   await User.create([
     ...customers,
@@ -143,8 +142,6 @@ function createTestUser(name, type = null) {
   return {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
-    // displayName: name,
-    accountType: [type],
     roles: names[0] === 'driver' ? ['driver', 'volunteer'] : [type],
     email: `${names.join('')}@example.com`,
     password: 'password',

@@ -1,6 +1,6 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
-import {get} from 'lodash'
+import {flatMap, get, partition} from 'lodash'
 
 import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
@@ -47,14 +47,15 @@ export default crudReducer('questionnaire')
 
 export const createSelectors = path => {
   const getEntities = state => state.entities
+  const getAll = createSelector(
+    state => get(state, path).ids,
+    getEntities,
+    (questionnaires, entities) =>
+      denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires
+  )
 
   return {
-    getAll: createSelector(
-      state => get(state, path).ids,
-      getEntities,
-      (questionnaires, entities) =>
-        denormalize({questionnaires}, {questionnaires: arrayOfQuestionnaires}, entities).questionnaires
-    ),
+    getAll,
     getOne: state => identifier => createSelector(
       getEntities,
       entities => {
@@ -63,6 +64,23 @@ export const createSelectors = path => {
         if (!ids.length) return
 
         return denormalize({questionnaires: ids[0]}, {questionnaires: questionnaireSchema}, entities).questionnaires
+      }
+    )(state),
+    getLinkableFields: state => identifier => createSelector(
+      getAll,
+      questionnaires => {
+        const [[thisQuestionnaire], otherQuestionnaires] =
+          partition(questionnaires, q => q.identifier === identifier)
+
+        const thisFields = flatMap(thisQuestionnaire.sections, section => section.fields)
+
+        return otherQuestionnaires.map(q => ({
+          ...q,
+          fields: flatMap(q.sections, section => section.fields).filter(field =>
+            ['foodPreferences', 'table', 'household']
+              .every(type => type !== field.type) &&
+                thisFields.every(f => f._id !== field._id))
+        })).filter(q => q.fields.length)
       }
     )(state),
     loading: state => get(state, path).fetching,

@@ -22,12 +22,11 @@ var VolunteerSchema = new Schema({
     type: String,
     trim: true
   },
-  accountType: [String],
   location: locationSchema,
   status: {
     type: String,
-    enum: ['Active', 'Inactive'],
-    default: 'Inactive'
+    enum: ['Active', 'Inactive', 'Pending'],
+    default: 'Pending'
   },
   disclaimerAgree: {
     type: Boolean
@@ -43,7 +42,6 @@ var VolunteerSchema = new Schema({
     type: Boolean,
     default: false
   },
-
   generalNotes: {
     type: String,
     trim: true
