@@ -16,6 +16,7 @@ export const foodCategory = new schema.Entity('foodCategories', {}, {
   }
 })
 export const foodItem = new schema.Entity('foodItems', {}, {idAttribute: '_id'})
+export const foodPackage = new schema.Entity('packages', {}, {idAttribute: '_id'})
 export const page = new schema.Entity('pages', {}, {idAttribute: '_id'})
 export const questionnaire = new schema.Entity('questionnaires', {}, {idAttribute: '_id'})
 export const section = new schema.Entity('sections', {}, {idAttribute: '_id'})
@@ -28,6 +29,7 @@ export const arrayOfCustomers = new schema.Array(customer)
 export const arrayOfFields = new schema.Array(field)
 export const arrayOfFoodCategories = new schema.Array(foodCategory)
 export const arrayOfFoodItems = new schema.Array(foodItem)
+export const arrayOfPackages = new schema.Array(foodPackage)
 export const arrayOfPages = new schema.Array(page)
 export const arrayOfQuestionnaires = new schema.Array(questionnaire)
 export const arrayOfSections = new schema.Array(section)
@@ -52,6 +54,10 @@ questionnaire.define({sections: arrayOfSections})
 
 section.define({fields: arrayOfFields})
 
+foodPackage.define({
+  customer,
+  contents: arrayOfFoodItems
+})
 
 foodCategory.define({
   items: arrayOfFoodItems

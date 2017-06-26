@@ -1,10 +1,16 @@
 import moment from 'moment'
+import Package from '../models/package'
 import Customer from '../models/customer'
 import Food from '../models/food'
 
 const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
+  list: function(req, res, next) {
+    Package.find()
+    .then(data => res.json(data))
+    .catch(err => next(err))
+  },
   pack: async function(req, res, next) {
     const {customers, items} = req.body
     try {
@@ -12,7 +18,6 @@ export default {
         customers.map(async customer =>
           Customer.findByIdAndUpdate(Number(customer.id), {
             lastPacked: beginWeek,
-            packingList: customer.packingList.map(item => item._id)
           }, {new: true})
         )
       )
@@ -30,9 +35,17 @@ export default {
         })
       )
 
+      const newPackages = await Promise.all(
+        customers.map(customer => {
+          const contents = customer.packingList.map(item => ({_id: item._id, name: item.name}))
+          return Package.create({customer: customer.id, contents})
+        })
+      )
+
       res.json({
         customers: updatedCustomers,
-        foodItems: updatedItems
+        foodItems: updatedItems,
+        packages: newPackages
       })
     } catch (err) {
       next(err)

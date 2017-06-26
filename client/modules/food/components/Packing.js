@@ -10,6 +10,7 @@ import {loadCustomers} from '../../customer/reducer'
 import {loadFoods} from '../reducers/category'
 import {pack} from '../reducers/packing'
 
+import Packages from './Packages'
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import {Page, PageBody} from '../../../components/page'
 import {Checkbox} from '../../../components/form'
@@ -160,6 +161,7 @@ class PackingList extends Component {
               </div>
             </BoxBody>
           </Box>
+          <Packages />
         </PageBody>
       </Page>
     )
