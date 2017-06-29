@@ -1,12 +1,15 @@
+/**
+ * Component to display a table of all the packages
+ */
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
-import selectors from '../../../store/selectors'
-import {listPackages } from '../reducers/packing'
+import selectors from '../../../../store/selectors'
+import {listPackages } from '../../reducers/packing'
 
-import {Box, BoxBody, BoxHeader} from '../../../components/box'
+import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 
 const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
@@ -24,6 +27,9 @@ class Packages extends Component {
     this.props.load()
   }
 
+  /**
+   * Convert an array of foodItems to a string listing the item names
+   */
   formatContents = contentList => {
     return contentList.reduce((prev, curr) => {return `${prev} ${curr.name},`}, "")
   }
