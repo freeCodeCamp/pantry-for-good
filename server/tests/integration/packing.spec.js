@@ -43,7 +43,7 @@ describe('Packing Api', function() {
     // transform the foodItems from mongoose models to JSON objects used in the PUT request
     foodItems = foodItems.map(item => {
       let newItem = item.toObject()
-      //The put requests shows the new item quantities after packing
+      //The post requests shows the new item quantities after packing
       newItem.quantity = newItem.quantity - 1
       newItem.categoryId = food._id
       return newItem
@@ -66,10 +66,10 @@ describe('Packing Api', function() {
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
-    return request.put('/api/packing').send({
-      customers: [customer],
-      items: foodItems,
-    })
+    return request.post('/api/packing').send([{
+      "customer": customer._id,
+      "contents": foodItemIds
+    }])
       .expect(200)
       .expect(function(res) {
         expect(res.body.packages).to.be.an('array')
@@ -92,7 +92,7 @@ describe('Packing Api', function() {
     // transform the foodItems from mongoose models to JSON objects used in the PUT request
     foodItems = foodItems.map(item => {
       let newItem = item.toObject()
-      //The put requests shows the new item quantities after packing
+      //The post requests shows the new item quantities after packing
       newItem.quantity = newItem.quantity - 1
       newItem.categoryId = food._id
       return newItem
@@ -126,10 +126,10 @@ describe('Packing Api', function() {
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
-    return request.put('/api/packing').send({
-      customers: [customer1, customer2],
-      items: foodItems,
-    })
+    return request.post('/api/packing').send([
+      { "customer": customer1._id, "contents": customer1.foodPreferences },
+      { "customer": customer2._id, "contents": customer2.foodPreferences }    
+    ])
       .expect(200)
       .expect(function(res) {
         expect(res.body.packages).to.be.an('array')
@@ -162,7 +162,7 @@ describe('Packing Api', function() {
     // transform the foodItems from mongoose models to JSON objects used in the PUT request
     foodItems = foodItems.map(item => {
       let newItem = item.toObject()
-      //The put requests shows the new item quantities after packing
+      //The post requests shows the new item quantities after packing
       newItem.quantity = newItem.quantity - 1
       newItem.categoryId = food._id
       return newItem
@@ -186,10 +186,9 @@ describe('Packing Api', function() {
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
-    await request.put('/api/packing').send({
-      customers: [customer],
-      items: foodItems
-    })
+    await request.post('/api/packing').send([
+      { "customer": customer._id, "contents": customer.foodPreferences },
+    ])
 
     return request.get(`/api/customer/${customer._id}`)
       .expect(200)

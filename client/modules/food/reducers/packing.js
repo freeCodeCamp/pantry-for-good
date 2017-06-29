@@ -5,7 +5,7 @@ import {denormalize} from 'normalizr'
 
 import {CALL_API, callApi} from '../../../store/middleware/api'
 
-import {arrayOfCustomers, arrayOfFoodItems, arrayOfPackages} from '../../../../common/schemas'
+import {arrayOfCustomers, arrayOfPackages} from '../../../../common/schemas'
 
 const LOAD_REQUEST = 'packages/LOAD_REQUEST'
 const LOAD_SUCCESS = 'packages/LOAD_SUCCESS'
@@ -15,26 +15,27 @@ const PACK_SUCCESS = 'packing/PACK_SUCCESS'
 const PACK_FAILURE = 'packing/PACK_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
-
-const packSuccess = response => ({
-  type: PACK_SUCCESS,
-  response
-})
-
+const packSuccess = response => ({type: PACK_SUCCESS, response})
 const packFailure = error => ({type: PACK_FAILURE, error})
 
-export const pack = (customers, items) => dispatch => {
+export const pack = newPackedCustomers => dispatch => {
   dispatch(packRequest())
-  callApi('packing', 'PUT', {customers, items})
+  callApi('packing', 'POST', newPackedCustomers)
     .then(res => {
+
+      // Update the lastPacked dates for customer entities that just got packed
+      const customerEntities = {}
+      res.packedCustomerIds.forEach(customerId => {
+        customerEntities[customerId] = {lastPacked: res.packages[0].datePacked}
+      })     
+
       dispatch(packSuccess({
         result: {
-          newPackageIds: res.packages.map(item => item._id)
+          newPackageIds: res.packages.map(item => item._id), 
         },
         entities: {
-          customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-          foodItems: normalize(res.foodItems, arrayOfFoodItems).entities.foodItems,
-          packages: normalize(res.packages, arrayOfPackages).entities.packages
+          packages: normalize(res.packages, arrayOfPackages).entities.packages,
+          customers: customerEntities
         }
       }))
     })

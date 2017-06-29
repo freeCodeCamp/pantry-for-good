@@ -1,6 +1,7 @@
 /**
  * Component to display a table of all the packages that need to be packed
  */
+const  MIN_DAYS_SINCE_LAST_PACKED_TO_SHOW = 7
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {compose, withProps} from 'recompose'
@@ -32,7 +33,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadCustomers())
     dispatch(loadFoods())
   },
-  pack: (customers, items) => dispatch(pack(customers, items))
+  pack: packages => dispatch(pack(packages))
 })
 
 const withPackedCustomers = withProps(({customers, items}) =>
@@ -57,12 +58,15 @@ class PackingList extends Component {
 
   pack = () => {
     // generate packing lists for selected customers and updated item counts
-    const {packedCustomers, updatedItems} = getPackedCustomersAndItems(
-      this.state.selected.map(id => this.props.customers.find(c => c.id === id)),
-      this.props.items
-    )
+    const customers = this.state.selected.map(id => this.props.customers.find(c => c.id === id))
+    const {packedCustomers} = getPackedCustomersAndItems(customers, this.props.items)
+    
+    const packages = packedCustomers.map(customer => ({
+      customer: customer.id,
+      contents: customer.packingList.map(item => item._id)
+    }))
 
-    this.props.pack(packedCustomers, updatedItems)
+    this.props.pack(packages)
   }
 
   getItemList = items => items.map(i => i.name).join(', ')
@@ -173,7 +177,7 @@ function getPackedCustomersAndItems(customers, items) {
   let itemCounts = items.map(item => item.quantity)
 
   // generate a packing list for each customer
-  const packedCustomers = customers.map(customer => ({
+  const packedCustomers = customers.filter(filterCustomersByLastPackedDate).map(customer => ({
     ...customer,
     packingList: items.map((item, i) => {
       // If the item is in the customer's food preferences and in stock
@@ -200,4 +204,16 @@ function equalIds(thing) {
 
 function exists(thing) {
   return thing
+}
+
+/**
+ * Used to filter out customers that have been packed since MIN_DAYS_SINCE_LAST_PACKED_TO_SHOW
+ */
+function filterCustomersByLastPackedDate(customer) {
+  let showBeforeDate = new Date()
+  showBeforeDate.setDate(showBeforeDate.getDate() - MIN_DAYS_SINCE_LAST_PACKED_TO_SHOW)
+  showBeforeDate = new Date(showBeforeDate.toDateString())
+
+  let lastPacked = new Date(new Date(customer.lastPacked).toDateString())
+  return (lastPacked <= showBeforeDate)
 }
