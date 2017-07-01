@@ -25,7 +25,6 @@ const CustomerSchema = new Schema({
     type: String,
     required: true
   },
-  accountType: [String],
   location: locationSchema,
   status: {
     type: String,

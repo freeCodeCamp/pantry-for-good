@@ -1,38 +1,56 @@
 import moment from 'moment'
+import Package from '../models/package'
 import Customer from '../models/customer'
 import Food from '../models/food'
 
 const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
+  list: function(req, res, next) {
+    Package.find()
+    .then(data => res.json(data))
+    .catch(err => next(err))
+  },
   pack: async function(req, res, next) {
-    const {customers, items} = req.body
+    const packages = req.body
+    const packedCustomerIds = []
+    const packedItemCounts = {}
+
+    //Iterate through the packages to calculate packedCustomerIds and packedItemCounts
+    packages.forEach(customerPackage => {
+      packedCustomerIds.push(customerPackage.customer)
+      customerPackage.contents.forEach(itemId => {
+        if (packedItemCounts[itemId]) {
+          packedItemCounts[itemId] = packedItemCounts[itemId] + 1
+        } else {
+          packedItemCounts[itemId] = 1
+        }
+      })
+    })
+
     try {
-      const updatedCustomers = await Promise.all(
-        customers.map(async customer =>
-          Customer.findByIdAndUpdate(Number(customer.id), {
-            lastPacked: beginWeek,
-            packingList: customer.packingList.map(item => item._id)
-          }, {new: true})
+      //mark customers as last packed this week
+      await Customer.update({_id: {$in: packedCustomerIds}}, {"$set": {lastPacked: beginWeek}}, {"multi": true})
+
+      // Update the food item inventory quantities
+      const foodItemIdsToUpdate = Object.keys(packedItemCounts)
+      await Promise.all(
+        foodItemIdsToUpdate.map(itemId => 
+          Food.findOneAndUpdate(
+            {'items._id': itemId},
+            {$inc:  {'items.$.quantity': -packedItemCounts[itemId] }}
+          ).exec()
         )
       )
 
-      const updatedItems = await Promise.all(
-        items.map(async item => {
-          const category = await Food.findOneAndUpdate(
-            {'items._id': item._id},
-            {$set: {'items.$': item}},
-            {new: true}
-          )
-
-          if (!category.items) return
-          return category.items.find(it => it._id.toString() === item._id)
-        })
+      const newPackages = await Promise.all(
+        packages.map(customerPackage => Package.create(customerPackage))
       )
 
       res.json({
-        customers: updatedCustomers,
-        foodItems: updatedItems
+        packages: newPackages,
+        packedCustomerIds,
+        packedItemCounts
       })
     } catch (err) {
       next(err)

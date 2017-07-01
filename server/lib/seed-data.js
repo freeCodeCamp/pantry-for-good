@@ -1,5 +1,6 @@
 import {utc} from 'moment'
 import faker from 'faker'
+import {v4} from 'uuid'
 
 import config from '../config'
 
@@ -177,17 +178,24 @@ export const pages = [{
 `
 }]
 
+const commonFields = [
+  {type: 'address', label: 'Street', required: true},
+  {type: 'address', label: 'Town/City', required: true},
+  {type: 'address', label: 'State/Province', required: true},
+  {type: 'address', label: 'Zip/Post Code', required: true},
+  {type: 'text', label: 'Telephone Number'}
+].map(field => ({
+  ...field,
+  _id: v4()
+}))
+
 export const customerQuestionnaire = {
   name: 'Customer Application',
   identifier: 'qCustomers',
   sections: [{
     name: 'General Info',
     fields: [
-      {type: 'address', label: 'Street', required: true},
-      {type: 'address', label: 'Town/City', required: true},
-      {type: 'address', label: 'State/Province', required: true},
-      {type: 'address', label: 'Zip/Post Code', required: true},
-      {type: 'text', label: 'Telephone Number'},
+      ...commonFields,
       {type: 'date', label: 'Date of Birth', required: true},
       {type: 'radio', choices: 'Male, Female', label: 'Gender'},
       {type: 'radio', choices: 'Rental, Own, Subsidized, Other', label: 'Accommodation Type'},
@@ -229,11 +237,7 @@ export const donorQuestionnaire = {
   sections: [{
     name: 'General Info',
     fields: [
-      {type: 'address', label: 'Street', required:true},
-      {type: 'address', label: 'Town/City', required:true},
-      {type: 'address', label: 'State/Province', required:true},
-      {type: 'address', label: 'Zip/Post Code', required:true},
-      {type: 'text', label: 'Telephone Number'},
+      ...commonFields,
       {type: 'textarea', label: 'How did you hear about us?'}
     ]
   }]
@@ -245,11 +249,7 @@ export const volunteerQuestionnaire = {
   sections: [{
     name: 'General Info',
     fields: [
-      {type: 'address', label: 'Street', required:true},
-      {type: 'address', label: 'Town/City', required:true},
-      {type: 'address', label: 'State/Province', required:true},
-      {type: 'address', label: 'Zip/Post Code', required:true},
-      {type: 'text', label: 'Telephone Number'},
+      ...commonFields,
       {type: 'date', label: 'Date of Birth', required:true},
       {type: 'radio', choices: 'Phone, Email', label: 'Best way to contact'},
       {type: 'textarea', label: 'How did you hear about us?'},

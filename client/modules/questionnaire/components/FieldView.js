@@ -19,7 +19,8 @@ const fieldSource = {
   beginDrag(props) {
     return {
       id: props.field._id,
-      idx: props.idx
+      idx: props.idx,
+      type: 'field'
     }
   }
 }
@@ -34,12 +35,18 @@ const fieldTarget = {
     props.moveField(id, props.sectionId, dropIndex)
 
     monitor.getItem().idx = dropIndex
+  },
+  canDrop(props, monitor) {
+    const {id} = monitor.getItem()
+
+    return id !== props.field._id
   }
 }
 
 function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging(),
   }
 }
@@ -53,27 +60,41 @@ function collectTarget(connect, monitor) {
 
 const FieldView = ({
   connectDragSource,
+  connectDragPreview,
   connectDropTarget,
-  isDragging,
   isOver,
+  canDrop,
   field,
   onSelect
-}) => connectDragSource(
+}) => connectDragPreview(
   connectDropTarget(
     <div
       onClick={onSelect}
       style={{
+        display: 'flex',
         border: 'none',
-        opacity: isDragging || isOver ? '0.5' : 1
+        opacity: isOver && canDrop ? '0.5' : 1
       }}
       className="list-group-item"
     >
-      <h4 className="list-group-item-heading">
-        {field.label}
-      </h4>
-      <p className="list-group-item-text">
-        {mapTypeToDescription(field.type)}
-      </p>
+      {connectDragSource(
+        <div
+          style={{
+            padding: '5px 10px',
+            cursor: 'pointer'
+          }}
+        >
+          <i className="fa fa-ellipsis-v" />
+        </div>
+      )}
+      <div>
+        <h4 className="list-group-item-heading">
+          {field.label}
+        </h4>
+        <p className="list-group-item-text">
+          {mapTypeToDescription(field.type)}
+        </p>
+      </div>
     </div>
   )
 )

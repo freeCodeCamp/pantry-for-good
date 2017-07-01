@@ -29,7 +29,7 @@ const DonorRouter = ({match}) =>
     <Route
       path={`${match.url}/create`}
       exact
-      component={IsDonor(DonorCreate)}
+      component={DonorCreate}
     />
     <Route
       path={`${match.url}/:donorId/edit`}

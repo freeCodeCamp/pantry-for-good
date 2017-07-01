@@ -28,7 +28,7 @@ export default () => {
           scope: [
             'https://www.googleapis.com/auth/userinfo.profile',
             'https://www.googleapis.com/auth/userinfo.email'],
-          state: JSON.stringify({action: action, accountType: req.query.accountType})
+          state: JSON.stringify({action})
         }
       )(req, res, next)
     }
@@ -44,7 +44,7 @@ export default () => {
       if (err) {
         return res.status(500).send(err.message)
       } else if (!user) {
-        return res.status(500).send("Server error. Could not login the user")        
+        return res.status(500).send("Server error. Could not login the user")
       } else {
         req.login(user, err => {
           if (err) return res.status(500).send(err.message)

@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {trim} from 'lodash'
 
 import selectors from '../../../store/selectors'
-import userClientRole from '../../../lib/user-client-role'
 import ClientNavbar from './navbar/ClientNavbar'
 import AdminNavbar from './navbar/AdminNavbar'
 
@@ -13,18 +13,16 @@ const mapStateToProps = state => ({
 })
 
 const Header = ({settings, user, route}) => {
-  const clientRole = userClientRole(user)
-  const homeUrl = clientRole ? `/${clientRole}s` : '/'
-  const path = route.pathname.split('/').filter(s => s.length)
+  const path = trim(route.pathname, '/')
+  const isAdmin = user && user.roles.find(r => r === 'admin')
 
-  return !user || clientRole ?
+  return isAdmin ?
+    <AdminNavbar user={user} settings={settings} /> :
     <ClientNavbar
       user={user}
       settings={settings}
       path={path}
-      homeUrl={homeUrl}
-    /> :
-    <AdminNavbar user={user} settings={settings} homeUrl={homeUrl} />
+    />
 }
 
 export default connect(mapStateToProps)(Header)

@@ -5,6 +5,7 @@ import uuid from 'uuid'
 import {questionnaire as questionnaireSchema} from '../../../../../common/schemas'
 import sections from './sections'
 import fields from './fields'
+import {actions as apiActions} from '../api'
 
 export const actions = {
   INIT: 'qEditor/INIT',
@@ -67,7 +68,7 @@ export const moveSection = (sectionId, idx) => ({
   idx
 })
 
-export const addField = (field, sectionId) => dispatch => {
+export const addField = (field, sectionId, edit = true) => dispatch => {
   const newField = {_id: uuid.v4(), label: '', type: 'text', ...field}
   dispatch({
     type: actions.ADD_FIELD,
@@ -75,7 +76,8 @@ export const addField = (field, sectionId) => dispatch => {
     sectionId
   })
 
-  dispatch(editField(newField._id))
+  if (edit)
+    dispatch(editField(newField._id))
 }
 
 export const deleteField = (fieldId, sectionId) => ({
@@ -96,6 +98,11 @@ export const moveField = (fieldId, sectionId, idx) => ({
   idx
 })
 
+export const moveFieldToSection = (field, fromSection, toSection) => dispatch => {
+  dispatch(deleteField(field._id, fromSection))
+  dispatch(addField(field, toSection, false))
+  dispatch(selectSection(toSection))
+}
 
 export default (state = {questionnaires: {}}, action) => {
   switch (action.type) {
@@ -137,6 +144,11 @@ export default (state = {questionnaires: {}}, action) => {
         dirty: true,
         fields: fields(state.fields, action),
         sections: sections(state.sections, action)
+      }
+    case apiActions.SAVE_SUCCESS:
+      return {
+        ...state,
+        dirty: false
       }
     default:
       return {

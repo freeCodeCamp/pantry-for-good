@@ -12,11 +12,6 @@ import validate from '../../../common/validators'
 import './questionnaire.css'
 
 class Questionnaire extends Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.onSubmitSuccess && nextProps.submitSucceeded && !this.props.dirty)
-      nextProps.onSubmitSuccess()
-  }
-
   render() {
     const {questionnaire, loading} = this.props
     return (

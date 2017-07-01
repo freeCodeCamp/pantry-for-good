@@ -12,8 +12,7 @@ export default {
     let customer = new Customer(req.body)
     customer._id = req.user.id
 
-    // Update user's hasApplied property to restrict them from applying again
-    await User.findOneAndUpdate({_id: customer._id}, {$set: {hasApplied: true }})
+    await User.findOneAndUpdate({_id: customer._id}, {$push: {roles: 'customer'}})
 
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
@@ -41,10 +40,6 @@ export default {
       mailer.sendStatus(newCustomer)
     } else {
       mailer.sendUpdate(newCustomer)
-    }
-
-    if (newCustomer.status === 'Accepted') {
-      await User.findByIdAndUpdate(customer._id, {$set: {roles: ['customer']}})
     }
 
     res.json(newCustomer)

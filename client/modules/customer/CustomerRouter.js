@@ -29,7 +29,7 @@ const CustomerRouter = ({match}) =>
     <Route
       path={`${match.url}/create`}
       exact
-      component={IsCustomer(CustomerCreate)}
+      component={CustomerCreate}
     />
     <Route
       path={`${match.url}/:customerId/edit`}

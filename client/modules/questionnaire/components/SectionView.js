@@ -4,42 +4,63 @@ import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
 
 import selectors from '../../../store/selectors'
-import {moveSection} from '../reducers/editor/index'
+import {moveSection, moveFieldToSection} from '../reducers/editor/index'
 
 const mapStateToProps = state => ({
-  getSection: selectors.qEditor.getSectionById(state)
+  getSection: selectors.qEditor.getSectionById(state),
+  getField: selectors.qEditor.getFieldById(state),
+  selectedSection: selectors.qEditor.getSelectedSection(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  moveSection: (section, idx) => dispatch(moveSection(section, idx))
+  moveSection: (section, idx) => dispatch(moveSection(section, idx)),
+  moveFieldToSection: (field, fromSection, toSection) =>
+    dispatch(moveFieldToSection(field, fromSection, toSection))
 })
 
 const sectionSource = {
   beginDrag(props) {
     return {
       id: props.section._id,
-      idx: props.idx
+      idx: props.idx,
+      type: 'section'
     }
   }
 }
 
 const sectionTarget = {
   hover(props, monitor) {
-    const {id, idx} = monitor.getItem()
+    const {id, idx, type} = monitor.getItem()
     const dropIndex = props.idx
 
-    if (idx === dropIndex) return
+    if (type !== 'section' || idx === dropIndex) return
 
     props.moveSection(id, dropIndex)
 
     monitor.getItem().idx = dropIndex
+  },
+  canDrop(props, monitor) {
+    const {id, type} = monitor.getItem()
+
+    if (type === 'field')
+      return props.selectedSection !== props.section._id
+
+    return id !== props.section._id
+  },
+  drop(props, monitor) {
+    const {id, type} = monitor.getItem()
+    if (type !== 'field') return
+
+    const field = props.getField(id)
+
+    props.moveFieldToSection(field, props.selectedSection, props.section._id)
   }
 }
-
 
 function collectSource(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
+    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging(),
   }
 }
@@ -47,33 +68,45 @@ function collectSource(connect, monitor) {
 function collectTarget(connect, monitor) {
   return {
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
   }
 }
 
-
 const SectionView = ({
   connectDragSource,
+  connectDragPreview,
   connectDropTarget,
   isOver,
+  canDrop,
   section,
   onEdit,
   onDelete,
   onSelect,
   selected
-}) => connectDragSource(
+}) => connectDragPreview(
   connectDropTarget(
     <div
       style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        opacity: isOver ? '0.5' : 1
+        opacity: isOver && canDrop ? '0.5' : 1
       }}
       className={selected === section._id ? 'list-group-item active' : 'list-group-item'}
       onDoubleClick={onEdit}
       onClick={onSelect}
     >
+      {connectDragSource(
+        <div
+          style={{
+            padding: '5px 10px',
+            cursor: 'pointer'
+          }}
+        >
+          <i className="fa fa-ellipsis-v" />
+        </div>
+      )}
       {section.name}
       <span style={{marginLeft: '5px'}}>
         <i
@@ -93,5 +126,5 @@ const SectionView = ({
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   DragSource('section', sectionSource, collectSource),
-  DropTarget('section', sectionTarget, collectTarget)
+  DropTarget(['section', 'field'], sectionTarget, collectTarget)
 )(SectionView)

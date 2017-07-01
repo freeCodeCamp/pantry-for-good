@@ -21,7 +21,6 @@ var DonorSchema = new Schema({
     type: String,
     trim: true
   },
-  accountType: [String],
   donations: [{
     type: Number,
     ref: 'Donation'

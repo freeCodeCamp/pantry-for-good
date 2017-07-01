@@ -63,23 +63,12 @@ const UserSchema = new Schema({
       enum: ['user', 'customer', 'volunteer', 'driver', 'donor', 'admin']
     }]
   },
-  accountType: {
-    type: [{
-      type: String,
-      enum: ['volunteer', 'donor', 'customer', 'admin']
-    }],
-    required: 'Please select account type'
-  },
   updated: {
     type: Date
   },
   created: {
     type: Date,
     default: Date.now
-  },
-  hasApplied: {
-    type: Boolean,
-    default: false
   },
   /* For reset password */
   resetPasswordToken: {
