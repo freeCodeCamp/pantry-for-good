@@ -15,8 +15,7 @@ export default async function sendEmail(toEmail, toName, {html, text, subject}) 
   const content = new helper.Content('text/plain', text)
   const mail = new helper.Mail(from, subject, to, content)
   mail.addContent(new helper.Content('text/html', html))
-console.log('mail.toJSON()', mail.toJSON())
-// return
+
   const request = sg.emptyRequest({
     method: 'POST',
     path: '/v3/mail/send',

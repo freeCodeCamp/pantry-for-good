@@ -42,7 +42,7 @@ export default async function generate(identifier, bindings) {
 function transformText(body) {
   const replaceTags = {
     td: '\n\n',
-    img: node => h('#text', `\n[${getAttr(node, 'alt')}]\n`),
+    img: replaceWithAltText,
     '*': stringifyLinks
   }
 
@@ -92,6 +92,11 @@ function stringifyLinks(acc, node) {
     ...node.childNodes,
     h('#text', `\n[${getAttr(node, 'href')}]\n`),
   ])
+}
+
+function replaceWithAltText(node) {
+  const text = getAttr(node, 'alt')
+  return h('#text', text ? `\n[${text}]\n` : '')
 }
 
 function replaceWithTrTd(node) {

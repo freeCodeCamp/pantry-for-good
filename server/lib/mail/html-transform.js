@@ -15,12 +15,6 @@ export default function transformHtml(html, {
   const node = fragment ? parseFragment(html) : parse(html)
   const transformed = transform(node)
 
-  // function attrs(node) {
-  //   return `${node.nodeName} - ${JSON.stringify(node.attrs)}\n  ${node.childNodes && node.childNodes.map(node => attrs(node))}`
-  // }
-  // console.log('attrs(transformed)', attrs(transformed))
-
-
   return serialize(transformed)
 
   function transform(node) {
