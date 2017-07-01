@@ -7,6 +7,7 @@ export default function entities(state = {
   fields: {},
   foodCategories: {},
   foodItems: {},
+  packages: {},
   pages: {},
   questionnaires: {},
   sections: {},
