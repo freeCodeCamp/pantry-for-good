@@ -1,6 +1,6 @@
 import passport from 'passport'
 
-import {User} from '../../models'
+import User from '../../models/user'
 
 /**
  * Signup
