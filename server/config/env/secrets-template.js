@@ -7,5 +7,8 @@ export default {
   sendpulse: {
     API_USER_ID: process.env.SENDPULSE_USER_ID || '',
     API_SECRET: process.env.SENDPULSE_API_SECRET || ''
+  },
+  sendgrid: {
+    API_KEY: process.env.SENDGRID_API_KEY || ''
   }
 }
