@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <style>
+    .body-table {
+      border: 0;
+      height: 100%;
+      width: 100%;
+    }
+    .container {
+      display: block;
+      max-width: 600px;
+    }
+    .content-table {
+      border: 0;
+      max-width: 600px;
+    }
+    .content-table td {
+      padding: 3px 10px;
+      text-align: left;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 18px;
+    }
+    td.ql-align-center {
+      text-align: center;
+    }
+    td.ql-align-right {
+      text-align: right;
+    }
+    td.ql-align-justify {
+      text-align: justify;
+    }
+    td.ql-indent-1 {
+      padding-left: 3em;
+    }
+    td.ql-indent-2 {
+      padding-left: 6em;
+    }
+  </style>
+  <title>{subject}</title>
+</head>
+<body>
+  <table cellpadding="0" cellspacing="0" class="body-table">
+    <tr>
+      <td align="center" valign="top" class="container">
+        <table cellpadding="0" cellspacing="0" class="content-table">
+          {content}
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

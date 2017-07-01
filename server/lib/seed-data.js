@@ -109,7 +109,6 @@ export const pages = [{
 <p>We are pleased to inform you that based on the information provided in your application, you are eligible to receive our assistance.</p>
 <p>Sincerely,</p>
 <p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
-<br />
 <p>
   <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
 </p>
@@ -124,7 +123,6 @@ export const pages = [{
 <p>If your circumstances change please edit your application and we will reevaluate your request</p>
 <p>Sincerely,</p>
 <p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
-<br />
 <p>
   <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
 </p>
@@ -154,10 +152,8 @@ export const pages = [{
   body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
 <p>You have requested to have your password reset for your account at <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>
 <p>Please visit this url to reset your password:</p>
-<p><span class="ql-placeholder-content" data-id="passwordResetToken" data-label="Password Reset Link" data-required="true"></span></p>
+<p><span class="ql-placeholder-content" data-id="passwordResetLink" data-label="Password Reset Link" data-required="true"></span></p>
 <strong>If you didn't make this request, you can ignore this email.</strong>
-<br>
-<br>
 <p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> support team</p>`
 }, {
   identifier: 'donation-received',
@@ -168,7 +164,6 @@ export const pages = [{
 <p>Thank you for your generous donation.</p>
 <p>Sincerely,</p>
 <p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Team</p>
-<br />
 <p>
   <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
 </p>

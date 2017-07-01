@@ -22,7 +22,7 @@
     "lint:client": "eslint client",
     "test": "npm run test:server; npm run test:client",
     "test:client": "NODE_ENV=test mocha --require babel-register --require client/entry.test.js 'client/**/*.spec.js' --watch",
-    "test:server": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/tests/**/*.spec.js' --watch"
+    "test:server": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/**/*.spec.js' --watch"
   },
   "dependencies": {
     "@mapbox/polyline": "^0.2.0",
