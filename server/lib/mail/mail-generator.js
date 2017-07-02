@@ -5,6 +5,7 @@ import striptags from 'striptags'
 import transformHtml, {h, getAttr, hasClass} from './html-transform'
 import {trim} from 'lodash'
 
+import config from '../../config'
 import Page from '../../models/page'
 import placeholders from '../../../common/placeholders'
 
@@ -28,9 +29,6 @@ export default async function generate(identifier, bindings) {
   const text = transformText(body)
   const html = template.replace(/\{content\}/, body)
     .replace(/\{subject\}/g, subject)
-// console.log('html', html)
-// console.log('juice(html)', juice(html))
-
 
   return {
     html: juice(html),
@@ -52,6 +50,7 @@ function transformText(body) {
 function transformBody(body, bindings) {
   const replaceTags = {
     span: node => isPlaceholder(node) ? bindPlaceholder(node, bindings) : node,
+    img: setFullUrl,
     p: replaceWithTrTd,
     blockquote: nestInTrTd,
     h1: nestInTrTd,
@@ -111,4 +110,22 @@ function nestInTrTd(node) {
       h(node)
     ])
   ])
+}
+
+function setFullUrl(node) {
+  const port = process.env.NODE_ENV === 'production' ? '' : ':8080'
+  const baseUrl = `${config.protocol}://${config.host}${port}`
+
+  const src = getAttr(node, 'src')
+  if (!src.startsWith('/')) return node
+
+  const attrs = [
+    ...node.attrs.filter(attr => attr.name !== 'src'),
+    {name: 'src', value: `${baseUrl}${src}`}
+  ]
+
+  return {
+    ...node,
+    attrs
+  }
 }

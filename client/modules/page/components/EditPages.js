@@ -4,6 +4,7 @@ import {compose, withProps} from 'recompose'
 import {capitalize, last} from 'lodash'
 
 import selectors from '../../../store/selectors'
+import {pageTypes} from '../types'
 import {loadPages, savePage} from '../reducer'
 import {showNavDialog, hideDialog} from '../../core/reducers/dialog'
 import {Page, PageBody, PageHeader} from '../../../components/page'
@@ -12,7 +13,9 @@ import PageSelector from './PageSelector'
 import PageEditor from './PageEditor'
 
 const withPageType = withProps(({location}) => ({
-  type: last(location.pathname.split('/')) === 'emails' ? 'email' : 'page'
+  type: last(location.pathname.split('/')) === 'emails' ?
+    pageTypes.EMAIL :
+    pageTypes.PAGE
 }))
 
 const mapStateToProps = (state, ownProps) => ({
@@ -48,6 +51,11 @@ class EditPages extends Component {
 
     if (this.props.saving && !nextProps.saving && !nextProps.error)
       this.setState({dirty: false})
+
+    if (nextProps.type !== this.props.type) {
+      nextProps.loadPages()
+      this.setState({selectedPage: null})
+    }
   }
 
   selectPage = page => () => {
@@ -66,10 +74,13 @@ class EditPages extends Component {
 
   render() {
     const {loading, saving, error, type} = this.props
+    const heading = type === pageTypes.EMAIL ?
+      'Edit Emails' :
+      'Edit Client Pages'
 
     return (
       <Page>
-        <PageHeader heading={`Edit ${capitalize(type)}s`} />
+        <PageHeader heading={heading} />
         <PageBody>
           <Box>
             <BoxBody
@@ -81,13 +92,13 @@ class EditPages extends Component {
                 handlePageSelect={this.handlePageSelect}
                 type={type}
               />
-                <PageEditor
-                  selectedPage={this.state.selectedPage}
-                  handlePageSave={this.props.savePage}
-                  setDirty={this.setPageDirty}
-                  dirty={this.state.dirty}
-                  type={type}
-                />
+              <PageEditor
+                selectedPage={this.state.selectedPage}
+                handlePageSave={this.props.savePage}
+                setDirty={this.setPageDirty}
+                dirty={this.state.dirty}
+                type={type}
+              />
             </BoxBody>
           </Box>
         </PageBody>

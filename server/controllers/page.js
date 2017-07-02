@@ -4,7 +4,6 @@ import {writeFileSync, mkdirSync} from 'fs'
 import del from 'del'
 
 import Page from '../models/page'
-import sanitizeHtmlConfig from '../lib/sanitizehtml-config'
 
 const clientPath = '/media/pages'
 const serverPath = process.env.NODE_ENV === 'production' ?
@@ -15,6 +14,16 @@ try {
   mkdirSync(serverPath)
 } catch (err) {
   if (err.code !== 'EEXIST') throw err
+}
+
+const sanitizeHtmlConfig = {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'span', 'h1', 'h2', 's', 'u']),
+  allowedAttributes: {
+    img: ['src', 'width', 'style'],
+    span: ['style', 'data-id', 'data-label', 'class'],
+    a: ['href'],
+    p: ['class']
+  }
 }
 
 export default {
