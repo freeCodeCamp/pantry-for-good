@@ -20,7 +20,7 @@ The button creates an admin account with username `admin@example.com` and passwo
 ------------
 ### Detailed local development installation steps
 
-You'll need to have the latest verison of **Node.js** installed. Either use your OS's package manager or follow the installation instructions on the [official website](http://nodejs.org).
+You'll need to have a **Node.js** version > 6 installed. Either use your OS's package manager or follow the installation instructions on the [official website](http://nodejs.org).
 
 This app uses **MongoDB** as its database engine. Follow [these instructions](https://docs.mongodb.com/manual/installation/#mongodb-community-edition) to install it locally and start the MongoDB server on your machine.
 
@@ -41,14 +41,11 @@ To use all the features of this application you will need to obtain API keys and
 Google Maps API key required for the deliveries feature
 #### 2. [oauth](https://developers.google.com/identity/sign-in/web/devconsole-project)
 Google API that will allow the application to work with google accounts.
-When you create your Client ID for Web Application, add `http://localhost:8080/api/auth/google/callback` to the **Authorized Redirect URIs** section
-#### 3. [sendpulse](https://sendpulse.com/register)
-Sendpulse email service API.  Required for the password reset by email to work.
-- [Register](https://sendpulse.com/register) for an account
-- Go to [Settings](https://login.sendpulse.com/settings/)
-- Click the **API** tab
-- Click **Activate REST API**
-- Click **Save**
+#### 3. [sendgrid](https://sendgrid.com)
+Sendgrid email service API.  Required for the password reset by email to work.
+- Register for a trial account or deploy the app and get the username/password from the heroku config vars
+- Go to [Settings > API Keys](https://app.sendgrid.com/settings/api_keys) and create a key
+- Paste the key in `secrets.js` or the `SENDGRID_API_KEY` config var of your deployed app.
 
 
 ------------
