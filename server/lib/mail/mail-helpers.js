@@ -13,6 +13,7 @@ export default {
    */
   async send(toEmail, toName, identifier, bindings = null) {
     if (typeof sendEmail !== 'function') return
+
     const settings = await Settings.findOne().lean()
     const mail = await mailGenerator(identifier, {...settings, ...bindings})
 

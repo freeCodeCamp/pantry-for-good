@@ -9,7 +9,7 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
 import selectors from '../../../store/selectors'
-import placeholders, {getPlaceholders} from '../../../../common/placeholders'
+import placeholders, {getPlaceholders, placeholderTypes} from '../../../../common/placeholders'
 import Placeholder from '../../../lib/quill-placeholder'
 import withConfirmNavigation from '../../../components/withConfirmNavigation'
 import QuillBodyToolbar from './QuillBodyToolbar'
@@ -89,7 +89,11 @@ class PageEditor extends React.Component {
   render() {
     const {page} = this.state
     const {type, selectedPage} = this.props
-    const placeholders = getPlaceholders(type, selectedPage)
+    const bodyPlaceholders = getPlaceholders(
+      type === pageTypes.EMAIL ?
+        [placeholderTypes.EMAIL, placeholderTypes.ATTACHMENT] :
+        []
+    )
 
     return (
       <div className="page-editor">
@@ -97,7 +101,9 @@ class PageEditor extends React.Component {
           <div>
             {type === pageTypes.EMAIL &&
               <div>
-                <QuillSubjectToolbar placeholders={placeholders} />
+                <QuillSubjectToolbar
+                  placeholders={getPlaceholders([placeholderTypes.EMAIL])}
+                />
                 <ReactQuill
                   theme="snow"
                   value={page.subject}
@@ -108,7 +114,7 @@ class PageEditor extends React.Component {
                 />
               </div>
             }
-            <QuillBodyToolbar placeholders={getPlaceholders(type)} type={type} />
+            <QuillBodyToolbar placeholders={bodyPlaceholders} type={type} />
             <ReactQuill
               theme="snow"
               bounds=".page-editor"

@@ -10,8 +10,8 @@ export default {
   protocol: process.env.PROTOCOL || protocol,
   host,
   port,
-  templateEngine: 'nunjucks',
   sessionCollection: 'sessions',
+  mailFrom: `no-reply@${host}`,
   oauth: {
     googleCallbackURL: `${url}/api/auth/google/callback`
   }

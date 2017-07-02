@@ -3,11 +3,11 @@ import {readFileSync} from 'fs'
 import {resolve} from 'path'
 import striptags from 'striptags'
 import transformHtml, {h, getAttr, hasClass} from './html-transform'
-import {trim} from 'lodash'
+import {trim, uniq} from 'lodash'
 
 import config from '../../config'
 import Page from '../../models/page'
-import placeholders from '../../../common/placeholders'
+import placeholders, {placeholderTypes} from '../../../common/placeholders'
 
 const templatePath = resolve(__dirname, 'email-template.html')
 const template = readFileSync(templatePath).toString()
@@ -24,7 +24,8 @@ export default async function generate(identifier, bindings) {
   const page = await Page.findOne({identifier}).lean()
   if (!page || page.disabled) return
 
-  const body = transformBody(page.body, bindings)
+  let attachments = []
+  const body = transformBody(page.body, bindings, attachments)
   const subject = transformSubject(page.subject, bindings)
   const text = transformText(body)
   const html = template.replace(/\{content\}/, body)
@@ -33,7 +34,8 @@ export default async function generate(identifier, bindings) {
   return {
     html: juice(html),
     text,
-    subject
+    subject,
+    attachments: uniq(attachments)
   }
 }
 
@@ -47,9 +49,11 @@ function transformText(body) {
   return trim(striptags(transformHtml(body, {replaceTags})))
 }
 
-function transformBody(body, bindings) {
+function transformBody(body, bindings, attachments) {
   const replaceTags = {
-    span: node => isPlaceholder(node) ? bindPlaceholder(node, bindings) : node,
+    span: node => isPlaceholder(node) ?
+      bindPlaceholder(node, bindings, attachments) :
+      node,
     img: setFullUrl,
     p: replaceWithTrTd,
     blockquote: nestInTrTd,
@@ -69,12 +73,16 @@ function transformSubject(subject, bindings) {
   return striptags(transformHtml(subject, {replaceTags}))
 }
 
-function bindPlaceholder(node, bindings) {
+function bindPlaceholder(node, bindings, attachments) {
   const id = getAttr(node, 'data-id')
   const placeholder = placeholders.find(pl => pl.id === id)
 
   if (!placeholder) throw new Error('Invalid placeholder', id)
-  if (!bindings[id]) throw new Error('Missing binding for placeholder', id)
+  if (!bindings[id] && placeholder.type !== placeholderTypes.ATTACHMENT)
+    throw new Error('Missing binding for placeholder', id)
+
+  if (Array.isArray(attachments) && placeholder.type === placeholderTypes.ATTACHMENT)
+    attachments.push(placeholder.id)
 
   return typeof placeholder.format === 'function' ?
     h(placeholder.format(bindings[id])) :
