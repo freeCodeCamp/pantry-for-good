@@ -21,11 +21,11 @@ export const forgot = async function(req, res) {
   if (!req.body.email) return res.status(400).send({message: 'Email is required'})
   const user = await User.findOne({email: req.body.email}).select('-salt -password')
   if (!user) {
-    return res.status(400).send({
+    return res./*status(400).*/send({
       message: 'No account with that email has been found'
     })
   } else if (user.provider !== 'local') {
-    return res.status(400).send({
+    return res./*status(400).*/send({
       message: 'It seems like you signed up using your ' + user.provider + ' account'
     })
   } else {
@@ -35,7 +35,9 @@ export const forgot = async function(req, res) {
     await user.save()
   }
 
-  const url = `http://${req.headers.host}/users/reset-password/${token}`
+  const port = process.env.NODE_ENV === 'production' ? '' : `:${config.port}`
+  const url = `${config.protocol}://${config.host}${port}/users/reset-password/${token}`
+
   try {
     await mailer.sendPasswordReset(user, url)
     res.send({message: 'Password reset email sent'})
