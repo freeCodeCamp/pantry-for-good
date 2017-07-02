@@ -2,7 +2,7 @@ import {utc} from 'moment'
 import faker from 'faker'
 import {v4} from 'uuid'
 
-import config from '../config'
+import config from '../../config'
 
 const addRandomDate = item =>
   ({...item, startDate: utc(faker.date.past(2)).startOf('isoWeek')})

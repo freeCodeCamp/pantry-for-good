@@ -4,6 +4,13 @@ export default function getErrorMessage(err) {
     status: 500
   }
 
+  if (err.message === 'Invalid address') {
+    return {
+      message: err.message,
+      status: 400
+    }
+  }
+
   if (err.code) {
     switch (err.code) {
       case 11000:
@@ -16,6 +23,8 @@ export default function getErrorMessage(err) {
         return defaultResponse
     }
   } else {
+
+
     return defaultResponse
   }
 }

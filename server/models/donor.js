@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import questionnaireValidator from '../lib/questionnaire-validator'
+import {getValidator} from '../lib/questionnaire-helpers'
 
 const {Schema} = mongoose
 
@@ -39,7 +39,7 @@ var DonorSchema = new Schema({
 })
 
 DonorSchema.path('fields')
-  .validate(questionnaireValidator('qDonors'), 'Invalid field')
+  .validate(getValidator('qDonors'), 'Invalid field')
 
 /**
  * Virtual getters & setters

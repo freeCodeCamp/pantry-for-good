@@ -13,7 +13,7 @@ const Questionnaire = mongoose.model('Questionnaire')
 const clientRoles = ['customer', 'volunteer', 'donor']
 
 export default async function seedClients(addressGenerator) {
-  await clientRoles.map(async type => {
+  await Promise.all(clientRoles.map(async type => {
     const Model = mongoose.model(capitalize(type))
     const count = await Model.count()
     if (count) return
@@ -21,16 +21,13 @@ export default async function seedClients(addressGenerator) {
     const users = await User.find({roles: type})
       .select('-salt -password -__v')
 
-    await Promise.all(
-      users.map(async user => {
-        const client = new Model(user.toObject())
-        const seededClient = await seedClientFields(client, user, addressGenerator)
+    const clients = await Promise.all(users.map(user => {
+      const client = new Model(user.toObject())
+      return seedClientFields(client, user, addressGenerator)
+    }))
 
-        await seededClient.save()
-        // await User.findOneAndUpdate({_id: client._id}, {$set: {hasApplied: true }})
-      })
-    )
-  })
+    await Model.insertMany(clients)
+  }))
 }
 
 /**

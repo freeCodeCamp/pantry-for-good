@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import questionnaireValidator from '../lib/questionnaire-validator'
+import {getValidator} from '../lib/questionnaire-helpers'
 import locationSchema from './location-schema'
 
 const {Schema} = mongoose
@@ -73,7 +73,7 @@ var VolunteerSchema = new Schema({
 })
 
 VolunteerSchema.path('fields')
-  .validate(questionnaireValidator('qVolunteers'), 'Invalid field')
+  .validate(getValidator('qVolunteers'), 'Invalid field')
 
 /**
  * Virtual getters & setters

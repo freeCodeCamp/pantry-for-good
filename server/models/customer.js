@@ -1,10 +1,9 @@
 import mongoose from 'mongoose'
 import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
-import {head} from 'lodash'
 
 import locationSchema from './location-schema'
-import questionnaireValidator from '../lib/questionnaire-validator'
+import {getFieldsByType, getValidator} from '../lib/questionnaire-helpers'
 
 const {Schema} = mongoose
 
@@ -80,7 +79,7 @@ const CustomerSchema = new Schema({
 })
 
 CustomerSchema.path('fields')
-  .validate(questionnaireValidator('qCustomers'), 'Invalid field')
+  .validate(getValidator('qCustomers'), 'Invalid field')
 
 // Initialize geocoder options for pre save method
 const geocoder = nodeGeocoder({
@@ -91,24 +90,18 @@ const geocoder = nodeGeocoder({
 /**
  * Hook a pre save method to construct the geolocation of the address
  */
-CustomerSchema.pre('save', function(next) {
-  var doc = this
-  var address = `${doc.address}, ${doc.city}, ${doc.province}`
+CustomerSchema.pre('save', async function(next) {
+  if (process.env.NODE_ENV === 'test') return next()
+  const address = (await getFieldsByType('qCustomers', this.fields, 'address'))
+    .map(field => field.value)
+    .join(', ')
 
-  if (process.env.NODE_ENV !== 'production') {
-    // doc.location = [0, 0]
-    next()
-  } else {
-    // slow for tests, breaks with fake address
-    geocoder.geocode(address, function(err, data) {
-      if (!data) return next()
+  const [result] = await geocoder.geocode(address)
+  if (!result) return next(new Error('Invalid address'))
 
-      const {latitude, longitude} = head(data)
-      doc.location = {lat: latitude, lng: longitude}
-
-      next()
-    })
-  }
+  const {latitude, longitude} = result
+  this.location = {lat: latitude, lng: longitude}
+  next()
 })
 
 /**

@@ -106,18 +106,18 @@ async function seedFoods() {
   const count = await Food.count()
   if (count) return
 
-  await Food.create(foodFields)
+  await Food.insertMany(foodFields)
 }
 
 async function seedQuestionnaires() {
   const count = await Questionnaire.count()
   if (count) return
 
-  await Questionnaire.create(
+  await Questionnaire.insertMany([
     customerQuestionnaire,
     donorQuestionnaire,
     volunteerQuestionnaire
-  )
+  ])
 }
 
 async function seedSettings() {
@@ -131,7 +131,7 @@ async function seedPages() {
   const count = await Page.count()
   if (count) return
 
-  await Page.create(pages)
+  await Page.insertMany(pages)
 }
 
 // Helpers
