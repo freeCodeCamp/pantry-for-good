@@ -88,7 +88,7 @@ class PageEditor extends React.Component {
 
   render() {
     const {page} = this.state
-    const {type, selectedPage} = this.props
+    const {type} = this.props
     const bodyPlaceholders = getPlaceholders(
       type === pageTypes.EMAIL ?
         [placeholderTypes.EMAIL, placeholderTypes.ATTACHMENT] :

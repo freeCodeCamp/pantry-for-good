@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {compose, withProps} from 'recompose'
-import {capitalize, last} from 'lodash'
+import {last} from 'lodash'
 
 import selectors from '../../../store/selectors'
 import {pageTypes} from '../types'
