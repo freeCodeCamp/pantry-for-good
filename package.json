@@ -11,7 +11,7 @@
   "scripts": {
     "heroku-postbuild": "gulp build",
     "postinstall": "shx cp -n server/config/env/secrets-template.js server/config/env/secrets.js",
-    "dev": "gulp watch",
+    "dev": "NODE_ENV=development gulp watch",
     "build": "gulp build",
     "build:server": "gulp build-server",
     "build:client": "gulp build-client",
