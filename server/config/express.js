@@ -11,12 +11,13 @@ import path from 'path'
 import session from 'express-session'
 import {get} from 'lodash'
 
+import {addUser} from '../lib/websocket-middleware'
 import apiRoutes from '../routes/api'
 import config from './index'
+import enforceSSLMiddleware from '../lib/enforce-ssl-middleware'
 import getErrorMessage from '../lib/error-messages'
-import '../models'
 import seed from '../lib/seed'
-import {addUser} from '../lib/websocket-middleware'
+import '../models'
 
 // set api delay and failure probablility for testing
 const API_DELAY = 0
@@ -44,19 +45,9 @@ export default function(io) {
 
   // force https
   if (process.env.NODE_ENV === 'production') {
-    app.use(function(req, res, next) {
-      if (req.headers['x-forwarded-proto'] !== 'https') {
-        if (req.method === 'GET') {
-          return res.redirect(301, `https://${req.hostname}${req.url}`)
-        } else {
-          return res.status(400).end()
-        }
-      }
-      next()
-    })
+    app.use(enforceSSLMiddleware)
   }
 
-  // Should be placed before express.static
   app.use(compress({
     filter: function(req, res) {
       return (/json|text|javascript|css/).test(res.getHeader('Content-Type'))
@@ -64,18 +55,8 @@ export default function(io) {
     level: 9
   }))
 
-  // Showing stack errors
-  app.set('showStackError', true)
-
-  // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
-    // Enable logger (morgan)
     app.use(morgan('dev'))
-
-    // Disable views cache
-    app.set('view cache', false)
-  } else if (process.env.NODE_ENV === 'production') {
-    app.locals.cache = 'memory'
   }
 
   app.use(bodyParser.urlencoded({
