@@ -1,6 +1,6 @@
 import {extend} from 'lodash'
 
-import mailer from '../lib/mail-helpers'
+import mailer from '../lib/mail/mail-helpers'
 import Customer from '../models/customer'
 import User from '../models/user'
 

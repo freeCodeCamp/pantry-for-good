@@ -6,6 +6,9 @@ import {Parser, ProcessNodeDefinitions} from 'html-to-react'
 import selectors from '../store/selectors'
 import {loadPage} from '../modules/page/reducer'
 
+import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.core.css'
+
 const htmlToReactParser = new Parser()
 const processNodeDefinitions = new ProcessNodeDefinitions(React)
 
@@ -54,15 +57,17 @@ class ContentPage extends Component {
     if (!page) return null
 
     return (
-      <div
-        className="text-left"
-        style={{margin: '10px'}}
-      >
-        {htmlToReactParser.parseWithInstructions(
-          page.body,
-          () => true,
-          getProcessingInstructions(this.props.settings)
-        )}
+      <div className="ql-snow">
+        <div
+          className="text-left ql-editor"
+          style={{margin: '10px'}}
+        >
+          {htmlToReactParser.parseWithInstructions(
+            page.body,
+            () => true,
+            getProcessingInstructions(this.props.settings)
+          )}
+        </div>
       </div>
     )
   }

@@ -9,25 +9,26 @@ import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
 import selectors from '../../../store/selectors'
-import placeholders, {getPlaceholders} from '../../../../common/placeholders'
+import placeholders, {getPlaceholders, placeholderTypes} from '../../../../common/placeholders'
 import Placeholder from '../../../lib/quill-placeholder'
 import withConfirmNavigation from '../../../components/withConfirmNavigation'
 import QuillBodyToolbar from './QuillBodyToolbar'
 import QuillSubjectToolbar from './QuillSubjectToolbar'
+import {pageTypes, editorTypes} from '../types'
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)
 Quill.register('modules/placeholder', Placeholder)
 
-const quillBodyModules = {
-  toolbar: {container: '#quill-body-toolbar'},
+const getQuillBodyModules = type => ({
+  toolbar: {container: `#${type}-toolbar`},
   imageDrop: true,
   imageResize: {},
   placeholder: {placeholders}
-}
+})
 
 const quillSubjectModules = {
-  toolbar: {container: '#quill-subject-toolbar'},
+  toolbar: {container: '#subject-toolbar'},
   placeholder: {placeholders}
 }
 
@@ -46,11 +47,6 @@ class PageEditor extends React.Component {
 
     if (selectedPage !== this.props.selectedPage) {
       this.setState({page: {...page}})
-      // TODO: better way to clear undo history when editor changed and initialized
-      setTimeout(() => {
-        this.subjectQuill && this.subjectQuill.getModule('history').clear()
-        this.bodyQuill && this.bodyQuill.getModule('history').clear()
-      }, 50)
     }
   }
 
@@ -62,8 +58,8 @@ class PageEditor extends React.Component {
     this.setState({
       page: {
         ...this.state.page,
-        subject: editor === 'subject' ? value : this.state.page.subject,
-        body: editor === 'body' ? value : this.state.page.body
+        subject: editor === editorTypes.SUBJECT ? value : this.state.page.subject,
+        body: editor === editorTypes.BODY ? value : this.state.page.body
       }
     })
 
@@ -72,42 +68,60 @@ class PageEditor extends React.Component {
     }
   }
 
-  getEditorInstance = editor => el => {
-    if (el) this[`${editor}Quill`] = el.getEditor()
-    else this[`${editor}Quill`] = null
+  componentWillUnmount() {
+    this[editorTypes.BODY] = null
+    this[editorTypes.SUBJECT] = null
+    this.resizeModule = null
+  }
 
-    if (editor === 'body') this.resizeModule = el ?
-      el.getEditor().getModule('imageResize') : null
+  getEditorInstance = editor => el => {
+    if (el && !this[editor]) {
+      const instance = el.getEditor()
+      instance.getModule('history').clear()
+      this[editor] = instance
+
+      if (editor === editorTypes.BODY) {
+        this.resizeModule = instance.getModule('imageResize')
+      }
+    }
   }
 
   render() {
     const {page} = this.state
     const {type, selectedPage} = this.props
-    const placeholders = getPlaceholders(type, selectedPage)
+    const bodyPlaceholders = getPlaceholders(
+      type === pageTypes.EMAIL ?
+        [placeholderTypes.EMAIL, placeholderTypes.ATTACHMENT] :
+        []
+    )
+
     return (
-      <div>
-        {type === 'email' && page &&
-          <div>
-            <QuillSubjectToolbar placeholders={placeholders} />
-            <ReactQuill
-              theme="snow"
-              value={page.subject}
-              onChange={this.handleEditorChange('subject')}
-              modules={quillSubjectModules}
-              placeholder="Subject"
-              ref={this.getEditorInstance('subject')}
-            />
-          </div>
-        }
+      <div className="page-editor">
         {page &&
           <div>
-            <QuillBodyToolbar placeholders={getPlaceholders(type)} />
+            {type === pageTypes.EMAIL &&
+              <div>
+                <QuillSubjectToolbar
+                  placeholders={getPlaceholders([placeholderTypes.EMAIL])}
+                />
+                <ReactQuill
+                  theme="snow"
+                  value={page.subject}
+                  onChange={this.handleEditorChange(editorTypes.SUBJECT)}
+                  modules={quillSubjectModules}
+                  placeholder="Subject"
+                  ref={this.getEditorInstance(editorTypes.SUBJECT)}
+                />
+              </div>
+            }
+            <QuillBodyToolbar placeholders={bodyPlaceholders} type={type} />
             <ReactQuill
               theme="snow"
+              bounds=".page-editor"
               value={page.body}
-              onChange={this.handleEditorChange('body')}
-              modules={quillBodyModules}
-              ref={this.getEditorInstance('body')}
+              onChange={this.handleEditorChange(editorTypes.BODY)}
+              modules={getQuillBodyModules(type)}
+              ref={this.getEditorInstance(editorTypes.BODY)}
             />
           </div>
         }

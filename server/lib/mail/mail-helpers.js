@@ -1,6 +1,6 @@
-import {sendEmail} from '../config/mailer'
-import Settings from '../models/settings'
 import mailGenerator from './mail-generator'
+import sendEmail from '../../config/mailer'
+import Settings from '../../models/settings'
 
 export default {
   /**
@@ -13,16 +13,14 @@ export default {
    */
   async send(toEmail, toName, identifier, bindings = null) {
     if (typeof sendEmail !== 'function') return
+
     const settings = await Settings.findOne().lean()
-    const mail = await mailGenerator(identifier, {
-      ...settings,
-      ...bindings
-    })
+    const mail = await mailGenerator(identifier, {...settings, ...bindings})
 
     if (!mail) return
 
     try {
-      await sendEmail(toEmail, toName, mail.subject, mail.body)
+      await sendEmail(toEmail, toName, mail)
     } catch (err) {
       handleError(err)
     }
@@ -70,12 +68,13 @@ export default {
   },
 
   async sendPasswordReset(user, passwordResetLink) {
-    const {displayName, email} = user
+    const {firstName, lastName, email} = user
+    const fullName = `${firstName} ${lastName}`
     await this.send(
       email,
-      displayName,
+      fullName,
       'password-reset',
-      {fullName: displayName, passwordResetLink}
+      {fullName, passwordResetLink}
     )
   }
 }
@@ -84,8 +83,8 @@ function handleError(err) {
   // suppress errors during testing
   if (process.env.NODE_ENV === 'test') return
 
-  // eslint-disable-next-line no-console
-  console.log('email error', err)
+  console.error('email error', err)
+  console.error(err.response.body.errors)
 
   // throw err
 }

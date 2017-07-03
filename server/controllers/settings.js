@@ -6,7 +6,7 @@ export default {
   async read (req, res) {
     const {user} = req
     const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
-      '+gmapsApiKey +gmapsClientId' : ''
+      '+gmapsApiKey +gmapsClientId ' : ''
 
     let settings = await Settings.findOne().select(projection).lean()
 

@@ -3,7 +3,7 @@ import React from 'react'
 import './quill-toolbar.css'
 
 const QuillSubjectToolbar = ({placeholders}) =>
-  <div id="quill-subject-toolbar">
+  <div id="subject-toolbar">
     <span className="ql-formats">
       <select className="ql-placeholder">
         {placeholders.filter(placeholder => !placeholder.required)

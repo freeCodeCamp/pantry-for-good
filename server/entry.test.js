@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
-// import bluebird from 'bluebird'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'

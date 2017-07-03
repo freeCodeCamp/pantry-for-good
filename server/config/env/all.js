@@ -10,14 +10,9 @@ export default {
   protocol: process.env.PROTOCOL || protocol,
   host,
   port,
-  templateEngine: 'nunjucks',
   sessionCollection: 'sessions',
+  mailFrom: `no-reply@${host}`,
   oauth: {
     googleCallbackURL: `${url}/api/auth/google/callback`
-  },
-  sendpulse: {
-    name: 'FoodBank App', // TODO: get this from settings
-    email: process.env.SENDPULSE_EMAIL || 'a2388865@mvrht.net',
-    TOKEN_STORAGE: '/tmp/'
   }
 }

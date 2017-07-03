@@ -1,9 +1,10 @@
 import React from 'react'
 
+import {pageTypes} from '../types'
 import './quill-toolbar.css'
 
-const QuillBodyToolbar = ({placeholders}) =>
-  <div id="quill-body-toolbar">
+const QuillBodyToolbar = ({placeholders, type}) =>
+  <div id={`${type}-toolbar`}>
     <span className="ql-formats">
       <select className="ql-header" defaultValue="">
         <option value="1"></option>
@@ -12,6 +13,12 @@ const QuillBodyToolbar = ({placeholders}) =>
         <option value=""></option>
       </select>
       <select className="ql-font" defaultValue=""></select>
+      <select className="ql-size" defaultValue="">
+        <option value="small"></option>
+        <option value=""></option>
+        <option value="large"></option>
+        <option value="huge"></option>
+      </select>
     </span>
     <span className="ql-formats">
       <button className="ql-bold"></button>
@@ -32,7 +39,7 @@ const QuillBodyToolbar = ({placeholders}) =>
     <span className="ql-formats">
       <button className="ql-link"></button>
       <button className="ql-image"></button>
-      <button className="ql-video"></button>
+      {type === pageTypes.PAGE && <button className="ql-video"></button>}
     </span>
     <span className="ql-formats">
       <select className="ql-placeholder">

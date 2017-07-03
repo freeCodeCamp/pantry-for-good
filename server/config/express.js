@@ -2,13 +2,10 @@ import bodyParser from 'body-parser'
 import compress from 'compression'
 import cookieParser from 'cookie-parser'
 import express from 'express'
-import flash from 'connect-flash'
 import helmet from 'helmet'
-import methodOverride from 'method-override'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
 import connectMongo from 'connect-mongo'
-import nunjucks from 'nunjucks'
 import passport from 'passport'
 import path from 'path'
 import session from 'express-session'
@@ -70,12 +67,6 @@ export default function(io) {
   // Showing stack errors
   app.set('showStackError', true)
 
-  // add filter from swig for backwards compatibility
-  nunjucks.configure(path.join(__dirname, '/../views'), {
-    autoescape: false,
-    express: app
-  })
-
   // Environment dependent middleware
   if (process.env.NODE_ENV === 'development') {
     // Enable logger (morgan)
@@ -87,13 +78,11 @@ export default function(io) {
     app.locals.cache = 'memory'
   }
 
-  // Request body parsing middleware should be above methodOverride
   app.use(bodyParser.urlencoded({
     extended: true
   }))
   app.use('/api/admin/pages', bodyParser.json({limit: '5mb'}))
   app.use(bodyParser.json({}))
-  app.use(methodOverride())
 
   // CookieParser should be above session
   app.use(cookieParser())
@@ -104,9 +93,6 @@ export default function(io) {
   // use passport session
   app.use(passport.initialize())
   app.use(passport.session())
-
-  // connect flash for flash messages
-  app.use(flash())
 
   // Use helmet to secure Express headers
   app.use(helmet())
@@ -124,7 +110,6 @@ export default function(io) {
 
     // Dont log during testing
     if (process.env.NODE_ENV !== 'test') {
-      // eslint-disable-next-line no-console
       console.error(err.stack)
     }
 

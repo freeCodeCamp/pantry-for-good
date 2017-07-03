@@ -2,39 +2,53 @@
  * This module adds functionality for the app to use email
  */
 
-import sendpulse from 'sendpulse-api'
-import striptags from 'striptags'
+import {readFileSync} from 'fs'
+import mime from 'mime-types'
+import sendgrid, {mail as helper} from 'sendgrid'
+
 import config from './index.js'
+import Media from '../models/media'
 
-let sendEmail = null
+const sg = sendgrid(config.sendgrid.API_KEY)
+const path = process.env.NODE_ENV === 'production' ?
+      'dist/client/' :
+      'assets/'
 
-if (config.sendpulse.API_USER_ID && config.sendpulse.API_SECRET) {
-  const sp_config = config.sendpulse
+export default async function sendEmail(
+  toEmail,
+  toName,
+  {html, text, subject, attachments}
+) {
+  if (!config.sendgrid.API_KEY || toEmail.endsWith('@example.com')) return
 
-  sendpulse.init(sp_config.API_USER_ID, sp_config.API_SECRET, sp_config.TOKEN_STORAGE)
+  const from = new helper.Email(config.mailFrom)
+  const to = new helper.Email(toEmail, toName)
+  const content = new helper.Content('text/plain', text)
+  const mail = new helper.Mail(from, subject, to, content)
+  mail.addContent(new helper.Content('text/html', html))
 
-  sendEmail = (recepientEmail, recepientName, subject, bodyHTML) => {
-    var message = {
-      "html" : bodyHTML,
-      "text" : striptags(bodyHTML, [], '\n'),
-      "subject" : subject,
-      "from" : {
-        "name" : sp_config.name,
-        "email" : sp_config.email
-      },
-      "to" : [ {
-        "name" : recepientName,
-        "email" : recepientEmail
-      } ]
-    }
+  if (attachments.length) {
+    const media = await Media.findOne().lean()
 
-    return new Promise((resolve, reject) => {
-      sendpulse.smtpSendMail(sendpulseResponse => {
-        if (sendpulseResponse.result) resolve()
-        else reject (sendpulseResponse)
-      }, message)
+    attachments.forEach(attachmentId => {
+      const file = `${path}${media.path}${media[attachmentId]}`
+      const content = readFileSync(file).toString('base64')
+
+      const attachment = new helper.Attachment()
+      attachment.setContent(content)
+      attachment.setType(mime.lookup(file))
+      attachment.setFilename(file)
+      attachment.setDisposition('inline')
+      attachment.setContentId(attachmentId)
+      mail.addAttachment(attachment)
     })
   }
-}
 
-export {sendEmail}
+  const request = sg.emptyRequest({
+    method: 'POST',
+    path: '/v3/mail/send',
+    body: mail.toJSON()
+  })
+
+  return sg.API(request)
+}

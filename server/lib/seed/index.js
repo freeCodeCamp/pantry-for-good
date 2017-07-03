@@ -23,6 +23,7 @@ const Questionnaire = mongoose.model('Questionnaire')
 const Food = mongoose.model('Food')
 const Settings = mongoose.model('Settings')
 const Page = mongoose.model('Page')
+const Media = mongoose.model('Media')
 
 const clientRoles = ['customer', 'volunteer', 'donor']
 
@@ -51,7 +52,8 @@ async function clearDb(replaceAdmin) {
     Food.find().remove(),
     Page.find().remove(),
     Questionnaire.find().remove(),
-    Settings.find().remove()
+    Settings.find().remove(),
+    Media.find().remove
   ])
 }
 
@@ -60,6 +62,7 @@ async function seedDb(env) {
   await seedQuestionnaires()
   await seedSettings()
   await seedPages()
+  await Media.create()
 
   // for development also seed clients and foods
   if (env !== 'production') {

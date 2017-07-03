@@ -11,4 +11,6 @@ export default Schema({
     type: Number,
     required: true
   }
+}, {
+  _id: false
 })
