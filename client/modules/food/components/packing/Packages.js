@@ -3,11 +3,12 @@
  */
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
-import {listPackages } from '../../reducers/packing'
+import {listPackages, unpackPackage} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 
@@ -18,7 +19,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  load: () => dispatch(listPackages())
+  load: () => dispatch(listPackages()),
+  unpack: packageId => dispatch(unpackPackage(packageId))
 })
 
 class Packages extends Component {
@@ -34,6 +36,13 @@ class Packages extends Component {
     return contentList.reduce((prev, curr) => {return `${prev} ${curr.name},`}, "")
   }
   
+  getActionButtons = (_, foodPackage) =>
+    <div>
+      <Button bsStyle="danger"
+        onClick={() => this.props.unpack(foodPackage._id)}
+      ><i className="fa fa-undo" /> Unpack</Button>
+    </div>
+
   render() {
     const {loading, error, packages} = this.props
     return (
@@ -52,16 +61,19 @@ class Packages extends Component {
             striped
             pagination
           >
-            <TableHeaderColumn dataField="_id" width="40px" dataSort>_id</TableHeaderColumn>
-            <TableHeaderColumn  dataField="customer" dataFormat={customer => customer.id} width="20px">
+            <TableHeaderColumn dataField="_id" dataSort>_id</TableHeaderColumn>
+            <TableHeaderColumn  dataField="customer" dataFormat={customer => customer.id} >
               Customer
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="datePacked" width="40px">
+            <TableHeaderColumn dataField="datePacked" >
               Date Packed
             </TableHeaderColumn>
-            <TableHeaderColumn  dataField="contents" dataFormat={this.formatContents} width="80px">
+            <TableHeaderColumn dataField="contents" dataFormat={this.formatContents} >
               Contents
             </TableHeaderColumn>
+            <TableHeaderColumn
+              dataFormat={this.getActionButtons}
+            />
           </BootstrapTable>
         </BoxBody>
       </Box>
