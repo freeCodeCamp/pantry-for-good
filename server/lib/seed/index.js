@@ -53,7 +53,7 @@ async function clearDb(replaceAdmin) {
     Page.find().remove(),
     Questionnaire.find().remove(),
     Settings.find().remove(),
-    Media.find().remove
+    Media.find().remove()
   ])
 }
 
@@ -62,7 +62,7 @@ async function seedDb(env) {
   await seedQuestionnaires()
   await seedSettings()
   await seedPages()
-  await Media.create()
+  await Media.create({})
 
   // for development also seed clients and foods
   if (env !== 'production') {
