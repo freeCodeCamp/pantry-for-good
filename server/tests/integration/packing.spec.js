@@ -2,7 +2,7 @@ import {find} from 'lodash'
 import moment from 'moment'
 
 import {createUserSession, createTestUser} from '../helpers'
-
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../common/constants'
 import Customer from '../../models/customer'
 import Food, {FoodItem} from '../../models/food'
 import Package from '../../models/package'
@@ -17,7 +17,10 @@ describe('Packing Api', function() {
     await Food.find().remove()
     await Package.find().remove()
     await Questionnaire.find().remove()
-    await Questionnaire.create({ "name" : "Customer Application", "identifier" : "qCustomers", })  
+    await Questionnaire.create({
+      name: 'Customer Application',
+      identifier: questionnaireIdentifiers.CUSTOMER
+    })
   })
 
   afterEach(async function() {
@@ -62,13 +65,13 @@ describe('Packing Api', function() {
     customer.packingList = foodItems
     customer.id = 1
 
-    const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+    const testAdmin = createTestUser('admin', ADMIN_ROLE)
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
     return request.post('/api/packing').send([{
-      "customer": customer._id,
-      "contents": foodItemIds
+      customer: customer._id,
+      contents: foodItemIds
     }])
       .expect(200)
       .expect(function(res) {
@@ -122,13 +125,13 @@ describe('Packing Api', function() {
     customer2.packingList = [foodItems[1], foodItems[2]]
     customer2.id = 2
 
-    const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+    const testAdmin = createTestUser('admin', ADMIN_ROLE)
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
     return request.post('/api/packing').send([
       { "customer": customer1._id, "contents": customer1.foodPreferences },
-      { "customer": customer2._id, "contents": customer2.foodPreferences }    
+      { "customer": customer2._id, "contents": customer2.foodPreferences }
     ])
       .expect(200)
       .expect(function(res) {
@@ -182,12 +185,12 @@ describe('Packing Api', function() {
     customer.packingList = foodItems
     customer.id = 1
 
-    const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+    const testAdmin = createTestUser('admin', ADMIN_ROLE)
     const session = await createUserSession(testAdmin)
     const request = supertest.agent(session.app)
 
     await request.post('/api/packing').send([
-      { "customer": customer._id, "contents": customer.foodPreferences },
+      {customer: customer._id, contents: customer.foodPreferences },
     ])
 
     return request.get(`/api/customer/${customer._id}`)
@@ -196,7 +199,7 @@ describe('Packing Api', function() {
         const beginWeek = moment.utc().startOf('isoWeek')
         expect(res.body.lastPacked).to.equal(beginWeek.toISOString())
       })
-  })  
+  })
 
 })
 

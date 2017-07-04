@@ -4,6 +4,7 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {ButtonToolbar, Button} from 'react-bootstrap'
 
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {loadCustomer, saveCustomer, deleteCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -20,7 +21,7 @@ const mapStateToProps = (state, ownProps) => ({
   saveCustomersError: selectors.customer.saveError(state),
   getCustomer: selectors.customer.getOne(state),
   customerId: ownProps.match.params.customerId,
-  questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.CUSTOMER),
   loading: selectors.questionnaire.loading(state) ||
     selectors.customer.loading(state),
   loadFormDataError: selectors.questionnaire.loadError(state) ||
@@ -44,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
 class CustomerView extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.isAdmin = this.props.user.roles.find(r => r === ADMIN_ROLE)
     this.state = {deleting: false}
   }
 

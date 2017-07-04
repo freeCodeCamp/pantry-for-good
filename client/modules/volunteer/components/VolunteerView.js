@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {ButtonToolbar, Button} from 'react-bootstrap'
 
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -20,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     saveVolunteersError: selectors.volunteer.saveError(state),
     volunteer: selectors.volunteer.getOne(state)(volunteerId),
     volunteerId,
-    questionnaire: selectors.questionnaire.getOne(state)('qVolunteers'),
+    questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.VOLUNTEER),
     loading: selectors.questionnaire.loading(state) ||
       selectors.volunteer.loading(state),
     loadError: selectors.questionnaire.loadError(state) ||
@@ -41,7 +42,7 @@ const mapDispatchToProps = dispatch => ({
 class VolunteerView extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
+    this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
   }
 
   componentWillMount() {

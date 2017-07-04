@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import {modelTypes, pageTypes} from '../../common/constants'
+
 const {Schema} = mongoose
 
 const PageSchema = new Schema({
@@ -13,8 +15,8 @@ const PageSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['page', 'email'],
-    default: 'page'
+    enum: [pageTypes.PAGE, pageTypes.EMAIL],
+    default: pageTypes.PAGE
   },
   disabled: {
     type: Boolean,
@@ -24,4 +26,4 @@ const PageSchema = new Schema({
   body: String
 })
 
-export default mongoose.model('Page', PageSchema)
+export default mongoose.model(modelTypes.PAGE, PageSchema)

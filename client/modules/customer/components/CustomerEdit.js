@@ -5,7 +5,8 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-import {toForm, fromForm} from '../../../lib/fields-adapter'
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
+import {toForm, fromForm} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
 import {loadCustomer, saveCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -22,7 +23,7 @@ const mapStateToProps = (state, ownProps) => ({
   saveCustomersError: selectors.customer.saveError(state),
   getCustomer: selectors.customer.getOne(state),
   customerId: ownProps.match.params.customerId,
-  questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.CUSTOMER),
   foodCategories: selectors.food.category.getAll(state),
   loading: selectors.questionnaire.loading(state) ||
     selectors.customer.loading(state) || selectors.food.category.loading(state),
@@ -42,7 +43,7 @@ const mapDispatchToProps = dispatch => ({
 class CustomerEdit extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.isAdmin = this.props.user.roles.find(r => r === ADMIN_ROLE)
   }
 
   componentWillMount() {

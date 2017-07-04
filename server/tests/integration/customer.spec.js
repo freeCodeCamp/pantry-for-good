@@ -1,4 +1,9 @@
-// have to import separately or user model will be imported and blow up
+import {
+  ADMIN_ROLE,
+  clientRoles,
+  volunteerRoles,
+  questionnaireIdentifiers
+} from '../../../common/constants'
 import Customer from '../../models/customer'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
@@ -11,12 +16,12 @@ describe('Customer Api', function() {
     await User.find().remove()
     await Questionnaire.find().remove()
     await new Questionnaire({
-      "name" : "Customer Application",
-      "identifier" : "qCustomers",
-    }).save()    
+      name: 'Customer Application',
+      identifier: questionnaireIdentifiers.CUSTOMER
+    }).save()
     await new Questionnaire({
       name: 'Volunteer Application',
-      identifier: 'qVolunteers',
+      identifier: questionnaireIdentifiers.VOLUNTEER
     }).save()
   })
 
@@ -32,7 +37,7 @@ describe('Customer Api', function() {
 
   describe('User routes', function() {
     it('creates customers', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
       const request = supertest.agent(app)
 
@@ -47,7 +52,7 @@ describe('Customer Api', function() {
 
 
     it('doesn\'t create duplicate customers', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
       const request = supertest.agent(app)
 
@@ -64,7 +69,7 @@ describe('Customer Api', function() {
     })
 
     it('shows a customer', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
       const request = supertest.agent(app)
 
@@ -80,7 +85,7 @@ describe('Customer Api', function() {
     })
 
     it('doesn\'t show non-existing customer', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
       const request = supertest.agent(app)
 
@@ -93,8 +98,8 @@ describe('Customer Api', function() {
     })
 
     it('doesn\'t show other customers', async function() {
-      const firstCustomer = createTestUser('user1', 'customer')
-      const secondCustomer = createTestUser('user2', 'customer')
+      const firstCustomer = createTestUser('user1', clientRoles.CUSTOMER)
+      const secondCustomer = createTestUser('user2', clientRoles.CUSTOMER)
 
       const first = await createUserSession(firstCustomer)
       const second = await createUserSession(secondCustomer)
@@ -114,7 +119,7 @@ describe('Customer Api', function() {
     })
 
     it('updates customers', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
       const request = supertest.agent(app)
 
@@ -138,8 +143,8 @@ describe('Customer Api', function() {
 
   describe('Admin routes', function() {
     it('lists customers', async function() {
-      const newAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
-      const newCustomer = createTestUser('user', 'customer')
+      const newAdmin = createTestUser('admin', ADMIN_ROLE)
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const admin = await createUserSession(newAdmin)
       const customer = await createUserSession(newCustomer)
 
@@ -159,7 +164,7 @@ describe('Customer Api', function() {
     })
 
     it('rejects non-admins', async function() {
-      const newCustomer = createTestUser('user', 'customer')
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const customer = await createUserSession(newCustomer)
 
       const customerReq = supertest.agent(customer.app)
@@ -173,8 +178,8 @@ describe('Customer Api', function() {
     })
 
     it('deletes customers', async function() {
-      const newAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
-      const newCustomer = createTestUser('user', 'customer')
+      const newAdmin = createTestUser('admin', ADMIN_ROLE)
+      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const admin = await createUserSession(newAdmin)
       const customer = await createUserSession(newCustomer)
 
@@ -193,9 +198,10 @@ describe('Customer Api', function() {
     })
 
     it('assigns customers', async function() {
-      const newAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
-      const newCustomer = createTestUser('customer', 'customer')
-      const newVolunteer = createTestUser('driver', 'volunteer', {roles: ['volunteer', 'driver']})
+      const newAdmin = createTestUser('admin', ADMIN_ROLE)
+      const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
+      const newVolunteer = createTestUser('driver', null, {roles: [
+        clientRoles.VOLUNTEER, volunteerRoles.DRIVER]})
 
       const admin = await createUserSession(newAdmin)
       const customer = await createUserSession(newCustomer)

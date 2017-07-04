@@ -5,7 +5,8 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-import {toForm, fromForm} from '../../../lib/fields-adapter'
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
+import {toForm, fromForm} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
 import {loadDonor, saveDonor} from '../reducers/donor'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -21,7 +22,7 @@ const mapStateToProps = (state, ownProps) => ({
   saveDonorsError: selectors.donor.saveError(state),
   getDonor: selectors.donor.getOne(state),
   donorId: ownProps.match.params.donorId,
-  questionnaire: selectors.questionnaire.getOne(state)('qDonors'),
+  questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.DONOR),
   loading: selectors.questionnaire.loading(state) ||
     selectors.donor.loading(state),
   loadFormDataError: selectors.questionnaire.loadError(state) ||
@@ -39,7 +40,7 @@ const mapDispatchToProps = dispatch => ({
 class DonorEdit extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
+    this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
   }
 
   componentWillMount() {

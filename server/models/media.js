@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import {modelTypes} from '../../common/constants'
+
 const {Schema} = mongoose
 
 /**
@@ -24,4 +26,4 @@ const MediaSchema = new Schema({
   }
 })
 
-export default mongoose.model('Media', MediaSchema)
+export default mongoose.model(modelTypes.MEDIA, MediaSchema)

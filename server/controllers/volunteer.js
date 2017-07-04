@@ -1,5 +1,6 @@
-import extend from 'lodash/extend'
+import {difference, extend} from 'lodash'
 
+import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
 import User from '../models/user'
 import Volunteer from '../models/volunteer'
 
@@ -11,7 +12,10 @@ export default {
     let volunteer = new Volunteer(req.body)
     volunteer._id = req.user.id
 
-    await User.findOneAndUpdate({_id: volunteer._id}, {$push: {roles: 'volunteer'}})
+    await User.findOneAndUpdate(
+      {_id: volunteer._id},
+      {$push: {roles: clientRoles.VOLUNTEER}}
+    )
 
     const savedVolunteer = await volunteer.save()
     res.json(savedVolunteer)
@@ -84,7 +88,8 @@ export default {
    * Volunteer authorization middleware
    */
   async hasAuthorization(req, res, next) {
-    if (!req.user.roles.find(r => r === 'admin') && req.volunteer._id !== +req.user.id) {
+    if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
+        req.volunteer._id !== +req.user.id) {
       return res.status(403).json({
         message: 'User is not authorized'
       })

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import Home from '../core/components/Home'
 import VolunteerList from './components/VolunteerList'
 import VolunteerView from './components/VolunteerView'
@@ -11,8 +12,8 @@ import requireRole from '../../components/router/requireRole'
 import ownerOrAdmin from '../../components/router/ownerOrAdmin'
 import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
-const IsAdmin = requireRole(['admin'])
-const IsVolunteer = requireRole(['volunteer', 'admin'])
+const IsAdmin = requireRole([ADMIN_ROLE])
+const IsVolunteer = requireRole([ADMIN_ROLE, clientRoles.VOLUNTEER])
 const Owns = ownerOrAdmin('volunteerId')
 
 const VolunteerRouter = ({match}) =>

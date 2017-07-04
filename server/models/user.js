@@ -1,6 +1,10 @@
-import mongoose from 'mongoose'
 import crypto from 'crypto'
+import {values} from 'lodash'
+import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
+
+import {ADMIN_ROLE, clientRoles, volunteerRoles, modelTypes} from '../../common/constants'
+
 const Schema = mongoose.Schema
 
 /**
@@ -60,7 +64,7 @@ const UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'customer', 'volunteer', 'driver', 'donor', 'admin']
+      enum: [ADMIN_ROLE, ...values(clientRoles), ...values(volunteerRoles)]
     }]
   },
   updated: {
@@ -114,8 +118,8 @@ UserSchema.methods.authenticate = function(password) {
  */
 autoIncrement.initialize(mongoose.connection)
 UserSchema.plugin(autoIncrement.plugin, {
-  model: 'User',
+  model: modelTypes.USER,
   startAt: 10000
 })
 
-export default mongoose.model('User', UserSchema)
+export default mongoose.model(modelTypes.USER, UserSchema)

@@ -1,5 +1,6 @@
-import {difference, values} from 'lodash'
+import {difference, intersection, values} from 'lodash'
 
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Volunteer from '../models/volunteer'
 import {getDirections} from '../lib/mapquest-client'
@@ -56,14 +57,16 @@ export default {
     })
   },
   async hasAuthorization(req, res, next) {
-    if (req.user && req.user.roles.find(r => r === 'admin')) return next()
-    const volunteer = req.user && await Volunteer.findById(Number(req.user._id))
-    if (!volunteer || !volunteer.driver) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
-    }
+    const authorizedRoles = [
+      ADMIN_ROLE,
+      volunteerRoles.DRIVER
+    ]
 
-    next()
+    if (req.user && intersection(req.user.roles, authorizedRoles).length)
+      return next()
+
+    return res.status(403).json({
+      message: 'User is not authorized'
+    })
   }
 }

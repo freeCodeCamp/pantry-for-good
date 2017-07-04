@@ -1,6 +1,8 @@
 import React from 'react'
+import {values} from 'lodash'
 import {utc} from 'moment'
 
+import {fieldTypes, widgetTypes} from '../../../common/constants'
 import HouseholdView from './widgets/HouseholdView'
 import FoodPreferencesView from './widgets/FoodPreferencesView'
 
@@ -12,10 +14,9 @@ const SectionView = ({section, model}) =>
 export default SectionView
 
 function renderField(field, model) {
-  const textTypes = ['text', 'textarea', 'date', 'checkbox', 'radio']
   const type = field.type === 'address' ? 'text' : field.type
 
-  if (textTypes.find(t => t === type)) {
+  if (values(fieldTypes).find(t => t === type)) {
     const modelField = model.fields.find(f => f.meta._id === field._id)
     const value = type === 'date' ?
       modelField && modelField.value && utc(modelField.value).format('YYYY-MM-DD') :
@@ -37,10 +38,10 @@ function renderField(field, model) {
     )
   }
 
-  if (type === 'household')
+  if (type === widgetTypes.HOUSEHOLD)
     return <HouseholdView key={field._id} model={model} className="questionnaireWidget" />
 
-  if (type === 'foodPreferences')
+  if (type === widgetTypes.FOOD_PREFERENCES)
     return <FoodPreferencesView key={field._id} model={model} />
 
   return null

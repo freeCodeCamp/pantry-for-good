@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
+import {ADMIN_ROLE} from '../common/constants'
 import selectors from './store/selectors'
 import {loadUser} from './modules/users/reducer'
 import {loadMedia} from './modules/settings/reducers/media'
@@ -42,7 +43,7 @@ class Application extends Component {
   componentDidUpdate() {
     const {user} = this.props
     window.dispatchEvent(new Event('resize'))
-    if (user && user.roles.find(r => r === 'admin')) {
+    if (user && user.roles.find(r => r === ADMIN_ROLE)) {
       $('body').removeClass('layout-top-nav')
     }
   }

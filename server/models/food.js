@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import {modelTypes} from '../../common/constants'
+
 const {Schema} = mongoose
 
 const FoodItemSchema = new Schema({
@@ -30,5 +32,5 @@ const FoodSchema = new Schema({
   items: [FoodItemSchema]
 })
 
-export default mongoose.model('Food', FoodSchema)
-export const FoodItem = mongoose.model('FoodItem', FoodItemSchema)
+export default mongoose.model(modelTypes.FOOD, FoodSchema)
+export const FoodItem = mongoose.model(modelTypes.FOOD_ITEM, FoodItemSchema)

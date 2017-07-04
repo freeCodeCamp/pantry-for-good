@@ -1,5 +1,7 @@
 import apiRouterFactory from '../../routes/api'
 
+import {ADMIN_ROLE} from '../../../common/constants'
+
 describe('Api router', function() {
   let userControllerMock
   let apiRouterMock
@@ -41,7 +43,7 @@ describe('Api router', function() {
 
   it('checks admin/ routes for admin role', function() {
     expect(userControllerMock.hasAuthorization)
-        .to.have.been.calledWith(['admin'])
+        .to.have.been.calledWith([ADMIN_ROLE])
     expect(apiRouterMock.all).to.have.been
         .calledWith('/admin/*')
   })

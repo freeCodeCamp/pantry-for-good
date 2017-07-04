@@ -4,6 +4,11 @@ import {connect} from 'react-redux'
 import {reduxForm, formValueSelector} from 'redux-form'
 import {ButtonToolbar, Button, ListGroupItem} from 'react-bootstrap'
 
+import {
+  fieldTypes,
+  widgetTypes,
+  questionnaireIdentifiers
+} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {RFFieldGroup} from '../../../components/form'
 
@@ -50,10 +55,10 @@ const FieldEdit = ({
           <optgroup label="Widgets">
             {/*TODO*/}
             {/*<option value="table">Table</option>*/}
-            {questionnaire.identifier === 'qCustomers' &&
+            {questionnaire.identifier === questionnaireIdentifiers.CUSTOMER &&
               <option value="foodPreferences">Food Preferences</option>
             }
-            {questionnaire.identifier === 'qCustomers' &&
+            {questionnaire.identifier === questionnaireIdentifiers.CUSTOMER &&
               <option value="household">Household</option>
             }
           </optgroup>
@@ -66,7 +71,7 @@ const FieldEdit = ({
           options="Required"
           style={{paddingRight: '10px'}}
         />
-        {(fieldType === 'radio' || fieldType === 'checkbox') &&
+        {(fieldType === fieldTypes.RADIO || fieldType === fieldTypes.CHECKBOX) &&
           <RFFieldGroup
             type="text"
             name="choices"
@@ -75,7 +80,7 @@ const FieldEdit = ({
             style={{flexGrow: 1, paddingRight: '10px'}}
           />
         }
-        {fieldType === 'table' &&
+        {fieldType === widgetTypes.TABLE &&
           <RFFieldGroup
             type="text"
             name="rows"
@@ -84,7 +89,7 @@ const FieldEdit = ({
             style={{flexGrow: 1, paddingRight: '10px'}}
           />
         }
-        {fieldType === 'table' &&
+        {fieldType === widgetTypes.TABLE &&
           <RFFieldGroup
             type="text"
             name="cols"
@@ -134,20 +139,19 @@ function validate(fields, props) {
   if (!fields.label.trim().length)
     errors.label = 'Label is required'
 
-  if (fields.type === 'radio') {
+  if (fields.type === fieldTypes.RADIO) {
     if (typeof values.choices !== 'string' || !values.choices.trim().length)
       errors.choices = 'Add two or more options'
     else if (values.choices.split(',').filter(s => s.trim().length).length < 2)
       errors.choices = 'Add options separated by commas'
   }
 
-  if (fields.type === 'table') {
+  if (fields.type === widgetTypes.TABLE) {
     if (!values.rows)
       errors.rows = 'Add one or more comma-separated rows'
     if (!values.cols)
       errors.cols = 'Add one or more comma-separated columns'
   }
-
 
   return errors
 }

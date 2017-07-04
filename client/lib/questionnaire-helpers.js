@@ -1,5 +1,7 @@
-import {flatMap} from 'lodash'
+import {flatMap, map, take} from 'lodash'
 import {utc} from 'moment'
+
+import {fieldTypes} from '../../common/constants'
 
 /**
  * Convert api representation of client model for populating forms
@@ -29,16 +31,28 @@ export const fromForm = form => ({
   fields: fromFormFields(form.fields)
 })
 
+/**
+ * Returns model fields filtered by type
+ *
+ * @param {object} model
+ * @param {string} type
+ * @param {number=} limit
+ */
+export const fieldsByType = (model, type, limit) => {
+  const fields = model.fields.filter(f => f.meta && f.meta.type === type)
+  return limit ? take(fields, limit) : fields
+}
+
 function toFormFields(model, qFields) {
   const withValues = qFields.map(qField => {
     const modelField = model.fields.find(field => field.meta._id === qField._id)
 
     if (!modelField) return {[qField._id]: ''}
 
-    if (qField.type === 'date')
+    if (qField.type === fieldTypes.DATE)
       return {[qField._id]: utc(modelField.value).format('YYYY-MM-DD')}
 
-    if (qField.type === 'checkbox')
+    if (qField.type === fieldTypes.CHECKBOX)
       return {[qField._id]: modelField.value.split(',').map(v => v.trim())}
 
     return {[qField._id]: modelField.value}
@@ -55,13 +69,8 @@ function householdToForm(model) {
 }
 
 function fromFormFields(fields) {
-  return Object.keys(fields).map(k => {
-    const field = fields[k]
-    const value = Array.isArray(field) ? field.join(', ') : field
-
-    return {
-      value,
-      meta: {_id: k}
-    }
-  })
+  return map(fields, (field, k) => ({
+    value: Array.isArray(field) ? field.join(', ') : field,
+    meta: {_id: k}
+  }))
 }
