@@ -1,6 +1,6 @@
 import {difference, extend} from 'lodash'
 
-import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
+import {ADMIN_ROLE, clientRoles} from '../../common/constants'
 import User from '../models/user'
 import Volunteer from '../models/volunteer'
 
@@ -11,6 +11,7 @@ export default {
   async create(req, res) {
     let volunteer = new Volunteer(req.body)
     volunteer._id = req.user.id
+    volunteer.user = req.user.id
 
     await User.findOneAndUpdate(
       {_id: volunteer._id},
@@ -24,8 +25,16 @@ export default {
   /**
    * Show the current volunteer
    */
-  read(req, res) {
-    res.json(req.volunteer)
+  async read(req, res) {
+    if (!req.user.roles.find(r => r === ADMIN_ROLE))
+      return res.json(req.volunteer)
+
+    const {roles} = await User.findById(req.volunteer._id).lean()
+
+    res.json({
+      ...req.volunteer.toObject(),
+      roles
+    })
   },
 
   /**
@@ -34,16 +43,23 @@ export default {
   async update(req, res) {
     const volunteer = extend(req.volunteer, req.body)
 
-    const oldVolunteer = await Volunteer.findById(volunteer._id)
+    const user = await User.findById(volunteer._id).lean()
     const newVolunteer = await volunteer.save()
 
-    if (newVolunteer.driver && !oldVolunteer.driver) {
-      await User.findOneAndUpdate({_id: volunteer._id}, {$push: {roles: 'driver'}})
-    } else if (!newVolunteer.driver && oldVolunteer.driver) {
-      await User.findOneAndUpdate({_id: volunteer._id}, {$pull: {roles: 'driver'}})
-    }
+    if (!volunteer.roles || !req.user.roles.find(r => r === ADMIN_ROLE))
+      return res.json(newVolunteer)
 
-    res.json(newVolunteer)
+    const oldRoles = difference(user.roles, volunteer.roles)
+    const newRoles = difference(volunteer.roles, user.roles)
+    const roles = difference(user.roles.concat(newRoles), oldRoles)
+
+    if (newRoles.length || oldRoles.length)
+      await User.findByIdAndUpdate(volunteer._id, {$set: {roles}})
+
+    res.json({
+      ...newVolunteer.toObject(),
+      roles
+    })
   },
 
   /**
@@ -52,7 +68,7 @@ export default {
   async list(req, res) {
     const volunteers = await Volunteer.find()
       .sort('-dateReceived')
-      .populate('user', 'displayName')
+      .populate('user', 'roles')
 
     res.json(volunteers)
   },

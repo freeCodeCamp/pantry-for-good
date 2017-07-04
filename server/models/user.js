@@ -53,34 +53,24 @@ const UserSchema = new Schema({
     default: '',
     validate: [validateLocalStrategyPassword, 'Password should be longer']
   },
-  salt: {
-    type: String
-  },
+  salt: String,
   provider: {
     type: String,
     required: 'Provider is required'
   },
   google: {},
-  roles: {
-    type: [{
-      type: String,
-      enum: [ADMIN_ROLE, ...values(clientRoles), ...values(volunteerRoles)]
-    }]
-  },
-  updated: {
-    type: Date
-  },
+  roles: [{
+    type: String,
+    enum: [ADMIN_ROLE, ...values(clientRoles), ...values(volunteerRoles)]
+  }],
+  updated: Date,
   created: {
     type: Date,
     default: Date.now
   },
   /* For reset password */
-  resetPasswordToken: {
-    type: String
-  },
-  resetPasswordExpires: {
-    type: Date
-  }
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 })
 
 /**

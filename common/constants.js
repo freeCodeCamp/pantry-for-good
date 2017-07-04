@@ -14,12 +14,12 @@ export const volunteerRoles = {
 }
 
 export const fieldTypes = {
-  ADDRESS: 'fields/address',
-  CHECKBOX: 'fields/checkbox',
-  DATE: 'fields/date',
-  RADIO: 'fields/radio',
-  TEXT: 'fields/text',
-  TEXTAREA: 'fields/textarea'
+  ADDRESS: 'address',
+  CHECKBOX: 'checkbox',
+  DATE: 'date',
+  RADIO: 'radio',
+  TEXT: 'text',
+  TEXTAREA: 'textarea'
 }
 
 export const widgetTypes = {
