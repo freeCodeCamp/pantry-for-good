@@ -1,5 +1,6 @@
 import extend from 'lodash/extend'
 
+import {ForbiddenError, NotFoundError} from '../lib/errors'
 import Donor from '../models/donor'
 import User from '../models/user'
 
@@ -66,9 +67,7 @@ export default {
     const donor = await Donor.findById(id)
       .populate('donations')
 
-    if (!donor) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!donor) throw new NotFoundError
 
     req.donor = donor
     next()
@@ -78,11 +77,8 @@ export default {
    * Donor authorization middleware
    */
   hasAuthorization(req, res, next) {
-    if (req.donor._id !== +req.user.id) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
-    }
+    if (req.donor._id !== +req.user.id)
+      throw new ForbiddenError
 
     next()
   }

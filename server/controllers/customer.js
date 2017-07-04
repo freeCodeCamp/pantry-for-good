@@ -1,5 +1,6 @@
 import {extend} from 'lodash'
 
+import {ForbiddenError, NotFoundError} from '../lib/errors'
 import mailer from '../lib/mail/mail-helpers'
 import Customer from '../models/customer'
 import User from '../models/user'
@@ -73,9 +74,7 @@ export default {
   async customerById(req, res, next, id) {
     const customer = await Customer.findById(id)
 
-    if (!customer) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!customer) throw new NotFoundError
 
     req.customer = customer
     next()
@@ -90,11 +89,8 @@ export default {
       return next()
     }
 
-    if (!req.customer || req.customer._id !== +req.user.id) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
-    }
+    if (!req.customer || req.customer._id !== +req.user.id)
+      throw new ForbiddenError
 
     next()
   }

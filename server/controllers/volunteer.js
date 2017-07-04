@@ -1,5 +1,6 @@
 import extend from 'lodash/extend'
 
+import {ForbiddenError, NotFoundError} from '../lib/errors'
 import User from '../models/user'
 import Volunteer from '../models/volunteer'
 
@@ -72,9 +73,7 @@ export default {
     const volunteer = await Volunteer.findById(id)
       .populate('customers')
 
-    if (!volunteer) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!volunteer) throw new NotFoundError
 
     req.volunteer = volunteer
     next()
@@ -85,9 +84,7 @@ export default {
    */
   async hasAuthorization(req, res, next) {
     if (!req.user.roles.find(r => r === 'admin') && req.volunteer._id !== +req.user.id) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
+      throw new ForbiddenError
     }
     next()
   }

@@ -1,8 +1,10 @@
 import {difference, values} from 'lodash'
 
+import {ForbiddenError} from '../lib/errors'
+import {getDirections} from '../lib/mapquest-client'
 import Customer from '../models/customer'
 import Volunteer from '../models/volunteer'
-import {getDirections} from '../lib/mapquest-client'
+
 
 export default {
   async directions(req, res) {
@@ -57,12 +59,9 @@ export default {
   },
   async hasAuthorization(req, res, next) {
     if (req.user && req.user.roles.find(r => r === 'admin')) return next()
+
     const volunteer = req.user && await Volunteer.findById(Number(req.user._id))
-    if (!volunteer || !volunteer.driver) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
-    }
+    if (!volunteer || !volunteer.driver) throw new ForbiddenError
 
     next()
   }

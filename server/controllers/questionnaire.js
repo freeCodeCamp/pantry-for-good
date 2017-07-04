@@ -1,4 +1,6 @@
 import {extend} from 'lodash'
+
+import {NotFoundError} from '../lib/errors'
 import Questionnaire from '../models/questionnaire'
 
 export default {
@@ -57,9 +59,7 @@ export default {
   async questionnaireById(req, res, next, id) {
     const questionnaire = await Questionnaire.findById(id)
 
-    if (!questionnaire) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!questionnaire) throw new NotFoundError
 
     req.questionnaire = questionnaire
     next()

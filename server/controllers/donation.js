@@ -1,7 +1,7 @@
 import Donation from '../models/donation'
 import Donor from '../models/donor'
 import Settings from '../models/settings'
-import errorHandler from './errors'
+// import errorHandler from './errors'
 import sendgrid, {mail as mailHelper} from 'sendgrid'
 import config from '../config/index'
 
@@ -14,7 +14,7 @@ export const create = function(req, res) {
   donation.save(function(err) {
     if (err) {
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        // message: errorHandler.getErrorMessage(err)
       })
     } else {
       res.json(donation)
@@ -61,6 +61,6 @@ export const sendEmail = function(req, res, next) {
       })
     })
   })
-  
+
   res.end()
 }
