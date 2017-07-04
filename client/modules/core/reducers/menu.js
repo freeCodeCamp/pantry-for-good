@@ -16,6 +16,11 @@ export default (state = {items: []}, action) => {
   }
 }
 
+const notAdmin = `!${ADMIN_ROLE}`
+const notCustomer = `!${clientRoles.CUSTOMER}`
+const notDonor = `!${clientRoles.DONOR}`
+const notVolunteer = `!${clientRoles.VOLUNTEER}`
+
 function getMenuItems(user) {
   if (!user) return []
 
@@ -23,7 +28,7 @@ function getMenuItems(user) {
     title: 'Customers',
     type: 'treeview',
     link: 'customers',
-    roles: [`!${ADMIN_ROLE}`],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'customers',
@@ -35,13 +40,13 @@ function getMenuItems(user) {
     }, {
       title: 'Apply',
       link: 'customers/create',
-      roles: [`!${clientRoles.CUSTOMER}`]
+      roles: [notCustomer]
     }]
   }, {
     title: 'Donors',
     type: 'treeview',
     link: 'donors',
-    roles: [`!${ADMIN_ROLE}`],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'donors',
@@ -53,13 +58,13 @@ function getMenuItems(user) {
     }, {
       title: 'Apply',
       link: 'donors/create',
-      roles: [`!${clientRoles.DONOR}`]
+      roles: [notDonor]
     }]
   }, {
     title: 'Volunteers',
     type: 'treeview',
     link: 'volunteers',
-    roles: [`!${ADMIN_ROLE}`],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'volunteers',
@@ -70,19 +75,24 @@ function getMenuItems(user) {
       roles: [clientRoles.VOLUNTEER]
     }, {
       type: 'divider',
-      roles: [clientRoles.VOLUNTEER, volunteerRoles.DRIVER]
+      roles: [
+        volunteerRoles.INVENTORY,
+        volunteerRoles.PACKING,
+        volunteerRoles.SCHEDULE,
+        volunteerRoles.DRIVER
+      ]
     }, {
       title: 'Food Schedule',
       link: 'schedule',
-      roles: [clientRoles.VOLUNTEER, `!${volunteerRoles.DRIVER}`]
+      roles: [volunteerRoles.SCHEDULE]
     }, {
       title: 'Packing List',
       link: 'packing',
-      roles: [clientRoles.VOLUNTEER, `!${volunteerRoles.DRIVER}`]
+      roles: [volunteerRoles.PACKING]
     }, {
       title: 'Inventory',
       link: 'inventory',
-      roles: [clientRoles.VOLUNTEER, `!${volunteerRoles.DRIVER}`]
+      roles: [volunteerRoles.INVENTORY]
     }, {
       title: 'Delivery',
       link: `drivers/${user._id}`,
@@ -90,7 +100,7 @@ function getMenuItems(user) {
     }, {
       title: 'Apply',
       link: 'volunteers/create',
-      roles: [`!${clientRoles.VOLUNTEER}`]
+      roles: [notVolunteer]
     }]
   }]
 

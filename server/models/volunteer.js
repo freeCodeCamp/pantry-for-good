@@ -32,9 +32,6 @@ var VolunteerSchema = new Schema({
   disclaimerAgree: {
     type: Boolean
   },
-  driver: {
-    type: Boolean
-  },
   customers: [{
     type: Number,
     ref: modelTypes.CUSTOMER
@@ -66,6 +63,11 @@ var VolunteerSchema = new Schema({
     },
     value: String
   }],
+  // to populate with user roles, nicer way?
+  user: {
+    type: Number,
+    ref: modelTypes.USER
+  },
   dateReceived: {
     type: Date,
     default: Date.now

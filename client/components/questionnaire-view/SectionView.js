@@ -14,11 +14,11 @@ const SectionView = ({section, model}) =>
 export default SectionView
 
 function renderField(field, model) {
-  const type = field.type === 'address' ? 'text' : field.type
+  const type = field.type === fieldTypes.ADDRESS ? fieldTypes.TEXT : field.type
 
   if (values(fieldTypes).find(t => t === type)) {
     const modelField = model.fields.find(f => f.meta._id === field._id)
-    const value = type === 'date' ?
+    const value = type === fieldTypes.DATE ?
       modelField && modelField.value && utc(modelField.value).format('YYYY-MM-DD') :
       modelField && modelField.value || ''
 

@@ -10,6 +10,7 @@ import {
 
 import {
   clientRoles,
+  volunteerRoles,
   fieldTypes,
   modelTypes,
   questionnaireIdentifiers
@@ -110,13 +111,14 @@ async function seedStaticFields(client, user, dateOfBirth, address) {
   let properties = {}
 
   if (user.roles.find(role => role === clientRoles.VOLUNTEER)) {
+    properties.user = user._id
+
     properties.status = randomIn({
       'Active': 0.8,
       'Inactive': 0.2
     })
 
-    if (user.email.startsWith('driver')) {
-      properties.driver = true
+    if (user.roles.find(r => r === volunteerRoles.DRIVER)) {
       properties.status = 'Active'
       properties.location = {lat, lng}
     }
