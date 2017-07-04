@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {compose, setDisplayName, setPropTypes} from 'recompose'
 
+import {ADMIN_ROLE} from '../../../common/constants'
 import Unauthorized from '../../modules/core/components/errors/Unauthorized'
 import userOrRedirect from './userOrRedirect'
 
@@ -16,7 +17,7 @@ const enhance = compose(
  */
 const ownerOrAdmin = param => WrappedComponent =>
   enhance(({user, ...props}) => {
-    return user.roles.find(r => r === 'admin') ||
+    return user.roles.find(r => r === ADMIN_ROLE) ||
         String(user._id) === props.match.params[param] ?
       <WrappedComponent {...props} /> :
       <Unauthorized />

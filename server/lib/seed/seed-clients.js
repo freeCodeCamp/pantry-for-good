@@ -1,24 +1,32 @@
 import mongoose from 'mongoose'
-import {capitalize, head, intersection} from 'lodash'
-import extend from 'lodash/extend'
-import random from 'lodash/random'
-import range from 'lodash/range'
 import faker from 'faker'
+import {
+  extend,
+  intersection,
+  map,
+  random,
+  range
+} from 'lodash'
 
-const User = mongoose.model('User')
-const Donation = mongoose.model('Donation')
-const Food = mongoose.model('Food')
-const Questionnaire = mongoose.model('Questionnaire')
+import {
+  clientRoles,
+  fieldTypes,
+  modelTypes,
+  questionnaireIdentifiers
+} from '../../../common/constants'
 
-const clientRoles = ['customer', 'volunteer', 'donor']
+const User = mongoose.model(modelTypes.USER)
+const Donation = mongoose.model(modelTypes.DONATION)
+const Food = mongoose.model(modelTypes.FOOD)
+const Questionnaire = mongoose.model(modelTypes.QUESTIONNAIRE)
 
 export default async function seedClients(addressGenerator) {
-  await Promise.all(clientRoles.map(async type => {
-    const Model = mongoose.model(capitalize(type))
+  await Promise.all(map(clientRoles, async (role, key) => {
+    const Model = mongoose.model(modelTypes[key])
     const count = await Model.count()
     if (count) return
 
-    const users = await User.find({roles: type})
+    const users = await User.find({roles: role})
       .select('-salt -password -__v')
 
     const clients = await Promise.all(users.map(user => {
@@ -51,17 +59,20 @@ async function seedClientFields(client, user, addressGenerator) {
  * @returns {array}
  */
 async function seedDynamicFields(client, user, address) {
-  const clientRole = head(intersection(user.roles, clientRoles))
-  const identifier = `q${capitalize(clientRole)}s`
+  const roleKey = Object.keys(clientRoles).find(role =>
+    intersection(user.roles, [clientRoles[role]]).length)
 
+  const identifier = questionnaireIdentifiers[roleKey]
   const questionnaire = await Questionnaire
     .findOne({identifier})
     .lean()
 
   const generalInfoFields = questionnaire.sections[0].fields
 
-  const addressFields = generalInfoFields.filter(field => field.type === 'address')
-  const dateOfBirthField = generalInfoFields.find(field => field.label === 'Date of Birth')
+  const addressFields = generalInfoFields.filter(field =>
+    field.type === fieldTypes.ADDRESS)
+  const dateOfBirthField = generalInfoFields.find(field =>
+    field.label === 'Date of Birth')
 
   let fields = [{
     meta: addressFields[0],
@@ -77,11 +88,12 @@ async function seedDynamicFields(client, user, address) {
     value: address.zip
   }]
 
-  if (dateOfBirthField)
+  if (dateOfBirthField) {
     fields.unshift({
       meta: dateOfBirthField,
       value: faker.date.between('1950-01-01', '2000-12-31').toISOString()
     })
+  }
 
   return fields
 }
@@ -97,7 +109,7 @@ async function seedStaticFields(client, user, dateOfBirth, address) {
   const {lat, lng} = address
   let properties = {}
 
-  if (user.roles.find(role => role === 'volunteer')) {
+  if (user.roles.find(role => role === clientRoles.VOLUNTEER)) {
     properties.status = randomIn({
       'Active': 0.8,
       'Inactive': 0.2
@@ -110,14 +122,14 @@ async function seedStaticFields(client, user, dateOfBirth, address) {
     }
   }
 
-  if (user.roles.find(role => role === 'donor')) {
+  if (user.roles.find(role => role === clientRoles.DONOR)) {
     properties = {
       ...properties,
       ...await populateDonorFields(client)
     }
   }
 
-  if (user.roles.find(role => role === 'customer')) {
+  if (user.roles.find(role => role === clientRoles.CUSTOMER)) {
     properties = {
       ...properties,
       ...await populateCustomerFields(client, dateOfBirth, address)

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE} from '../../../common/constants'
 import DriverAdmin from './components/DriverList'
 import DriverAssignment from './components/DriverAssignment'
 import DriverRoute from './components/DriverRoute'
@@ -10,7 +11,7 @@ import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 import './driver.css'
 
-const IsAdmin = requireRole(['admin'])
+const IsAdmin = requireRole([ADMIN_ROLE])
 const Owns = ownerOrAdmin('driverId')
 
 const DriverRouter = ({match}) =>

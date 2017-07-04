@@ -1,7 +1,10 @@
+import {intersection} from 'lodash'
 import moment from 'moment'
-import Package from '../models/package'
+
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Food from '../models/food'
+import Package from '../models/package'
 
 const beginWeek = moment.utc().startOf('isoWeek')
 
@@ -35,7 +38,7 @@ export default {
       // Update the food item inventory quantities
       const foodItemIdsToUpdate = Object.keys(packedItemCounts)
       await Promise.all(
-        foodItemIdsToUpdate.map(itemId => 
+        foodItemIdsToUpdate.map(itemId =>
           Food.findOneAndUpdate(
             {'items._id': itemId},
             {$inc:  {'items.$.quantity': -packedItemCounts[itemId] }}
@@ -70,8 +73,11 @@ export default {
     }
   },
   hasAuthorization(req, res, next) {
-    if (req.user && req.user.roles.find(r =>
-        r === 'admin' || r === 'volunteer')) {
+    const authorizedRoles = [
+      ADMIN_ROLE,
+      volunteerRoles.PACKING
+    ]
+    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
     }
     return res.status(403).json({

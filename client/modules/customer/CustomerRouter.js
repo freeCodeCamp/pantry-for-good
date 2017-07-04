@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import Home from '../core/components/Home'
 import CustomerList from './components/CustomerList'
 import CustomerView from './components/CustomerView'
@@ -13,8 +14,8 @@ import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 import './customer.css'
 
-const IsAdmin = requireRole(['admin'])
-const IsCustomer = requireRole(['customer', 'admin'])
+const IsAdmin = requireRole([ADMIN_ROLE])
+const IsCustomer = requireRole([clientRoles.CUSTOMER, ADMIN_ROLE])
 const Owns = ownerOrAdmin('customerId')
 
 const CustomerRouter = ({match}) =>

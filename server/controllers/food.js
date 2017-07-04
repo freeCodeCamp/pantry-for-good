@@ -1,7 +1,8 @@
-import extend from 'lodash/extend'
+import {extend, intersection} from 'lodash'
 
-import Food from '../models/food'
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
+import Food from '../models/food'
 
 export default {
   /**
@@ -145,10 +146,17 @@ export default {
   },
 
   hasAuthorization(req, res, next) {
-    if (req.user && req.user.roles.find(r =>
-        r === 'admin' || r === 'volunteer')) {
+    const authorizedRoles = [
+      ADMIN_ROLE,
+      volunteerRoles.INVENTORY,
+      volunteerRoles.PACKING,
+      volunteerRoles.SCHEDULE
+    ]
+
+    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
     }
+
     return res.status(403).json({
       message: 'User is not authorized'
     })

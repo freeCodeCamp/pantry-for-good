@@ -2,6 +2,8 @@ import React from 'react'
 import {ConnectedRouter} from 'react-router-redux'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE, clientRoles} from '../common/constants'
+
 import Sidebar from './modules/core/components/sidebar/Sidebar'
 import Header from './modules/core/components/Header'
 import Footer from './modules/core/components/Footer'
@@ -21,8 +23,8 @@ import Volunteers from './modules/volunteer/VolunteerRouter'
 import requireRole from './components/router/requireRole'
 import SwitchWithNotFound from './components/router/SwitchWithNotFound'
 
-const IsAdmin = requireRole(['admin'])
-const IsVolunteer = requireRole(['admin', 'volunteer'])
+const IsAdmin = requireRole([ADMIN_ROLE])
+const IsVolunteer = requireRole([ADMIN_ROLE, clientRoles.VOLUNTEER])
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>

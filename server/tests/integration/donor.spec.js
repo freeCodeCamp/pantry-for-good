@@ -1,4 +1,4 @@
-// have to import separately or user model will be imported and blow up
+import {ADMIN_ROLE, clientRoles, questionnaireIdentifiers} from '../../../common/constants'
 import Donor from '../../models/donor'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
@@ -12,7 +12,7 @@ describe('Donor Api', function() {
     await Questionnaire.find().remove()
     await new Questionnaire({
       name: 'Donor Application',
-      identifier: 'qDonors',
+      identifier: questionnaireIdentifiers.DONOR
     }).save()
   })
 
@@ -28,7 +28,7 @@ describe('Donor Api', function() {
 
   describe('User routes', function() {
     it('creates donors', async function() {
-      const testDonor = createTestUser('user', 'donor')
+      const testDonor = createTestUser('user', clientRoles.DONOR)
       const {user, app} = await createUserSession(testDonor)
       const request = supertest.agent(app)
 
@@ -42,7 +42,7 @@ describe('Donor Api', function() {
     })
 
     it('shows a donor', async function() {
-      const testDonor = createTestUser('user', 'donor')
+      const testDonor = createTestUser('user', clientRoles.DONOR)
       const {user, app} = await createUserSession(testDonor)
       const request = supertest.agent(app)
 
@@ -58,7 +58,7 @@ describe('Donor Api', function() {
     })
 
     it('updates a donor', async function() {
-      const testDonor = createTestUser('user', 'donor')
+      const testDonor = createTestUser('user', clientRoles.DONOR)
       const {user, app} = await createUserSession(testDonor)
       const request = supertest.agent(app)
 
@@ -82,8 +82,8 @@ describe('Donor Api', function() {
 
   describe('Admin routes', function() {
     it('lists donors', async function() {
-      const testDonor = createTestUser('user', 'donor')
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testDonor = createTestUser('user', clientRoles.DONOR)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
 
       const donor = await createUserSession(testDonor)
       const admin = await createUserSession(testAdmin)
@@ -104,8 +104,8 @@ describe('Donor Api', function() {
     })
 
     it('deletes a donor', async function() {
-      const testDonor = createTestUser('user', 'donor')
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testDonor = createTestUser('user', clientRoles.DONOR)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
 
       const donor = await createUserSession(testDonor)
       const admin = await createUserSession(testAdmin)

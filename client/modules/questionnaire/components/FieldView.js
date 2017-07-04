@@ -4,7 +4,9 @@ import {capitalize} from 'lodash'
 import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
 
+import {fieldTypes, widgetTypes} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
+import {dragDropTypes} from '../types'
 import {moveField} from '../reducers/editor/index'
 
 const mapStateToProps = state => ({
@@ -20,7 +22,7 @@ const fieldSource = {
     return {
       id: props.field._id,
       idx: props.idx,
-      type: 'field'
+      type: dragDropTypes.FIELD
     }
   }
 }
@@ -101,16 +103,16 @@ const FieldView = ({
 
 function mapTypeToDescription(type) {
   switch (type) {
-    case 'textarea': return 'Long Text'
-    case 'radio': return 'Radio Buttons'
-    case 'checkbox': return 'Checkboxes'
-    case 'foodPreferences': return 'Food Preferences'
+    case fieldTypes.TEXTAREA: return 'Long Text'
+    case fieldTypes.RADIO: return 'Radio Buttons'
+    case fieldTypes.CHECKBOX: return 'Checkboxes'
+    case widgetTypes.FOOD_PREFERENCES: return 'Food Preferences'
     default: return capitalize(type)
   }
 }
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DragSource('field', fieldSource, collectSource),
-  DropTarget('field', fieldTarget, collectTarget)
+  DragSource(dragDropTypes.FIELD, fieldSource, collectSource),
+  DropTarget(dragDropTypes.FIELD, fieldTarget, collectTarget)
 )(FieldView)

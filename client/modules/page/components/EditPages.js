@@ -4,7 +4,7 @@ import {compose, withProps} from 'recompose'
 import {last} from 'lodash'
 
 import selectors from '../../../store/selectors'
-import {pageTypes} from '../types'
+import {pageTypes} from '../../../../common/constants'
 import {loadPages, savePage} from '../reducer'
 import {showNavDialog, hideDialog} from '../../core/reducers/dialog'
 import {Page, PageBody, PageHeader} from '../../../components/page'
