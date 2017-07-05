@@ -1,8 +1,12 @@
-// have to import separately or user model will be imported and blow up
-import Volunteer from '../../models/volunteer'
+import {
+  ADMIN_ROLE,
+  clientRoles,
+  questionnaireIdentifiers
+} from '../../../common/constants'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
 import Questionnaire from '../../models/questionnaire'
+import Volunteer from '../../models/volunteer'
 
 describe('Volunteer Api', function() {
   before(async function() {
@@ -12,7 +16,7 @@ describe('Volunteer Api', function() {
     await Questionnaire.find().remove()
     await new Questionnaire({
       name: 'Volunteer Application',
-      identifier: 'qVolunteers',
+      identifier: questionnaireIdentifiers.VOLUNTEER
     }).save()
   })
 
@@ -28,7 +32,7 @@ describe('Volunteer Api', function() {
 
   describe('User routes', function() {
     it('creates volunteers', async function() {
-      const testVolunteer = createTestUser('user', 'volunteer')
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
       const {user, app} = await createUserSession(testVolunteer)
       const request = supertest.agent(app)
 
@@ -42,7 +46,7 @@ describe('Volunteer Api', function() {
     })
 
     it('shows a volunteer', async function() {
-      const testVolunteer = createTestUser('user', 'volunteer')
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
       const {user, app} = await createUserSession(testVolunteer)
       const request = supertest.agent(app)
 
@@ -58,7 +62,7 @@ describe('Volunteer Api', function() {
     })
 
     it('updates a volunteer', async function() {
-      const testVolunteer = createTestUser('user', 'volunteer')
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
       const {user, app} = await createUserSession(testVolunteer)
       const request = supertest.agent(app)
 
@@ -82,8 +86,8 @@ describe('Volunteer Api', function() {
 
   describe('Admin routes', function() {
     it('lists volunteers', async function() {
-      const testVolunteer = createTestUser('user', 'volunteer')
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
 
       const volunteer = await createUserSession(testVolunteer)
       const admin = await createUserSession(testAdmin)
@@ -104,8 +108,8 @@ describe('Volunteer Api', function() {
     })
 
     it('deletes volunteers', async function() {
-      const testVolunteer = createTestUser('user', 'volunteer')
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
 
       const volunteer = await createUserSession(testVolunteer)
       const admin = await createUserSession(testAdmin)

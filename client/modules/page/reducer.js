@@ -4,6 +4,7 @@ import {get, sortBy} from 'lodash'
 
 import {CALL_API} from '../../store/middleware/api'
 import {page as pageSchema, arrayOfPages} from '../../../common/schemas'
+import {pageTypes, pageIdentifiers} from '../../../common/constants'
 import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('page')
@@ -47,16 +48,20 @@ export const createSelectors = path => {
         const allPages = denormalize({pages}, {pages: arrayOfPages}, entities).pages
         if (!allPages.length) return []
 
-        if (type === 'email')
-          return allPages.filter(page => page.type === 'email')
+        if (type === pageTypes.EMAIL) {
+          return sortBy(
+            allPages.filter(page => page.type === pageTypes.EMAIL),
+            'title'
+          )
+        }
 
-        const homePage = allPages.find(page => page.identifier === 'home')
+        const homePage = allPages.find(page => page.identifier === pageIdentifiers.HOME)
         const clientPages = allPages.filter(page =>
-          page.identifier !== 'home' && page.type === 'page')
+          page.identifier !== pageIdentifiers.HOME && page.type === pageTypes.PAGE)
 
         return [
           homePage,
-          ...sortBy(clientPages, 'identifier')
+          ...sortBy(clientPages, 'title')
         ]
       }
     )(state),

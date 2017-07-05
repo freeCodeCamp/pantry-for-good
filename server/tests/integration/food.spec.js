@@ -1,3 +1,4 @@
+import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import Food from '../../models/food'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
@@ -20,8 +21,8 @@ describe('Food Api', function() {
 
   describe('User routes', function() {
     it('lists food categories', async function() {
-      const testUser = createTestUser('user', 'customer')
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testUser = createTestUser('user', clientRoles.CUSTOMER)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
 
       const user = await createUserSession(testUser)
       const admin = await createUserSession(testAdmin)
@@ -51,7 +52,7 @@ describe('Food Api', function() {
 
   describe('Admin routes', function () {
     it('creates food categories', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -67,7 +68,7 @@ describe('Food Api', function() {
     })
 
     it('lists food categories', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -86,7 +87,7 @@ describe('Food Api', function() {
     })
 
     it('updates a food categories', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -107,7 +108,7 @@ describe('Food Api', function() {
     })
 
     it('deletes a food categories', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -125,7 +126,7 @@ describe('Food Api', function() {
     })
 
     it('adds food items', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -148,7 +149,7 @@ describe('Food Api', function() {
     })
 
     it('updates food items', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -179,7 +180,7 @@ describe('Food Api', function() {
     })
 
     it('changes food items category', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 
@@ -216,7 +217,7 @@ describe('Food Api', function() {
     })
 
     it('deletes food items', async function() {
-      const testAdmin = createTestUser('admin', 'admin', {roles: ['admin']})
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const {app} = await createUserSession(testAdmin)
       const request = supertest.agent(app)
 

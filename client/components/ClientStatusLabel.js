@@ -1,5 +1,8 @@
 import React from 'react'
 import {Label} from 'react-bootstrap'
+import {get} from 'lodash'
+
+import {volunteerRoles} from '../../common/constants'
 
 const labelMap = {
   'Accepted': 'success',
@@ -10,10 +13,11 @@ const labelMap = {
 }
 
 const ClientStatusLabel = ({client}) => {
-  const labelClass = client.driver ? 'info' : labelMap[client.status]
+  const driver = get(client, 'user.roles', []).find(r => r === volunteerRoles.DRIVER)
+  const labelClass = driver ? 'info' : labelMap[client.status]
   return (
     <Label bsStyle={labelClass}>
-      {client.driver ? 'Driver' : client.status}
+      {driver ? 'Driver' : client.status}
     </Label>
   )
 }

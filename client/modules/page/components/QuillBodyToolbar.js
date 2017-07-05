@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {pageTypes} from '../types'
+import {pageTypes} from '../../../../common/constants'
 import './quill-toolbar.css'
 
 const QuillBodyToolbar = ({placeholders, type}) =>

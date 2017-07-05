@@ -4,7 +4,6 @@ import {Col, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
-// import {RFFieldGroup} from '../../../components/form'
 import ImageUpload from './ImageUpload'
 
 const mapStateToProps = state => ({

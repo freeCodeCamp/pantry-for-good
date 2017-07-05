@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
+import {ADMIN_ROLE} from '../../../../../common/constants'
 import selectors from '../../../../store/selectors'
 import SidebarMenu from './SidebarMenu'
 
@@ -16,7 +17,7 @@ const Sidebar = ({
   route,
 }) => {
   const path = route.pathname.split('/').filter(s => s.length)
-  const isAdmin = user && user.roles.find(r => r === 'admin')
+  const isAdmin = user && user.roles.find(r => r === ADMIN_ROLE)
 
   if (!isAdmin) return null
   return (

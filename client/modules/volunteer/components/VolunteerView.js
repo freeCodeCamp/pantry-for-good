@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {ButtonToolbar, Button} from 'react-bootstrap'
+import {ButtonToolbar, Button, Col} from 'react-bootstrap'
 
+import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {loadVolunteer, saveVolunteer, deleteVolunteer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -11,6 +12,7 @@ import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
 import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageBody, PageHeader} from '../../../components/page'
 import {QuestionnaireView} from '../../../components/questionnaire-view'
+import RoleSelector from './RoleSelector'
 
 const mapStateToProps = (state, ownProps) => {
   const {volunteerId} = ownProps.match.params
@@ -20,7 +22,7 @@ const mapStateToProps = (state, ownProps) => {
     saveVolunteersError: selectors.volunteer.saveError(state),
     volunteer: selectors.volunteer.getOne(state)(volunteerId),
     volunteerId,
-    questionnaire: selectors.questionnaire.getOne(state)('qVolunteers'),
+    questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.VOLUNTEER),
     loading: selectors.questionnaire.loading(state) ||
       selectors.volunteer.loading(state),
     loadError: selectors.questionnaire.loadError(state) ||
@@ -41,7 +43,7 @@ const mapDispatchToProps = dispatch => ({
 class VolunteerView extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
+    this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
   }
 
   componentWillMount() {
@@ -66,6 +68,18 @@ class VolunteerView extends Component {
       status,
       driver: false
     }, this.isAdmin)
+  }
+
+  toggleRole = role => () => {
+    const {volunteer} = this.props
+    const roles = volunteer.roles.find(r => r === role) ?
+      volunteer.roles.filter(r => r !== role) :
+      volunteer.roles.concat(role)
+
+    this.props.saveVolunteer({
+      ...volunteer,
+      roles
+    })
   }
 
   deleteVolunteer = volunteer => () => this.props.showDialog(
@@ -95,34 +109,35 @@ class VolunteerView extends Component {
               loading={loading || savingVolunteers}
             />
           }
-          {volunteer && this.isAdmin &&
+          {volunteer && volunteer.roles && this.isAdmin &&
             <Box>
-              <BoxHeader heading={`Status: ${volunteer.driver ? 'Driver' : volunteer.status}`} />
-              <BoxBody loading={loading}>
-                <ButtonToolbar>
-                  <Button
-                    bsStyle="info"
-                    disabled={loading || volunteer.driver}
-                    onClick={this.saveVolunteer('Driver')}
-                  >
-                    Driver
-                  </Button>
-                  <Button
-                    bsStyle="success"
-                    disabled={loading || volunteer.status === 'Active' && !volunteer.driver}
-                    onClick={this.saveVolunteer('Active')}
-                  >
-                    Active
-                  </Button>
-                  <Button
-                    bsStyle="warning"
-                    disabled={loading || volunteer.status === 'Inactive'}
-                    onClick={this.saveVolunteer('Inactive')}
-                  >
-                    Inactive
-                  </Button>
-
-                </ButtonToolbar>
+              <BoxHeader heading="Administration" />
+              <BoxBody loading={loading || savingVolunteers}>
+                <Col sm={6}>
+                  <h4>Status: {volunteer.status}</h4>
+                  <ButtonToolbar>
+                    <Button
+                      bsStyle="success"
+                      disabled={loading || volunteer.status === 'Active'}
+                      onClick={this.saveVolunteer('Active')}
+                    >
+                      Active
+                    </Button>
+                    <Button
+                      bsStyle="warning"
+                      disabled={loading || volunteer.status === 'Inactive'}
+                      onClick={this.saveVolunteer('Inactive')}
+                    >
+                      Inactive
+                    </Button>
+                  </ButtonToolbar>
+                </Col>
+                <Col sm={6}>
+                  <RoleSelector
+                    toggleRole={this.toggleRole}
+                    roles={volunteer.roles}
+                  />
+                </Col>
               </BoxBody>
             </Box>
           }

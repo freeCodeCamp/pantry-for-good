@@ -1,9 +1,11 @@
-import {extend} from 'lodash'
+import {extend, intersection} from 'lodash'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
-import mailer from '../lib/mail/mail-helpers'
+import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
+import mailer from '../lib/mail/mail-helpers'
 import User from '../models/user'
+
 
 export default {
   /**
@@ -13,7 +15,10 @@ export default {
     let customer = new Customer(req.body)
     customer._id = req.user.id
 
-    await User.findOneAndUpdate({_id: customer._id}, {$push: {roles: 'customer'}})
+    await User.findOneAndUpdate(
+      {_id: customer._id},
+      {$push: {roles: clientRoles.CUSTOMER}}
+    )
 
     const savedCustomer = await customer.save()
     res.json(savedCustomer)
@@ -84,8 +89,13 @@ export default {
    * Customer authorization middleware
    */
   hasAuthorization(req, res, next) {
-    if (req.user && req.user.roles.find(r =>
-        r === 'admin' || r === 'volunteer')) {
+    const authorizedRoles = [
+      ADMIN_ROLE,
+      volunteerRoles.DRIVER,
+      volunteerRoles.PACKING
+    ]
+
+    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
     }
 

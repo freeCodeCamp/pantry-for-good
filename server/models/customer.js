@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
 
+import {fieldTypes, modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import locationSchema from './location-schema'
 import {getFieldsByType, getValidator} from '../lib/questionnaire-helpers'
 
@@ -10,7 +11,7 @@ const {Schema} = mongoose
 const CustomerSchema = new Schema({
   _id: {
     type: Number,
-    ref: 'User'
+    ref: modelTypes.USER
   },
   firstName: {
     type: String,
@@ -62,7 +63,7 @@ const CustomerSchema = new Schema({
   },
   assignedTo: {
     type: Number,
-    ref: 'Volunteer'
+    ref: modelTypes.VOLUNTEER
   },
   foodPreferences: [Schema.Types.ObjectId],
   fields: [{
@@ -79,7 +80,7 @@ const CustomerSchema = new Schema({
 })
 
 CustomerSchema.path('fields')
-  .validate(getValidator('qCustomers'), 'Invalid field')
+  .validate(getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
 
 // Initialize geocoder options for pre save method
 const geocoder = nodeGeocoder({
@@ -92,7 +93,9 @@ const geocoder = nodeGeocoder({
  */
 CustomerSchema.pre('save', async function(next) {
   if (process.env.NODE_ENV === 'test') return next()
-  const address = (await getFieldsByType('qCustomers', this.fields, 'address'))
+
+  const address = (await getFieldsByType(
+      questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS))
     .map(field => field.value)
     .join(', ')
 
@@ -133,4 +136,4 @@ CustomerSchema.virtual('householdSummary').get(function() {
  */
 CustomerSchema.set('toJSON', {virtuals: true})
 
-export default mongoose.model('Customer', CustomerSchema)
+export default mongoose.model(modelTypes.CUSTOMER, CustomerSchema)

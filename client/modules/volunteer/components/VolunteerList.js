@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
+import {fieldTypes} from '../../../../common/constants'
+import {fieldsByType} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
 import {loadVolunteers} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -49,7 +51,7 @@ class VolunteerList extends Component {
   formatData = () => this.props.volunteers ?
     this.props.volunteers.map(v => ({
       ...v,
-      address: getAddress(v)
+      address: fieldsByType(v, fieldTypes.ADDRESS).map(f => f.value).join(', ')
     })) :
     []
 
@@ -106,10 +108,3 @@ class VolunteerList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VolunteerList)
-
-function getAddress(client) {
-  return client && client.fields.filter(f =>
-      f.meta && f.meta.type === 'address')
-    .map(f => f.value)
-    .join(', ')
-}

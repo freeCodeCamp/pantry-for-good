@@ -5,7 +5,12 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-import {fromForm, toForm} from '../../../lib/fields-adapter'
+import {
+  ADMIN_ROLE,
+  clientRoles,
+  questionnaireIdentifiers
+} from '../../../../common/constants'
+import {fromForm, toForm} from '../../../lib/questionnaire-helpers'
 import userClientRole from '../../../lib/user-client-role'
 import selectors from '../../../store/selectors'
 import {saveCustomer} from '../reducer'
@@ -25,7 +30,7 @@ const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
   savingCustomers: selectors.customer.saving(state),
   saveCustomersError: selectors.customer.saveError(state),
-  questionnaire: selectors.questionnaire.getOne(state)('qCustomers'),
+  questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.CUSTOMER),
   loading: selectors.questionnaire.loading(state) ||
     selectors.settings.fetching(state) || selectors.food.category.loading(state),
   loadError: selectors.questionnaire.loadError(state) ||
@@ -51,7 +56,7 @@ const mapDispatchToProps = dispatch => ({
 class CustomerCreate extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = this.props.user.roles.find(r => r === 'admin')
+    this.isAdmin = this.props.user.roles.find(r => r === ADMIN_ROLE)
     this.state = {
       customer: {
         ...this.props.user,
@@ -66,8 +71,8 @@ class CustomerCreate extends Component {
     this.props.loadQuestionnaires()
     this.props.loadFoods()
     const role = userClientRole(this.props.user)
-    if (role === 'donor') this.props.loadDonor(this.props.user._id)
-    if (role === 'volunteer') this.props.loadVolunteer(this.props.user._id)
+    if (role === clientRoles.DONOR) this.props.loadDonor(this.props.user._id)
+    if (role === clientRoles.VOLUNTEER) this.props.loadVolunteer(this.props.user._id)
   }
 
   componentWillReceiveProps(nextProps) {

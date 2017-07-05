@@ -1,6 +1,8 @@
 import React from 'react'
+import {values} from 'lodash'
 import PropTypes from 'prop-types'
 
+import {fieldTypes, widgetTypes} from '../../../common/constants'
 import {RFFieldGroup} from '../form'
 import FoodPreferences from './widgets/FoodPreferences'
 import Household from './widgets/Household'
@@ -17,12 +19,11 @@ Section.propTypes = {
 export default Section
 
 function renderField(field) {
-  const inputTypes = ['text', 'textarea', 'date', 'checkbox', 'radio']
-  const type = field.type === 'address' ? 'text' : field.type
+  const type = field.type === fieldTypes.ADDRESS ? fieldTypes.TEXT : field.type
   const options = field.choices && field.choices.split(',')
     .map(choice => choice.trim())
 
-  if (inputTypes.find(t => t === type)) {
+  if (values(fieldTypes).find(t => t === type)) {
     return <RFFieldGroup
       key={field._id}
       name={`fields[${field._id}]`}
@@ -35,9 +36,9 @@ function renderField(field) {
     />
   }
 
-  if (type === 'household')
+  if (type === widgetTypes.HOUSEHOLD)
     return <Household key={field._id} className="questionnaireWidget" />
 
-  if (type === 'foodPreferences')
+  if (type === widgetTypes.FOOD_PREFERENCES)
     return <FoodPreferences key={field._id} className="questionnaireWidget" />
 }

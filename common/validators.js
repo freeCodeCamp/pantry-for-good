@@ -1,17 +1,19 @@
 import {utc} from 'moment'
 
+import {fieldTypes} from './constants'
+
 export default (value, meta) => {
   let errors = {}
 
   if (meta.required)
     errors = Object.assign(errors, validateRequired(value, meta))
-  if (meta.type === 'address' || meta.type === 'text')
+  if (meta.type === fieldTypes.ADDRESS || meta.type === fieldTypes.TEXT)
     errors = Object.assign(errors, validateText(value, meta))
-  if (meta.type === 'textarea')
+  if (meta.type === fieldTypes.TEXTAREA)
     errors = Object.assign(errors, validateTextarea(value, meta))
-  if (meta.type === 'date')
+  if (meta.type === fieldTypes.DATE)
     errors = Object.assign(errors, validateDate(value, meta))
-  if (meta.type === 'radio')
+  if (meta.type === fieldTypes.RADIO)
     errors = Object.assign(errors, validateRadio(value, meta))
   // if (meta.type === 'checkbox')
   //   errors = Object.assign(errors, validateCheckbox(value, meta))

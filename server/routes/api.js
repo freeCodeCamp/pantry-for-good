@@ -1,6 +1,7 @@
 import express from 'express'
 
 import {NotFoundError, SimulatedError} from '../lib/errors'
+import {ADMIN_ROLE} from '../../common/constants'
 import users from '../controllers/users'
 import customerRoutes from './customer'
 import donationRoutes from './donation'
@@ -15,14 +16,12 @@ import settingsRoutes from './settings'
 import usersRoutes from './users'
 import volunteerRoutes from './volunteer'
 
-const adminRole = ['admin']
-
 var apiRouter = express.Router()
 
 export default (delay, errorProb) => apiRouter
   // delay api requests
   .use(loadingSimulator(delay))
-  .all('/admin/*', users.hasAuthorization(adminRole))
+  .all('/admin/*', users.hasAuthorization([ADMIN_ROLE]))
   // uncomment to also test core components
   // .use(errorSimulator(errorProb))
   .use(usersRoutes())

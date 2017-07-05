@@ -8,13 +8,14 @@ import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.core.css'
 
+import {pageTypes} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import placeholders, {getPlaceholders, placeholderTypes} from '../../../../common/placeholders'
+import {editorTypes} from '../types'
 import Placeholder from '../../../lib/quill-placeholder'
 import withConfirmNavigation from '../../../components/withConfirmNavigation'
 import QuillBodyToolbar from './QuillBodyToolbar'
 import QuillSubjectToolbar from './QuillSubjectToolbar'
-import {pageTypes, editorTypes} from '../types'
 
 Quill.register('modules/imageResize', ImageResize)
 Quill.register('modules/imageDrop', ImageDrop)

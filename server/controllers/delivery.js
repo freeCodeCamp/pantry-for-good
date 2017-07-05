@@ -1,7 +1,8 @@
-import {difference, values} from 'lodash'
+import {difference, intersection, values} from 'lodash'
 
 import {ForbiddenError} from '../lib/errors'
 import {getDirections} from '../lib/mapquest-client'
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Volunteer from '../models/volunteer'
 
@@ -58,11 +59,15 @@ export default {
     })
   },
   async hasAuthorization(req, res, next) {
-    if (req.user && req.user.roles.find(r => r === 'admin')) return next()
+    const authorizedRoles = [
+      ADMIN_ROLE,
+      volunteerRoles.DRIVER
+    ]
 
-    const volunteer = req.user && await Volunteer.findById(Number(req.user._id))
-    if (!volunteer || !volunteer.driver) throw new ForbiddenError
-
-    next()
+    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
+      return next()
+    } else {
+      throw new ForbiddenError
+    }
   }
 }

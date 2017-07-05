@@ -1,6 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import Home from '../core/components/Home'
 import DonorList from './components/DonorList'
 import DonorView from './components/DonorView'
@@ -13,8 +14,8 @@ import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 import './donor.css'
 
-const IsAdmin = requireRole(['admin'])
-const IsDonor = requireRole(['donor', 'admin'])
+const IsAdmin = requireRole([ADMIN_ROLE])
+const IsDonor = requireRole([clientRoles.DONOR, ADMIN_ROLE])
 const Owns = ownerOrAdmin('donorId')
 
 const DonorRouter = ({match}) =>

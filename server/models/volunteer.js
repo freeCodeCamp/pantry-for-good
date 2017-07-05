@@ -1,14 +1,15 @@
 import mongoose from 'mongoose'
 
-import {getValidator} from '../lib/questionnaire-helpers'
+import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import locationSchema from './location-schema'
+import {getValidator} from '../lib/questionnaire-helpers'
 
 const {Schema} = mongoose
 
 var VolunteerSchema = new Schema({
   _id: {
     type: Number,
-    ref: 'User'
+    ref: modelTypes.USER
   },
   lastName: {
     type: String,
@@ -31,12 +32,9 @@ var VolunteerSchema = new Schema({
   disclaimerAgree: {
     type: Boolean
   },
-  driver: {
-    type: Boolean
-  },
   customers: [{
     type: Number,
-    ref: 'Customer'
+    ref: modelTypes.CUSTOMER
   }],
   optimized: {
     type: Boolean,
@@ -65,6 +63,11 @@ var VolunteerSchema = new Schema({
     },
     value: String
   }],
+  // to populate with user roles, nicer way?
+  user: {
+    type: Number,
+    ref: modelTypes.USER
+  },
   dateReceived: {
     type: Date,
     default: Date.now
@@ -73,7 +76,7 @@ var VolunteerSchema = new Schema({
 })
 
 VolunteerSchema.path('fields')
-  .validate(getValidator('qVolunteers'), 'Invalid field')
+  .validate(getValidator(questionnaireIdentifiers.VOLUNTEER), 'Invalid field')
 
 /**
  * Virtual getters & setters
@@ -90,4 +93,4 @@ VolunteerSchema.virtual('fullName').get(function() {
  */
 VolunteerSchema.set('toJSON', {virtuals: true})
 
-export default mongoose.model('Volunteer', VolunteerSchema)
+export default mongoose.model(modelTypes.VOLUNTEER, VolunteerSchema)

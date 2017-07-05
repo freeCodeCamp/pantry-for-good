@@ -2,12 +2,16 @@ import {intersection} from 'lodash'
 
 import {ForbiddenError} from '../lib/errors'
 import Settings from '../models/settings'
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import config from '../config'
+import Settings from '../models/settings'
+
 
 export default {
   async read (req, res) {
     const {user} = req
-    const projection = user && intersection(user.roles, ['admin', 'driver']).length ?
+    const mapRoles = [ADMIN_ROLE, volunteerRoles.DRIVER]
+    const projection = user && intersection(user.roles, mapRoles).length ?
       '+gmapsApiKey +gmapsClientId ' : ''
 
     let settings = await Settings.findOne().select(projection).lean()
@@ -20,15 +24,15 @@ export default {
     // Remove unnecessary info before sending off the object to the client
     delete settings.__v
 
-
     res.json(settings)
   },
 
   async save (req, res) {
     const {user} = req
 
-    if (!user || !user.roles.find(role => role === 'admin'))
+    if (!user || !user.roles.find(role => role === ADMIN_ROLE)) {
       throw new ForbiddenError
+    }
 
     const count = await Settings.count()
     const query = count ?

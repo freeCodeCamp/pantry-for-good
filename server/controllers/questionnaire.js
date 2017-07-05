@@ -21,28 +21,6 @@ export default {
     res.json(savedQuestionnaire)
   },
 
-  // Delete a questionnaire
-  // export const delete = function(req, res) {
-  //   var questionnaire = req.questionnaire
-
-  //   // Prevent remove if there are sections for the questionnaire
-  //   if (questionnaire.sections.length) {
-  //     return res.status(400).send({
-  //       message: 'Questionnaire must not contain any sections before deleting'
-  //     })
-  //   }
-
-  //   questionnaire.remove(function(err) {
-  //     if (err) {
-  //       return res.status(400).send({
-  //         message: errorHandler.getErrorMessage(err)
-  //       })
-  //     } else {
-  //       res.json(questionnaire)
-  //     }
-  //   })
-  // }
-
   // Query questionnaires
   async query(req, res) {
     const questionnaires = await Questionnaire.find()

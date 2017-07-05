@@ -1,6 +1,7 @@
 import extend from 'lodash/extend'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
+import {clientRoles} from '../../common/constants'
 import Donor from '../models/donor'
 import User from '../models/user'
 
@@ -16,7 +17,7 @@ export default {
 
     const savedDonor = await donor.save()
 
-    await User.findOneAndUpdate({_id: donor._id}, {$push: {roles: 'donor'}})
+    await User.findOneAndUpdate({_id: donor._id}, {$push: {roles: clientRoles.DONOR}})
 
     res.json(savedDonor)
   },

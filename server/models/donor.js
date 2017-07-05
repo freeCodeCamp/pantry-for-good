@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import {getValidator} from '../lib/questionnaire-helpers'
 
 const {Schema} = mongoose
@@ -7,7 +8,7 @@ const {Schema} = mongoose
 var DonorSchema = new Schema({
   _id: {
     type: Number,
-    ref: 'User'
+    ref: modelTypes.USER
   },
   lastName: {
     type: String,
@@ -23,7 +24,7 @@ var DonorSchema = new Schema({
   },
   donations: [{
     type: Number,
-    ref: 'Donation'
+    ref: modelTypes.DONATION
   }],
   fields: [{
     meta: {
@@ -39,7 +40,7 @@ var DonorSchema = new Schema({
 })
 
 DonorSchema.path('fields')
-  .validate(getValidator('qDonors'), 'Invalid field')
+  .validate(getValidator(questionnaireIdentifiers.DONOR), 'Invalid field')
 
 /**
  * Virtual getters & setters
@@ -53,4 +54,4 @@ DonorSchema.virtual('fullName').get(function() {
 
 DonorSchema.set('toJSON', {virtuals: true})
 
-export default mongoose.model('Donor', DonorSchema)
+export default mongoose.model(modelTypes.DONOR, DonorSchema)

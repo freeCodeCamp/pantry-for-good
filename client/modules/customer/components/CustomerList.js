@@ -4,7 +4,9 @@ import {Link} from 'react-router-dom'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
+import {fieldTypes} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
+import {fieldsByType} from '../../../lib/questionnaire-helpers'
 import {loadCustomers} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
@@ -49,7 +51,7 @@ class CustomerList extends Component {
   formatData = () => this.props.customers ?
     this.props.customers.map(c => ({
       ...c,
-      address: getAddress(c),
+      address: fieldsByType(c, fieldTypes.ADDRESS).map(f => f.value).join(', '),
       assignedTo: c.assignedTo && c.assignedTo.fullName
     })) :
     []
@@ -114,10 +116,3 @@ class CustomerList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomerList)
-
-function getAddress(client) {
-  return client && client.fields.filter(f =>
-      f.meta && f.meta.type === 'address')
-    .map(f => f.value)
-    .join(', ')
-}
