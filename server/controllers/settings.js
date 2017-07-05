@@ -1,7 +1,6 @@
 import {intersection} from 'lodash'
 
 import {ForbiddenError} from '../lib/errors'
-import Settings from '../models/settings'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import config from '../config'
 import Settings from '../models/settings'

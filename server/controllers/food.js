@@ -2,7 +2,6 @@ import {extend, intersection} from 'lodash'
 
 import {BadRequestError, ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
-import Food from '../models/food'
 import Customer from '../models/customer'
 import Food from '../models/food'
 
