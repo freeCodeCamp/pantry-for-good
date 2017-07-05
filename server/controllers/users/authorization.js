@@ -1,17 +1,17 @@
-import User from '../../models/user'
 import intersection from 'lodash/intersection'
+
+import {ForbiddenError, NotFoundError, UnauthorizedError} from '../../lib/errors'
+import User from '../../models/user'
+
 /**
  * User middleware
  */
-export const userByID = function(req, res, next, id) {
-  User.findOne({
-    _id: id
-  }).exec(function(err, user) {
-    if (err) return next(err)
-    if (!user) return next(new Error('Failed to load User ' + id))
-    req.profile = user
-    next()
-  })
+export const userByID = async function(req, res, next, id) {
+  const user = User.findById(id)
+  if (!user) throw new NotFoundError
+
+  req.profile = user
+  next()
 }
 
 /**
@@ -19,9 +19,7 @@ export const userByID = function(req, res, next, id) {
  */
 export const requiresLogin = function(req, res, next) {
   if (!req.isAuthenticated()) {
-    return res.status(401).send({
-      message: 'User is not logged in'
-    })
+    throw new UnauthorizedError
   }
   next()
 }
@@ -32,13 +30,11 @@ export const requiresLogin = function(req, res, next) {
 export const hasAuthorization = function(roles) {
   return (req, res, next) => {
     this.requiresLogin(req, res, function() {
-      if (intersection(req.user.roles, roles).length) {
-        return next()
-      } else {
-        return res.status(403).send({
-          message: 'User is not authorized'
-        })
+      if (!intersection(req.user.roles, roles).length) {
+        throw new ForbiddenError
       }
+
+      next()
     })
   }
 }

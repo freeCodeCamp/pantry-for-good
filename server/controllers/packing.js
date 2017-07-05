@@ -1,6 +1,7 @@
 import {intersection} from 'lodash'
 import moment from 'moment'
 
+import {ForbiddenError} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Food from '../models/food'
@@ -80,8 +81,7 @@ export default {
     if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
     }
-    return res.status(403).json({
-      message: 'User is not authorized'
-    })
+
+    throw new ForbiddenError
   }
 }

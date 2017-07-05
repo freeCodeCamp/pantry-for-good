@@ -2,6 +2,11 @@ import crypto from 'crypto'
 import thenify from 'thenify'
 
 import config from '../../config'
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError
+} from '../../lib/errors'
 import mailer from '../../lib/mail/mail-helpers'
 import User from '../../models/user'
 
@@ -18,14 +23,14 @@ export const forgot = async function(req, res) {
   const token = (await randomBytes(20)).toString('hex')
 
   // Lookup user by email
-  if (!req.body.email) return res.status(400).send({message: 'Email is required'})
+  if (!req.body.email) throw new BadRequestError('Email is required')
   const user = await User.findOne({email: req.body.email}).select('-salt -password')
   if (!user) {
-    return res./*status(400).*/send({
+    return res.status(400).send({
       message: 'No account with that email has been found'
     })
   } else if (user.provider !== 'local') {
-    return res./*status(400).*/send({
+    return res.status(400).send({
       message: 'It seems like you signed up using your ' + user.provider + ' account'
     })
   } else {
@@ -38,12 +43,8 @@ export const forgot = async function(req, res) {
   const port = process.env.NODE_ENV === 'production' ? '' : `:${config.port}`
   const url = `${config.protocol}://${config.host}${port}/users/reset-password/${token}`
 
-  try {
-    await mailer.sendPasswordReset(user, url)
-    res.send({message: 'Password reset email sent'})
-  } catch (err) {
-    res.status(500).send({message: 'Error sending password reset email'})
-  }
+  await mailer.sendPasswordReset(user, url)
+  res.send({message: 'Password reset email sent'})
 }
 
 /**
@@ -56,7 +57,7 @@ export const reset = async function (req, res) {
   })
 
   if (!user) {
-    return res.status(400).send({message: 'Password reset token is invalid or has expired.'})
+    throw new BadRequestError('Password reset token is invalid or has expired.')
   }
 
   user.password = req.body.password
@@ -74,19 +75,19 @@ export const changePassword = async function(req, res) {
   const {newPassword, currentPassword, verifyPassword} = req.body.passwordDetails
 
   if (!req.user || !newPassword || !currentPassword || newPassword !== verifyPassword) {
-    return res.status(400).send({message: 'Invalid request'})
+    throw new BadRequestError
   }
 
   const user = await User.findById(req.user.id)
-  if (!user) return res.status(400).send({message: 'Invalid request'})
+  if (!user) throw new NotFoundError
   if (!user.authenticate(currentPassword))
-    return res.status(400).send({message: 'Password is incorrect'})
+    throw new BadRequestError('Password is incorrect')
 
   user.password = newPassword
   await user.save()
 
   req.login(user, function(err) {
-    if (err) res.status(400).send(err)
+    if (err) throw new UnauthorizedError
     return res.send({message: 'Password changed successfully'})
   })
 }

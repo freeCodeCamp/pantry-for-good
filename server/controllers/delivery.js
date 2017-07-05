@@ -1,9 +1,11 @@
 import {difference, intersection, values} from 'lodash'
 
+import {ForbiddenError} from '../lib/errors'
+import {getDirections} from '../lib/mapquest-client'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Volunteer from '../models/volunteer'
-import {getDirections} from '../lib/mapquest-client'
+
 
 export default {
   async directions(req, res) {
@@ -62,11 +64,10 @@ export default {
       volunteerRoles.DRIVER
     ]
 
-    if (req.user && intersection(req.user.roles, authorizedRoles).length)
+    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
-
-    return res.status(403).json({
-      message: 'User is not authorized'
-    })
+    } else {
+      throw new ForbiddenError
+    }
   }
 }

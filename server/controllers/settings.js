@@ -1,5 +1,7 @@
 import {intersection} from 'lodash'
 
+import {ForbiddenError} from '../lib/errors'
+import Settings from '../models/settings'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import config from '../config'
 import Settings from '../models/settings'
@@ -29,9 +31,7 @@ export default {
     const {user} = req
 
     if (!user || !user.roles.find(role => role === ADMIN_ROLE)) {
-      return res.status(403).json({
-        message: 'User is not authorized'
-      })
+      throw new ForbiddenError
     }
 
     const count = await Settings.count()

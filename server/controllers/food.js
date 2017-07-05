@@ -1,6 +1,8 @@
 import {extend, intersection} from 'lodash'
 
+import {BadRequestError, ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
+import Food from '../models/food'
 import Customer from '../models/customer'
 import Food from '../models/food'
 
@@ -24,7 +26,7 @@ export default {
         }
         return res.status(400).json({error: response})
       } else {
-        return res.status(500).json(error)
+        throw error
       }
     }
   },
@@ -47,9 +49,7 @@ export default {
 
     // Prevent remove if food category contains food items
     if (food.items.length) {
-      return res.status(400).json({
-        message: 'Food category must be empty before deleting'
-      })
+      throw new BadRequestError('Food category must be empty before deleting')
     }
 
     await food.remove()
@@ -132,9 +132,7 @@ export default {
   async foodById(req, res, next, id) {
     const food = await Food.findById(id)
 
-    if (!food) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!food) throw new NotFoundError
 
     req.food = food
     next()
@@ -156,10 +154,7 @@ export default {
     if (req.user && intersection(req.user.roles, authorizedRoles).length) {
       return next()
     }
-
-    return res.status(403).json({
-      message: 'User is not authorized'
-    })
+    throw new ForbiddenError
   }
 }
 

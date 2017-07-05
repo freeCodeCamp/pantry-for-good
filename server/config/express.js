@@ -15,7 +15,7 @@ import {addUser} from '../lib/websocket-middleware'
 import apiRoutes from '../routes/api'
 import config from './index'
 import enforceSSLMiddleware from '../lib/enforce-ssl-middleware'
-import getErrorMessage from '../lib/error-messages'
+import getErrorMessage, {HttpError} from '../lib/errors'
 import seed from '../lib/seed'
 import '../models'
 
@@ -89,8 +89,8 @@ export default function(io) {
   app.use(function(err, req, res, next) {
     if (!err) return next()
 
-    // Dont log during testing
-    if (process.env.NODE_ENV !== 'test') {
+    // Dont log client errors or during testing
+    if (process.env.NODE_ENV !== 'test' && !(err instanceof HttpError)) {
       console.error(err.stack)
     }
 

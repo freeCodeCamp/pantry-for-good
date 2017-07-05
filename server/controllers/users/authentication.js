@@ -1,5 +1,6 @@
 import passport from 'passport'
 
+import {UnauthorizedError} from '../../lib/errors'
 import User from '../../models/user'
 
 /**
@@ -34,7 +35,7 @@ export const signup = async function(req, res) {
     } else if (error.name === 'ValidationError') {
       return res.status(400).json({error})
     } else {
-      return res.status(500).json({error})
+      throw error
     }
   }
 
@@ -42,7 +43,7 @@ export const signup = async function(req, res) {
   user.salt = undefined
 
   req.login(user, err => {
-    if (err) throw err //return res.status(400).json(err)
+    if (err) throw new UnauthorizedError
   })
   return res.json(user)
 }
@@ -60,7 +61,7 @@ export const signin = function(req, res, next) {
       user.salt = undefined
 
       req.login(user, function(err) {
-        if (err) throw err //return  res.status(400).json(err);
+        if (err) throw new UnauthorizedError
         return res.json(user)
       })
     }
