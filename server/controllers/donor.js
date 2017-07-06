@@ -42,7 +42,7 @@ export default {
   async list(req, res) {
     const donors = await Donor.find()
       .sort('-dateReceived')
-      .populate('donations', 'eligibleForTax')
+      .populate('donations')
 
     res.json(donors)
   },

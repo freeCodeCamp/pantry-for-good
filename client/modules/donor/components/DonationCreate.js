@@ -1,29 +1,57 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Modal} from 'react-bootstrap'
+import {compose, withHandlers} from 'recompose'
+import {FieldArray, formValueSelector, reduxForm, submit} from 'redux-form'
+import {Button, Col, Modal, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {saveDonation} from '../reducers/donation'
+import {RFFieldGroup} from '../../../components/form'
+import DonationItemRow from './DonationItemRow'
+
+const FORM_NAME = 'donationForm'
 
 const mapStateToProps = state => ({
+  items: formValueSelector(FORM_NAME)(state, 'items'),
   savingDonations: selectors.donation.saving(state),
   saveDonationsError: selectors.donation.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   saveDonation: (donation, donor) => () => dispatch(saveDonation(donation, donor)),
+  submit: () => dispatch(submit(FORM_NAME))
 })
 
+const renderItems = withHandlers({
+  handleAdd: ({fields}) => () => fields.push(),
+  handleDelete: ({fields}) => index => () => fields.remove(index)
+})(({fields, handleAdd, handleDelete}) =>
+  <div>
+    <ul style={{padding: 0}}>
+      {fields.map((item, i) =>
+        <DonationItemRow
+          key={i}
+          item={item}
+          showDelete={fields.length > 1}
+          handleDelete={handleDelete(i)}
+        />
+      )}
+    </ul>
+    <div className="text-center">
+      <Button onClick={handleAdd}>Add Item</Button>
+    </div>
+  </div>
+)
+
 const DonationCreate = ({
-  // savingDonations,
-  // saveDonationsError,
-  saveDonation,
+  items,
   show,
   close,
-  donation,
-  handleFieldChange
+  handleSubmit,
+  submit
 }) => {
   if (!show) return null
+  const total = items ? items.filter(x => x).reduce((acc, item) => acc + Number(item.value) || 0, 0) : 0
   return (
     <Modal show={show} onHide={close}>
       <Modal.Header closeButton>
@@ -32,183 +60,51 @@ const DonationCreate = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form name="donationForm">
-          <div className="row">
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Donation type</label>
-                <select
-                  className="form-control"
-                  value={donation.type}
-                  onChange={handleFieldChange('type')}
-                  required
-                >
-                  <option value="Cash">Cash gift (no advantage)</option>
-                  <option value="Cash with advantage">Cash gift with advantage</option>
-                  <option value="Non-cash">Non-cash gift (no advantage)</option>
-                  <option value="Non-cash with advantage">Non-cash gift with advantage</option>
-                </select>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Date donation received</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={donation.dateReceived}
-                  onChange={handleFieldChange('dateReceived')}
-                  required
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Donated by</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.donorName}
-                  onChange={handleFieldChange('donorName')}
-                  required
-                />
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Donor address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.donorAddress}
-                  onChange={handleFieldChange('donorAddress')}
-                  required
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Total amount received by charity</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={donation.total}
-                  onChange={handleFieldChange('total')}
-                  disabled={donation.type !== 'Cash with advantage' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Value of advantage</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={donation.advantageValue}
-                  onChange={handleFieldChange('advantageValue')}
-                  disabled={donation.type !== 'Cash with advantage' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Description of advantage</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.advantageDescription}
-                  onChange={handleFieldChange('advantageDescription')}
-                  disabled={donation.type !== 'Cash with advantage' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Eligible amount of gift for tax purposes</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={donation.eligibleForTax}
-                  onChange={handleFieldChange('eligibleForTax')}
-                  required
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Description of property received by charity</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.description}
-                  onChange={handleFieldChange('description')}
-                  disabled={donation.type !== 'Non-cash' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Appraised by</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.appraiserName}
-                  onChange={handleFieldChange('appraiserName')}
-                  disabled={donation.type !== 'Non-cash' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Address of appraiser</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.appraiserAddress}
-                  onChange={handleFieldChange('appraiserAddress')}
-                  disabled={donation.type !== 'Non-cash' && donation.type !== 'Non-cash with advantage'}
-                />
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Date receipt issued</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={donation.dateIssued}
-                  onChange={handleFieldChange('dateIssued')}
-                  required
-                />
-              </div>
-            </div>
-            <div className="clearfix"></div>
-            <div className="col-xs-12 col-sm-6">
-              <div className="form-group">
-                <label>Location receipt issued</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={donation.location}
-                  onChange={handleFieldChange('location')}
-                  required
-                />
-              </div>
-            </div>
-          </div>
+        <form onSubmit={handleSubmit}>
+          <RFFieldGroup
+            name="description"
+            label="Description"
+          />
+          <label>Items:</label>
+          <FieldArray
+            name="items"
+            component={renderItems}
+          />
+          <Row>
+            <Col xs={4} xsOffset={8}>
+              <label>Total:</label>
+              <span className="pull-right">{total}</span>
+            </Col>
+          </Row>
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-success pull-left" onClick={saveDonation(donation)}>Submit</button>
-        <button className="btn btn-default" onClick={close}>Cancel</button>
+        <Button bsStyle="success" onClick={submit}>Add Donation</Button>
+        <Button bsStyle="primary" onClick={close}>Cancel</Button>
       </Modal.Footer>
     </Modal>
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DonationCreate)
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  reduxForm({
+    form: FORM_NAME,
+    validate
+  })
+)(DonationCreate)
+
+function validate(values) {
+  return {
+    items: values.items.reduce((errors, row) => {
+      let rowErrors = {}
+
+      if (!row || !row.name || !row.name.trim())
+        rowErrors.name = 'Name is required'
+      if (!row || !row.value || row.value === '0')
+        rowErrors.value = 'Value is required'
+
+      return errors.concat(rowErrors)
+    }, [])
+  }
+}

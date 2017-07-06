@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {utc} from 'moment'
-import set from 'lodash/set'
-import {Button} from 'react-bootstrap'
+import {uniq} from 'lodash'
+import {Button, Label} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
 import {loadDonor, deleteDonor} from '../reducers/donor'
+import {approveDonation, saveDonation} from '../reducers/donation'
 
 import {Page, PageBody} from '../../../components/page'
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
@@ -18,16 +19,20 @@ const mapStateToProps = (state, ownProps) => ({
   user: selectors.user.getUser(state),
   savingDonors: selectors.donor.saving(state),
   saveDonorsError: selectors.donor.saveError(state),
+  savingDonations: selectors.donation.saving(state),
+  saveDonationsError: selectors.donation.saveError(state),
   loadingDonors: selectors.donor.loading(state),
   loadDonorsError: selectors.donor.loadError(state),
-  getDonor: selectors.donor.getOne(state),
+  donor: selectors.donor.getOne(state)(ownProps.match.params.donorId),
   donorId: ownProps.match.params.donorId,
   settings: selectors.settings.getSettings(state)
 })
 
 const mapDispatchToProps = dispatch => ({
   loadDonor: (id, admin) => dispatch(loadDonor(id, admin)),
-  deleteDonor: id => dispatch(deleteDonor(id))
+  deleteDonor: id => dispatch(deleteDonor(id)),
+  approveDonation: donation => () => dispatch(approveDonation(donation._id)),
+  saveDonation: donor => donation => dispatch(saveDonation(donation, donor))
 })
 
 class DonorView extends Component {
@@ -35,8 +40,6 @@ class DonorView extends Component {
     super(props)
     this.isAdmin = props.user.roles.find(role => role === 'admin')
     this.state = {
-      donorModel: null,
-      donationModel: null,
       newDonationModal: false,
       viewDonationModal: false
     }
@@ -46,20 +49,8 @@ class DonorView extends Component {
     this.props.loadDonor(this.props.donorId, this.isAdmin)
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {getDonor} = nextProps
-
-    // generate donor view
-    const donor = getDonor(nextProps.donorId)
-    if (donor && !this.state.donorModel) {
-      this.setState({
-        donorModel: {...donor}
-      })
-    }
-  }
-
   toggleNewDonationModal = () => this.setState({
-    donationModel: {},
+    donationModel: {description: 'foo', items: [{name: 'fooitem', value: 2}]},
     newDonationModal: !this.state.newDonationModal
   })
 
@@ -68,13 +59,6 @@ class DonorView extends Component {
       donationModel: {...donation},
       viewDonationModal: !this.state.viewDonationModal
     })
-  }
-
-  handleFieldChange = (field, value) => ev => {
-    if (!value) value = ev.target.value
-
-    const donationModel = set({...this.state.donationModel}, field, value)
-    this.setState({donationModel})
   }
 
   getActionButtons = (_, donation) =>
@@ -86,18 +70,46 @@ class DonorView extends Component {
       <i className="fa fa-eye" />
     </Button>
 
+  getItems = (_, donation) => uniq(donation.items.map(item => item.name)).join(', ')
+
   formatDate = date => utc(date).format('YYYY-MM-DD')
 
+  getDonationApprovedButton = (_, donation) => {
+    if (donation.approved)
+      return <Label bsStyle="success">Approved</Label>
+
+    if (!this.isAdmin)
+      return <Label bsStyle="primary">Pending</Label>
+
+    return (
+      <Button
+        bsStyle="primary"
+        bsSize="xs"
+        onClick={this.props.approveDonation(donation)}
+      >
+        Approve
+      </Button>
+    )
+  }
+
   render() {
-    const {donorModel, donationModel} = this.state
-    const {loadingDonors, savingDonors, loadDonorsError, saveDonorsError} = this.props
+    const {donationModel} = this.state
+    const {
+      donor,
+      loadingDonors,
+      loadDonorsError,
+      savingDonors,
+      saveDonorsError,
+      savingDonations,
+      saveDonationsError
+    } = this.props
 
     return (
       <Page>
         <PageBody>
           <Box>
             <BoxHeader
-              heading={donorModel ? `${donorModel.fullName}'s Donations` : 'Donations'}
+              heading={donor ? `${donor.fullName}'s Donations` : 'Donations'}
             >
               <div className="box-tools">
                 <Button
@@ -105,16 +117,17 @@ class DonorView extends Component {
                   bsSize="sm"
                   onClick={this.toggleNewDonationModal}
                 >
-                  <i className="fa fa-plus" /> Add Donation
+                  <i className="fa fa-plus" style={{marginRight: '5px'}} />
+                  Add Donation
                 </Button>
               </div>
             </BoxHeader>
             <BoxBody
-              loading={loadingDonors || savingDonors}
-              error={loadDonorsError || saveDonorsError}
+              loading={loadingDonors || savingDonors || savingDonations}
+              error={loadDonorsError || saveDonorsError || saveDonationsError}
             >
               <BootstrapTable
-                data={donorModel ? donorModel.donations : []}
+                data={donor ? donor.donations : []}
                 keyField="_id"
                 options={{
                   defaultSortName: "_id",
@@ -126,16 +139,35 @@ class DonorView extends Component {
                 pagination
                 search
               >
-                <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
-                <TableHeaderColumn dataField="type" dataSort>Type</TableHeaderColumn>
-                <TableHeaderColumn dataField="eligibleForTax" dataSort>Amount</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="_id"
+                  dataAlign="right"
+                  width="70px"
+                  dataSort
+                >#</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataField="total"
+                  dataAlign="right"
+                  width="100px"
+                  dataSort
+                >Value</TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getItems}
+                  dataSort
+                >Items</TableHeaderColumn>
                 <TableHeaderColumn
                   dataField="dateReceived"
                   dataFormat={this.formatDate}
+                  width="100px"
                   dataSort
                 >
                   Date
                 </TableHeaderColumn>
+                <TableHeaderColumn
+                  dataFormat={this.getDonationApprovedButton}
+                  dataAlign="center"
+                  width="100px"
+                >Approved</TableHeaderColumn>
                 <TableHeaderColumn
                   dataFormat={this.getActionButtons}
                   dataAlign="center"
@@ -146,20 +178,20 @@ class DonorView extends Component {
           </Box>
         </PageBody>
         {/*modals*/}
-        {donorModel &&
+        {donor &&
           <DonationView
             show={this.state.viewDonationModal}
             close={this.toggleViewDonationModal()}
             donation={donationModel}
-            donorId={donorModel.id}
+            donorId={donor.id}
           />
         }
         {donationModel &&
           <DonationCreate
             show={this.state.newDonationModal}
             close={this.toggleNewDonationModal}
-            donation={donationModel}
-            handleFieldChange={this.handleFieldChange}
+            onSubmit={this.props.saveDonation(donor)}
+            initialValues={{items: [{name: '', value: ''}]}}
           />
         }
       </Page>
