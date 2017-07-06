@@ -42,7 +42,7 @@ class DonorView extends Component {
     this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
     this.state = {
       newDonationModal: false,
-      viewDonationModal: false
+      viewDonationModal: null
     }
   }
 
@@ -50,17 +50,25 @@ class DonorView extends Component {
     this.props.loadDonor(this.props.donorId, this.isAdmin)
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {savingDonations, saveDonationsError} = nextProps
+    if (this.props.savingDonations && !savingDonations && !saveDonationsError) {
+      this.setState({
+        newDonationModal: false,
+        newDonationModel: {items: [{name: '', value: ''}]},
+        viewDonationModal: null
+      })
+    }
+  }
+
   toggleNewDonationModal = () => this.setState({
-    donationModel: {description: 'foo', items: [{name: 'fooitem', value: 2}]},
-    newDonationModal: !this.state.newDonationModal
+    newDonationModal: !this.state.newDonationModal,
+    newDonationModel: {items: [{name: '', value: ''}]}
   })
 
-  toggleViewDonationModal = donation => () => {
-    this.setState({
-      donationModel: {...donation},
-      viewDonationModal: !this.state.viewDonationModal
-    })
-  }
+  toggleViewDonationModal = donation => () =>  this.setState({
+    viewDonationModal: donation ? donation._id : null
+  })
 
   getActionButtons = (_, donation) =>
     <Button
@@ -94,7 +102,6 @@ class DonorView extends Component {
   }
 
   render() {
-    const {donationModel} = this.state
     const {
       donor,
       loadingDonors,
@@ -181,20 +188,18 @@ class DonorView extends Component {
         {/*modals*/}
         {donor &&
           <DonationView
-            show={this.state.viewDonationModal}
+            donationId={this.state.viewDonationModal}
             close={this.toggleViewDonationModal()}
-            donation={donationModel}
             donorId={donor.id}
+            showAdminButtons={this.isAdmin}
           />
         }
-        {donationModel &&
-          <DonationCreate
-            show={this.state.newDonationModal}
-            close={this.toggleNewDonationModal}
-            onSubmit={this.props.saveDonation(donor)}
-            initialValues={{items: [{name: '', value: ''}]}}
-          />
-        }
+        <DonationCreate
+          show={this.state.newDonationModal}
+          close={this.toggleNewDonationModal}
+          onSubmit={this.props.saveDonation(donor)}
+          initialValues={this.state.newDonationModel}
+        />
       </Page>
     )
   }

@@ -7,34 +7,28 @@ import {approveDonation, sendReceipt} from '../reducers/donation'
 
 const mapStateToProps = (state, ownProps) => ({
   donor: selectors.donor.getOne(state)(ownProps.donorId),
+  donation: selectors.donation.getOne(state)(ownProps.donationId),
   savingDonations: selectors.donation.saving(state),
   saveDonationsError: selectors.donation.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  approveDonation: (donation, close) => () => {
-    dispatch(approveDonation(donation._id))
-    close()
-  },
-  sendReceipt: (donation, donorId, close) => () => {
-    dispatch(sendReceipt(donation, donorId))
-    close()
-  }
+  approveDonation: donation => () => dispatch(approveDonation(donation._id)),
+  sendReceipt: donation => () => dispatch(sendReceipt(donation._id))
 })
 
 const DonationView = ({
   approveDonation,
   sendReceipt,
-  show,
   close,
+  showAdminButtons,
   savingDonations,
   donation,
-  donorId,
   donor
 }) => {
-  if (!donation || !show) return null
+  if (!donation) return null
   return (
-    <Modal show={show} onHide={close}>
+    <Modal show={!!donation} onHide={close}>
       <Modal.Header closeButton>
         <Modal.Title>
           Donation #{donation._id}
@@ -42,18 +36,18 @@ const DonationView = ({
       </Modal.Header>
       <Modal.Body>
         <Row style={{padding: '10px'}}>
-          <Col xs={6}>
+          <Col xs={4}>
             <b>Donor:</b>
-            <span className="pull-right">
-              {donor.fullName}
-            </span>
+          </Col>
+          <Col xs={8}>
+            {donor.fullName}
           </Col>
         </Row>
         <Row style={{padding: '10px'}}>
-          <Col xs={6}>
+          <Col xs={4}>
             <strong>Description:</strong>
           </Col>
-          <Col xs={6}>
+          <Col xs={8}>
             {donation.description}
           </Col>
         </Row>
@@ -97,13 +91,15 @@ const DonationView = ({
         }
       </Modal.Body>
       <Modal.Footer>
-        {donation.approved ?
+        {donation.approved &&
           <Button
             bsStyle="success"
-            onClick={sendReceipt(donation, donorId, close)}
+            onClick={sendReceipt(donation, close)}
           >
             Send Receipt
-          </Button> :
+          </Button>
+        }
+        {!donation.approved && showAdminButtons &&
           <Button
             bsStyle="primary"
             onClick={approveDonation(donation, close)}

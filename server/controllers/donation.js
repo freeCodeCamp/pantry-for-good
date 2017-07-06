@@ -1,18 +1,26 @@
 import {ADMIN_ROLE} from '../../common/constants'
 import Donation from '../models/donation'
 import {UnauthorizedError} from '../lib/errors'
-import {sendReceipt/*, sendThanks*/} from '../lib/mail/mail-helpers'
+import mailer from '../lib/mail/mail-helpers'
 
 export default {
   async create(req, res) {
-    const donation = await Donation.create({
+    let donation = {
       ...req.body,
       total: req.body.items.reduce((acc, item) => acc + item.value, 0)
-    }).populate('donor')
+    }
 
-    // sendThanks(donation)
+    if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
+        donation.donor !== req.user.id) {
+      throw new UnauthorizedError
+    }
 
-    res.json(donation)
+    const savedDonation = await Donation.create(donation)
+    await savedDonation.populate('donor').execPopulate()
+
+    mailer.sendThanks(savedDonation)
+
+    res.json(savedDonation)
   },
 
   async approve(req, res) {
@@ -22,15 +30,24 @@ export default {
       {new: true}
     ).populate('donor')
 
-    sendReceipt(donation)
+    mailer.sendReceipt(donation)
 
+    res.json(donation)
+  },
+
+  async sendEmail(req, res) {
+    const donation = await Donation.findById(req.params.donationId)
+      .populate('donor')
+
+    mailer.sendReceipt(donation)
     res.json(donation)
   },
 
   hasAuthorization(req, res, next) {
     if (req.user.roles.find(r => r === ADMIN_ROLE) ||
-        req.user._id === req.body.donor)
+        req.params.donationId === req.user._id) {
       return next()
+    }
 
     throw new UnauthorizedError
   }

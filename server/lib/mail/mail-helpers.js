@@ -1,3 +1,4 @@
+import {pageIdentifiers} from '../../../common/constants'
 import mailGenerator from './mail-generator'
 import sendEmail from '../../config/mailer'
 import Settings from '../../models/settings'
@@ -12,8 +13,6 @@ export default {
    * @param {object} bindings
    */
   async send(toEmail, toName, identifier, bindings = null) {
-    if (typeof sendEmail !== 'function') return
-
     const settings = await Settings.findOne().lean()
     const mail = await mailGenerator(identifier, {...settings, ...bindings})
 
@@ -32,22 +31,22 @@ export default {
    * @param {object} customer
    */
   async sendStatus(customer) {
-    const {fullName, email} = customer
+    const {firstName, lastName, fullName, email} = customer
     const date = customer.dateReceived.toDateString()
 
     if (customer.status === 'Accepted') {
       await this.send(
         email,
         fullName,
-        'accept-customer',
+        pageIdentifiers.CUSTOMER_ACCEPTED,
         {fullName, date}
       )
     } else {
       await this.send(
         email,
         fullName,
-        'reject-customer',
-        {fullName, date}
+        pageIdentifiers.CUSTOMER_REJECTED,
+        {firstName, lastName, fullName, date}
       )
     }
   },
@@ -58,12 +57,12 @@ export default {
    * @param {object} customer
    */
   async sendUpdate(customer) {
-    const {fullName, email, id} = customer
+    const {firstName, lastName, fullName, email, id} = customer
     await this.send(
       email,
       fullName,
-      'customer-update',
-      {fullName, id}
+      pageIdentifiers.CUSTOMER_UPDATED,
+      {firstName, lastName, fullName, id}
     )
   },
 
@@ -73,8 +72,32 @@ export default {
     await this.send(
       email,
       fullName,
-      'password-reset',
-      {fullName, passwordResetLink}
+      pageIdentifiers.PASSWORD_RESET,
+      {firstName, lastName, fullName, passwordResetLink}
+    )
+  },
+
+  async sendThanks(donation) {
+    const {donor} = donation
+    const {firstName, lastName, email} = donor
+    const fullName = `${firstName} ${lastName}`
+    await this.send(
+      email,
+      fullName,
+      pageIdentifiers.DONATION_RECEIVED,
+      {firstName, lastName, fullName}
+    )
+  },
+
+  async sendReceipt(donation) {
+    const {donor} = donation
+    const {firstName, lastName, email} = donor
+    const fullName = `${firstName} ${lastName}`
+    await this.send(
+      email,
+      fullName,
+      pageIdentifiers.DONATION_RECEIPT,
+      {firstName, lastName, fullName}
     )
   }
 }

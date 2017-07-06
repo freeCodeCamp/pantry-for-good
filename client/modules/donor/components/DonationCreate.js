@@ -1,13 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, withHandlers} from 'recompose'
-import {FieldArray, formValueSelector, reduxForm, submit} from 'redux-form'
+import {compose} from 'recompose'
+import {formValueSelector, reduxForm, submit} from 'redux-form'
 import {Button, Col, Modal, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
 import {saveDonation} from '../reducers/donation'
 import {RFFieldGroup} from '../../../components/form'
-import DonationItemRow from './DonationItemRow'
+import DonationItems from './DonationItems'
 
 const FORM_NAME = 'donationForm'
 
@@ -21,27 +21,6 @@ const mapDispatchToProps = dispatch => ({
   saveDonation: (donation, donor) => () => dispatch(saveDonation(donation, donor)),
   submit: () => dispatch(submit(FORM_NAME))
 })
-
-const renderItems = withHandlers({
-  handleAdd: ({fields}) => () => fields.push(),
-  handleDelete: ({fields}) => index => () => fields.remove(index)
-})(({fields, handleAdd, handleDelete}) =>
-  <div>
-    <ul style={{padding: 0}}>
-      {fields.map((item, i) =>
-        <DonationItemRow
-          key={i}
-          item={item}
-          showDelete={fields.length > 1}
-          handleDelete={handleDelete(i)}
-        />
-      )}
-    </ul>
-    <div className="text-center">
-      <Button onClick={handleAdd}>Add Item</Button>
-    </div>
-  </div>
-)
 
 const DonationCreate = ({
   items,
@@ -64,12 +43,10 @@ const DonationCreate = ({
           <RFFieldGroup
             name="description"
             label="Description"
+            autoFocus
           />
           <label>Items:</label>
-          <FieldArray
-            name="items"
-            component={renderItems}
-          />
+          <DonationItems />
           <Row>
             <Col xs={4} xsOffset={8}>
               <label>Total:</label>
@@ -95,6 +72,7 @@ export default compose(
 )(DonationCreate)
 
 function validate(values) {
+  if (!values.items) return
   return {
     items: values.items.reduce((errors, row) => {
       let rowErrors = {}

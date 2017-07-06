@@ -66,25 +66,24 @@ export const approveDonation = id => dispatch => {
 export const saveDonation = (donation, donor) =>
   dispatch => {
     dispatch(saveDonationRequest())
-    callApi('donations', 'POST', {...donation, donor: donor._id})
+    callApi('donations', 'POST', {...donation, donor: donor.id})
       .then(res => {
         dispatch(saveDonor({
           ...donor,
           donations: [...donor.donations, res]
-        }, true))
+        }))
 
         dispatch(saveDonationSuccess(res))
       })
       .catch(err => dispatch(saveDonationFailure(err)))
   }
 
-export const sendReceipt = (donation, donorId) =>
-  dispatch => {
-    dispatch(receiptDonationRequest())
-    callApi(`admin/donations/${donorId}`, 'PUT', donation)
-      .then(() => dispatch(receiptDonationSuccess()))
-      .catch(err => dispatch(receiptDonationFailure(err)))
-  }
+export const sendReceipt = id => dispatch => {
+  dispatch(receiptDonationRequest())
+  callApi(`donations/${id}`, 'PUT')
+    .then(() => dispatch(receiptDonationSuccess()))
+    .catch(err => dispatch(receiptDonationFailure(err)))
+}
 
 export default (state = {
   ids: []
@@ -135,7 +134,7 @@ export const createSelectors = path => {
     getOne: state => id => createSelector(
       getEntities,
       entities =>
-        denormalize({donationss: id}, {donations: donationSchema}, entities).donations
+        denormalize({donations: id}, {donations: donationSchema}, entities).donations
     )(state),
     saving: state => get(state, path).saving,
     saveError: state => get(state, path).saveError

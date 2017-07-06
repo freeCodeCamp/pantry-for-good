@@ -3,14 +3,13 @@ import donationController from '../controllers/donation'
 
 const donationRouter = express.Router({mergeParams: true})
 
-// Donation routes for admin
 donationRouter.route('/donations')
-  .post(donationController.hasAuthorization, donationController.create)
+  .post(donationController.create)
 
 donationRouter.route('/admin/donations/:donationId/approve')
   .put(donationController.approve)
 
-// donationRouter.route('/admin/donations/:donorId')
-//   .put(donation.sendEmail)
+donationRouter.route('/donations/:donationId')
+  .put(donationController.hasAuthorization, donationController.sendEmail)
 
 export default donationRouter
