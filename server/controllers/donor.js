@@ -1,7 +1,7 @@
 import extend from 'lodash/extend'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
-import {clientRoles} from '../../common/constants'
+import {ADMIN_ROLE, clientRoles} from '../../common/constants'
 import Donor from '../models/donor'
 import User from '../models/user'
 
@@ -44,7 +44,7 @@ export default {
   async list(req, res) {
     const donors = await Donor.find()
       .sort('-dateReceived')
-      .populate('donations', 'eligibleForTax')
+      .populate('donations')
 
     res.json(donors)
   },
@@ -78,9 +78,9 @@ export default {
    * Donor authorization middleware
    */
   hasAuthorization(req, res, next) {
-    if (req.donor._id !== +req.user.id)
-      throw new ForbiddenError
+    if (req.user.roles.find(r => r === ADMIN_ROLE) || req.donor._id === +req.user.id)
+      return next()
 
-    next()
+    throw new ForbiddenError
   }
 }

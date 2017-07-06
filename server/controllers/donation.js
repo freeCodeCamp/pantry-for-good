@@ -1,66 +1,54 @@
+import {ADMIN_ROLE} from '../../common/constants'
 import Donation from '../models/donation'
-import Donor from '../models/donor'
-import Settings from '../models/settings'
-// import errorHandler from './errors'
-import sendgrid, {mail as mailHelper} from 'sendgrid'
-import config from '../config/index'
+import {UnauthorizedError} from '../lib/errors'
+import mailer from '../lib/mail/mail-helpers'
 
-/**
- * Create a donation
- */
-export const create = function(req, res) {
-  var donation = new Donation(req.body)
-
-  donation.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        // message: errorHandler.getErrorMessage(err)
-      })
-    } else {
-      res.json(donation)
+export default {
+  async create(req, res) {
+    let donation = {
+      ...req.body,
+      total: req.body.items.reduce((acc, item) => acc + item.value, 0)
     }
-  })
-}
 
-/**
- * Send email receipt
- */
-export const sendEmail = function(req, res, next) {
-  const donation = req.body
+    if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
+        donation.donor !== req.user.id) {
+      throw new UnauthorizedError
+    }
 
-  const temp = new Date(donation.dateIssued).toDateString().split(' ').splice(1)
-  donation.dateIssued = temp[0] + ' ' + temp[1] + ', ' + temp[2]
+    const savedDonation = await Donation.create(donation)
+    await savedDonation.populate('donor').execPopulate()
 
-  const donorId = req.params.donorId
-  Donor.findById(donorId, function(err, donor) {
-    if (err) return next(err)
+    mailer.sendThanks(savedDonation)
 
-    Settings.findOne({}, function(err, settings) {
-      if (err)
-        console.error(err)
+    res.json(savedDonation)
+  },
 
-      donation.tconfig = settings
+  async approve(req, res) {
+    const donation = await Donation.findByIdAndUpdate(
+      req.params.donationId,
+      {$set: {approved: true, dateIssued: Date.now()}},
+      {new: true}
+    ).populate('donor')
 
-      res.render('templates/donation-attachment-email', donation, (err, email) => {
-        const from_email = new mailHelper.Email(config.mailer.from)
-        const to_email = new mailHelper.Email(donor.email)
-        const sg = sendgrid(config.mailer.sendgridKey)
-        const sgContent = new mailHelper.Content('text/html', email)
-        const mail = new mailHelper.Mail(from_email, "Tax Receipt", to_email, sgContent)
-        const request = sg.emptyRequest({
-          method: 'POST',
-          path: '/v3/mail/send',
-          body: mail.toJSON()
-        })
+    mailer.sendReceipt(donation)
 
-        sg.API(request, function(error, response) {
-          if (error) {
-            console.error(error, response.body.errors)
-          }
-        })
-      })
-    })
-  })
+    res.json(donation)
+  },
 
-  res.end()
+  async sendEmail(req, res) {
+    const donation = await Donation.findById(req.params.donationId)
+      .populate('donor')
+
+    mailer.sendReceipt(donation)
+    res.json(donation)
+  },
+
+  hasAuthorization(req, res, next) {
+    if (req.user.roles.find(r => r === ADMIN_ROLE) ||
+        req.params.donationId === req.user._id) {
+      return next()
+    }
+
+    throw new UnauthorizedError
+  }
 }

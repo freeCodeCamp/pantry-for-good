@@ -1,128 +1,113 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Modal, Table} from 'react-bootstrap'
+import {Button, Col, Modal, Row, Table} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
-import {sendReceipt} from '../reducers/donation'
+import {approveDonation, sendReceipt} from '../reducers/donation'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
+  donor: selectors.donor.getOne(state)(ownProps.donorId),
+  donation: selectors.donation.getOne(state)(ownProps.donationId),
   savingDonations: selectors.donation.saving(state),
-  saveDonationsError: selectors.donation.saveError(state),
-  settings: selectors.settings.getSettings(state)
+  saveDonationsError: selectors.donation.saveError(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  sendReceipt: (donation, donorId) => () => dispatch(sendReceipt(donation, donorId)),
+  approveDonation: donation => () => dispatch(approveDonation(donation._id)),
+  sendReceipt: donation => () => dispatch(sendReceipt(donation._id))
 })
 
 const DonationView = ({
-  // savingDonations,
-  // saveDonationsError,
-  settings,
+  approveDonation,
   sendReceipt,
-  show,
   close,
+  showAdminButtons,
+  savingDonations,
   donation,
-  donorId
+  donor
 }) => {
-  if (!donation || !show) return null
+  if (!donation) return null
   return (
-    <Modal show={show} onHide={close}>
+    <Modal show={!!donation} onHide={close}>
       <Modal.Header closeButton>
         <Modal.Title>
-          Official Donation Receipt for Income Tax Purposes
+          Donation #{donation._id}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="row">
-          <div className="col-xs-4">
-            <address>
-              From
-              <br />
-              <strong>{settings.organization}</strong><br />
-              Address
-              <br />
-              Number
-            </address>
-          </div>
-          <div className="col-xs-4">
-            <address>
-              To
-              <br />
-              <strong><span>{donation.donorName}</span></strong>
-              <br />
-              <span>{donation.donorAddress}</span>
-            </address>
-          </div>
-          <div className="col-xs-4">
-            <strong>Receipt #<span>{donation._id}</span></strong>
-            <br /><br />
-            <strong>Date Issued: </strong><span>{donation.dateIssued}</span>
-            <br />
-            <strong>Location: </strong><span>{donation.location}</span>
-          </div>
-        </div>
-        <div className="row">
-          {donation.type === 'Non-cash' || donation.type === 'Non-cash with advantage' ?
-            <div className="col-xs-12">
-              <p className="lead">Non-cash payment details</p>
-              <Table responsive>
-                <tbody>
-                  <tr>
-                    <td>Description of property received by charity:</td>
-                    <td><span>{donation.description}</span></td>
-                  </tr>
-                  <tr>
-                    <td>Appraised by:</td>
-                    <td><span>{donation.appraiserName}</span></td>
-                  </tr>
-                  <tr>
-                    <td>Address of appraiser:</td>
-                    <td><span>{donation.appraiserAddress}</span></td>
-                  </tr>
-                </tbody>
-              </Table>
-            </div> :
-            <div className="col-xs-12">
-              <p className="lead">Advantage information</p>
-              <Table responsive>
-                <tbody>
-                  <tr>
-                    <th>Total amount received by charity:</th>
-                    <td><span>{donation.total}</span></td>
-                  </tr>
-                  <tr>
-                    <th>Value of advantage:</th>
-                    <td><span>{donation.advantageValue}</span></td>
-                  </tr>
-                  <tr>
-                    <td>Description of advantage:</td>
-                    <td><span>{donation.advantageDescription}</span></td>
-                  </tr>
-                </tbody>
-              </Table>
-            </div>
-          }
-          <div className="col-xs-12">
-            <p className="lead">Summary</p>
-            <Table responsive>
-              <tbody>
+        <Row style={{padding: '10px'}}>
+          <Col xs={4}>
+            <b>Donor:</b>
+          </Col>
+          <Col xs={8}>
+            {donor.fullName}
+          </Col>
+        </Row>
+        <Row style={{padding: '10px'}}>
+          <Col xs={4}>
+            <strong>Description:</strong>
+          </Col>
+          <Col xs={8}>
+            {donation.description}
+          </Col>
+        </Row>
+        <Row style={{margin: '10px'}}>
+          <Col xs={12}>
+            <Table striped hover bordered style={{width: '85%', marginLeft: '7.5%'}}>
+              <thead>
                 <tr>
-                  <th>Eligible amount of gift for tax purposes:</th>
-                  <td><span>{donation.eligibleForTax}</span></td>
+                  <td><b>Item</b></td>
+                  <td
+                    style={{width: '100px'}}
+                    className="text-right"
+                  >
+                    <b>Value</b>
+                  </td>
                 </tr>
+              </thead>
+              <tbody>
+                {donation.items && donation.items.map((item, i) =>
+                  <tr key={i}>
+                    <td>{item.name}</td>
+                    <td className="text-right">{item.value}</td>
+                  </tr>
+                )}
               </tbody>
             </Table>
+          </Col>
+        </Row>
+        <Row style={{padding: '10px'}}>
+          <Col xs={4} xsOffset={8}>
+            <b>Total:</b>
+            <span className="pull-right">
+              {donation.total}
+            </span>
+          </Col>
+        </Row>
+        {savingDonations &&
+          <div className="overlay">
+            <i className="fa fa-refresh" />
           </div>
-        </div>
-        <p>
-          Sincerely,<br /><br />
-          <img src="/media/signature.png" alt="signature" />
-        </p>
+        }
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-primary pull-left" onClick={sendReceipt(donation, donorId)}>Send email</button>
-        <button className="btn btn-default" onClick={close}>Cancel</button>
+        {donation.approved &&
+          <Button
+            bsStyle="success"
+            onClick={sendReceipt(donation, close)}
+          >
+            Send Receipt
+          </Button>
+        }
+        {!donation.approved && showAdminButtons &&
+          <Button
+            bsStyle="primary"
+            onClick={approveDonation(donation, close)}
+          >
+            Approve Donation
+          </Button>
+        }
+        <Button onClick={close}>Close</Button>
       </Modal.Footer>
     </Modal>
   )

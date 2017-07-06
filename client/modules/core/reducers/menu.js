@@ -59,6 +59,13 @@ function getMenuItems(user) {
       title: 'Apply',
       link: 'donors/create',
       roles: [notDonor]
+    }, {
+      type: 'divider',
+      roles: [clientRoles.DONOR]
+    }, {
+      title: 'My Donations',
+      link: `donors/${user._id}`,
+      roles: [clientRoles.DONOR]
     }]
   }, {
     title: 'Volunteers',
