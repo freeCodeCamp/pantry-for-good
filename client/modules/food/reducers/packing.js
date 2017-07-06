@@ -1,5 +1,5 @@
 import {normalize} from 'normalizr'
-import {get, union} from 'lodash'
+import {get, union, without} from 'lodash'
 import {createSelector} from 'reselect'
 import {denormalize} from 'normalizr'
 
@@ -7,39 +7,57 @@ import {CALL_API, callApi} from '../../../store/middleware/api'
 
 import {arrayOfCustomers, arrayOfPackages} from '../../../../common/schemas'
 
-const LOAD_REQUEST = 'packages/LOAD_REQUEST'
-const LOAD_SUCCESS = 'packages/LOAD_SUCCESS'
-const LOAD_FAILURE = 'packages/LOAD_FAILURE'
+const LOAD_REQUEST = 'packing/LOAD_REQUEST'
+const LOAD_SUCCESS = 'packing/LOAD_SUCCESS'
+const LOAD_FAILURE = 'packing/LOAD_FAILURE'
 const PACK_REQUEST = 'packing/PACK_REQUEST'
 const PACK_SUCCESS = 'packing/PACK_SUCCESS'
 const PACK_FAILURE = 'packing/PACK_FAILURE'
+const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
+const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
+const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
 const packFailure = error => ({type: PACK_FAILURE, error})
 
+// newPackedCustomers has to be an aray of objects with this structure
+// {customer: customerId, contents[foodItemId, foodItemId, foodItemId]}
 export const pack = newPackedCustomers => dispatch => {
   dispatch(packRequest())
-  callApi('packing', 'POST', newPackedCustomers)
+  const apiURL = 'packing'  //eventually resolves to something like 'http://hostname/api/packing'
+  const httpMethod = 'POST'
+  callApi(apiURL, httpMethod, newPackedCustomers)
     .then(res => {
-
-      // Update the lastPacked dates for customer entities that just got packed
-      const customerEntities = {}
-      res.packedCustomerIds.forEach(customerId => {
-        customerEntities[customerId] = {lastPacked: res.packages[0].datePacked}
-      })     
-
-      dispatch(packSuccess({
-        result: {
-          newPackageIds: res.packages.map(item => item._id), 
-        },
+      const response = {
+        result: { newPackageIds: res.packages.map(item => item._id) },
         entities: {
           packages: normalize(res.packages, arrayOfPackages).entities.packages,
-          customers: customerEntities
+          customers: res.customerUpdates,
+          foodItems: res.foodItemUpdates
         }
-      }))
+      }
+      dispatch({type: PACK_SUCCESS, response})
     })
-    .catch(err => dispatch(packFailure(err)))
+    .catch(error => dispatch({type: PACK_FAILURE, error}))
+}
+
+export const unpackPackage = packageId => dispatch => {
+  dispatch({ type: UNPACK_REQUEST })
+  const apiURL = 'packing'  // eventually resolves to something like 'http://hostname/api/packing'
+  const httpMethod = 'DELETE'
+  callApi(apiURL, httpMethod, { _id: packageId })
+    .then(res => {
+      const response = {
+        result: res.deletedPackage && res.deletedPackage._id,
+        entities: {
+          customers: res.updatedCustomer,
+          foodItems: res.updatedItemCounts
+        }
+      }
+      dispatch({ type: UNPACK_SUCCESS, response })
+    })
+    .catch(error => dispatch({ type: UNPACK_FAILURE, error }))
 }
 
 export const deliver = customerIds => dispatch => {
@@ -88,6 +106,7 @@ export default (state = {}, action) => {
         loadError: action.error
       }
     case PACK_REQUEST:
+    case UNPACK_REQUEST:
       return {
         ...state,
         saving: true,
@@ -100,7 +119,16 @@ export default (state = {}, action) => {
         saving: false,
         saveError: null
       }
+    case UNPACK_SUCCESS:
+      return {
+        ...state,
+        // Use lodash without() to take the unpacked package out of the packing list
+        ids: without(state.ids, action.response.result),
+        saving: false,
+        saveError: null
+      }
     case PACK_FAILURE:
+    case UNPACK_FAILURE:
       return {
         ...state,
         saving: false,

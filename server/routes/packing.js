@@ -17,5 +17,6 @@ const sync = {
 packingRouter.route('/packing')
   .get(packingController.hasAuthorization, packingController.list)
   .post(packingController.hasAuthorization, websocketMiddleware(sync), packingController.pack)
+  .delete(packingController.hasAuthorization, packingController.unpack)
 
 export default packingRouter
