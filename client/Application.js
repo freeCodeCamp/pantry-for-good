@@ -12,8 +12,7 @@ import ServerError from './modules/core/components/errors/ServerError'
 const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
   loading: selectors.user.fetching(state),
-  error: selectors.user.error(state),
-  settings: selectors.settings.getSettings(state)
+  error: selectors.user.error(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -46,10 +45,6 @@ class Application extends Component {
     window.dispatchEvent(new Event('resize'))
     if (user && user.roles.find(r => r === ADMIN_ROLE)) {
       $('body').removeClass('layout-top-nav')
-    }
-
-    if (document.title !== this.props.settings.organization) {
-      document.title = this.props.settings.organization
     }
   }
 
