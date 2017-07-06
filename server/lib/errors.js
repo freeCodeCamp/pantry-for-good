@@ -77,5 +77,13 @@ export default function getErrorMessage(err) {
     }
   }
 
+  //This catches when body-parser encounters bad JSON user data in a request
+  if(err.stack.match(/^SyntaxError: Unexpected token.+in JSON(.|\n)*node_modules\/body-parser/)) {
+    return {
+      message: `Bad JSON in HTTP request. ${err.message}:  ${err.body}`,
+      status: 400
+    }
+  }
+  
   return defaultResponse
 }
