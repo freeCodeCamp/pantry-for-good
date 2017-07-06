@@ -3,6 +3,7 @@ import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
 
 import {fieldTypes, modelTypes, questionnaireIdentifiers} from '../../common/constants'
+import {ValidationError} from '../lib/errors'
 import locationSchema from './location-schema'
 import {getFieldsByType, getValidator} from '../lib/questionnaire-helpers'
 
@@ -80,7 +81,8 @@ const CustomerSchema = new Schema({
 })
 
 CustomerSchema.path('fields')
-  .validate(getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
+  .validate(//() => false, 'Invalid field')
+    getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
 
 // Initialize geocoder options for pre save method
 const geocoder = nodeGeocoder({
@@ -94,17 +96,22 @@ const geocoder = nodeGeocoder({
 CustomerSchema.pre('save', async function(next) {
   if (process.env.NODE_ENV === 'test') return next()
 
-  const address = (await getFieldsByType(
-      questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS))
-    .map(field => field.value)
-    .join(', ')
+  const addressFields = await getFieldsByType(
+      questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS)
+
+  const address = addressFields.map(field => field.value).join(', ')
 
   const [result] = await geocoder.geocode(address)
-  if (!result) return next(new Error('Invalid address'))
+
+  if (!result) return next(new ValidationError({
+    fields: Object.assign({}, ...addressFields.map((field, i) => ({
+      [field.meta]: i === 0 ? 'Address not found' : ' '}
+    )))
+  }))
 
   const {latitude, longitude} = result
   this.location = {lat: latitude, lng: longitude}
-  next()
+  return next()
 })
 
 /**

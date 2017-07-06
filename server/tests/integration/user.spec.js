@@ -56,7 +56,7 @@ describe('User Api', function() {
         .send(newUser)
         .expect(400)
         .expect(res => {
-          expect(res.body.error.errors.firstName.message).to.equal('Please fill in your first name')
+          expect(res.body.paths.firstName).to.equal('Please fill in your first name')
         })
     })
 
@@ -71,7 +71,7 @@ describe('User Api', function() {
         .send(newUser)
         .expect(400)
         .expect(res => {
-          expect(res.body.error.errors.lastName.message).to.equal('Please fill in your last name')
+          expect(res.body.paths.lastName).to.equal('Please fill in your last name')
         })
     })
 
@@ -86,7 +86,7 @@ describe('User Api', function() {
         .send(newUser)
         .expect(400)
         .expect(res => {
-          expect(res.body.error.errors.password.message).to.equal('Password should be longer')
+          expect(res.body.paths.password).to.equal('Password should be longer')
         })
     })
 
@@ -102,7 +102,7 @@ describe('User Api', function() {
         .send(newUser)
         .expect(400)
         .expect(res => {
-          expect(res.body.error.errors.password.message).to.equal('Password should be longer')
+          expect(res.body.paths.password).to.equal('Password should be longer')
         })
     })
 
@@ -128,7 +128,7 @@ describe('User Api', function() {
         .send(newUser2)
         .expect(400)
         .expect(res => {
-          expect(res.body.error.errors.email.message).to.equal('Email address already has an account')
+          expect(res.body.paths.email).to.equal('Email address already has an account')
         })
     })
   })

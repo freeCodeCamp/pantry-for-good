@@ -1,6 +1,7 @@
+import {map} from 'lodash'
 import passport from 'passport'
 
-import {UnauthorizedError} from '../../lib/errors'
+import {UnauthorizedError, ValidationError} from '../../lib/errors'
 import User from '../../models/user'
 
 /**
@@ -19,21 +20,15 @@ export const signup = async function(req, res) {
     await user.save()
   } catch (error) {
     // Check for unique key violation from email
-    if (error.code === 11000) {
-      let errors
-      if (error.errmsg.match('email')) {
-        errors = {email: {message: 'Email address already has an account'}}
-      } else {
-        errors = {message: 'A database unique key error occured'}
-      }
-      const response = {
-        name: 'Unique key error',
-        message: 'A unique key error occured',
-        errors
-      }
-      return res.status(400).json({error: response})
+    if (error.code === 11000 && error.errmsg.match('email')) {
+      throw new ValidationError({email: 'Email address already has an account'})
     } else if (error.name === 'ValidationError') {
-      return res.status(400).json({error})
+      const errors = Object.assign(
+        {},
+        ...map(error.errors, (v, k) => ({[k]: v.message}))
+      )
+
+      throw new ValidationError(errors)
     } else {
       throw error
     }

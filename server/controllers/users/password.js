@@ -5,7 +5,8 @@ import config from '../../config'
 import {
   BadRequestError,
   NotFoundError,
-  UnauthorizedError
+  UnauthorizedError,
+  ValidationError
 } from '../../lib/errors'
 import mailer from '../../lib/mail/mail-helpers'
 import User from '../../models/user'
@@ -26,9 +27,7 @@ export const forgot = async function(req, res) {
   if (!req.body.email) throw new BadRequestError('Email is required')
   const user = await User.findOne({email: req.body.email}).select('-salt -password')
   if (!user) {
-    return res.status(400).send({
-      message: 'No account with that email has been found'
-    })
+    throw new ValidationError({email: 'No account with that email has been found'})
   } else if (user.provider !== 'local') {
     return res.status(400).send({
       message: 'It seems like you signed up using your ' + user.provider + ' account'
