@@ -1,4 +1,6 @@
-import {head, intersection} from 'lodash'
+import {head, intersection, values} from 'lodash'
+
+import {clientRoles} from '../../common/constants'
 
 /**
  * get the client type of a user
@@ -7,8 +9,8 @@ import {head, intersection} from 'lodash'
  * @returns {(string|undefined)} the client role
  */
 function userClientRole(user) {
-  const clientTypes = ['customer', 'donor', 'volunteer']
-  return user && head(intersection(user.roles, clientTypes))
+  if (!user) return
+  return head(intersection(user.roles, values(clientRoles)))
 }
 
 export default userClientRole

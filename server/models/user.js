@@ -1,6 +1,10 @@
-import mongoose from 'mongoose'
 import crypto from 'crypto'
+import {values} from 'lodash'
+import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
+
+import {ADMIN_ROLE, clientRoles, volunteerRoles, modelTypes} from '../../common/constants'
+
 const Schema = mongoose.Schema
 
 /**
@@ -49,34 +53,24 @@ const UserSchema = new Schema({
     default: '',
     validate: [validateLocalStrategyPassword, 'Password should be longer']
   },
-  salt: {
-    type: String
-  },
+  salt: String,
   provider: {
     type: String,
     required: 'Provider is required'
   },
   google: {},
-  roles: {
-    type: [{
-      type: String,
-      enum: ['user', 'customer', 'volunteer', 'driver', 'donor', 'admin']
-    }]
-  },
-  updated: {
-    type: Date
-  },
+  roles: [{
+    type: String,
+    enum: [ADMIN_ROLE, ...values(clientRoles), ...values(volunteerRoles)]
+  }],
+  updated: Date,
   created: {
     type: Date,
     default: Date.now
   },
   /* For reset password */
-  resetPasswordToken: {
-    type: String
-  },
-  resetPasswordExpires: {
-    type: Date
-  }
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 })
 
 /**
@@ -114,8 +108,8 @@ UserSchema.methods.authenticate = function(password) {
  */
 autoIncrement.initialize(mongoose.connection)
 UserSchema.plugin(autoIncrement.plugin, {
-  model: 'User',
+  model: modelTypes.USER,
   startAt: 10000
 })
 
-export default mongoose.model('User', UserSchema)
+export default mongoose.model(modelTypes.USER, UserSchema)

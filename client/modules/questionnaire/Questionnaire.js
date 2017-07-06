@@ -6,6 +6,7 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import {sortBy} from 'lodash'
 import {Button, Col} from 'react-bootstrap'
 
+import {questionnaireIdentifiers} from '../../../common/constants'
 import selectors from '../../store/selectors'
 import {loadQuestionnaires, saveQuestionnaire} from './reducers/api'
 import {init, selectSection, editField} from './reducers/editor/index'
@@ -51,10 +52,11 @@ class Questionnaire extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.loading && !nextProps.loading) {
-      const questionnaire = nextProps.getQuestionnaire('qCustomers')
+      const questionnaire = nextProps.getQuestionnaire(questionnaireIdentifiers.CUSTOMER)
 
       this.props.init(questionnaire)
-      this.props.selectSection(questionnaire.sections[0]._id)
+      if (questionnaire && questionnaire.sections && questionnaire.sections.length)
+        this.props.selectSection(questionnaire.sections[0]._id)
     }
   }
 

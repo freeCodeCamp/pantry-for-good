@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 
+import {modelTypes} from '../../common/constants'
 import locationSchema from './location-schema'
 
 const {Schema} = mongoose
@@ -38,5 +39,5 @@ const SettingsSchema = new Schema({
   }
 })
 
-export default mongoose.model('Settings', SettingsSchema)
+export default mongoose.model(modelTypes.SETTINGS, SettingsSchema)
 // TODO: set location on save

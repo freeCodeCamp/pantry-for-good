@@ -6,6 +6,7 @@ import {Button, Label} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
+import {ADMIN_ROLE} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {loadDonor, deleteDonor} from '../reducers/donor'
 import {approveDonation, saveDonation} from '../reducers/donation'
@@ -38,7 +39,7 @@ const mapDispatchToProps = dispatch => ({
 class DonorView extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
+    this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
     this.state = {
       newDonationModal: false,
       viewDonationModal: false

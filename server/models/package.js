@@ -1,11 +1,13 @@
 import mongoose from 'mongoose'
 
+import {modelTypes} from '../../common/constants'
+
 const {Schema} = mongoose
 
 const PackageSchema = new Schema({
   customer: {
     type: Number,
-    ref: 'Customer',
+    ref: modelTypes.CUSTOMER,
     required: true
   },
   datePacked: {
@@ -16,9 +18,9 @@ const PackageSchema = new Schema({
     type: Date
   },
   contents: {
-    type: [{type: Schema.Types.ObjectId, ref: 'FoodItem'}],
+    type: [{type: Schema.Types.ObjectId, ref: modelTypes.FOOD_ITEM}],
     required: true
   }
 })
 
-export default mongoose.model('Package', PackageSchema)
+export default mongoose.model(modelTypes.PACKAGE, PackageSchema)

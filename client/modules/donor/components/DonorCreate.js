@@ -5,7 +5,12 @@ import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
-import {fromForm, toForm} from '../../../lib/fields-adapter'
+import {
+  ADMIN_ROLE,
+  clientRoles,
+  questionnaireIdentifiers
+} from '../../../../common/constants'
+import {fromForm, toForm} from '../../../lib/questionnaire-helpers'
 import userClientRole from '../../../lib/user-client-role'
 import selectors from '../../../store/selectors'
 import {saveDonor} from '../reducers/donor'
@@ -24,7 +29,7 @@ const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
   savingDonors: selectors.donor.saving(state),
   saveDonorsError: selectors.donor.saveError(state),
-  questionnaire: selectors.questionnaire.getOne(state)('qDonors'),
+  questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.DONOR),
   loading: selectors.questionnaire.loading(state) ||
     selectors.settings.fetching(state),
   loadError: selectors.questionnaire.loadError(state) ||
@@ -50,7 +55,7 @@ const mapDispatchToProps = dispatch => ({
 class DonorCreate extends Component {
   constructor(props) {
     super(props)
-    this.isAdmin = props.user.roles.find(role => role === 'admin')
+    this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
     this.state = {
       donor: {
         ...this.props.user,
@@ -63,8 +68,8 @@ class DonorCreate extends Component {
   componentWillMount() {
     this.props.loadQuestionnaires()
     const role = userClientRole(this.props.user)
-    if (role === 'customer') this.props.loadCustomer(this.props.user._id)
-    if (role === 'volunteer') this.props.loadVolunteer(this.props.user._id)
+    if (role === clientRoles.CUSTOMER) this.props.loadCustomer(this.props.user._id)
+    if (role === clientRoles.VOLUNTEER) this.props.loadVolunteer(this.props.user._id)
   }
 
   componentWillReceiveProps(nextProps) {

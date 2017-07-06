@@ -1,5 +1,6 @@
 import {intersection, partition} from 'lodash'
 
+import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../../../common/constants'
 import {LOAD_SUCCESS, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
 
 export default (state = {items: []}, action) => {
@@ -15,6 +16,11 @@ export default (state = {items: []}, action) => {
   }
 }
 
+const notAdmin = `!${ADMIN_ROLE}`
+const notCustomer = `!${clientRoles.CUSTOMER}`
+const notDonor = `!${clientRoles.DONOR}`
+const notVolunteer = `!${clientRoles.VOLUNTEER}`
+
 function getMenuItems(user) {
   if (!user) return []
 
@@ -22,117 +28,122 @@ function getMenuItems(user) {
     title: 'Customers',
     type: 'treeview',
     link: 'customers',
-    roles: ['!admin'],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'customers',
-      roles: ['customer']
+      roles: [clientRoles.CUSTOMER]
     }, {
       title: 'Edit Details',
       link: `customers/${user._id}/edit`,
-      roles: ['customer']
+      roles: [clientRoles.CUSTOMER]
     }, {
       title: 'Apply',
       link: 'customers/create',
-      roles: ['!customer']
+      roles: [notCustomer]
     }]
   }, {
     title: 'Donors',
     type: 'treeview',
     link: 'donors',
-    roles: ['!admin'],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'donors',
-      roles: ['donor']
+      roles: [clientRoles.DONOR]
     }, {
       title: 'Edit Details',
       link: `donors/${user._id}/edit`,
-      roles: ['donor']
+      roles: [clientRoles.DONOR]
     }, {
       title: 'Apply',
       link: 'donors/create',
-      roles: ['!donor']
+      roles: [notDonor]
     }, {
       type: 'divider',
-      roles: ['donor']
+      roles: [clientRoles.DONOR]
     }, {
       title: 'My Donations',
       link: `donors/${user._id}`,
-      roles: ['donor']
+      roles: [clientRoles.DONOR]
     }]
   }, {
     title: 'Volunteers',
     type: 'treeview',
     link: 'volunteers',
-    roles: ['!admin'],
+    roles: [notAdmin],
     items: [{
       title: 'Information',
       link: 'volunteers',
-      roles: ['volunteer']
+      roles: [clientRoles.VOLUNTEER]
     }, {
       title: 'Edit Details',
       link: `volunteers/${user._id}/edit`,
-      roles: ['volunteer']
+      roles: [clientRoles.VOLUNTEER]
     }, {
       type: 'divider',
-      roles: ['volunteer', 'driver']
+      roles: [
+        volunteerRoles.INVENTORY,
+        volunteerRoles.PACKING,
+        volunteerRoles.SCHEDULE,
+        volunteerRoles.DRIVER
+      ]
     }, {
       title: 'Food Schedule',
       link: 'schedule',
-      roles: ['volunteer', '!driver']
+      roles: [volunteerRoles.SCHEDULE]
     }, {
       title: 'Packing List',
       link: 'packing',
-      roles: ['volunteer', '!driver']
+      roles: [volunteerRoles.PACKING]
     }, {
       title: 'Inventory',
       link: 'inventory',
-      roles: ['volunteer', '!driver']
+      roles: [volunteerRoles.INVENTORY]
     }, {
       title: 'Delivery',
       link: `drivers/${user._id}`,
-      roles: ['driver']
+      roles: [volunteerRoles.DRIVER]
     }, {
       title: 'Apply',
       link: 'volunteers/create',
-      roles: ['!volunteer']
+      roles: [notVolunteer]
     }]
   }]
 
   const adminClientItems = [{
     title: 'Customers',
     link: 'customers/list',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }, {
     title: 'Volunteers',
     link: 'volunteers/list',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }, {
     title: 'Donors',
     link: 'donors/list',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }]
 
   const foodItems = [{
     title: 'Food Schedule',
     link: 'schedule',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }, {
     title: 'Packing List',
     link: 'packing',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }, {
     title: 'Inventory',
     link: 'inventory',
-    roles: ['admin']
+    roles: [ADMIN_ROLE]
   }]
 
   const deliveryItems = [{
     title: 'Delivery',
     link: 'drivers',
     type: 'treeview',
-    roles: ['admin'],
+    roles: [ADMIN_ROLE],
     items: [{
       title: 'Drivers',
       link: 'drivers/list',
@@ -146,7 +157,7 @@ function getMenuItems(user) {
     title: 'Settings',
     link: 'settings',
     type: 'treeview',
-    roles: ['admin'],
+    roles: [ADMIN_ROLE],
     items: [{
       title: 'General',
       link: 'settings'

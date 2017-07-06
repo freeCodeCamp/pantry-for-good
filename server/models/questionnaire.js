@@ -1,5 +1,8 @@
 import mongoose from 'mongoose'
 import uuid from 'uuid'
+import {values} from 'lodash'
+
+import {fieldTypes, widgetTypes, modelTypes} from '../../common/constants'
 
 const {Schema} = mongoose
 
@@ -10,14 +13,13 @@ const FieldSchema = new Schema({
   },
   label: {
     type: String,
-    required: 'Please fill in a field label',
+    required: true,
     trim: true
   },
   type: {
     type: String,
-    required: 'Please select a field type',
-    enum: ['text', 'address', 'textarea', 'date', 'radio', 'checkbox', 'foodPreferences', 'household', 'table'],
-    trim: true
+    required: true,
+    enum: [...values(fieldTypes), ...values(widgetTypes)]
   },
   choices: {
     type: String,
@@ -38,7 +40,7 @@ const SectionSchema = new Schema({
   },
   name: {
     type: String,
-    required: 'Please fill in a section name',
+    required: true,
     trim: true
   },
   fields: [FieldSchema]
@@ -48,16 +50,16 @@ const QuestionnaireSchema = new Schema({
   name: {
     type: String,
     unique: true,
-    required: 'Please fill in a questionnaire name',
+    required: true,
     trim: true
   },
   identifier: {
     type: String,
     unique: true,
-    required: 'Please fill in a short identifier',
+    required: true,
     trim: true
   },
   sections: [SectionSchema]
 })
 
-export default mongoose.model('Questionnaire', QuestionnaireSchema)
+export default mongoose.model(modelTypes.QUESTIONNAIRE, QuestionnaireSchema)

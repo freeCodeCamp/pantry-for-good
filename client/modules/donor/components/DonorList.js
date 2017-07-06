@@ -5,6 +5,8 @@ import {Button} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
+import {fieldTypes} from '../../../../common/constants'
+import {fieldsByType} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
 import {loadDonors, deleteDonor} from '../reducers/donor'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
@@ -52,7 +54,7 @@ class DonorList extends Component {
   formatData = () => this.props.donors ?
     this.props.donors.map(d => ({
       ...d,
-      address: getAddress(d)
+      address: fieldsByType(d, fieldTypes.ADDRESS).map(f => f.value).join(', ')
     })) :
     []
 
@@ -123,10 +125,3 @@ class DonorList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DonorList)
-
-function getAddress(client) {
-  return client && client.fields.filter(f =>
-      f.meta && f.meta.type === 'address')
-    .map(f => f.value)
-    .join(', ')
-}

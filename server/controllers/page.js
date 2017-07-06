@@ -3,6 +3,7 @@ import {extend} from 'lodash'
 import {writeFileSync, mkdirSync} from 'fs'
 import del from 'del'
 
+import {NotFoundError} from '../lib/errors'
 import Page from '../models/page'
 
 const clientPath = '/media/pages'
@@ -62,9 +63,7 @@ export default {
 
   async pageByIdentifier(req, res, next, identifier) {
     const page = await Page.findOne({identifier})
-    if (!page) return res.status(404).json({
-      message: 'Not found'
-    })
+    if (!page) throw new NotFoundError
 
     req.page = page
     next()

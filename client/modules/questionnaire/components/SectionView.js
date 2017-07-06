@@ -4,7 +4,8 @@ import {compose} from 'recompose'
 import {DragSource, DropTarget} from 'react-dnd'
 
 import selectors from '../../../store/selectors'
-import {moveSection, moveFieldToSection} from '../reducers/editor/index'
+import {dragDropTypes} from '../types'
+import {moveSection, moveFieldToSection} from '../reducers/editor'
 
 const mapStateToProps = state => ({
   getSection: selectors.qEditor.getSectionById(state),
@@ -23,7 +24,7 @@ const sectionSource = {
     return {
       id: props.section._id,
       idx: props.idx,
-      type: 'section'
+      type: dragDropTypes.SECTION
     }
   }
 }
@@ -33,7 +34,7 @@ const sectionTarget = {
     const {id, idx, type} = monitor.getItem()
     const dropIndex = props.idx
 
-    if (type !== 'section' || idx === dropIndex) return
+    if (type !== dragDropTypes.SECTION || idx === dropIndex) return
 
     props.moveSection(id, dropIndex)
 
@@ -42,14 +43,14 @@ const sectionTarget = {
   canDrop(props, monitor) {
     const {id, type} = monitor.getItem()
 
-    if (type === 'field')
+    if (type === dragDropTypes.FIELD)
       return props.selectedSection !== props.section._id
 
     return id !== props.section._id
   },
   drop(props, monitor) {
     const {id, type} = monitor.getItem()
-    if (type !== 'field') return
+    if (type !== dragDropTypes.FIELD) return
 
     const field = props.getField(id)
 
@@ -125,6 +126,6 @@ const SectionView = ({
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  DragSource('section', sectionSource, collectSource),
-  DropTarget(['section', 'field'], sectionTarget, collectTarget)
+  DragSource(dragDropTypes.SECTION, sectionSource, collectSource),
+  DropTarget([dragDropTypes.SECTION, dragDropTypes.FIELD], sectionTarget, collectTarget)
 )(SectionView)

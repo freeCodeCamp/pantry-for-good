@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-auto-increment'
 
+import {modelTypes} from '../../common/constants'
+
 const Schema = mongoose.Schema
 
 const DonatedItemSchema = new Schema({
@@ -19,7 +21,7 @@ const DonatedItemSchema = new Schema({
 const DonationSchema = new Schema({
   donor: {
     type: Number,
-    ref: 'User'
+    ref: modelTypes.USER
   },
   total: Number,
   approved: {
@@ -39,8 +41,8 @@ const DonationSchema = new Schema({
 })
 
 DonationSchema.plugin(autoIncrement.plugin, {
-  model: 'Donation',
+  model: modelTypes.DONATION,
   startAt: 1
 })
 
-export default mongoose.model('Donation', DonationSchema)
+export default mongoose.model(modelTypes.DONATION, DonationSchema)
