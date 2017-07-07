@@ -53,7 +53,8 @@ const CustomerSchema = new Schema({
     trim: true
   },
   lastPacked: {
-    type: Date
+    type: Date,
+    default: null
   },
   packingList: [{
     type: Schema.Types.ObjectId,
