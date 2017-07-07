@@ -37,7 +37,7 @@ describe('User Api', function() {
         .send(newUser)
         .expect(200)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('_id')
           expect(res.body.firstName).to.equal('Frank')
           expect(res.body.lastName).to.equal('Harper')
@@ -149,7 +149,7 @@ describe('User Api', function() {
         .send({email: 'fharper@example.com', password: '12345678'})
         .expect(200)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('_id')
         })
     })
@@ -169,7 +169,7 @@ describe('User Api', function() {
         .send({password: '12345678'})
         .expect(400)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body.message).to.equal('Missing credentials')
         })
     })
@@ -189,7 +189,7 @@ describe('User Api', function() {
         .send({email: 'fharper@example.com'})
         .expect(400)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body.message).to.equal('Missing credentials')
         })
     })
@@ -209,7 +209,7 @@ describe('User Api', function() {
         .send({email: 'fharper@example.com', password: 'xxxxxxxxx'})
         .expect(400)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body.message).to.equal('Unknown user or invalid password')
         })
     })

@@ -78,7 +78,7 @@ describe('Customer Api', function() {
 
       return request.get(`/api/customer/${user._id}`)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('firstName', 'user')
         })
         .expect(200)
@@ -91,7 +91,7 @@ describe('Customer Api', function() {
 
       return request.get(`/api/customer/${user._id}`)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('message', 'Not found')
         })
         .expect(404)
@@ -112,7 +112,7 @@ describe('Customer Api', function() {
 
       return firstReq.get(`/api/customer/${second.user._id}`)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('message', 'User is not authorized')
         })
         .expect(403)
@@ -134,7 +134,7 @@ describe('Customer Api', function() {
       return request.put(`/api/customer/${user._id}`)
         .send(updatedCustomer)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('firstName', 'updated')
         })
         .expect(200)
@@ -156,7 +156,7 @@ describe('Customer Api', function() {
 
       return adminReq.get(`/api/customer`)
         .expect(res => {
-          expect(res.body).to.be.an.array
+          expect(res.body).to.be.an('array')
           expect(res.body).to.have.lengthOf(1)
           expect(res.body[0]).to.have.property('firstName', 'user')
         })
@@ -171,7 +171,7 @@ describe('Customer Api', function() {
 
       return customerReq.get(`/api/customer`)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('message', 'User is not authorized')
         })
         .expect(403)
@@ -191,7 +191,7 @@ describe('Customer Api', function() {
 
       return adminReq.delete(`/api/admin/customers/${customer.user._id}`)
         .expect(res => {
-          expect(res.body).to.be.an.object
+          expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('firstName', 'user')
         })
         .expect(200)
