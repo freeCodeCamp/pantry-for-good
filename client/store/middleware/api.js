@@ -1,5 +1,6 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
 import {normalize} from 'normalizr'
+import {SubmissionError} from 'redux-form'
 
 let _socket
 
@@ -86,27 +87,17 @@ export default socket => {
 
     return callApi(endpoint, method, body, schema, responseSchema).then(
       response => next(actionWith({
-        response,
-        type: successType
+        type: successType,
+        response
       })),
       error => {
-        let errorMessage = ""
-        if (error.error && error.error.errors) {
-          errorMessage = Object.entries(error.error.errors).reduce((acc, val) => {
-            return acc + " " + val[1].message + "\n"
-          }, "")
-        } else if (error.message) {
-          errorMessage = error.message
-        } else if (error.errmsg) {
-          errorMessage = error.errmsg
-        } else {
-          errorMessage = "The server responded with an error"
-        }
-
-        return next(actionWith({
+        next(actionWith({
           type: failureType,
-          error: errorMessage
-        }))}
+          error
+        }))
+        if (error.paths && action.meta && action.meta.submitValidate)
+          throw new SubmissionError(error.paths)
+      }
     )
   }
 }

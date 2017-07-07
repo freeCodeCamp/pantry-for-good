@@ -34,7 +34,8 @@ export const saveCustomer = customer => {
       body: customer,
       schema: customerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-    }
+    },
+    meta: {submitValidate: true}
   }
 }
 

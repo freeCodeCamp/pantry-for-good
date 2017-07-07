@@ -1,6 +1,8 @@
 import React from 'react'
+import {values} from 'lodash'
 import {Route} from 'react-router-dom'
 
+import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import ChangePassword from './components/ChangePassword'
 import EditProfile from './components/EditProfile'
 import ForgotPassword from './components/ForgotPassword'
@@ -12,7 +14,7 @@ import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 
 import './css/users.css'
 
-const IsUser = requireRole(['admin', 'customer', 'donor', 'volunteer'])
+const IsUser = requireRole([ADMIN_ROLE, ...values(clientRoles)])
 
 const UserRouter = ({match}) =>
   <SwitchWithNotFound>

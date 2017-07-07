@@ -40,6 +40,14 @@ export class NotFoundError extends HttpError {
   }
 }
 
+export class ValidationError extends BadRequestError {
+  constructor(paths, message) {
+    super(message || 'Validation error')
+    this.name = this.constructor.name
+    this.paths = paths
+  }
+}
+
 export class SimulatedError extends Error {
   constructor(message) {
     super()
@@ -56,13 +64,6 @@ const defaultResponse = {
 }
 
 export default function getErrorMessage(err) {
-  if (err.message === 'Invalid address') {
-    return {
-      message: err.message,
-      status: 400
-    }
-  }
-
   if (err.code && err.code === 11000 || err.code === 11001) {
     return {
       message: 'Unique field already exists',
@@ -73,7 +74,8 @@ export default function getErrorMessage(err) {
   if (err instanceof HttpError) {
     return {
       message: err.message,
-      status: err.status
+      status: err.status,
+      paths: err.paths
     }
   }
 

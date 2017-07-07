@@ -91,12 +91,13 @@ export default function(io) {
 
     // Dont log client errors or during testing
     if (process.env.NODE_ENV !== 'test' && !(err instanceof HttpError)) {
-      console.error(err.stack)
+      console.error(err)
     }
 
     const error = getErrorMessage(err)
     res.status(error.status).json({
-      message: error.message
+      message: error.message,
+      ...(error.paths ? {paths: err.paths} : {})
     })
   })
 

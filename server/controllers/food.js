@@ -1,6 +1,11 @@
 import {extend, intersection} from 'lodash'
 
-import {BadRequestError, ForbiddenError, NotFoundError} from '../lib/errors'
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  ValidationError
+} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Food from '../models/food'
@@ -17,16 +22,10 @@ export default {
       res.json(savedFood)
     } catch (error) {
       // Check if it is a unique key error(11000) from the category field
-      if (error.code === 11000 && error.errmsg.match('category')) {
-        const response = {
-          name: 'Duplicate category error',
-          message: 'That category already exists',
-          errors: {category: {message: 'That category already exists'}}
-        }
-        return res.status(400).json({error: response})
-      } else {
-        throw error
-      }
+      if (error.code === 11000 && error.errmsg.match('category'))
+        throw new ValidationError({category: 'That category already exists'})
+
+      throw error
     }
   },
 
@@ -80,22 +79,14 @@ export default {
       existingFoodItem.categoryId = item.categoryId
       existingFoodItem.quantity += Number(item.quantity)
 
-      try {
-        const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
-        res.json(updatedCategory)
-      } catch (err) {
-        res.status(500).json({ error: err.message })
-      }
+      const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
+      res.json(updatedCategory)
     } else {
-      try {
-        const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })
-        res.json(savedFood)
-      } catch (err) {
-        res.status(500).json({ error: err.message })
-      }
+      const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })
+      res.json(savedFood)
 
       // Add item to every customer's food preferences
-      // TODO: test this
+      // TODO: do we want this?
       await Customer.update({}, { $addToSet: { foodPreferences: item._id } }, { multi: true })
     }
   },
@@ -107,12 +98,8 @@ export default {
     const originalCategoryId = req.params.foodId
     const updatedItem = req.body
 
-    try {
-      const updatedCategory = await updateItemHelper(originalCategoryId, updatedItem)
-      res.json(updatedCategory)
-    } catch (err) {
-      res.status(500).json({ error: err.message })
-    }
+    const updatedCategory = await updateItemHelper(originalCategoryId, updatedItem)
+    res.json(updatedCategory)
   },
 
   /**
@@ -177,24 +164,14 @@ function updateFoodItemWithoutCategoryChange(categoryId, updatedItem) {
   )
 }
 
-function updateFoodItemWithCategoryChange(originalCategoryId, updatedItem) {
-  return new Promise((resolve, reject) => {
-    // first delete from the old category items colletion with $pull
-    Food.findByIdAndUpdate(originalCategoryId, { $pull: { items: { _id: updatedItem._id } } }, { new: true })
-    .catch(() => {
-      reject(new Error('Database error removing foodItem from original category'))
-    })
-    .then(() => {
-      // Add the item to the new category items collection
-      Food.findByIdAndUpdate(updatedItem.categoryId, { $addToSet: { items: updatedItem } }, { new: true })
-      .then(result => {
-        if (result) {
-          resolve(result)
-        } else {
-          reject(new Error('Could not update database'))
-        }
-      })
-      .catch(err => reject(err))
-    })
-  })
+async function updateFoodItemWithCategoryChange(originalCategoryId, updatedItem) {
+  // delete from old category
+  await Food.findByIdAndUpdate(originalCategoryId, {
+    $pull: { items: { _id: updatedItem._id } } })
+
+  // add to new
+  return Food.findByIdAndUpdate(updatedItem.categoryId,
+    { $addToSet: { items: updatedItem } },
+    { new: true }
+  )
 }

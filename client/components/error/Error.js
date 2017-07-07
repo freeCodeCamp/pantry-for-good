@@ -9,7 +9,7 @@ const Error = ({error}) => {
       <Col xs={12}>
         <div className="text-danger" style={{ whiteSpace: "pre-wrap"}}>
           <i className="icon fa fa-warning" />
-          {error}
+          {error.message || error}
         </div>
       </Col>
     </Row>

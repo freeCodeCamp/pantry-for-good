@@ -11,10 +11,9 @@ import Package from '../models/package'
 const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
-  list: function(req, res, next) {
+  list: function(req, res) {
     Package.find()
     .then(data => res.json(data))
-    .catch(err => next(err))
   },
 
   /**
@@ -37,7 +36,7 @@ export default {
       addPackageContentsToItemCounts(customerPackage.contents, packedItemCounts)
     })
     const foodItemIdsToUpdate = Object.keys(packedItemCounts)
-      
+
     await Promise.all([
       verifyCustomerIds(customerIdsToUpdate),
       verifyFoodItemIds(foodItemIdsToUpdate)
@@ -51,7 +50,7 @@ export default {
 
     //update customers lastPacked field in database
     await Customer.update({ _id: { $in: customerIdsToUpdate } }, { "$set": { lastPacked: now } }, { "multi": true })
-    
+
     // Create a customerUpdates object with lastPacked values to return to the client
     const customerUpdates = {}
     customerIdsToUpdate.forEach(_id => customerUpdates[_id] = { lastPacked: now })
@@ -77,10 +76,10 @@ export default {
       customerUpdates
     })
   },
-  
+
   /**
-   * Unpacks a packed food package for a customer. 
-   * In essence it undoes the pack() function by deleting the package, adding the package contents 
+   * Unpacks a packed food package for a customer.
+   * In essence it undoes the pack() function by deleting the package, adding the package contents
    * back to the foodItem counts and updating the customer.lastPacked field.
    * req.body.id must be set to the _id of the package to delete
    */
@@ -109,7 +108,7 @@ export default {
 
     //Add the items from the unpacked package back to the inventory counts
     await Promise.all(
-      deletedPackage.contents.map(itemId => 
+      deletedPackage.contents.map(itemId =>
         Food.findOneAndUpdate(
           {'items._id': itemId},
           {$inc:  {'items.$.quantity': 1 }},
@@ -122,27 +121,23 @@ export default {
       )
     )
 
-    res.json({ 
+    res.json({
       deletedPackage,
       updatedItemCounts,
       updatedCustomer: {
         [deletedPackage.customer]: {lastPacked: updatedLastPacked }
       }
     })
-  
+
   },
-  deliver: async function(req, res, next) {
+  deliver: async function(req, res) {
     const {customerIds} = req.body
-    try {
-      const customers = await Promise.all(
-        customerIds.map(async id =>
-          Customer.findByIdAndUpdate(id,
-            {lastDelivered: beginWeek}, {new: true}))
-      )
-      res.json({customers})
-    } catch (err) {
-      next(err)
-    }
+    const customers = await Promise.all(
+      customerIds.map(async id =>
+        Customer.findByIdAndUpdate(id,
+          {lastDelivered: beginWeek}, {new: true}))
+    )
+    res.json({customers})
   },
   hasAuthorization(req, res, next) {
     const authorizedRoles = [
@@ -174,7 +169,7 @@ async function verifyCustomerIds(customerIds) {
   if (count !== uniq(customerIds).length) {
     throw new BadRequestError('One or more customerIds are not valid')
   }
-  
+
 }
 
 // Verify a list of foodItem Ids exist in the database
