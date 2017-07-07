@@ -9,6 +9,7 @@ import Header from './modules/core/components/Header'
 import Footer from './modules/core/components/Footer'
 import Home from './modules/core/components/Home'
 import Dialog from './modules/core/components/Dialog'
+import Title from './modules/core/components/Title'
 
 import Customers from './modules/customer/CustomerRouter'
 import Donors from './modules/donor/DonorRouter'
@@ -29,6 +30,7 @@ const IsVolunteer = requireRole([ADMIN_ROLE, clientRoles.VOLUNTEER])
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
     <div>
+      <Title />
       <Sidebar />
       <Header />
       <Dialog />
