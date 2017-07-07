@@ -136,13 +136,30 @@ class FoodItems extends React.Component {
     foodName: value => {
       if (typeof value === 'string') {
         // The user entered a food name that does not exist yet
-        this.setState({ modalInputFields: { ...this.state.modalInputFields, name: value, categoryId:"" } }, this.validate)
-      } else {
+        this.setState({ 
+          modalInputFields: {
+            ...this.state.modalInputFields,
+            name: value,
+            categoryId: this.state.modalInputFields.categoryId
+          } 
+        }, this.validate)
+      } else if (value !== null) {
         // The user entered an existing food name and autosuggest provided the object for that food
-        this.setState({ modalInputFields: { ...this.state.modalInputFields,
-          name: value ? value.name : "",
-          categoryId: value ? value.categoryId : ""
-        } }, this.validate)
+        this.setState({
+          modalInputFields: {
+            ...this.state.modalInputFields,
+            name: value ? value.name : "",
+            categoryId: value ? value.categoryId : ""
+          }
+        }, this.validate)
+      } else {
+        this.setState({
+          modalInputFields: {
+            ...this.state.modalInputFields,
+            name: "",
+            categoryId: this.state.modalInputFields.categoryId
+          }
+        }, this.validate)
       }
     },
     foodQuantity: e =>
