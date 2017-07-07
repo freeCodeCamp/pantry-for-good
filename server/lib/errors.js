@@ -78,12 +78,13 @@ export default function getErrorMessage(err) {
   }
 
   //This catches when body-parser encounters bad JSON user data in a request
-  if(err.stack.match(/^SyntaxError: Unexpected token.+in JSON(.|\n)*node_modules\/body-parser/)) {
+  if(err.stack.match(/^SyntaxError:.+in JSON(.|\n)*node_modules\/body-parser/)) {
     return {
-      message: `Bad JSON in HTTP request. ${err.message}:  ${err.body}`,
+      message: (process.env.NODE_ENV === 'production') ? 'The data received by the server is not properly formatted. Try refreshing your browser.'
+        : `Bad JSON in HTTP request. ${err.message}:  ${err.body}`,
       status: 400
     }
   }
-  
+
   return defaultResponse
 }
