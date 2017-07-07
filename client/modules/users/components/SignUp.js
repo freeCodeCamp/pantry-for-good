@@ -1,4 +1,5 @@
 import React from 'react'
+import {get, has, last} from 'lodash'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {push} from 'react-router-redux'
@@ -18,11 +19,11 @@ class SignUp extends React.Component {
     super(props)
     this.redirectIfAlreadySignedIn(this.props)
     this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      passwordConfirm: ""
+      firstName: {value: '', touched: false},
+      lastName: {value: '', touched: false},
+      email: {value: '', touched: false},
+      password: {value: '', touched: false},
+      passwordConfirm: {value: '', touched: false}
     }
   }
 
@@ -33,22 +34,28 @@ class SignUp extends React.Component {
   redirectIfAlreadySignedIn(props) {
     if (props.user && props.user._id) {
       const role = userClientRole(props.user)
-      props.push(role ? `/${role}s` : '/')
+      props.push(role ? `/${last(role.split('/'))}s` : '/')
     }
   }
 
   onFieldChange = e => {
     const {name, value} = e.target
-    this.setState({ [name]: value })
+    this.setState({[name]: {value, touched: true}})
   }
 
   onSubmit = e => {
     e.preventDefault()
+    this.setState({
+      firstName: {value: this.state.firstName.value, touched: true},
+      lastName: {value: this.state.lastName.value, touched: true},
+      email: {value: this.state.email.value, touched: true},
+      password: {value: this.state.password.value, touched: true},
+    })
     this.props.signUp({
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      password: this.state.password
+      firstName: this.state.firstName.value,
+      lastName: this.state.lastName.value,
+      email: this.state.email.value,
+      password: this.state.password.value
     })
   }
 
@@ -59,6 +66,13 @@ class SignUp extends React.Component {
   componentWillReceiveProps = nextProps => {
     this.redirectIfAlreadySignedIn(nextProps)
   }
+
+  isValid = field => has(
+    get(this.props, 'fetchUserError.paths', {}),
+    field
+  ) ? 'error' : null
+
+  getError = field => get(this.props, `fetchUserError.paths.${field}`)
 
   render = () =>
     <section className="content">
@@ -72,14 +86,20 @@ class SignUp extends React.Component {
         <FieldGroup
           name="firstName"
           onChange={this.onFieldChange}
-          value={this.state.firstName}
+          value={this.state.firstName.value}
+          touched={this.state.firstName.touched}
           className="signup-firstname"
+          valid={this.isValid('firstName')}
+          errorMessage={this.getError('firstName')}
           placeholder="First Name"
         />
         <FieldGroup
           name="lastName"
           onChange={this.onFieldChange}
-          value={this.state.LastName}
+          value={this.state.lastName.value}
+          touched={this.state.lastName.touched}
+          valid={this.isValid('lastName')}
+          errorMessage={this.getError('lastName')}
           placeholder="Last Name"
           required
         />
@@ -87,7 +107,10 @@ class SignUp extends React.Component {
           name="email"
           type="email"
           onChange={this.onFieldChange}
-          value={this.state.email}
+          value={this.state.email.value}
+          touched={this.state.email.touched}
+          valid={this.isValid('email')}
+          errorMessage={this.getError('email')}
           placeholder="Email"
           required
         />
@@ -95,7 +118,10 @@ class SignUp extends React.Component {
           name="password"
           type="password"
           onChange={this.onFieldChange}
-          value={this.state.password}
+          value={this.state.password.value}
+          touched={this.state.password.touched}
+          valid={this.isValid('password')}
+          errorMessage={this.getError('password')}
           placeholder="Password"
           icon="lock"
           required
@@ -104,18 +130,21 @@ class SignUp extends React.Component {
           name="passwordConfirm"
           type="password"
           onChange={this.onFieldChange}
-          value={this.state.passwordConfirm}
+          value={this.state.passwordConfirm.value}
+          touched={this.state.passwordConfirm.touched}
+          valid={this.isValid('passwordConfirm')}
+          errorMessage={this.getError('passwordConfirm')}
           placeholder="Confirm Password"
           icon="lock"
           required
         />
-        {this.state.password !== this.state.passwordConfirm &&
+        {this.state.password.value !== this.state.passwordConfirm.value &&
           <div className="alert alert-danger">Passwords do not match</div>
         }
         <div className="text-center form-group">
           <button type="submit" className="btn btn-flat btn-primary"
             onClick={this.onSubmit}
-            disabled={this.state.password !== this.state.passwordConfirm}>
+            disabled={this.state.password.value !== this.state.passwordConfirm.value}>
             Sign up
           </button>
           <br />
@@ -140,7 +169,7 @@ const mapStateToProps = state => ({
   user: selectors.user.getUser(state),
   fetchingUser: selectors.user.fetching(state),
   fetchUserError: selectors.user.error(state),
-  googleAuthentication: (state.settings && state.settings.data) ? state.settings.data.googleAuthentication : false
+  googleAuthentication: get(selectors.settings.getSettings(state), 'googleAuthentication')
 })
 
 const mapDispatchToProps = dispatch => ({
