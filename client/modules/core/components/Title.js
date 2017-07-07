@@ -1,19 +1,16 @@
 import {Component} from 'react'
 import {connect} from 'react-redux'
+import {capitalize} from 'lodash'
 
 import selectors from '../../../store/selectors'
 
 const mapStateToProps = state => ({
   route: state.router.location,
   settings: selectors.settings.getSettings(state),
-  customers: selectors.customer.getAll(state),
-  donors: selectors.donor.getAll(state),
-  volunteers: selectors.volunteer.getAll(state)
+  getCustomer: selectors.customer.getOne(state),
+  getDonor: selectors.donor.getOne(state),
+  getVolunteer: selectors.volunteer.getOne(state)
 })
-
-const capitalizeFirstLetter = string => (
-    string.charAt(0).toUpperCase() + string.slice(1)
-)
 
 class Title extends Component {
   componentDidUpdate() {
@@ -21,31 +18,28 @@ class Title extends Component {
     const route = this.props.route.pathname.split('/')
     
     if(route.length > 1 && route[1] !== '') {
-      title.unshift(capitalizeFirstLetter(route[1]))
+      title.unshift(capitalize(route[1]))
 
       if(route.length > 2 && route[2] !== 'list') {
-        const id = route[2]
+        const id = parseInt(route[2], 10)
 
-        if (parseInt(id, 10)) {
+        if (id) {
           switch (route[1]) {
             case 'customers': {
-              const customer = this.props.customers.find(c => c.id === id)
-              title.unshift(customer.fullName)
+              title.unshift(this.props.getCustomer(id).fullName)
               break
             }
             case 'donors': {
-              const donor = this.props.donors.find(d => d.id === id)
-              title.unshift(donor.fullName)
+              title.unshift(this.props.getDonor(id).fullName)
               break
             }
             case 'volunteers': {
-              const volunteer = this.props.volunteers.find(v => v.id === id)
-              title.unshift(volunteer.fullName)
+              title.unshift(this.props.getVolunteer(id).fullName)
               break
             }
           }
         } else {
-          title.unshift(capitalizeFirstLetter(route[2]))
+          title.unshift(capitalize(route[2]))
         }
       }
     }
