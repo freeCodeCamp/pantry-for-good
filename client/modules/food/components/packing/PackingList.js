@@ -148,6 +148,9 @@ class PackingList extends Component {
             <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
+            </TableHeaderColumn>            
+            <TableHeaderColumn dataField="lastPacked" width="150px">
+              Last Packed On
             </TableHeaderColumn>
             <TableHeaderColumn dataField="packingList" dataFormat={this.getItemList}>
               Items

@@ -5,63 +5,41 @@ import {modelTypes} from '../../common/constants'
 
 const Schema = mongoose.Schema
 
-/**
- * Donation Schema
- */
+const DonatedItemSchema = new Schema({
+  name: {
+    type: String,
+    trim: true
+  },
+  value: {
+    type: Number,
+    required: true
+  }
+}, {
+  _id: false
+})
+
 const DonationSchema = new Schema({
-  type: {
-    type: String,
-    enum: ['Cash', 'Cash with advantage', 'Non-cash', 'Non-cash with advantage']
+  donor: {
+    type: Number,
+    ref: modelTypes.USER
   },
-  dateReceived: {
-    type: Date
-  },
-  donorName: {
-    type: String,
-    trim: true
-  },
-  donorAddress: {
-    type: String,
-    trim: true
-  },
-  total: {
-    type: Number
-  },
-  advantageValue: {
-    type: Number
-  },
-  advantageDescription: {
-    type: String,
-    trim: true
-  },
-  eligibleForTax: {
-    type: Number
+  total: Number,
+  approved: {
+    type: Boolean,
+    default: false
   },
   description: {
     type: String,
     trim: true
   },
-  appraiserName: {
-    type: String,
-    trim: true
-  },
-  appraiserAddress: {
-    type: String,
-    trim: true
-  },
-  dateIssued: {
+  dateReceived: {
     type: Date,
     default: Date.now
   },
-  location: {
-    type: String,
-    trim: true
-  }
+  dateIssued: Date,
+  items: [DonatedItemSchema]
 })
 
-/**
- * Schema plugins
- */
 DonationSchema.plugin(autoIncrement.plugin, {
   model: modelTypes.DONATION,
   startAt: 1

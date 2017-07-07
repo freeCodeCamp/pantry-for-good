@@ -24,6 +24,7 @@ const addressGenerator = new AddressGenerator
 const User = mongoose.model(modelTypes.USER)
 const Customer = mongoose.model(modelTypes.CUSTOMER)
 const Donor = mongoose.model(modelTypes.DONOR)
+const Donation = mongoose.model(modelTypes.DONATION)
 const Volunteer = mongoose.model(modelTypes.VOLUNTEER)
 const Questionnaire = mongoose.model(modelTypes.QUESTIONNAIRE)
 const Food = mongoose.model(modelTypes.FOOD)
@@ -51,6 +52,7 @@ async function clearDb(replaceAdmin) {
 
   await Promise.all([
     Customer.find().remove(),
+    Donation.find().remove(),
     Donor.find().remove(),
     Volunteer.find().remove(),
     Food.find().remove(),

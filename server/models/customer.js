@@ -81,8 +81,7 @@ const CustomerSchema = new Schema({
 })
 
 CustomerSchema.path('fields')
-  .validate(//() => false, 'Invalid field')
-    getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
+  .validate(getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
 
 // Initialize geocoder options for pre save method
 const geocoder = nodeGeocoder({

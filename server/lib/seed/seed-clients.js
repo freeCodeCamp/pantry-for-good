@@ -148,21 +148,26 @@ async function seedStaticFields(client, user, dateOfBirth, address) {
  * @returns {object}
  */
 async function populateDonorFields(client) {
-  const donations = range(10).map(() => {
-    const type = randomIn({
-      'Cash': 0.25,
-      'Cash with advantage': 0.25,
-      'Non-cash': 0.25,
-      'Non-cash with advantage': 0.25
-    })
+  const donations = range(random(3, 30)).map(() => {
+    const items = range(random(1, 4)).map(() => ({
+      name: randomIn({
+        'Cash': 0.75,
+        'Food': 0.25,
+      }),
+      value: random(1, 50)
+    }))
 
+    const total = items.reduce((acc, item) => acc + item.value, 0)
     const dateReceived = faker.date.past(3).toISOString()
+    const approved = Boolean(Math.round(Math.random()))
 
     return {
-      type,
+      donor: client._id,
       dateReceived,
-      eligibleForTax: random(10, 1000),
-      donorName: `${client.firstName} ${client.lastName}`
+      items,
+      total,
+      approved,
+      ...(approved ? {dateIssued: Date.now()} : {})
     }
   })
 

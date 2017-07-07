@@ -41,8 +41,8 @@ class DonorList extends Component {
   }
 
   totalDonations = (_, donor) => {
-    if (!donor || !donor.donations) return 0
-    return donor.donations.reduce((acc, x) => acc + x.eligibleForTax || 0, 0)
+    if (!donor || !donor.donations.length) return 0
+    return donor.donations.reduce((acc, x) => acc + x.total || 0, 0)
   }
 
   deleteDonor = donor => () => this.props.showDialog(
