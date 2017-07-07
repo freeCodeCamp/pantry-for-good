@@ -1,6 +1,6 @@
 import {Component} from 'react'
 import {connect} from 'react-redux'
-import {capitalize} from 'lodash'
+import {capitalize, get} from 'lodash'
 
 import selectors from '../../../store/selectors'
 
@@ -14,9 +14,9 @@ const mapStateToProps = state => ({
 
 class Title extends Component {
   componentDidUpdate() {
-    let title = [this.props.settings.organization]
+    let title = [get(this.props.settings, 'organization', '')]
     const route = this.props.route.pathname.split('/')
-    
+
     if(route.length > 1 && route[1] !== '') {
       title.unshift(capitalize(route[1]))
 
@@ -43,7 +43,7 @@ class Title extends Component {
         }
       }
     }
-    
+
     document.title = title.join(' - ')
   }
 

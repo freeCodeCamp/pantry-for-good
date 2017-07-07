@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {flatten} from 'lodash'
 import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
@@ -78,15 +79,16 @@ class DonorCreate extends Component {
       const role = userClientRole(user)
       if (!role) return
 
-      const userData = {
-        customer: getCustomer(user._id),
-        volunteer: getVolunteer(user._id)
-      }
+      const userData = [
+        getCustomer(user._id),
+        getVolunteer(user._id),
+        this.state.donor
+      ]
 
       this.setState({
         donor: {
           ...this.state.donor,
-          fields: [...userData[role].fields, ...this.state.donor.fields]
+          fields: flatten(userData.filter(x => x).map(data => data.fields))
         }
       })
     }
