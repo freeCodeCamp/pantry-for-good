@@ -47,8 +47,10 @@ class Schedule extends Component {
   }
 
   frequencyValidator = (value) => {
-      if(value < 0) {
-          return 0;
+      if(value % 1 !=0) {
+          return 'Decimal is not allowed'
+      } else if(value < 0) {
+          return 'Negative number is not allowed.';
       }
       return true;
   }
