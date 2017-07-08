@@ -46,6 +46,13 @@ class Schedule extends Component {
     return category && category.category
   }
 
+  frequencyValidator = (value) => {
+      if(value < 0) {
+          return 0;
+      }
+      return true;
+  }
+
   render() {
     const {loading, saving, error} = this.props
 
@@ -98,7 +105,7 @@ class Schedule extends Component {
                 <TableHeaderColumn
                   dataField="frequency"
                   dataSort
-                  editable={{type: 'number'}}
+                  editable={{type: 'number', validator:this.frequencyValidator}}
                 >
                   Frequency
                 </TableHeaderColumn>
