@@ -60,7 +60,7 @@ class PackingList extends Component {
     // generate packing lists for selected customers and updated item counts
     const customers = this.state.selected.map(id => this.props.customers.find(c => c.id === id))
     const {packedCustomers} = getPackedCustomersAndItems(customers, this.props.items)
-    
+
     const packages = packedCustomers.map(customer => ({
       customer: customer.id,
       contents: customer.packingList.map(item => item._id)
@@ -148,7 +148,7 @@ class PackingList extends Component {
             <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
-            </TableHeaderColumn>            
+            </TableHeaderColumn>
             <TableHeaderColumn dataField="lastPacked" width="150px">
               Last Packed On
             </TableHeaderColumn>
@@ -160,7 +160,7 @@ class PackingList extends Component {
             <Button
               bsStyle="success"
               onClick={this.pack}
-              disabled={!packedCustomers.length}
+              disabled={!selected.length}
             >
               Mark Packed
             </Button>
