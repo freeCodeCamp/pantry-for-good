@@ -37,7 +37,7 @@ export default {
           // customer was assigned to another driver, remove from old driver
           const updatedDriver = await Volunteer.findByIdAndUpdate(assignedTo, {
             $pull: {customers: id}
-          }, {new: true})
+          }, {new: true}).populate('user', 'roles')
 
           updatedDrivers[assignedTo] = updatedDriver
         }
@@ -51,7 +51,7 @@ export default {
         customers: customerIds,
         optimized: false
       }
-    }, {new: true})
+    }, {new: true}).populate('user', 'roles')
 
     res.json({
       customers: [...unassignedCustomers, ...assignedCustomers],

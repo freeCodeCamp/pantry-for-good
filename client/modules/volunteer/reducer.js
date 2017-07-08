@@ -2,6 +2,7 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get} from 'lodash'
 
+import {volunteerRoles} from '../../../common/constants'
 import {volunteer as volunteerSchema, arrayOfVolunteers} from '../../../common/schemas'
 import {CALL_API} from '../../store/middleware/api'
 import {crudActions, crudReducer} from '../../store/utils'
@@ -62,7 +63,8 @@ export const createSelectors = path => {
     getAll,
     getAllDrivers: createSelector(
       getAll,
-      volunteers => volunteers.filter(v => v.driver && v.status === 'Active')
+      volunteers => volunteers.filter(v => v.status === 'Active' &&
+          get(v.user, 'roles', []).find(r => r === volunteerRoles.DRIVER))
     ),
     getOne: state => id => createSelector(
       getEntities,
