@@ -46,6 +46,15 @@ class Schedule extends Component {
     return category && category.category
   }
 
+  frequencyValidator = (value) => {
+      if(value % 1 !=0) {
+          return 'Decimal is not allowed'
+      } else if(value < 0) {
+          return 'Negative number is not allowed.';
+      }
+      return true;
+  }
+
   render() {
     const {loading, saving, error} = this.props
 
@@ -98,7 +107,7 @@ class Schedule extends Component {
                 <TableHeaderColumn
                   dataField="frequency"
                   dataSort
-                  editable={{type: 'number'}}
+                  editable={{type: 'number', validator:this.frequencyValidator}}
                 >
                   Frequency
                 </TableHeaderColumn>
