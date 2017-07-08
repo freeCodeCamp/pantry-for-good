@@ -17,7 +17,8 @@ class FoodItems extends React.Component {
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
-      searchText: ""
+      searchText: "",
+      hasBeenChanged: false
     }
   }
 
@@ -37,7 +38,8 @@ class FoodItems extends React.Component {
       this.setState({
         showModal: 'Add',
         editModalFood: undefined,
-        modalInputFields: { name: "", categoryId: "", quantity: "" }
+        modalInputFields: { name: "", categoryId: "", quantity: "" },
+        hasBeenChanged: false
       })
     } else {
       // Open the modal in 'edit' mode
@@ -49,7 +51,8 @@ class FoodItems extends React.Component {
           name: food.name,
           categoryId: food.categoryId,
           quantity: food.quantity
-        }
+        },
+        hasBeenChanged: false
       })
     }
   }
@@ -59,7 +62,8 @@ class FoodItems extends React.Component {
       showModal: false,
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
-      validInput: false
+      validInput: false,
+      hasBeenChanged: false
     })
     this.props.clearFlags()
   }
@@ -110,11 +114,11 @@ class FoodItems extends React.Component {
   getValidationState = {
     // The following 3 functions validate the individual input fields and return the validation state used for react-bootstrap-table
     foodName: () =>
-      this.state.modalInputFields.name.trim().length ? null : 'error',
+      this.state.modalInputFields.name.trim().length || !this.state.hasBeenChanged ? null : 'error',
     foodQuantity: () =>
-      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) ? null : 'error',
+      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) || !this.state.hasBeenChanged  ? null : 'error',
     foodCategory: () =>
-      (this.state.modalInputFields.categoryId !== "") ? null : 'error',
+      (this.state.modalInputFields.categoryId !== "") || !this.state.hasBeenChanged  ? null : 'error',
     // This returns true or false if all fields are valid
     all: () =>
       this.getValidationState.foodName() === null &&
@@ -141,7 +145,8 @@ class FoodItems extends React.Component {
             ...this.state.modalInputFields,
             name: value,
             categoryId: this.state.modalInputFields.categoryId
-          } 
+          },
+          hasBeenChanged: true
         }, this.validate)
       } else if (value !== null) {
         // The user entered an existing food name and autosuggest provided the object for that food
@@ -150,7 +155,8 @@ class FoodItems extends React.Component {
             ...this.state.modalInputFields,
             name: value ? value.name : "",
             categoryId: value ? value.categoryId : ""
-          }
+          },
+          hasBeenChanged: true
         }, this.validate)
       } else {
         this.setState({
@@ -158,7 +164,8 @@ class FoodItems extends React.Component {
             ...this.state.modalInputFields,
             name: "",
             categoryId: this.state.modalInputFields.categoryId
-          }
+          },
+          hasBeenChanged: true
         }, this.validate)
       }
     },
@@ -197,6 +204,14 @@ class FoodItems extends React.Component {
     }
   }
 
+  handelModalSubmit = e => {
+    e.preventDefault()
+
+    if (this.state.validInput && !this.props.savingFoodItem) {
+      this.saveFood()
+    }
+  }
+
   render = () => {
     // set options for react-bootstrap-table
     const tableOptions = {
@@ -226,7 +241,7 @@ class FoodItems extends React.Component {
               <Modal.Title>{this.state.showModal} Food</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <form>
+              <form onSubmit={this.handelModalSubmit}>
                 <FormGroup controlId="foodName" validationState={this.getValidationState.foodName()} >
                   <ControlLabel>Food Name</ControlLabel>
                   <Autosuggest
@@ -237,6 +252,7 @@ class FoodItems extends React.Component {
                     itemReactKeyPropName='name'
                     itemSortKeyPropName='nameLowerCased'
                     onSelect={this.handleChange.foodName}
+                    autoFocus={this.state.showModal === 'Add'}
                   />
                 </FormGroup>
 
@@ -244,7 +260,9 @@ class FoodItems extends React.Component {
                   <ControlLabel>Category</ControlLabel>
                   <FormControl componentClass="select" placeholder="select category"
                     onChange={this.handleChange.foodCategory}
-                    value={this.state.modalInputFields.categoryId} >
+                    value={this.state.modalInputFields.categoryId} 
+                    autoFocus={this.state.showModal !== 'Add'}
+                    >
                     {(this.state.showModal === 'Add') &&
                       <option value="">Select Category</option>
                     }
@@ -264,6 +282,7 @@ class FoodItems extends React.Component {
                     onChange={this.handleChange.foodQuantity}
                   />
                 </FormGroup>
+                <input type="submit" style={{position: "absolute", left: "-9999px", width: "1px", height: "1px"}} />
 
               </form>
             </Modal.Body>
