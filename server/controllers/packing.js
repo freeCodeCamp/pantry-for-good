@@ -44,7 +44,12 @@ export default {
     // save the new packages to the database
     const now = new Date().toISOString()
     const newPackages = await Promise.all(
-      packages.map(customerPackage => Package.create({ ...customerPackage, datePacked: now }))
+      packages.map(customerPackage => Package.create({
+        ...customerPackage,
+        datePacked: now,
+        packedBy: req.user._id,
+        status: 'Packed'
+      }))
     )
 
     //update customers lastPacked field in database
@@ -185,8 +190,8 @@ async function verifyFoodItemIds(foodItemIds) {
       return Food.count({ 'items._id': _id }).then(count => {
         if (!count) throw new BadRequestError(`foodItem ${_id} was not found in the database`)
       })
-    }
-  ))
+    })
+  )
 }
 
 // Takes an array of foodItem ids and increments packedItemCounts[foodItemId] for each item in contents
