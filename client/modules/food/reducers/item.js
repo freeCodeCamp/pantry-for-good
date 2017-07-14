@@ -18,18 +18,16 @@ export const CLEAR_FLAGS = 'foodItem/CLEAR_FLAGS'
 
 export const clearFlags = () => ({type: CLEAR_FLAGS})
 
-export const saveFoodItem = (categoryId, foodItem) => {
-  return {
-    [CALL_API]: {
-      endpoint: foodItem._id ? `foods/${categoryId}/items/${foodItem._id}` : `foods/${categoryId}/items`,
-      method: foodItem._id ? 'PUT' : 'POST',
-      body: foodItem,
-      schema: foodItemSchema,
-      responseSchema: foodCategorySchema,
-      types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-    }
+export const saveFoodItem = (categoryId, foodItem) => ({
+  [CALL_API]: {
+    endpoint: foodItem._id ? `foods/${categoryId}/items/${foodItem._id}` : `foods/${categoryId}/items`,
+    method: foodItem._id ? 'PUT' : 'POST',
+    body: foodItem,
+    schema: foodItemSchema,
+    responseSchema: foodCategorySchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
   }
-}
+})
 
 export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
@@ -70,7 +68,7 @@ export default (state = {
       return {
         ...state,
         ids: action.response.entities.foodItems ?
-              Object.keys(action.response.entities.foodItems) : []
+          Object.keys(action.response.entities.foodItems) : []
       }
     case actions.SAVE_FAILURE:
     case actions.DELETE_FAILURE:

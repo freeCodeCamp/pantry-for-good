@@ -1,4 +1,5 @@
 // https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js
+import fetch from 'isomorphic-fetch'
 import {normalize} from 'normalizr'
 import {SubmissionError} from 'redux-form'
 
@@ -78,6 +79,7 @@ export default socket => {
     const actionWith = data => {
       const finalAction = Object.assign({}, action, data)
       delete finalAction[CALL_API]
+      delete finalAction.meta
       return finalAction
     }
 
@@ -110,6 +112,7 @@ function formatRequestBody(body, method, schema) {
     const entityType = schema._key
     const normalized = normalize(body, schema).entities[entityType]
     const keys = Object.keys(normalized)
+
     if (keys.length !== 1) {
       throw new Error('Expected request body to contain a single entity')
     }

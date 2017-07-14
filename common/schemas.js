@@ -40,14 +40,14 @@ customer.define({
   fields: [{meta: field}],
   foodPreferences: arrayOfFoodItems,
   packingList: arrayOfFoodItems,
-  assignedTo: volunteer,
-  _id: user
+  assignedTo: volunteer
 })
+
+donation.define({donor})
 
 donor.define({
   fields: [{meta: field}],
-  donations: arrayOfDonations,
-  _id: user
+  donations: arrayOfDonations
 })
 
 questionnaire.define({sections: arrayOfSections})
@@ -65,6 +65,5 @@ foodCategory.define({
 
 volunteer.define({
   fields: [{meta: field}],
-  customers: arrayOfCustomers,
-  _id: user
+  customers: arrayOfCustomers
 })

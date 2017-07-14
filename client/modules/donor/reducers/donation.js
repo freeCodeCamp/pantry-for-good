@@ -2,9 +2,12 @@ import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
 import {get, union} from 'lodash'
 
-import {donation as donationSchema, arrayOfDonations} from '../../../../common/schemas'
+import {
+  donor as donorSchema,
+  donation as donationSchema,
+  arrayOfDonations
+} from '../../../../common/schemas'
 import {callApi} from '../../../store/middleware/api'
-import {saveDonor} from './donor'
 
 export const SAVE_DONATION_REQUEST = 'donation/SAVE_REQUEST'
 export const SAVE_DONATION_SUCCESS = 'donation/SAVE_SUCCESS'
@@ -19,16 +22,15 @@ export const RECEIPT_DONATION_FAILURE = 'donation/RECEIPT_FAILURE'
 const saveDonationRequest = () => ({type: SAVE_DONATION_REQUEST})
 const approveDonationRequest = () => ({type: APPROVE_DONATION_REQUEST})
 const receiptDonationRequest = () => ({type: RECEIPT_DONATION_REQUEST})
-const receiptDonationSuccess = () => ({type: RECEIPT_DONATION_SUCCESS})
 
-const saveDonationSuccess = result => ({
+const receiptDonationSuccess = response => ({
+  type: RECEIPT_DONATION_SUCCESS,
+  response
+})
+
+const saveDonationSuccess = response => ({
   type: SAVE_DONATION_SUCCESS,
-  response: {
-    result: result._id,
-    entities: {
-      donations: {[result._id]: result},
-    }
-  }
+  response
 })
 
 const saveDonationFailure = error => ({
@@ -36,14 +38,9 @@ const saveDonationFailure = error => ({
   error
 })
 
-const approveDonationSuccess = result => ({
+const approveDonationSuccess = response => ({
   type: APPROVE_DONATION_SUCCESS,
-  response: {
-    result: result._id,
-    entities: {
-      donations: {[result._id]: result}
-    }
-  }
+  response
 })
 
 const approveDonationFailure = error => ({
@@ -58,30 +55,28 @@ const receiptDonationFailure = error => ({
 
 export const approveDonation = id => dispatch => {
   dispatch(approveDonationRequest())
-  callApi(`admin/donations/${id}/approve`, 'PUT')
+  return callApi(`admin/donations/${id}/approve`, 'PUT', null, null, donationSchema)
     .then(res => dispatch(approveDonationSuccess(res)))
     .catch(err => dispatch(approveDonationFailure(err)))
 }
 
-export const saveDonation = (donation, donor) =>
-  dispatch => {
-    dispatch(saveDonationRequest())
-    callApi('donations', 'POST', {...donation, donor: donor.id})
-      .then(res => {
-        dispatch(saveDonor({
-          ...donor,
-          donations: [...donor.donations, res]
-        }))
+export const saveDonation = (donation, donor) => dispatch => {
+  dispatch(saveDonationRequest())
 
-        dispatch(saveDonationSuccess(res))
-      })
-      .catch(err => dispatch(saveDonationFailure(err)))
+  const schema = {
+    donation: donationSchema,
+    donor: donorSchema
   }
+
+  return callApi('donations', 'POST', {...donation, donor: donor.id}, null, schema)
+    .then(res => dispatch(saveDonationSuccess(res)))
+    .catch(err => dispatch(saveDonationFailure(err)))
+}
 
 export const sendReceipt = id => dispatch => {
   dispatch(receiptDonationRequest())
-  callApi(`donations/${id}`, 'PUT')
-    .then(() => dispatch(receiptDonationSuccess()))
+  return callApi(`donations/${id}`, 'PUT', null, null, donationSchema)
+    .then(res => dispatch(receiptDonationSuccess(res)))
     .catch(err => dispatch(receiptDonationFailure(err)))
 }
 
@@ -101,7 +96,7 @@ export default (state = {
       return {
         ...state,
         saving: false,
-        ids: union(state.ids, [action.response.result])
+        ids: union(state.ids, [action.response.result.donations])
       }
     case APPROVE_DONATION_SUCCESS:
     case RECEIPT_DONATION_SUCCESS:

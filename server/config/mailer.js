@@ -11,8 +11,8 @@ import Media from '../models/media'
 
 const sg = sendgrid(config.sendgrid.API_KEY)
 const path = process.env.NODE_ENV === 'production' ?
-      'dist/client/' :
-      'assets/'
+  'dist/client/' :
+  'assets/'
 
 export default async function sendEmail(
   toEmail,
