@@ -12,8 +12,7 @@ const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
   list: function(req, res) {
-    Package.find()
-    .then(data => res.json(data))
+    Package.find().then(data => res.json(data))
   },
 
   /**
@@ -51,12 +50,14 @@ export default {
     //update customers lastPacked field in database
     await Customer.update({ _id: { $in: customerIdsToUpdate } }, { "$set": { lastPacked: now } }, { "multi": true })
 
-    // Create a customerUpdates object with lastPacked values to return to the client
-    const customerUpdates = {}
-    customerIdsToUpdate.forEach(_id => customerUpdates[_id] = { lastPacked: now })
+    // Create an array of updates to apply to customers
+    const customerUpdates = customerIdsToUpdate.map(_id => ({
+      _id,
+      lastPacked: now
+    }))
 
     // Update the food item inventory quantities
-    const foodItemUpdates = {}
+    const foodItemUpdates = []
     await Promise.all(
       foodItemIdsToUpdate.map(itemId =>
         Food.findOneAndUpdate(
@@ -65,15 +66,15 @@ export default {
           { new: true }
         ).then(food => {
           const quantity = food.items.find(item => item._id.equals(itemId)).quantity
-          foodItemUpdates[itemId] = { quantity }
+          foodItemUpdates.push({ _id: itemId, quantity })
         })
       )
     )
 
     res.json({
       packages: newPackages,
-      foodItemUpdates,
-      customerUpdates
+      foodItems: foodItemUpdates,
+      customers: customerUpdates
     })
   },
 
@@ -104,28 +105,30 @@ export default {
 
     await Customer.findByIdAndUpdate(deletedPackage.customer, {lastPacked: updatedLastPacked})
 
-    const updatedItemCounts = {}
+    const updatedItemCounts = []
 
-    //Add the items from the unpacked package back to the inventory counts
+    // Add the items from the unpacked package back to the inventory counts
     await Promise.all(
-      deletedPackage.contents.map(itemId =>
-        Food.findOneAndUpdate(
-          {'items._id': itemId},
-          {$inc:  {'items.$.quantity': 1 }},
-          {new: true})
-        .then(foodCategory => {
-          // store the updated quantity for this foodItem in updatedItemCounts using it's _id as a key
-          const foodItem = foodCategory.items.find(item => item._id.equals(itemId))
-          updatedItemCounts[foodItem._id] = {quantity: foodItem.quantity}
+      deletedPackage.contents.map(itemId => Food.findOneAndUpdate(
+        {'items._id': itemId},
+        {$inc:  {'items.$.quantity': 1 }},
+        {new: true}
+      ).then(foodCategory => {
+        // store the updated quantity for this foodItem in updatedItemCounts
+        const foodItem = foodCategory.items.find(item => item._id.equals(itemId))
+        updatedItemCounts.push({
+          _id: foodItem._id,
+          quantity: foodItem.quantity
         })
-      )
+      }))
     )
 
     res.json({
-      deletedPackage,
-      updatedItemCounts,
-      updatedCustomer: {
-        [deletedPackage.customer]: {lastPacked: updatedLastPacked }
+      packages: deletedPackage,
+      foodItems: updatedItemCounts,
+      customers: {
+        _id: deletedPackage.customer,
+        lastPacked: updatedLastPacked
       }
     })
 
