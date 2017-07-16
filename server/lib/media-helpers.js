@@ -1,27 +1,34 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import {last} from 'lodash';
-import multer from 'multer';
+import fs from 'fs'
+import path from 'path'
+import crypto from 'crypto'
+import multer from 'multer'
+import {last} from 'lodash'
 
-const mediaRoot = process.env.NODE_ENV === 'production' ? 'dist/client/media' : 'assets/media';
+const mediaRoot = process.env.NODE_ENV === 'production' ? 'dist/client/media' : 'assets/media'
 
-const getPath = (filename) => {
-    return path.resolve(`${mediaRoot}/${filename}`);
-};
+const getPath = filename => {
+  return path.resolve(`${mediaRoot}/${filename}`)
+}
+
+const generateUniqueFilename = filename => {
+  const ext = last(filename.split('.'));
+  const raw = crypto.pseudoRandomBytes(16);
+  return `${raw.toString('hex')}.${ext}`;
+}
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, `${mediaRoot}`)
-    },
-    filename: function (req, file, cb) {
-        const ext = last(file.originalname.split('.'));
-        cb(null, `${file.fieldname}.${ext}`)
-    }
-});
+  destination: (req, file, cb) => {
+    cb(null, `${mediaRoot}`)
+  },
+  filename: (req, file, cb) => {
+    const filename = generateUniqueFilename(file.originalname);
+    cb(null, filename)
+  }
+})
 
-export const upload = multer({storage});
+export const upload = multer({storage})
 
-export const deleteFile = (filename) => {
-    return fs.unlink(getPath(filename));
-};
+export const deleteFile = filename => {
+  return fs.unlink(getPath(filename));
+}
 
