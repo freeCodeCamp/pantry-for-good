@@ -1,4 +1,5 @@
 import Media from '../models/media'
+import { deleteFile } from '../lib/media-helpers'
 
 export default {
   async read(req, res) {
@@ -11,6 +12,11 @@ export default {
 
     Object.keys(req.files).forEach(type => {
       const {filename} = req.files[type][0]
+
+      if (media[type] && media[type] !== filename) {
+        deleteFile(media[type])
+      }
+
       media[type] = filename
     })
 
