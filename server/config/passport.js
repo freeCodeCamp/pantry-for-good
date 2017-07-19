@@ -13,7 +13,7 @@ export default function() {
   // Deserialize sessions
   passport.deserializeUser(async function({_id}, done) {
     try {
-      const user = await User.findById(_id, '-salt -password')
+      const user = await User.findById(_id)
       done(null, user)
     } catch (err) {
       done(err)

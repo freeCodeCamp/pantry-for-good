@@ -28,7 +28,7 @@ export default async function seedClients(addressGenerator) {
     if (count) return
 
     const users = await User.find({roles: role})
-      .select('-salt -password -__v')
+      .select('-__v')
 
     const clients = await Promise.all(users.map(user => {
       const client = new Model(user.toObject())
@@ -184,9 +184,9 @@ async function populateDonorFields(client) {
 async function populateCustomerFields(client, dateOfBirth, address) {
   // get a random sample of foods for foodPreferences
   const foodPreferences = (await Food.aggregate(
-      {$unwind: '$items'},
-      {$sample: {size: random(4, 10)}}))
-    .map(res => res.items._id)
+    {$unwind: '$items'},
+    {$sample: {size: random(4, 10)}}
+  )).map(res => res.items._id)
 
   const household = [{
     name: `${client.firstName} ${client.lastName}`,

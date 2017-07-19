@@ -51,9 +51,13 @@ const UserSchema = new Schema({
   password: {
     type: String,
     default: '',
+    select: false,
     validate: [validateLocalStrategyPassword, 'Password should be longer']
   },
-  salt: String,
+  salt: {
+    type: String,
+    select: false
+  },
   provider: {
     type: String,
     required: 'Provider is required'
