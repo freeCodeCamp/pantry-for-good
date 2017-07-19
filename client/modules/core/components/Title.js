@@ -26,15 +26,18 @@ class Title extends Component {
         if (id) {
           switch (route[1]) {
             case 'customers': {
-              title.unshift(this.props.getCustomer(id).fullName)
+              const customer = this.props.getCustomer(id)
+              customer && title.unshift(customer.fullName)
               break
             }
             case 'donors': {
-              title.unshift(this.props.getDonor(id).fullName)
+              const donor = this.props.getDonor(id)
+              donor && title.unshift(donor.fullName)
               break
             }
             case 'volunteers': {
-              title.unshift(this.props.getVolunteer(id).fullName)
+              const volunteer = this.props.getVolunteer(id)
+              volunteer && title.unshift(volunteer.fullName)
               break
             }
           }
