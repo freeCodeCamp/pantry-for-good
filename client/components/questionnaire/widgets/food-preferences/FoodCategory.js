@@ -1,6 +1,8 @@
 import React from 'react'
+import P from 'prop-types'
 import {
   compose,
+  setPropTypes,
   withHandlers,
   withProps,
   withPropsOnChange
@@ -10,6 +12,12 @@ import {differenceBy, unionBy} from 'lodash'
 import {Checkbox} from '../../../form'
 
 const enhance = compose(
+  setPropTypes({
+    category: P.object.isRequired,
+    selectedItems: P.array.isRequired,
+    handleItemsChange: P.func.isRequired,
+    handleCategorySelect: P.func.isRequired
+  }),
   withPropsOnChange(
     ['category', 'selectedItems'],
     ({category, selectedItems}) => ({
@@ -27,7 +35,7 @@ const enhance = compose(
   })
 )
 
-const FoodCategorySelector = ({
+const FoodCategory = ({
   category,
   numSelected,
   partiallySelected,
@@ -41,6 +49,7 @@ const FoodCategorySelector = ({
     style={{display: 'flex'}}
   >
     <Checkbox
+      name={category._id}
       style={{margin: '0 0 0 -20px'}}
       className={partiallySelected ? 'partial' : ''}
       checked={numSelected > 0}
@@ -54,11 +63,11 @@ const FoodCategorySelector = ({
     </span>
   </div>
 
-export default enhance(FoodCategorySelector)
+export default enhance(FoodCategory)
 
 function numItemsSelected(category, selectedItems) {
   return category.items.reduce((acc, item) =>
     selectedItems.find(selectedItem =>
       selectedItem && selectedItem._id === item._id) ? acc + 1 : acc
-  , 0)
+    , 0)
 }

@@ -1,6 +1,15 @@
 import React from 'react'
-import {withHandlers} from 'recompose'
+import P from 'prop-types'
+import {compose, setPropTypes, withHandlers} from 'recompose'
 import {Checkbox as RBCheckbox} from 'react-bootstrap'
+
+const withPropTypes = setPropTypes({
+  name: P.any.isRequired,
+  label: P.string,
+  readOnly: P.bool,
+  onClick: P.func,
+  children: P.node
+})
 
 const withClickHandler = withHandlers({
   handleCheckboxClick: ({readOnly, onClick}) => ev =>
@@ -16,4 +25,7 @@ const Checkbox = ({handleCheckboxClick, children, ...rest}) =>
     {children}
   </RBCheckbox>
 
-export default withClickHandler(Checkbox)
+export default compose(
+  withPropTypes,
+  withClickHandler
+)(Checkbox)

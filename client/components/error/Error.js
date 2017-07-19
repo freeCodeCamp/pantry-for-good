@@ -1,4 +1,5 @@
 import React from 'react'
+import P from 'prop-types'
 import {Col, Row} from 'react-bootstrap'
 
 const Error = ({error}) => {
@@ -14,6 +15,13 @@ const Error = ({error}) => {
       </Col>
     </Row>
   )
+}
+
+Error.propTypes = {
+  error: P.oneOfType([
+    P.string,
+    P.shape({message: P.string})
+  ])
 }
 
 export default Error

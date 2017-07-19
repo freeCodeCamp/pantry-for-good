@@ -2,10 +2,6 @@ import {JSDOM} from 'jsdom'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import chaiEnzyme from 'chai-enzyme'
-
-chai.use(sinonChai)
-chai.use(chaiEnzyme())
 
 const {window} = new JSDOM('')
 global.window = window
@@ -23,3 +19,6 @@ global.navigator = {
 
 global.expect = chai.expect
 global.sinon = sinon
+
+chai.use(sinonChai)
+chai.use(require('chai-enzyme')())
