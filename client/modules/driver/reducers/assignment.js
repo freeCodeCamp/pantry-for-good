@@ -43,14 +43,14 @@ export const selectCluster = (cluster, customers, selectedCustomerIds) => {
     cluster.isMarkerInClusterBounds(marker))
 
   const allMarkersSelected = markersInCluster.reduce((acc, m) =>
-    selectedCustomerIds.find(id => String(id) === m.id) ? acc : false
+    selectedCustomerIds.find(id => String(id) === m._id) ? acc : false
   , true)
 
   const transform = allMarkersSelected ? difference : union
 
   return selectCustomers(transform(
     selectedCustomerIds,
-    markersInCluster.map(marker => marker.id)
+    markersInCluster.map(marker => marker._id)
   ))
 }
 
@@ -96,7 +96,7 @@ export default (state = {
       return {
         ...state,
         selectedCustomers: action.customers.map(customerOrId =>
-          customerOrId.id || customerOrId)
+          customerOrId._id || customerOrId)
       }
     case TOGGLE_SELECT_CUSTOMER: {
       const selectedCustomers = state.selectedCustomers.find(id =>
@@ -146,7 +146,7 @@ export const createSelectors = (path, customerSelectors) => {
         customers.filter(customer => {
           if (!filter) return true
           if (filter === 'unassigned') return !customer.assignedTo
-          return String(get(customer.assignedTo, 'id')) === filter
+          return String(get(customer.assignedTo, '_id')) === filter
         })
     ),
     isCustomerSelected: state => id => createSelector(

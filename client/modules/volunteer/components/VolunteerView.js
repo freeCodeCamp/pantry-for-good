@@ -33,7 +33,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   loadVolunteer: (id, admin) => dispatch(loadVolunteer(id, admin)),
   saveVolunteer: (volunteer, admin) => dispatch(saveVolunteer(volunteer, admin)),
-  deleteVolunteer: volunteer => () => dispatch(deleteVolunteer(volunteer.id)),
+  deleteVolunteer: volunteer => () => dispatch(deleteVolunteer(volunteer._id)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   showDialog: (cancel, confirm, message) =>
     dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
@@ -145,7 +145,7 @@ class VolunteerView extends Component {
             <div className="text-right">
               <Link
                 className="btn btn-success"
-                to={`/volunteers/${volunteer.id}/edit`}
+                to={`/volunteers/${volunteer._id}/edit`}
               >
                 Edit
               </Link>

@@ -38,12 +38,12 @@ class CustomerList extends Component {
   getActionButtons = (_, customer) =>
     <div>
       <Link
-        to={`/customers/${customer.id}`}
+        to={`/customers/${customer._id}`}
         className="btn btn-info btn-sm"
       ><i className="fa fa-eye" /></Link>
       {' '}
       <Link
-        to={`/customers/${customer.id}/edit`}
+        to={`/customers/${customer._id}/edit`}
         className="btn btn-primary btn-sm"
       ><i className="fa fa-pencil" /></Link>
     </div>
@@ -70,9 +70,9 @@ class CustomerList extends Component {
             >
               <BootstrapTable
                 data={this.formatData()}
-                keyField="id"
+                keyField="_id"
                 options={{
-                  defaultSortName: "id",
+                  defaultSortName: "_id",
                   defaultSortOrder: 'desc',
                   noDataText: loading ? '' : 'No customers found'
                 }}
@@ -81,7 +81,7 @@ class CustomerList extends Component {
                 pagination
                 search
               >
-                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
                 <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
                 <TableHeaderColumn dataField="address">Address</TableHeaderColumn>
                 <TableHeaderColumn dataField="email" dataSort>Email</TableHeaderColumn>

@@ -190,7 +190,7 @@ class DonorView extends Component {
           <DonationView
             donationId={this.state.viewDonationModal}
             close={this.toggleViewDonationModal()}
-            donorId={donor.id}
+            donorId={donor._id}
             showAdminButtons={this.isAdmin}
           />
         }

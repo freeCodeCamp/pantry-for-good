@@ -66,7 +66,7 @@ export const approveDonation = id => dispatch => {
 export const saveDonation = (donation, donor) =>
   dispatch => {
     dispatch(saveDonationRequest())
-    callApi('donations', 'POST', {...donation, donor: donor.id})
+    callApi('donations', 'POST', {...donation, donor: donor._id})
       .then(res => {
         dispatch(saveDonor({
           ...donor,

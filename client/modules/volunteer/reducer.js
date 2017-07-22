@@ -27,12 +27,12 @@ export const loadVolunteer = (id, admin) => ({
 
 export const saveVolunteer = (volunteer, admin) => {
   let endpoint
-  if (admin) endpoint = volunteer.id ? `admin/volunteers/${volunteer.id}` : `admin/volunteers`
-  else endpoint = volunteer.id ? `volunteer/${volunteer.id}` : `volunteer`
+  if (admin) endpoint = volunteer._id ? `admin/volunteers/${volunteer._id}` : `admin/volunteers`
+  else endpoint = volunteer._id ? `volunteer/${volunteer._id}` : `volunteer`
   return {
     [CALL_API]: {
       endpoint,
-      method: volunteer.id ? 'PUT' : 'POST',
+      method: volunteer._id ? 'PUT' : 'POST',
       body: volunteer,
       schema: volunteerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]

@@ -27,7 +27,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadDonors: () => dispatch(loadDonors()),
-  deleteDonor: donor => () => dispatch(deleteDonor(donor.id)),
+  deleteDonor: donor => () => dispatch(deleteDonor(donor._id)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   showDialog: (cancel, confirm, message) =>
     dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
@@ -61,12 +61,12 @@ class DonorList extends Component {
   getActionButtons = (_, donor) =>
     <div>
       <Link
-        to={`/donors/${donor.id}`}
+        to={`/donors/${donor._id}`}
         className="btn btn-info btn-sm"
       ><i className="fa fa-eye" /></Link>
       {' '}
       <Link
-        to={`/donors/${donor.id}/edit`}
+        to={`/donors/${donor._id}/edit`}
         className="btn btn-primary btn-sm"
       ><i className="fa fa-pencil" /></Link>
       {' '}
@@ -88,9 +88,9 @@ class DonorList extends Component {
             >
               <BootstrapTable
                 data={this.formatData()}
-                keyField="id"
+                keyField="_id"
                 options={{
-                  defaultSortName: "id",
+                  defaultSortName: "_id",
                   defaultSortOrder: 'desc',
                   noDataText: loading ? '' : 'No donors found'
                 }}
@@ -99,7 +99,7 @@ class DonorList extends Component {
                 pagination
                 search
               >
-                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
                 <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
                 <TableHeaderColumn
                   dataFormat={this.totalDonations}

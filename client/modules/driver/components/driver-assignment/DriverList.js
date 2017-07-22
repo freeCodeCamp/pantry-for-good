@@ -5,11 +5,11 @@ import driverIcon from '../../images/car-green2.png'
 
 const DriverList = ({drivers, setDriver, selectedDriverId}) =>
   <ListGroup style={{marginBottom: 0}}>
-    {drivers && drivers.filter(driver => driver.id !== selectedDriverId)
+    {drivers && drivers.filter(driver => driver._id !== selectedDriverId)
       .map(driver =>
         <ListGroupItem
-          key={driver.id}
-          onClick={setDriver(driver.id)}
+          key={driver._id}
+          onClick={setDriver(driver._id)}
         >
           <div style={{display: 'flex'}}>
             <img

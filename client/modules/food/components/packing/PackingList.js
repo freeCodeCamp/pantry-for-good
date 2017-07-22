@@ -58,11 +58,11 @@ class PackingList extends Component {
 
   pack = () => {
     // generate packing lists for selected customers and updated item counts
-    const customers = this.state.selected.map(id => this.props.customers.find(c => c.id === id))
+    const customers = this.state.selected.map(id => this.props.customers.find(c => c._id === id))
     const {packedCustomers} = getPackedCustomersAndItems(customers, this.props.items)
 
     const packages = packedCustomers.map(customer => ({
-      customer: customer.id,
+      customer: customer._id,
       contents: customer.packingList.map(item => item._id)
     }))
 
@@ -96,8 +96,8 @@ class PackingList extends Component {
 
   handleSelect = (customer, isSelected) => this.setState({
     selected: isSelected ?
-      [...this.state.selected, customer.id] :
-      this.state.selected.filter(id => id !== customer.id)
+      [...this.state.selected, customer._id] :
+      this.state.selected.filter(id => id !== customer._id)
   })
 
   handleSelectAll = isSelected => {
@@ -105,7 +105,7 @@ class PackingList extends Component {
     const {customers} = this.props
     this.setState({
       selected: isSelected || selected.length < customers.length ?
-        customers.map(c => c.id) : []
+        customers.map(c => c._id) : []
     })
   }
 
@@ -125,9 +125,9 @@ class PackingList extends Component {
           }
           <BootstrapTable
             data={packedCustomers || []}
-            keyField="id"
+            keyField="_id"
             options={{
-              defaultSortName: "id",
+              defaultSortName: "_id",
               defaultSortOrder: 'desc',
               noDataText: loading ? '' : 'Nothing to pack'
             }}
@@ -145,7 +145,7 @@ class PackingList extends Component {
             pagination
             search
           >
-            <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+            <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
             </TableHeaderColumn>

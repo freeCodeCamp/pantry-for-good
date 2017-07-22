@@ -45,7 +45,7 @@ const Markers = ({
     </MarkerClusterer>
     {driver &&
       <Marker
-        key={driver.id}
+        key={driver._id}
         icon={driverIcon}
         position={driver.location}
         title={driver.fullName}

@@ -75,7 +75,7 @@ class CustomerView extends Component {
 
   confirmDelete = customer => () => this.props.showDialog(
     this.props.hideDialog,
-    this.deleteCustomer(customer.id),
+    this.deleteCustomer(customer._id),
     `Customer ${customer.fullName} will be permanently deleted`
   )
 
@@ -146,7 +146,7 @@ class CustomerView extends Component {
               {' '}
               <Link
                 className="btn btn-success"
-                to={`/customers/${customer.id}/edit`}
+                to={`/customers/${customer._id}/edit`}
               >
                 Edit
               </Link>
@@ -161,7 +161,7 @@ class CustomerView extends Component {
             <div className="text-right">
               <Link
                 className="btn btn-success"
-                to={`/customers/${customer.id}/edit`}
+                to={`/customers/${customer._id}/edit`}
               >
                 Edit
               </Link>

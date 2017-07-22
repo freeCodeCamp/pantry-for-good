@@ -79,6 +79,8 @@ const CustomerSchema = new Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  id: false
 })
 
 CustomerSchema.path('fields')

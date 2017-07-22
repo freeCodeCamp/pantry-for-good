@@ -26,11 +26,11 @@ export const loadCustomer = id => ({
 })
 
 export const saveCustomer = customer => {
-  const endpoint = customer.id ? `customer/${customer.id}` : `customer`
+  const endpoint = customer._id ? `customer/${customer._id}` : `customer`
   return {
     [CALL_API]: {
       endpoint,
-      method: customer.id ? 'PUT' : 'POST',
+      method: customer._id ? 'PUT' : 'POST',
       body: customer,
       schema: customerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]

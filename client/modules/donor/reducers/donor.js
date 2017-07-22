@@ -26,12 +26,12 @@ export const loadDonor = (id, admin) => ({
 
 export const saveDonor = (donor, admin) => {
   let endpoint
-  if (admin) endpoint = donor.id ? `admin/donors/${donor.id}` : `admin/donors`
-  else endpoint = donor.id ? `donor/${donor.id}` : `donor`
+  if (admin) endpoint = donor._id ? `admin/donors/${donor._id}` : `admin/donors`
+  else endpoint = donor._id ? `donor/${donor._id}` : `donor`
   return {
     [CALL_API]: {
       endpoint,
-      method: donor.id ? 'PUT' : 'POST',
+      method: donor._id ? 'PUT' : 'POST',
       body: donor,
       schema: donorSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
