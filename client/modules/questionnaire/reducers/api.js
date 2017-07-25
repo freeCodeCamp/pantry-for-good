@@ -1,8 +1,9 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
-import {flatMap, get, partition} from 'lodash'
+import {flatMap, get, partition, values} from 'lodash'
 
 import {questionnaire as questionnaireSchema, arrayOfQuestionnaires} from '../../../../common/schemas'
+import {widgetTypes} from '../../../../common/constants'
 import {CALL_API} from '../../../store/middleware/api'
 import {crudActions, crudReducer} from '../../../store/utils'
 
@@ -77,8 +78,7 @@ export const createSelectors = path => {
         return otherQuestionnaires.map(q => ({
           ...q,
           fields: flatMap(q.sections, section => section.fields).filter(field =>
-            ['foodPreferences', 'table', 'household']
-              .every(type => type !== field.type) &&
+            values(widgetTypes).every(type => type !== field.type) &&
                 thisFields.every(f => f._id !== field._id))
         })).filter(q => q.fields.length)
       }

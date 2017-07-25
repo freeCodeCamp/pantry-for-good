@@ -1,7 +1,7 @@
 import {get} from 'lodash'
 
-const SHOW_DIALOG = 'app/dialog/SHOW_DIALOG'
-const HIDE_DIALOG = 'app/dialog/HIDE_DIALOG'
+export const SHOW_DIALOG = 'app/dialog/SHOW_DIALOG'
+export const HIDE_DIALOG = 'app/dialog/HIDE_DIALOG'
 
 /**
  * @typedef {Object} Action

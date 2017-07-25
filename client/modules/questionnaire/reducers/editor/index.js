@@ -112,7 +112,7 @@ export default (state = {questionnaires: {}}, action) => {
         questionnaires: action.questionnaires,
         sections: _sections,
         fields: fields(null, action),
-        selectedSection: _sections.length && _sections[0]._id,
+        selectedSection: _sections.allIds.length && _sections.allIds[0],
         dirty: false,
       }
     }
