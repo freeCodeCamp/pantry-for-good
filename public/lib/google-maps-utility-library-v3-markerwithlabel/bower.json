@@ -1,0 +1,32 @@
+{
+  "name": "google-maps-utility-library-v3-markerwithlabel",
+  "version": "1.1.10",
+  "description": "Fork of google code's google-maps-utility-library-v3-markerwithlabel",
+  "main": "./dist/markerwithlabel.js",
+  "homepage": "https://github.com/nmccready/google-maps-utility-library-v3-markerwithlabel",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nmccready/google-maps-utility-library-v3-markerwithlabel.git"
+  },
+  "author": "Gary Little (inspired by code from Marc Ridey of Google).",
+  "contributors": ["Nicholas McCready"],
+  "license": "Apache License 2.0",
+  "ignore": [
+    ".*",
+    "spec",
+    "*.coffee",
+    "*.json",
+    ".gitignore",
+    ".travis.yml",
+    "*.html",
+    "package.js",
+    "*.md",
+    "src",
+    "gulp",
+    "scripts",
+    "node_modules",
+    "bower_components",
+    "tmp",
+    "stylesheets"
+  ]
+}

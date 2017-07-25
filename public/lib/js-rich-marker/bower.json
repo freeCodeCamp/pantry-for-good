@@ -1,0 +1,25 @@
+{
+  "name": "js-rich-marker",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ashsidhu/js-rich-marker",
+  "authors": [
+    "Ashmeet Sidhu <ashmeet.sidhu7@gmail.com>"
+  ],
+  "description": "A Google Maps JavaScript API utility library",
+  "main": "src/richmarker.js",
+  "keywords": [
+    "rich",
+    "marker",
+    "richmarker",
+    "google",
+    "maps"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

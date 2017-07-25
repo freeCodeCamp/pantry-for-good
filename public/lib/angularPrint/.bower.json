@@ -1,0 +1,39 @@
+{
+  "name": "angularPrint",
+  "main": [
+    "angularPrint.js",
+    "angularPrint.css"
+  ],
+  "version": "0.3.8",
+  "homepage": "https://github.com/samwiseduzer/angularPrint",
+  "authors": [
+    "Sam Duzett <samuel.duzett@gmail.com>"
+  ],
+  "description": "Angular module that allows the user to selectively print, as well as provides optimizations for printing a table.",
+  "keywords": [
+    "angular",
+    "angularJS",
+    "print",
+    "media",
+    "query",
+    "table",
+    "select"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.3.8",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.3.8",
+    "commit": "5ec1195fe85770944908b40e565b43b960f81b85"
+  },
+  "_source": "https://github.com/samwiseduzer/angularPrint.git",
+  "_target": "^0.3.8",
+  "_originalSource": "angular-print"
+}

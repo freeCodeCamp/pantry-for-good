@@ -1,0 +1,61 @@
+@media screen{
+    .printOnly{
+        display:none;
+    }
+}
+@media print {
+    body *{
+        visibility:hidden;
+    }
+    body {
+        margin:0mm !important;
+        -webkit-print-color-adjust:exact;
+    }
+    .printOnly{
+        visibility:visible;
+        display:initial;
+    }
+    .printOnly.printRemove{
+        display:none;
+    }
+    .printSection, .printSection * {
+        visibility:visible;
+    }
+    .printRemove, .printRemove *{
+        display:none;
+    }
+    .printHide, .printHide *{
+        visibility:hidden;
+    }
+    .printHide .printSection *{
+        visibility:visible;
+    }
+    .printRemove .printSection *{
+        visibility:visible;
+    }
+    .avoidPageBreak{
+        page-break-inside:avoid;
+    }
+    td div{
+        page-break-inside:avoid;
+    }
+    thead {
+        display: table-header-group;
+    }
+    .noPrintMargin{
+        margin:0px !important;
+        padding:0px !important;
+    }
+    @page { margin:0cm }
+    @page :first {
+      margin-top:0cm;
+    }
+    @page :left {
+      margin-left:0cm;
+      margin-right:0cm;
+    }
+    @page :right {
+      margin-left:0cm;
+      margin-right:0cm;
+    }
+}

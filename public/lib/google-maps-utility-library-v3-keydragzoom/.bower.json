@@ -1,0 +1,43 @@
+{
+  "name": "google-maps-utility-library-v3-keydragzoom",
+  "version": "2.0.9",
+  "description": "Fork of google code's google-maps-utility-library-v3-keydragzoom",
+  "main": "./dist/keydragzoom.js",
+  "homepage": "https://github.com/nmccready/google-maps-utility-library-v3-keydragzoom",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nmccready/google-maps-utility-library-v3-keydragzoom.git"
+  },
+  "author": "Nianwei Liu [nianwei at gmail dot com] & Gary Little [gary at luxcentral dot com]",
+  "contibutors": [
+    "Nicholas McCready"
+  ],
+  "license": "Apache License 2.0",
+  "ignore": [
+    ".*",
+    "spec",
+    "*.coffee",
+    "*.json",
+    ".gitignore",
+    ".travis.yml",
+    "*.html",
+    "package.js",
+    "*.md",
+    "src",
+    "gulp",
+    "scripts",
+    "node_modules",
+    "bower_components",
+    "tmp",
+    "stylesheets"
+  ],
+  "_release": "2.0.9",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.0.9",
+    "commit": "142df7122264ab02d11673750117d8e14135c332"
+  },
+  "_source": "https://github.com/nmccready/google-maps-utility-library-v3-keydragzoom.git",
+  "_target": "^2.0.9",
+  "_originalSource": "google-maps-utility-library-v3-keydragzoom"
+}

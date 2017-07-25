@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>RichMarker for Google Maps v3 Reference</title>
+    <style>
+      body {
+        font-family: arial, sans-serif;
+        background-color: #fff;
+        font-size: small;
+        margin: 24px 8px 8px;
+        color: #000;
+      }
+      h1, h2, h3, h4, h5 {
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+      h2, h3, h4, h5 {
+        margin-left: 25px;
+      }
+      h1 {
+        font-size: 130%;
+        margin: 2em 0 0 10px; 
+        padding: 0 3px 0 3px;
+        border-top: 1px solid;
+        background-color: #e5ecf9;
+        border-color: #3366CC;
+      }
+      h2 {
+        font-size: 120%;
+        margin-top: 1.5em;
+        border-bottom: 1px solid;
+        border-color: #3366CC;
+      }
+      h3 {
+        font-size: 110%; 
+        margin-top: 0.7em;
+        position: relative;
+        left: 0;
+        top: 0.7em;
+        z-index: 5; /*to avoid falling behind other elements due to lowered position*/
+      }
+      h4 {
+        margin-top: .5em;
+        font-size: 100%;
+        font-weight: bold;
+        position: relative;
+        left: 0;
+        top: 0.8em;
+        z-index: 5; /*to avoid falling behind other elements due to lowered position*/
+      }
+      h5 {
+        margin-top: 0.4em;
+        font-size: 100%;
+        font-weight: 100;
+        font-style: italic;
+        text-decoration: underline;
+        position: relative;
+        left: 0;
+        top: 0.8em;
+        z-index: 5; /*to avoid falling behind other elements due to lowered position*/
+      }
+      p {
+        margin: 1em 0 0 25px;
+        padding: 0;
+      }
+      table {
+        border: 1px solid;
+        border-color: #3366CC;
+        border-spacing:0;
+        margin: 1em 0 0 26px;
+        border-collapse: collapse;
+        clear: right;
+      }
+      pre {
+        margin-left: 2em;
+      }
+      ol, ul {
+        margin-left: 2em;
+      }
+    </style>
+
+    <script>
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-12846745-20']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body>
+    <h1>RichMarker for Google Maps v3</h1>
+    <p>A RichMarker that allows any HTML/DOM to be added to a map and be draggable.</p>
+    <p>For a example of how to use this library, check out the <a
+      href="examples/richmarker.html">example</a>.</p>
+      <h2><a name="RichMarker"></a>class RichMarker</h2>
+      <p>This class extends <code>google.maps.OverlayView</code>.</p>
+        <h3>Constructor</h3>
+        <table summary="class RichMarker - Constructor" width="90%">
+
+          <tbody>
+            <tr>
+              <th>Constructor</th>
+              <th>Description</th>
+            </tr>
+              <tr class="odd">
+                <td><code>RichMarker(<span class="type">opt_options:Object.&lt;string|*&gt;</span>)</code></td>
+                <td>A RichMarker that allows any HTML/DOM to be added to a map and be draggable.</td>
+              </tr>
+          </tbody>
+        </table>
+
+        <h3>Methods</h3>
+        <table summary="class RichMarker - Methods" width="90%">
+          <thead>
+            <tr>
+              <th>Methods</th>
+              <th>Return&nbsp;Value</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>anchor_changed()</code></td>
+              <td><code>None</code></td>
+              <td>Anchor changed event.</td>
+            </tr>
+            <tr>
+              <td><code>content_changed()</code></td>
+              <td><code>None</code></td>
+              <td>Sets the marker content and adds loading events to images.</td>
+            </tr>
+            <tr>
+              <td><code>drag(<span class="type">e:Event</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Handles the drag event.</td>
+            </tr>
+            <tr>
+              <td><code>draggable_changed()</code></td>
+              <td><code>None</code></td>
+              <td>Draggable property changed callback.</td>
+            </tr>
+            <tr>
+              <td><code>draw()</code></td>
+              <td><code>None</code></td>
+              <td>Impelementing the interface. </td>
+            </tr>
+            <tr>
+              <td><code>flat_changed()</code></td>
+              <td><code>None</code></td>
+              <td>Flat changed event. </td>
+            </tr>
+            <tr>
+              <td><code>getAnchor()</code></td>
+              <td><code>google.maps.Size</code></td>
+              <td>Gets the anchor.</td>
+            </tr>
+            <tr>
+              <td><code>getContent()</code></td>
+              <td><code>string|Node</code></td>
+              <td>Get the content of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>getDraggable()</code></td>
+              <td><code>boolean</code></td>
+              <td> Whether the marker is draggable or not.</td>
+            </tr>
+             <tr>
+              <td><code>getFlat()</code></td>
+              <td><code>boolean</code></td>
+              <td> If the makrer is flat or not.</td>
+            </tr>
+            <tr>
+              <td><code>getPosition()</code></td>
+              <td><code>google.maps.LatLng</code></td>
+              <td>Gets the postiton of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>getHeight()</code></td>
+              <td><code>Number</code></td>
+              <td>Gets the height of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>getShadow()</code></td>
+              <td><code>string</code></td>
+              <td>Gets the marker's box shadow.</td>
+            </tr>
+            <tr>
+              <td><code>getVisible()</code></td>
+              <td><code>boolean</code></td>
+              <td>Returns the current visibility state of the marker. </td>
+            </tr>
+            <tr>
+              <td><code>getWidth()</code></td>
+              <td><code>Number</code></td>
+              <td>Gets the width of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>getZIndex()</code></td>
+              <td><code>Number</code></td>
+              <td>Gets the zIndex of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>onAdd()</code></td>
+              <td><code>None</code></td>
+              <td> Adding the marker to a map. Implementing the interface.</td>
+            </tr>
+            <tr>
+              <td><code>onRemove()</code></td>
+              <td><code>None</code></td>
+              <td>Removing a marker from the map. Implementing the interface..</td>
+            </tr>
+            <tr>
+              <td><code>position_changed()</code></td>
+              <td><code>None</code></td>
+              <td>Position changed event.</td>
+            </tr>
+            <tr>
+              <td><code>setAnchor(<span class="type">anchor:RichMarkerPosition|google.maps.Size</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Position changed event.</td>
+            </tr>
+            <tr>
+              <td><code>setContent(<span class="type">content:string|Node</span>)</code></td>
+              <td><code>None</code></td>
+              <td> Sets the content of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>setDraggable(<span class="type">draggable:boolean</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Sets the marker to be draggable or not.</td>
+            </tr>
+            <tr>
+              <td><code>setFlat(<span class="type">flat:boolean</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Sets the marker to be flat.</td>
+            </tr>
+            <tr>
+              <td><code>setPosition(<span class="type">position:google.maps.LatLng</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Sets the position of the marker.</td>
+            </tr>
+            <tr>
+              <td><code>setShadow(<span class="type">shadow:string</span>)</code></td>
+              <td><code>None</code></td>
+              <td> Sets the marker's box shadow.</td>
+            </tr>
+            <tr>
+              <td><code>setVisible(<span class="type">visible:boolean</span>)</code></td>
+              <td><code>None</code></td>
+              <td> Sets the visiblility state of the marker.</td>
+            </tr>
+           <tr>
+              <td><code>setZIndex(<span class="type">index:Number</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Sets the zIndex of the marker.</td>
+             </tr>
+             <tr>
+              <td><code>startDrag(<span class="type">e:Event</span>)</code></td>
+              <td><code>None</code></td>
+              <td>Start dragging.</td>
+            </tr>
+            <tr>
+              <td><code>stopDrag()</code></td>
+              <td><code>None</code></td>
+              <td>Stop dragging.</td>
+            </tr>
+             <tr>
+              <td><code>visible_changed()</code></td>
+              <td><code>None</code></td>
+              <td> The visible changed event.</td>
+            </tr>
+            <tr>
+              <td><code>zIndex_changed()</code></td>
+              <td><code>None</code></td>
+              <td>zIndex changed event.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table summary="class RichMarker - Events" width="90%">
+          <thead>
+            <tr>
+              <th>Events</th>
+              <th>Arguments</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>anchor_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the anchor property changes.</td>
+            </tr>
+            <tr>
+              <td><code>click</code></td>
+              <td><code>Event</code></td>
+              <td>This event is fired when the marker was clicked.</td>
+            </tr>
+            <tr>
+              <td><code>content_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the content property changes.</td>
+            </tr>
+            <tr>
+              <td><code>draggable_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the draggable property changes.</td>
+            </tr>
+            <tr>
+              <td><code>flat_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the flat property changes.</td>
+            </tr>
+            <tr>
+              <td><code>height_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the height property changes.</td>
+            </tr>
+            <tr>
+              <td><code>position_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the position property changes.</td>
+            </tr>
+            <tr>
+              <td><code>ready</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the marker is ready to interact with.</td>
+            </tr>
+             <tr>
+              <td><code>visible_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the visible property changes.</td>
+            </tr>
+            <tr>
+              <td><code>width_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the width property changes.</td>
+            </tr>
+            <tr>
+              <td><code>zIndex_changed</code></td>
+              <td><code>None</code></td>
+              <td>This event is fired when the zIndex property changes.</td>
+            </tr>
+          </tbody>
+        </table>
+  </body>
+</html>

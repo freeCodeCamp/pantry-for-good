@@ -1,0 +1,25 @@
+{
+  "name": "markerclustererplus",
+  "version": "2.1.4",
+  "keywords": [
+    "markerclustererplus",
+    "google",
+    "maps"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "main": "src/markerclusterer.js",
+  "ignore": [
+    "docs/*"
+  ],
+  "homepage": "https://github.com/mahnunchik/markerclustererplus",
+  "_release": "2.1.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.1.4",
+    "commit": "736b0e3a7d916fbeb2ee5007494f17a5329b11a8"
+  },
+  "_source": "https://github.com/mahnunchik/markerclustererplus.git",
+  "_target": "^2.1.4",
+  "_originalSource": "markerclustererplus"
+}

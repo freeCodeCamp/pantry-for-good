@@ -1,0 +1,25 @@
+{
+  "name": "markerclustererplus",
+  "version": "2.1.4",
+  "keywords": [
+    "markerclustererplus",
+    "google",
+    "maps"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mahnunchik/markerclustererplus.git"
+  },
+  "main": "dist/markerclusterer.js",
+  "scripts": {
+    "build": "uglifyjs src/markerclusterer.js --compress --output dist/markerclusterer.min.js",
+    "build:legacy_packaged": "uglifyjs src/markerclusterer.js --compress --output src/markerclusterer_packaged.js --preamble \"console.warn('This file has been deprecated and will be removed in the next release.');\"",
+    "build:legacy_min": "uglifyjs src/markerclusterer.js --compress --output src/markerclusterer.min.js --preamble \"console.warn('This file has been deprecated and will be removed in the next release.');\"",
+    "build:legacy": "npm run build:legacy_packaged && npm run build:legacy_min"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "uglify-js": "^2.4.17"
+  }
+}
