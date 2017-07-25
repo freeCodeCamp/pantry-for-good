@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {compose, setDisplayName, setPropTypes} from 'recompose'
+import {compose, setPropTypes} from 'recompose'
 
 import {ADMIN_ROLE} from '../../../common/constants'
 import Unauthorized from '../../modules/core/components/errors/Unauthorized'
@@ -8,8 +8,7 @@ import userOrRedirect from './userOrRedirect'
 
 const enhance = compose(
   userOrRedirect,
-  setPropTypes({match: PropTypes.object.isRequired}),
-  setDisplayName('OwnerOrAdmin')
+  setPropTypes({match: PropTypes.object.isRequired})
 )
 
 /**

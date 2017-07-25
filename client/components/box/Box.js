@@ -1,4 +1,5 @@
 import React from 'react'
+import P from 'prop-types'
 import {Col, Row} from 'react-bootstrap'
 
 const Box = ({children, type = 'primary', style, solid, ...props}) => {
@@ -15,6 +16,13 @@ const Box = ({children, type = 'primary', style, solid, ...props}) => {
       </Col>
     </Row>
   )
+}
+
+Box.propTypes = {
+  children: P.node,
+  type: P.string,
+  style: P.object,
+  solid: P.bool
 }
 
 export default Box

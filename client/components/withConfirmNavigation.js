@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
+import P from 'prop-types'
 import {connect} from 'react-redux'
-import {compose} from 'recompose'
+import {compose, setPropTypes} from 'recompose'
 import {withRouter} from 'react-router-dom'
 
 import {showNavDialog, hideDialog} from '../modules/core/reducers/dialog'
@@ -11,6 +12,9 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const enhance = compose(
+  setPropTypes({
+    dirty: P.bool
+  }),
   connect(null, mapDispatchToProps),
   withRouter
 )

@@ -1,6 +1,7 @@
 import React from 'react'
+import P from 'prop-types'
 import {connect} from 'react-redux'
-import {compose, withPropsOnChange} from 'recompose'
+import {compose, setPropTypes, withPropsOnChange} from 'recompose'
 import {ListGroup} from 'react-bootstrap'
 import {get} from 'lodash'
 
@@ -11,14 +12,22 @@ const mapStateToProps = state => ({
   getFoodCategory: selectors.food.category.getOne(state)
 })
 
+const withItemsProp = withPropsOnChange(
+  ['selectedCategoryId'],
+  ({selectedCategoryId, getFoodCategory}) => ({
+    items: get(getFoodCategory(selectedCategoryId), 'items')
+  })
+)
+
 const enhance = compose(
+  setPropTypes({
+    items: P.array,
+    selectedItems: P.array.isRequired,
+    selectedCategoryId: P.any,
+    handleItemsChange: P.func.isRequired
+  }),
   connect(mapStateToProps),
-  withPropsOnChange(
-    ['selectedCategoryId'],
-    ({selectedCategoryId, getFoodCategory}) => ({
-      items: get(getFoodCategory(selectedCategoryId), 'items')
-    })
-  )
+  withItemsProp
 )
 
 const FoodItemSelector = ({

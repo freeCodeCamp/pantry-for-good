@@ -1,10 +1,16 @@
 import React from 'react'
-import {compose, withHandlers, withPropsOnChange} from 'recompose'
+import P from 'prop-types'
+import {compose, setPropTypes, withHandlers, withPropsOnChange} from 'recompose'
 import {ListGroupItem} from 'react-bootstrap'
 
 import {Checkbox} from '../../../form'
 
 const enhance = compose(
+  setPropTypes({
+    selectedItems: P.array,
+    item: P.object.isRequired,
+    handleItemsChange: P.func.isRequired
+  }),
   withPropsOnChange(
     ['selectedItems'],
     ({item, selectedItems}) => ({
@@ -25,7 +31,8 @@ const FoodItem = ({item, selected, handleItemsChange}) =>
     onClick={handleItemsChange}
   >
     <Checkbox
-      style={{margin: '0 0 0 -20px'}}
+      name={item._id}
+      style={{margin: '0 0 0 -20px', cursor: 'pointer'}}
       checked={selected}
       readOnly
     />

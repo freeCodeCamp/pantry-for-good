@@ -1,22 +1,29 @@
 import React from 'react'
+import P from 'prop-types'
 import {connect} from 'react-redux'
-import {compose, withHandlers, withState} from 'recompose'
+import {compose, setPropTypes, withHandlers, withState} from 'recompose'
 import {get} from 'lodash'
 
 import selectors from '../../../../store/selectors'
 import FoodCategorySelector from './FoodCategorySelector'
 import FoodItemSelector from './FoodItemSelector'
 
+const withCategorySelectHandler = withHandlers({
+  handleCategorySelect: ({selectCategory}) => categoryId => () =>
+    selectCategory(categoryId)
+})
+
 const enhance = compose(
+  setPropTypes({
+    selectedItems: P.array.isRequired,
+    handleItemsChange: P.func.isRequired
+  }),
   connect(state => ({
     foodCategories: selectors.food.category.getAll(state)
   })),
   withState('selectedCategoryId', 'selectCategory', ({foodCategories}) =>
     get(foodCategories, '[0]._id')),
-  withHandlers({
-    handleCategorySelect: ({selectCategory}) => categoryId => () =>
-      selectCategory(categoryId)
-  })
+  withCategorySelectHandler
 )
 
 const FoodSelector = ({
@@ -24,7 +31,7 @@ const FoodSelector = ({
   selectedItems,
   handleItemsChange,
   selectedCategoryId,
-  handleCategorySelect,
+  handleCategorySelect
 }) =>
   <div style={{display: 'flex', margin: '10px 0'}}>
     <div className="foodCategoryContainer">
