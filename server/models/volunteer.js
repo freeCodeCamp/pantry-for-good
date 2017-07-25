@@ -73,6 +73,8 @@ var VolunteerSchema = new Schema({
     default: Date.now
   },
 
+}, {
+  id: false
 })
 
 VolunteerSchema.path('fields')

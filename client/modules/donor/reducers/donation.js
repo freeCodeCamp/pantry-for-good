@@ -60,6 +60,7 @@ export const approveDonation = id => dispatch => {
     .catch(err => dispatch(approveDonationFailure(err)))
 }
 
+
 export const saveDonation = (donation, donor) => dispatch => {
   dispatch(saveDonationRequest())
 
@@ -68,7 +69,7 @@ export const saveDonation = (donation, donor) => dispatch => {
     donor: donorSchema
   }
 
-  return callApi('donations', 'POST', {...donation, donor: donor.id}, null, schema)
+  return callApi('donations', 'POST', {...donation, donor: donor._id}, null, schema)
     .then(res => dispatch(saveDonationSuccess(res)))
     .catch(err => dispatch(saveDonationFailure(err)))
 }

@@ -87,18 +87,18 @@ const CustomerSelector = ({
       <tbody>
         {customers.map(customer =>
           <tr
-            key={customer.id}
-            className={isSelected(customer.id) ? 'active' : ''}
-            onClick={handleSelect(customer.id)}
+            key={customer._id}
+            className={isSelected(customer._id) ? 'active' : ''}
+            onClick={handleSelect(customer._id)}
             style={{cursor: 'pointer'}}
           >
             <td style={{padding: '0 0 0 4px'}}>
               <Checkbox
-                checked={isSelected(customer.id)}
+                checked={isSelected(customer._id)}
                 readOnly
               />
             </td>
-            <td><span>{customer.id}</span></td>
+            <td><span>{customer._id}</span></td>
             <td><span>
               {getAddress(customer, 2)}
             </span></td>

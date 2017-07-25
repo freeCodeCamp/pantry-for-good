@@ -32,7 +32,7 @@ const RouteMap = ({route, settings, driver}) =>
   >
     {route ?
       <DirectionsRenderer directions={route} /> :
-      <Markers driverId={driver.id} />
+      <Markers driverId={driver._id} />
     }
   </Map>
 

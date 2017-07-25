@@ -38,7 +38,7 @@ class DriverAdmin extends Component {
 
   getActionButtons = (_, driver) =>
     <div>
-      <Link to={`/drivers/${driver.id}`} className="btn btn-primary btn-sm">
+      <Link to={`/drivers/${driver._id}`} className="btn btn-primary btn-sm">
         <i className="fa fa-road" style={{marginRight: '8px'}}/>{' '}
         Route
       </Link>
@@ -58,9 +58,9 @@ class DriverAdmin extends Component {
             >
               <BootstrapTable
                 data={drivers || []}
-                keyField="id"
+                keyField="_id"
                 options={{
-                  defaultSortName: "id",
+                  defaultSortName: "_id",
                   defaultSortOrder: 'desc',
                   noDataText: loading ? '' : 'No drivers found'
                 }}
@@ -69,7 +69,7 @@ class DriverAdmin extends Component {
                 pagination
                 search
               >
-                <TableHeaderColumn dataField="id" width="70px" dataSort>#</TableHeaderColumn>
+                <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
                 <TableHeaderColumn dataField="fullName" dataSort>Name</TableHeaderColumn>
                 <TableHeaderColumn
                   dataField="deliveryStatus"

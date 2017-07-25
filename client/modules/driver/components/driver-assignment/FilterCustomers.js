@@ -19,7 +19,7 @@ const FilterCustomers = ({
     </optgroup>
     <optgroup label="Assigned Driver:">
       {drivers && drivers.map(driver =>
-        <option key={driver.id} value={driver.id}>
+        <option key={driver._id} value={driver._id}>
           {driver.fullName}
         </option>
       )}

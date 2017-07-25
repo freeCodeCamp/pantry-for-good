@@ -37,6 +37,8 @@ var DonorSchema = new Schema({
     type: Date,
     default: Date.now
   }
+}, {
+  id: false
 })
 
 DonorSchema.path('fields')

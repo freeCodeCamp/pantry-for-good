@@ -67,19 +67,19 @@ const Markers = ({
     >
       {customers && customers.filter(c => c.location).map(customer =>
         <Marker
-          key={customer.id}
-          icon={isSelected(customer.id) ? selectedCustomerIcon : customerIcon}
+          key={customer._id}
+          icon={isSelected(customer._id) ? selectedCustomerIcon : customerIcon}
           position={customer.location}
-          onClick={toggleCustomer(customer.id)}
+          onClick={toggleCustomer(customer._id)}
         />
       )}
     </MarkerClusterer>
     {drivers && drivers.map(driver =>
       <Marker
-        key={driver.id}
-        icon={isDriverSelected(driver.id) ? selectedDriverIcon : driverIcon}
+        key={driver._id}
+        icon={isDriverSelected(driver._id) ? selectedDriverIcon : driverIcon}
         position={driver.location}
-        onClick={selectDriver(driver.id)}
+        onClick={selectDriver(driver._id)}
         title={driver.fullName}
       />
     )}

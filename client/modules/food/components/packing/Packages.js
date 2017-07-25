@@ -62,7 +62,7 @@ class Packages extends Component {
             pagination
           >
             <TableHeaderColumn dataField="_id" dataSort>_id</TableHeaderColumn>
-            <TableHeaderColumn  dataField="customer" dataFormat={customer => customer.id} >
+            <TableHeaderColumn  dataField="customer" dataFormat={customer => customer._id} >
               Customer
             </TableHeaderColumn>
             <TableHeaderColumn dataField="datePacked" >
