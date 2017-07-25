@@ -5,17 +5,17 @@ import {getGoogleRoute, getCrudeRoute} from './helpers'
 import getAddress from '../../../lib/get-address'
 import {callApi} from '../../../store/middleware/api'
 
-const CLEAR_ROUTE = 'delivery/route/CLEAR_ROUTE'
-const ROUTE_REQUEST = 'delivery/route/ROUTE_REQUEST'
-const ROUTE_SUCCESS = 'delivery/route/ROUTE_SUCCESS'
-const ROUTE_FAILURE = 'delivery/route/ROUTE_FAILURE'
-const SET_WAYPOINTS = 'delivery/route/SET_WAYPOINTS'
-const SET_ALL_WAYPOINTS = 'delivery/route/SET_ALL_WAYPOINTS'
-const ADD_WAYPOINTS = 'delivery/route/ADD_WAYPOINTS'
-const REMOVE_WAYPOINTS = 'delivery/route/REMOVE_WAYPOINTS'
-const MOVE_WAYPOINT = 'delivery/route/MOVE_WAYPOINT'
-const SET_ORIGIN = 'delivery/route/SET_ORIGIN'
-const SET_DESTINATION = 'delivery/route/SET_DESTINATION'
+export const CLEAR_ROUTE = 'delivery/route/CLEAR_ROUTE'
+export const ROUTE_REQUEST = 'delivery/route/ROUTE_REQUEST'
+export const ROUTE_SUCCESS = 'delivery/route/ROUTE_SUCCESS'
+export const ROUTE_FAILURE = 'delivery/route/ROUTE_FAILURE'
+export const SET_WAYPOINTS = 'delivery/route/SET_WAYPOINTS'
+export const SET_ALL_WAYPOINTS = 'delivery/route/SET_ALL_WAYPOINTS'
+export const ADD_WAYPOINTS = 'delivery/route/ADD_WAYPOINTS'
+export const REMOVE_WAYPOINTS = 'delivery/route/REMOVE_WAYPOINTS'
+export const MOVE_WAYPOINT = 'delivery/route/MOVE_WAYPOINT'
+export const SET_ORIGIN = 'delivery/route/SET_ORIGIN'
+export const SET_DESTINATION = 'delivery/route/SET_DESTINATION'
 
 export const clearRoute = () => ({type: CLEAR_ROUTE})
 
@@ -85,7 +85,7 @@ export const moveWaypoint = (waypoint, idx, getWaypoints) => (dispatch, getState
 
 export const requestGoogleRoute = (waypoints, optimize) => dispatch => {
   dispatch(routeRequest())
-  getGoogleRoute(waypoints, optimize)
+  return getGoogleRoute(waypoints, optimize)
     .then(res => {
       dispatch(routeSuccess(res))
       if (!optimize) return

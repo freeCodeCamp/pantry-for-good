@@ -44,14 +44,14 @@ export const crudReducer = name =>
       case `${name}/SAVE_SUCCESS`:
       case `${name}/DELETE_SUCCESS`: {
         const result = Array.isArray(action.response.result) ?
-                          action.response.result :
-                          [action.response.result]
+          action.response.result :
+          [action.response.result]
 
         return {
           ...state,
           ids: action.type === `${name}/DELETE_SUCCESS` ?
-                                  difference(state.ids, result) :
-                                  union(state.ids, result),
+            difference(state.ids, result) :
+            union(state.ids, result),
           fetching: false,
           saving: false
         }

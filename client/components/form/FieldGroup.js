@@ -53,7 +53,7 @@ export default FieldGroup
 function renderField(type, name, props) {
   const {options, inline, children, ...rest} = props
 
-  if (type === 'checkbox') return renderCheckbox(options, inline, rest)
+  if (type === 'checkbox') return renderCheckbox(name, options, inline, rest)
   if (type === 'radio') return renderRadio(name, options, inline, rest)
 
   if (type === 'select' || type === 'textarea') {
@@ -91,12 +91,13 @@ function renderRadio(name, options, inline, props) {
   )
 }
 
-function renderCheckbox(options, inline, props) {
+function renderCheckbox(name, options, inline, props) {
   return Array.isArray(options) ?
     <div>
       {options.map((option, i) =>
         <Checkbox
           key={i}
+          name={name}
           {...props}
           value={option.value || option}
           onChange={() => props.onChange(option)}
@@ -107,7 +108,7 @@ function renderCheckbox(options, inline, props) {
         </Checkbox>
       )}
     </div> :
-    <Checkbox {...props}>
+    <Checkbox name={name} {...props}>
       {options}
     </Checkbox>
 }

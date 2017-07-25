@@ -77,7 +77,7 @@ export const changePassword = async function(req, res) {
     throw new BadRequestError
   }
 
-  const user = await User.findById(req.user.id)
+  const user = await User.findById(req.user.id).select('+salt +password')
   if (!user) throw new NotFoundError
   if (!user.authenticate(currentPassword))
     throw new BadRequestError('Password is incorrect')

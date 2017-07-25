@@ -38,6 +38,6 @@ export const update = async function(req, res) {
 export const me = async function(req, res) {
   if (!req.session.passport) return res.json(null)
 
-  const user = await User.findById(req.session.passport.user).select('-password -salt')
+  const user = await User.findById(req.session.passport.user)
   return res.json(user)
 }

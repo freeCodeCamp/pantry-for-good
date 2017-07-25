@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-fetch'
 import {get} from 'lodash'
 
 import {CALL_API} from '../../../store/middleware/api'
@@ -29,7 +30,7 @@ const saveMediaFailure = error => ({
 })
 
 export const saveMedia = (type, file) => dispatch => {
-  const formData = new FormData()
+  const formData = new window.FormData()
   formData.append(type, file)
 
   dispatch(saveMediaRequest())

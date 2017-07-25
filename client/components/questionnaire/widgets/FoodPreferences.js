@@ -1,4 +1,5 @@
 import React from 'react'
+import P from 'prop-types'
 import {Field} from 'redux-form'
 
 import FoodSelector from './food-preferences/FoodSelector'
@@ -10,6 +11,10 @@ const FoodPreferences = ({className}) =>
       component={renderFoodPreferences}
     />
   </div>
+
+FoodPreferences.propTypes = {
+  className: P.string
+}
 
 export default FoodPreferences
 

@@ -1,13 +1,16 @@
 import React from 'react'
+import P from 'prop-types'
+
+import LoadingWrapper from '../LoadingWrapper'
 
 const Page = ({loading, children}) =>
-  <div>
+  <LoadingWrapper loading={loading}>
     {children}
-    {loading &&
-      <div className="overlay">
-        <i className="fa fa-refresh fa-spin"></i>
-      </div>
-    }
-  </div>
+  </LoadingWrapper>
+
+Page.propTypes = {
+  loading: P.bool,
+  children: P.node
+}
 
 export default Page

@@ -1,26 +1,33 @@
 import {ADMIN_ROLE} from '../../common/constants'
 import Donation from '../models/donation'
+import Donor from '../models/donor'
 import {UnauthorizedError} from '../lib/errors'
 import mailer from '../lib/mail/mail-helpers'
 
 export default {
   async create(req, res) {
-    let donation = {
+    let newDonation = {
       ...req.body,
       total: req.body.items.reduce((acc, item) => acc + item.value, 0)
     }
 
     if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
-        donation.donor !== req.user.id) {
+        newDonation.donor !== req.user.id) {
       throw new UnauthorizedError
     }
 
-    const savedDonation = await Donation.create(donation)
-    await savedDonation.populate('donor').execPopulate()
+    const donation = await Donation.create(newDonation)
+    const donor = await Donor.findByIdAndUpdate(donation.donor,
+      {$push: {donations: donation}},
+      {new: true}
+    )
 
-    mailer.sendThanks(savedDonation)
+    mailer.sendThanks({...donation, donor})
 
-    res.json(savedDonation)
+    res.json({
+      donation,
+      donor
+    })
   },
 
   async approve(req, res) {

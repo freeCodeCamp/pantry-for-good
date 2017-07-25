@@ -43,6 +43,8 @@ customer.define({
   assignedTo: volunteer
 })
 
+donation.define({donor})
+
 donor.define({
   fields: [{meta: field}],
   donations: arrayOfDonations

@@ -5,13 +5,13 @@ import {normalize} from 'normalizr'
 import {callApi} from '../../../store/middleware/api'
 import {arrayOfCustomers, arrayOfVolunteers} from '../../../../common/schemas'
 
-const SET_FILTER = 'delivery/assignment/SET_FILTER'
-const SET_DRIVER = 'delivery/assignment/SET_DRIVER'
-const SELECT_CUSTOMERS = 'delivery/assignment/SELECT_CUSTOMERS'
-const TOGGLE_SELECT_CUSTOMER = 'delivery/assignment/TOGGLE_CUSTOMER'
-const ASSIGN_REQUEST = 'delivery/assignment/ASSIGN_REQUEST'
-const ASSIGN_SUCCESS = 'delivery/assignment/ASSIGN_SUCCESS'
-const ASSIGN_FAILURE = 'delivery/assignment/ASSIGN_FAILURE'
+export const SET_FILTER = 'delivery/assignment/SET_FILTER'
+export const SET_DRIVER = 'delivery/assignment/SET_DRIVER'
+export const SELECT_CUSTOMERS = 'delivery/assignment/SELECT_CUSTOMERS'
+export const TOGGLE_SELECT_CUSTOMER = 'delivery/assignment/TOGGLE_CUSTOMER'
+export const ASSIGN_REQUEST = 'delivery/assignment/ASSIGN_REQUEST'
+export const ASSIGN_SUCCESS = 'delivery/assignment/ASSIGN_SUCCESS'
+export const ASSIGN_FAILURE = 'delivery/assignment/ASSIGN_FAILURE'
 
 export const setFilter = filter => ({
   type: SET_FILTER,
@@ -43,8 +43,8 @@ export const selectCluster = (cluster, customers, selectedCustomerIds) => {
     cluster.isMarkerInClusterBounds(marker))
 
   const allMarkersSelected = markersInCluster.reduce((acc, m) =>
-    selectedCustomerIds.find(id => String(id) === m._id) ? acc : false
-  , true)
+    selectedCustomerIds.find(id => id === m._id) ? acc : false
+    , true)
 
   const transform = allMarkersSelected ? difference : union
 
@@ -58,16 +58,14 @@ export const assignCustomers = (customerIds, driverId) => dispatch => {
   const body = {customerIds, driverId}
   dispatch({type: ASSIGN_REQUEST})
 
-  callApi('admin/delivery/assign', 'POST', body)
+  return callApi('admin/delivery/assign', 'POST', body)
     .then(res => {
       dispatch({
         type: ASSIGN_SUCCESS,
-        response: {
-          entities: {
-            customers: normalize(res.customers, arrayOfCustomers).entities.customers,
-            volunteers: normalize(res.volunteers, arrayOfVolunteers).entities.volunteers
-          }
-        }
+        response: normalize(res, {
+          customers: arrayOfCustomers,
+          volunteers: arrayOfVolunteers
+        })
       })
       dispatch(setFilter(driverId))
     })
@@ -99,8 +97,9 @@ export default (state = {
           customerOrId._id || customerOrId)
       }
     case TOGGLE_SELECT_CUSTOMER: {
-      const selectedCustomers = state.selectedCustomers.find(id =>
-          id === action.customerId) ?
+      const selectedCustomers = state.selectedCustomers.find(
+        id => id === action.customerId
+      ) ?
         state.selectedCustomers.filter(id => id !== action.customerId) :
         [...state.selectedCustomers, action.customerId]
 

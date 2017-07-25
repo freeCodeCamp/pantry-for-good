@@ -5,17 +5,23 @@ import {denormalize} from 'normalizr'
 
 import {CALL_API, callApi} from '../../../store/middleware/api'
 
-import {arrayOfCustomers, arrayOfPackages} from '../../../../common/schemas'
+import {
+  arrayOfCustomers,
+  arrayOfFoodItems,
+  arrayOfPackages,
+  customer as customerSchema,
+  foodPackage as packageSchema
+} from '../../../../common/schemas'
 
-const LOAD_REQUEST = 'packing/LOAD_REQUEST'
-const LOAD_SUCCESS = 'packing/LOAD_SUCCESS'
-const LOAD_FAILURE = 'packing/LOAD_FAILURE'
-const PACK_REQUEST = 'packing/PACK_REQUEST'
-const PACK_SUCCESS = 'packing/PACK_SUCCESS'
-const PACK_FAILURE = 'packing/PACK_FAILURE'
-const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
-const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
-const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
+export const LOAD_REQUEST = 'packing/LOAD_REQUEST'
+export const LOAD_SUCCESS = 'packing/LOAD_SUCCESS'
+export const LOAD_FAILURE = 'packing/LOAD_FAILURE'
+export const PACK_REQUEST = 'packing/PACK_REQUEST'
+export const PACK_SUCCESS = 'packing/PACK_SUCCESS'
+export const PACK_FAILURE = 'packing/PACK_FAILURE'
+export const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
+export const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
+export const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
@@ -25,38 +31,29 @@ const packFailure = error => ({type: PACK_FAILURE, error})
 // {customer: customerId, contents[foodItemId, foodItemId, foodItemId]}
 export const pack = newPackedCustomers => dispatch => {
   dispatch(packRequest())
-  const apiURL = 'packing'  //eventually resolves to something like 'http://hostname/api/packing'
-  const httpMethod = 'POST'
-  callApi(apiURL, httpMethod, newPackedCustomers)
-    .then(res => {
-      const response = {
-        result: { newPackageIds: res.packages.map(item => item._id) },
-        entities: {
-          packages: normalize(res.packages, arrayOfPackages).entities.packages,
-          customers: res.customerUpdates,
-          foodItems: res.foodItemUpdates
-        }
-      }
-      dispatch({type: PACK_SUCCESS, response})
-    })
-    .catch(error => dispatch({type: PACK_FAILURE, error}))
+
+  const schema = {
+    packages: arrayOfPackages,
+    customers: arrayOfCustomers,
+    foodItems: arrayOfFoodItems
+  }
+
+  return callApi('packing', 'POST', newPackedCustomers, null, schema)
+    .then(res => dispatch(packSuccess(res)))
+    .catch(error => dispatch(packFailure(error)))
 }
 
 export const unpackPackage = packageId => dispatch => {
   dispatch({ type: UNPACK_REQUEST })
-  const apiURL = 'packing'  // eventually resolves to something like 'http://hostname/api/packing'
-  const httpMethod = 'DELETE'
-  callApi(apiURL, httpMethod, { _id: packageId })
-    .then(res => {
-      const response = {
-        result: res.deletedPackage && res.deletedPackage._id,
-        entities: {
-          customers: res.updatedCustomer,
-          foodItems: res.updatedItemCounts
-        }
-      }
-      dispatch({ type: UNPACK_SUCCESS, response })
-    })
+
+  const schema = {
+    packages: packageSchema,
+    foodItems: arrayOfFoodItems,
+    customers: customerSchema
+  }
+
+  return callApi('packing', 'DELETE', { _id: packageId }, null, schema)
+    .then(res => dispatch({ type: UNPACK_SUCCESS, response: res }))
     .catch(error => dispatch({ type: UNPACK_FAILURE, error }))
 }
 
@@ -115,7 +112,7 @@ export default (state = {}, action) => {
     case PACK_SUCCESS:
       return {
         ...state,
-        ids: union(state.ids, action.response.result.newPackageIds),
+        ids: union(state.ids, action.response.result.packages),
         saving: false,
         saveError: null
       }
@@ -123,7 +120,7 @@ export default (state = {}, action) => {
       return {
         ...state,
         // Use lodash without() to take the unpacked package out of the packing list
-        ids: without(state.ids, action.response.result),
+        ids: without(state.ids, action.response.result.packages),
         saving: false,
         saveError: null
       }
