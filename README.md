@@ -1,3 +1,6 @@
+# This branch is outdated
+Please switch to the staging branch for the latest version
+
 This repository is for the Food Bank application designed by Open Source for Good Contributors at [Free Code Camp](http://www.freecodecamp.com).
 
 You can test it out by deploying to [Heroku](https://www.heroku.com):
