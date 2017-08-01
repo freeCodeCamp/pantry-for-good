@@ -12,10 +12,11 @@ The button creates an admin account with username `admin@example.com` and passwo
 2. Start MongoDB
 3. `git clone https://github.com/freeCodeCamp/Pantry-for-Good.git`
 4. `cd Pantry-for-Good`
-5. `npm install`
-6. `npm run dev`
-7. Open <http://localhost:8080> in your web browser
-8. Login with username `admin@example.com` password `password`
+5. Make sure you're on the 'staging' branch (`git branch`), otherwise run `git checkout staging`
+6. `npm install`
+7. `npm run dev`
+8. Open <http://localhost:8080> in your web browser
+9. Login with username `admin@example.com` password `password`
 
 ------------
 ### Detailed local development installation steps
