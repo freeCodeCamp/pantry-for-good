@@ -51,4 +51,4 @@ Sendgrid email service API.  Required for the password reset by email to work.
 ------------
 ### Contributing
 
-We welcome pull requests from seasoned Javascript developers. Please read our [guide](CONTRIBUTING.md) first, then check out our open issues.
+We welcome pull requests from seasoned Javascript developers. Please read our [contributing guide](CONTRIBUTING.md) and [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide), then check out our open issues.
