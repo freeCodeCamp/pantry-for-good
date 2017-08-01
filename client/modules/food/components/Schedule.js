@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {utc} from 'moment'
+import moment, {utc} from 'moment'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
+import DayPicker from 'react-day-picker'
+import 'react-day-picker/lib/style.css'
 
 import selectors from '../../../store/selectors'
 import {loadFoods} from '../reducers/category'
@@ -28,6 +30,14 @@ const mapDispatchToProps = dispatch => ({
   }))
 })
 
+const createDayPicker = (onUpdate, props) => (
+  <DayPicker
+    enableOutsideDays
+    month={moment(props.row.startDate, 'YYYY-[W]ww').toDate()}
+    onDayClick={day => onUpdate(day)}
+  />
+)
+
 class Schedule extends Component {
   componentWillMount() {
     this.props.loadFoods()
@@ -40,14 +50,15 @@ class Schedule extends Component {
     })) :
     []
 
-
   getCategoryName = id => {
     const category = this.props.getFoodCategory(id)
     return category && category.category
   }
 
   frequencyValidator = value => {
-    if (value % 1 != 0) {
+    if (isNaN(value)) {
+      return 'Please enter a valid number'
+    } else if (value % 1 != 0) {
       return 'Decimal is not allowed'
     } else if (value < 0) {
       return 'Negative number is not allowed.'
@@ -100,14 +111,14 @@ class Schedule extends Component {
                 <TableHeaderColumn
                   dataField="startDate"
                   dataSort
-                  editable={{type: 'week'}}
+                  customEditor={{getElement: createDayPicker}}
                 >
                   Start Date
                 </TableHeaderColumn>
                 <TableHeaderColumn
                   dataField="frequency"
                   dataSort
-                  editable={{type: 'number', validator: this.frequencyValidator}}
+                  editable={{type: 'text', validator: this.frequencyValidator}}
                 >
                   Frequency
                 </TableHeaderColumn>
