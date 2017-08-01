@@ -13,3 +13,4 @@ node_modules/
 typings/
 server/config/env/secrets.js
 dist
+mongod
