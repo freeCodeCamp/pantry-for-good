@@ -22,6 +22,7 @@ export const PACK_FAILURE = 'packing/PACK_FAILURE'
 export const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
 export const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
 export const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
+export const CLEAR_FLAGS = 'packing/CLEAR_FLAGS'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
@@ -69,6 +70,8 @@ export const deliver = customerIds => dispatch => {
     })
     .catch(err => dispatch(packFailure(err)))
 }
+
+export const clearPackingFlags = () => ({ type: CLEAR_FLAGS })
 
 export const listPackages = () => {
   return {
@@ -130,6 +133,14 @@ export default (state = {}, action) => {
         ...state,
         saving: false,
         saveError: action.error
+      }
+    case CLEAR_FLAGS:
+      return {
+        ...state,
+        loading: false,
+        loadError: null,
+        saving: false,
+        saveError: null,
       }
     default: return state
   }

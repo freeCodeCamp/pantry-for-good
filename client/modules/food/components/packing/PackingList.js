@@ -12,20 +12,22 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 import selectors from '../../../../store/selectors'
 import {loadCustomers} from '../../../customer/reducer'
 import {loadFoods} from '../../reducers/category'
-import {pack} from '../../reducers/packing'
+import {pack, clearPackingFlags} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 import {Checkbox} from '../../../../components/form'
+import PackModal from './PackModal'
 
 const mapStateToProps = state => ({
   customers: selectors.customer.getScheduled(state),
-  items: selectors.food.item.getScheduled(state),
+  scheduledItems: selectors.food.item.getScheduled(state),
   loading: selectors.customer.loading(state) ||
-    selectors.food.category.loading(state),
-  error: selectors.customer.loadError(state) ||
+    selectors.food.category.loading(state) ||
+    selectors.food.packing.loading(state),
+  loadError: selectors.customer.loadError(state) ||
     selectors.food.category.loadError(state),
-  packing: selectors.food.packing.saving(state),
-  packError: selectors.food.packing.saveError(state)
+  packSaving: selectors.food.packing.saving(state),
+  packSaveError: selectors.food.packing.saveError(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -33,17 +35,19 @@ const mapDispatchToProps = dispatch => ({
     dispatch(loadCustomers())
     dispatch(loadFoods())
   },
-  pack: packages => dispatch(pack(packages))
+  packSelected: packages => dispatch(pack(packages)),
+  clearPackingFlags: () => dispatch(clearPackingFlags())
 })
 
-const withPackedCustomers = withProps(({customers, items}) =>
-  getPackedCustomersAndItems(customers, items))
+const withPackedCustomers = withProps(({customers, scheduledItems}) =>
+  getPackedCustomersAndItems(customers, scheduledItems))
 
 class PackingList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: []
+      selected: [],
+      showModal: false,
     }
   }
 
@@ -52,21 +56,21 @@ class PackingList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.packing && !nextProps.packing && !nextProps.packError)
+    if (this.props.packSaving && !nextProps.packSaving && !nextProps.packSavingError)
       this.setState({selected: []})
   }
 
-  pack = () => {
+  packSelected = () => {
     // generate packing lists for selected customers and updated item counts
     const customers = this.state.selected.map(id => this.props.customers.find(c => c._id === id))
-    const {packedCustomers} = getPackedCustomersAndItems(customers, this.props.items)
+    const {packedCustomers} = getPackedCustomersAndItems(customers, this.props.scheduledItems)
 
     const packages = packedCustomers.map(customer => ({
       customer: customer._id,
       contents: customer.packingList.map(item => item._id)
     }))
 
-    this.props.pack(packages)
+    this.props.packSelected(packages)
   }
 
   getItemList = items => items.map(i => i.name).join(', ')
@@ -109,15 +113,43 @@ class PackingList extends Component {
     })
   }
 
+  /**
+   * Gets the Pack button used in the bootstrap table rows
+   */
+  getPackButton = (cell, row) =>{
+    return (<Button onClick={this.onPackClick} bsStyle="primary" bsSize="xs" value={row._id}>
+      Pack
+    </Button>)
+  }
+
+  /**
+   * Handler for when the pack button is clicked on a row in the Packing List
+   */
+  onPackClick = e => {
+    const customerId = e.target.value
+    this.props.clearPackingFlags()
+    this.setState({
+      showModal: true,
+      modalCustomer: this.props.packedCustomers.find(customer => customer._id.toString() === customerId)
+    })
+  }
+
+  closePackModal = () => {
+    this.setState({showModal: false, modalCustomer: undefined})
+    this.props.clearPackingFlags()
+  }
+
   render() {
-    const {loading, packing, error, packError, packedCustomers} = this.props
+    const {loading, packSaving, loadError, packSaveError, packedCustomers} = this.props
     const {selected} = this.state
     const itemsToPack = packedCustomers.reduce((acc, c) =>
       acc + c.packingList.length, 0)
+    // Don't show error when modal is showing
+    const error = this.state.showModal ? null : (loadError || packSaveError)
     return (
       <Box>
         <BoxHeader heading="Packing List" />
-        <BoxBody loading={loading || packing} error={error || packError}>
+        <BoxBody loading={loading || packSaving} error={error} errorBottom={true}>
           {packedCustomers &&
             <div style={{color: '#aaa'}}>
               {itemsToPack} items for {packedCustomers.length} customers
@@ -137,7 +169,6 @@ class PackingList extends Component {
               onSelect: this.handleSelect,
               onSelectAll: this.handleSelectAll,
               selected,
-              clickToSelect: true,
               columnWidth: '55px'
             }}
             hover
@@ -153,19 +184,31 @@ class PackingList extends Component {
               Last Packed On
             </TableHeaderColumn>
             <TableHeaderColumn dataField="packingList" dataFormat={this.getItemList}>
-              Items
+              Preferred Foods
             </TableHeaderColumn>
+            <TableHeaderColumn dataFormat={this.getPackButton}/>
           </BootstrapTable>
-          <div className="box-footer text-right">
+          <div className="box-footer">
             <Button
               bsStyle="success"
-              onClick={this.pack}
+              onClick={this.packSelected}
               disabled={!selected.length}
             >
-              Mark Packed
+              Mark Selected Customers Packed with their preferred foods
             </Button>
           </div>
         </BoxBody>
+
+        {this.state.showModal &&
+          <PackModal
+            customer={this.state.modalCustomer}
+            scheduledFoods={this.props.scheduledItems}
+            closeModal={this.closePackModal}
+            packSelected={this.props.packSelected}
+            packSaving={this.props.packSaving}
+            packSaveError={this.props.packSaveError}
+          />
+        }
       </Box>
     )
   }

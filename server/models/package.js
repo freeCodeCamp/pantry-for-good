@@ -10,6 +10,16 @@ const PackageSchema = new Schema({
     ref: modelTypes.CUSTOMER,
     required: true
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ['Packed', 'Received'],
+  },
+  packedBy: {
+    type: Number,
+    ref: modelTypes.USER,
+    required: true
+  },
   datePacked: {
     type: Date,
     default: Date.now

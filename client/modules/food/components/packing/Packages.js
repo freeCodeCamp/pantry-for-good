@@ -71,6 +71,12 @@ class Packages extends Component {
             <TableHeaderColumn dataField="contents" dataFormat={this.formatContents} >
               Contents
             </TableHeaderColumn>
+            <TableHeaderColumn dataField="packedBy" >
+              Packed By
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="status" >
+              status
+            </TableHeaderColumn>
             <TableHeaderColumn
               dataFormat={this.getActionButtons}
             />

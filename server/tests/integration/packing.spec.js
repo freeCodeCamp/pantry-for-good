@@ -33,7 +33,7 @@ describe('Packing Api', function() {
     await Questionnaire.find().remove()
     await resetDb()
   })
-  
+
   describe('packing POST route', function() {
 
     it('Packs a package for one customer', async function() {
@@ -345,10 +345,16 @@ describe('Packing Api', function() {
         email: 'gw@example.com',
       })
 
-      const testPackage = await Package.create({ customer: customer._id, contents: foodItemIds })
-
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const session = await createUserSession(testAdmin)
+
+      const testPackage = await Package.create({
+        customer: customer._id,
+        contents: foodItemIds,
+        status: 'Packed',
+        packedBy: session.user._id
+      })
+
       const request = supertest.agent(session.app)
 
       return request.delete('/api/packing').send({ _id: testPackage._id, })
@@ -375,25 +381,37 @@ describe('Packing Api', function() {
         email: 'gw@example.com'
       })
 
-      const testPackage1 = await Package.create({ customer: customer._id, contents: foodItemIds })
-      const testPackage2 = await Package.create({ customer: customer._id, contents: foodItemIds })
-
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const session = await createUserSession(testAdmin)
+
+      const testPackage1 = await Package.create({
+        customer: customer._id,
+        contents: foodItemIds,
+        status: 'Packed',
+        packedBy: session.user._id
+      })
+
+      const testPackage2 = await Package.create({
+        customer: customer._id,
+        contents: foodItemIds,
+        status: 'Packed',
+        packedBy: session.user._id
+      })
+
       const request = supertest.agent(session.app)
 
       return request.delete('/api/packing').send({
         _id: testPackage2._id,
       })
-      .expect(200)
-      .then(function() {
-        return (Package.find({}))
-      })
-      .then(function(results) {
-        expect(results).to.be.an('array')
-        expect(results).to.have.length(1)
-        expect(results[0]._id.equals(testPackage1._id)).to.be.true
-      })
+        .expect(200)
+        .then(function () {
+          return (Package.find({}))
+        })
+        .then(function (results) {
+          expect(results).to.be.an('array')
+          expect(results).to.have.length(1)
+          expect(results[0]._id.equals(testPackage1._id)).to.be.true
+        })
     })
 
     it('Adds the foodItems from the package back to the inventory counts', async function() {
@@ -410,10 +428,16 @@ describe('Packing Api', function() {
         email: 'gw@example.com',
       })
 
-      const testPackage = await Package.create({ customer: customer._id, contents: foodItemIds })
-
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const session = await createUserSession(testAdmin)
+
+      const testPackage = await Package.create({
+        customer: customer._id,
+        contents: foodItemIds,
+        status: 'Packed',
+        packedBy: session.user._id
+      })
+
       const request = supertest.agent(session.app)
 
       return request.delete('/api/packing').send({ _id: testPackage._id, })
@@ -440,10 +464,16 @@ describe('Packing Api', function() {
         email: 'gw@example.com',
       })
 
-      const testPackage = await Package.create({ customer: customer._id, contents: foodItemIds })
-
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const session = await createUserSession(testAdmin)
+
+      const testPackage = await Package.create({
+        customer: customer._id,
+        contents: foodItemIds,
+        status: 'Packed',
+        packedBy: session.user._id
+      })
+
       const request = supertest.agent(session.app)
 
       return request.delete('/api/packing').send({ _id: testPackage._id, })
@@ -479,7 +509,7 @@ describe('Packing Api', function() {
           expect(res.body.message).to.equal('xxxxxxxx is not a valid package _id')
         })
     })
-    
+
     it('Returns 400 when a package _id is not found in the database', async function() {
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
       const session = await createUserSession(testAdmin)
