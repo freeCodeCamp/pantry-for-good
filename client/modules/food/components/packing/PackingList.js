@@ -21,6 +21,7 @@ import PackModal from './PackModal'
 const mapStateToProps = state => ({
   customers: selectors.customer.getScheduled(state),
   scheduledItems: selectors.food.item.getScheduled(state),
+  allItems: selectors.food.item.getAll(state),
   loading: selectors.customer.loading(state) ||
     selectors.food.category.loading(state) ||
     selectors.food.packing.loading(state),
@@ -202,6 +203,7 @@ class PackingList extends Component {
         {this.state.showModal &&
           <PackModal
             customer={this.state.modalCustomer}
+            allFoods={this.props.allItems}
             scheduledFoods={this.props.scheduledItems}
             closeModal={this.closePackModal}
             packSelected={this.props.packSelected}
