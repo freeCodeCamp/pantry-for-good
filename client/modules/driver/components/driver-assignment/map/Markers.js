@@ -96,7 +96,7 @@ function calculator(markers) {
   const total = markers.length
   const selected = markers.reduce((acc, marker) =>
     marker.icon === selectedCustomerIcon ? acc + 1 : acc
-  , 0)
+    , 0)
   const unselected = total - selected
 
   let index

@@ -69,47 +69,47 @@ const DriverListDetail = ({
         <span style={{padding: '0 8px'}}>
           {driver.customers.length}
         </span>
-        <i className="fa fa-users" style={{color: '#777'}} />
-        </div>
+        <i className="fa fa-users" style={{ color: '#777' }} />
       </div>
-      {route ?
-        <div className="text-center" style={{margin: '0 auto'}}>
-          <RouteSummary route={route} />
-          <Button
-            bsStyle="primary"
-            onClick={clearRoute}
-            style={{margin: '10px 10px 0 0'}}
-          >
-            Clear Route
-          </Button>
-          {' '}
-          <Button
-            bsStyle="success"
-            onClick={saveRoute}
-            style={{margin: '10px 10px 0 0'}}
-          >
-            Save Route
-          </Button>
-        </div> :
-        <div className="text-center" style={{margin: '0 auto'}}>
-          <Button
-            bsStyle="primary"
-            onClick={requestRoute}
-            disabled={waypoints.length <= 2}
-            style={{margin: '10px 10px 0 0'}}
-          >
-            Suggest Route
-          </Button>
-          {' '}
-          <Button
-            bsStyle="success"
-            onClick={assign}
-            style={{marginTop: '10px'}}
-          >
-            Assign Selected
-          </Button>
-        </div>
-      }
+    </div>
+    {route ?
+      <div className="text-center" style={{ margin: '0 auto' }}>
+        <RouteSummary route={route} />
+        <Button
+          bsStyle="primary"
+          onClick={clearRoute}
+          style={{ margin: '10px 10px 0 0' }}
+        >
+          Clear Route
+        </Button>
+        {' '}
+        <Button
+          bsStyle="success"
+          onClick={saveRoute}
+          style={{ margin: '10px 10px 0 0' }}
+        >
+          Save Route
+        </Button>
+      </div> :
+      <div className="text-center" style={{ margin: '0 auto' }}>
+        <Button
+          bsStyle="primary"
+          onClick={requestRoute}
+          disabled={waypoints.length <= 2}
+          style={{ margin: '10px 10px 0 0' }}
+        >
+          Suggest Route
+        </Button>
+        {' '}
+        <Button
+          bsStyle="success"
+          onClick={assign}
+          style={{ marginTop: '10px' }}
+        >
+          Assign Selected
+        </Button>
+      </div>
+    }
   </ListGroupItem>
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(DriverListDetail)

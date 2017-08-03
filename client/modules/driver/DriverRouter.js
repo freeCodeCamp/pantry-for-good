@@ -14,19 +14,19 @@ import './driver.css'
 const IsAdmin = requireRole([ADMIN_ROLE])
 const Owns = ownerOrAdmin('driverId')
 
-const DriverRouter = ({match}) =>
+const DriverRouter = ({ match }) =>
   <SwitchWithNotFound>
-      <Route path={`${match.url}/list`} exact component={IsAdmin(DriverAdmin)} />
-      <Route
-        path={`${match.url}/routes`}
-        exact
-        component={IsAdmin(DriverAssignment)}
-      />
-      <Route
-        path={`${match.url}/:driverId`}
-        exact
-        component={Owns(DriverRoute)}
-      />
+    <Route path={`${match.url}/list`} exact component={IsAdmin(DriverAdmin)} />
+    <Route
+      path={`${match.url}/routes`}
+      exact
+      component={IsAdmin(DriverAssignment)}
+    />
+    <Route
+      path={`${match.url}/:driverId`}
+      exact
+      component={Owns(DriverRoute)}
+    />
   </SwitchWithNotFound>
 
 export default DriverRouter

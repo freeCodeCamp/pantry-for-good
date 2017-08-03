@@ -140,7 +140,7 @@ class FoodItems extends React.Component {
     foodName: value => {
       if (typeof value === 'string') {
         // The user entered a food name that does not exist yet
-        this.setState({ 
+        this.setState({
           modalInputFields: {
             ...this.state.modalInputFields,
             name: value,
@@ -260,9 +260,9 @@ class FoodItems extends React.Component {
                   <ControlLabel>Category</ControlLabel>
                   <FormControl componentClass="select" placeholder="select category"
                     onChange={this.handleChange.foodCategory}
-                    value={this.state.modalInputFields.categoryId} 
+                    value={this.state.modalInputFields.categoryId}
                     autoFocus={this.state.showModal !== 'Add'}
-                    >
+                  >
                     {(this.state.showModal === 'Add') &&
                       <option value="">Select Category</option>
                     }
@@ -289,9 +289,9 @@ class FoodItems extends React.Component {
             <Modal.Footer>
               <Button onClick={this.closeModal}>Cancel</Button>
               <Button className={this.state.validInput && 'btn-success'}
-                      onClick={this.saveFood}
-                      disabled={!this.state.validInput || this.props.savingFoodItem}>
-                        {this.state.showModal === 'Add' ? 'Add' : 'Update'}
+                onClick={this.saveFood}
+                disabled={!this.state.validInput || this.props.savingFoodItem}>
+                {this.state.showModal === 'Add' ? 'Add' : 'Update'}
               </Button>
             </Modal.Footer>
             {this.props.saveFoodItemError &&

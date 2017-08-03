@@ -11,9 +11,9 @@ const getPath = filename => {
 }
 
 const generateUniqueFilename = filename => {
-  const ext = last(filename.split('.'));
-  const raw = crypto.pseudoRandomBytes(16);
-  return `${raw.toString('hex')}.${ext}`;
+  const ext = last(filename.split('.'))
+  const raw = crypto.pseudoRandomBytes(16)
+  return `${raw.toString('hex')}.${ext}`
 }
 
 const storage = multer.diskStorage({
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     cb(null, `${mediaRoot}`)
   },
   filename: (req, file, cb) => {
-    const filename = generateUniqueFilename(file.originalname);
+    const filename = generateUniqueFilename(file.originalname)
     cb(null, filename)
   }
 })
@@ -29,6 +29,6 @@ const storage = multer.diskStorage({
 export const upload = multer({storage})
 
 export const deleteFile = filename => {
-  return fs.unlink(getPath(filename));
+  return fs.unlink(getPath(filename))
 }
 
