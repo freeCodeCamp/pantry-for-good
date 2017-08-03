@@ -11,9 +11,9 @@ describe('assignment reducer', function() {
 
     it('selectCluster selects unselected customers', function() {
       const customers = [
-        {id: 1, location: {lat: 1, lng: 1}},
-        {id: 2, location: {lat: 6, lng: 6}},
-        {id: 3, location: {lat: 8, lng: 8}}
+        {_id: 1, location: {lat: 1, lng: 1}},
+        {_id: 2, location: {lat: 6, lng: 6}},
+        {_id: 3, location: {lat: 8, lng: 8}}
       ]
 
       const action = reducer.selectCluster(cluster, customers, [])
@@ -25,9 +25,9 @@ describe('assignment reducer', function() {
 
     it('selectCluster selects partially selected customers', function() {
       const customers = [
-        {id: 1, location: {lat: 1, lng: 1}},
-        {id: 2, location: {lat: 6, lng: 6}},
-        {id: 3, location: {lat: 8, lng: 8}}
+        {_id: 1, location: {lat: 1, lng: 1}},
+        {_id: 2, location: {lat: 6, lng: 6}},
+        {_id: 3, location: {lat: 8, lng: 8}}
       ]
 
       const action = reducer.selectCluster(cluster, customers, [2])
@@ -39,9 +39,9 @@ describe('assignment reducer', function() {
 
     it('selectCluster deselects when all selected', function() {
       const customers = [
-        {id: 1, location: {lat: 1, lng: 1}},
-        {id: 2, location: {lat: 6, lng: 6}},
-        {id: 3, location: {lat: 8, lng: 8}}
+        {_id: 1, location: {lat: 1, lng: 1}},
+        {_id: 2, location: {lat: 6, lng: 6}},
+        {_id: 3, location: {lat: 8, lng: 8}}
       ]
 
       const action = reducer.selectCluster(cluster, customers, [2, 3])
@@ -93,7 +93,7 @@ describe('assignment reducer', function() {
       })
       const secondState = reducer.default(firstState, {
         type: reducer.SELECT_CUSTOMERS,
-        customers: [{id: 2}]
+        customers: [{_id: 2}]
       })
 
       expect(firstState.selectedCustomers).to.be.an('array')
