@@ -67,12 +67,12 @@ class FoodCategories extends Component {
 
           {this.props.saveFoodsError &&
             <div className="text-center text-danger">
-                <strong>{this.props.saveFoodsError}</strong>
+              <strong>{this.props.saveFoodsError}</strong>
             </div>
           }
           {this.props.loadFoodsError &&
             <div className="text-center text-danger">
-                <strong>{this.props.loadFoodsError}</strong>
+              <strong>{this.props.loadFoodsError}</strong>
             </div>
           }
         </div>

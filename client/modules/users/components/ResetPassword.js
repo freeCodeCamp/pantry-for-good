@@ -84,24 +84,24 @@ class ResetPassword extends React.Component {
                         !this.state.verifyPassword
                       }
                     >
-                    Save Password
-                  </button>
+                      Save Password
+                    </button>
                   </div>
                   {this.state.validationError &&
-                  <div className="text-center text-danger">
-                    <strong>{this.state.validationError}</strong>
-                  </div>
-                }
+                    <div className="text-center text-danger">
+                      <strong>{this.state.validationError}</strong>
+                    </div>
+                  }
                   {this.props.success &&
-                  <div className="text-center text-success">
-                    <strong>{this.props.success.message}</strong>
-                  </div>
-                }
+                    <div className="text-center text-success">
+                      <strong>{this.props.success.message}</strong>
+                    </div>
+                  }
                   {this.props.error &&
-                  <div className="text-center text-danger">
-                    <strong>{this.props.error}</strong>
-                  </div>
-                }
+                    <div className="text-center text-danger">
+                      <strong>{this.props.error}</strong>
+                    </div>
+                  }
                 </fieldset>
               </form>
             </LoadingWrapper>

@@ -3,7 +3,7 @@ import {utc} from 'moment'
 
 import * as reducer from './item'
 // import {pageTypes, pageIdentifiers} from '../../../common/constants'
-import {foodItem, arrayOfFoodItems, foodCategory} from '../../../../common/schemas'
+import {foodItem, foodCategory} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
 
 describe('food item reducer', function() {

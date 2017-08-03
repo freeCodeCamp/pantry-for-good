@@ -27,27 +27,27 @@ class NewCategory extends React.Component {
   }
 
   render = () => (
-      <div>
-        <div className="input-group">
-            <input type="text"
-                className="form-control"
-                placeholder="Add category"
-                value={this.state.inputFieldValue}
-                onChange={this.onChange} />
-            <span className="input-group-btn">
-                <button className="btn btn-success btn-flat" disabled={!this.state.validInput}
-                    onClick={this.onClick}>
-                    <i className="fa fa-plus"></i>
-                </button>
-            </span>
+    <div>
+      <div className="input-group">
+        <input type="text"
+          className="form-control"
+          placeholder="Add category"
+          value={this.state.inputFieldValue}
+          onChange={this.onChange} />
+        <span className="input-group-btn">
+          <button className="btn btn-success btn-flat" disabled={!this.state.validInput}
+            onClick={this.onClick}>
+            <i className="fa fa-plus"></i>
+          </button>
+        </span>
+      </div>
+      {this.state.categoryExists &&
+        <div className="text-center text-danger">
+          <strong>That category already exists</strong>
         </div>
-        {this.state.categoryExists &&
-            <div className="text-center text-danger">
-                <strong>That category already exists</strong>
-            </div>
-        }
+      }
     </div>
-    )
+  )
 }
 
 export default NewCategory
