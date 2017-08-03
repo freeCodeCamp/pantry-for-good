@@ -217,7 +217,7 @@ describe('Packing Api', function() {
       }])
         .expect(400)
         .expect(function (res) {
-          expect(res.body.message).to.equal('Customer property must be set on all packages')
+          expect(res.body.message).to.equal('Package validation failed: customer: Path `customer` is required.')
         })
     })
 
@@ -260,7 +260,7 @@ describe('Packing Api', function() {
       )
         .expect(400)
         .expect(function (res) {
-          expect(res.body.message).to.equal('Each package must have property contents that is an array')
+          expect(res.body.message).to.equal('Package validation failed: contents: Path `contents` is required.')
         })
     })
 
@@ -281,7 +281,7 @@ describe('Packing Api', function() {
       )
         .expect(400)
         .expect(function (res) {
-          expect(res.body.message).to.equal('Each package must have property contents that is an array')
+          expect(res.body.message).to.equal('Package validation failed: contents: Cast to Array failed for value "123456789" at path "contents"')
         })
     })
 
@@ -302,7 +302,7 @@ describe('Packing Api', function() {
       )
         .expect(400)
         .expect(function (res) {
-          expect(res.body.message).to.equal('xxxxxxxxxxxxxxxxxxxxxxxx is not a valid foodItem _id')
+          expect(res.body.message).to.equal('Package validation failed: contents: Cast to Array failed for value "[ \'xxxxxxxxxxxxxxxxxxxxxxxx\' ]" at path "contents"')
         })
     })
 
