@@ -25,41 +25,54 @@ export default {
     if (!Array.isArray(packages)) {
       throw new BadRequestError('Request body must be an array')
     }
+    const now = new Date().toISOString()
+    const newPackages = []
     const customerIdsToUpdate = []
     const packedItemCounts = {}
 
-    //Iterate through the packages to calculate packedCustomerIds and packedItemCounts
+    // Iterate through the package data to populate newPackages, customerIdsToUpdate and packedItemCounts
     packages.forEach(customerPackage => {
-      validatePackage(customerPackage)
-      customerIdsToUpdate.push(customerPackage.customer)
-      addPackageContentsToItemCounts(customerPackage.contents, packedItemCounts)
-    })
-    const foodItemIdsToUpdate = Object.keys(packedItemCounts)
+      const newPackage = new Package({
+        customer: customerPackage.customer,
+        contents: customerPackage.contents,
+        datePacked: now,
+        packedBy: req.user._id,
+        status: 'Packed'
+      })
 
+      newPackages.push(newPackage)
+      customerIdsToUpdate.push(newPackage.customer)
+      addPackageContentsToItemCounts(newPackage.contents, packedItemCounts)
+    })
+
+    // Validate the data for the new packages
+    try {
+      await Promise.all(
+        newPackages.map(customerPackage => customerPackage.validate())
+      )
+    } catch (err) {
+      if (err instanceof mongoose.Error.ValidationError) {
+        throw new BadRequestError(err.message)
+      } else {
+        throw err
+      }
+    }
+
+    // Verify the customerIds and foodItemIds in the data are valid id's
+    const foodItemIdsToUpdate = Object.keys(packedItemCounts)
     await Promise.all([
       verifyCustomerIds(customerIdsToUpdate),
       verifyFoodItemIds(foodItemIdsToUpdate)
     ])
 
-    // save the new packages to the database
-    const now = new Date().toISOString()
-    const newPackages = await Promise.all(
-      packages.map(customerPackage => Package.create({
-        ...customerPackage,
-        datePacked: now,
-        packedBy: req.user._id,
-        status: 'Packed'
-      }))
+    // Save the new packages to the database
+    await Promise.all(
+      newPackages.map(customerPackage => customerPackage.save())
     )
 
     //update customers lastPacked field in database
     await Customer.update({ _id: { $in: customerIdsToUpdate } }, { "$set": { lastPacked: now } }, { "multi": true })
 
-    // Create an array of updates to apply to customers
-    const customerUpdates = customerIdsToUpdate.map(_id => ({
-      _id,
-      lastPacked: now
-    }))
 
     // Update the food item inventory quantities
     const foodItemUpdates = []
@@ -75,6 +88,9 @@ export default {
         })
       )
     )
+
+    // Create a list of customers lastPacked fields that the client needs to update
+    const customerUpdates = customerIdsToUpdate.map(_id => ({ _id, lastPacked: now }))
 
     res.json({
       packages: newPackages,
@@ -157,16 +173,6 @@ export default {
     }
 
     throw new ForbiddenError
-  }
-}
-
-// Verify a package object has the required properties customer and contents
-function validatePackage(customerPackage) {
-  if (!customerPackage.customer) {
-    throw new BadRequestError('Customer property must be set on all packages')
-  }
-  if (!customerPackage.contents || !Array.isArray(customerPackage.contents)) {
-    throw new BadRequestError('Each package must have property contents that is an array')
   }
 }
 
