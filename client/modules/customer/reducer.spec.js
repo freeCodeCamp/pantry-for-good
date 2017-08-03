@@ -29,14 +29,14 @@ describe('customer reducer', function() {
     })
 
     it('saves a customer', function() {
-      const action = reducer.saveCustomer({id: 1})
+      const action = reducer.saveCustomer({_id: 1})
 
       expect(action).to.have.property(CALL_API)
       const {endpoint, method, body, schema, types} = action[CALL_API]
 
       expect(endpoint).to.equal('customer/1')
       expect(method).to.equal('PUT')
-      expect(body).to.eql({id: 1})
+      expect(body).to.eql({_id: 1})
       expect(schema).to.equal(customerSchema)
       expect(types.length).to.equal(3)
     })
