@@ -36,7 +36,15 @@ const SettingsSchema = new Schema({
     type: String,
     trim: true,
     select: false
-  }
+  },
+  distanceUnit: {
+    type: String,
+    trim: true
+  },
+  moneyUnit: {
+    type: String,
+    trim: true
+  },
 })
 
 export default mongoose.model(modelTypes.SETTINGS, SettingsSchema)

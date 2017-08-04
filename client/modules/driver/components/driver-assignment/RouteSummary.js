@@ -1,6 +1,8 @@
 import React from 'react'
 
-const RouteSummary = ({route}) => {
+
+const RouteSummary = ({route, settings}) => {
+
   const {distance, duration} = route.routes[0].legs.reduce((acc, x) => ({
     distance: acc.distance + x.distance.value,
     duration: acc.duration + x.duration.value
@@ -12,10 +14,16 @@ const RouteSummary = ({route}) => {
   if (hours) hourString = hours === 1 ? `${hours} hour` : `${hours} hours`
   if (minutes) minuteString = `${minutes} minutes`
 
+  ///////RONALD
+  var fixDistance = ` ${Math.round(distance / 100) / 10} km, `
+  if(settings.distanceUnit == 'km') fixDistance = ` ${Math.round(distance / 100) / 10} km, `
+  if(settings.distanceUnit == 'mi') fixDistance = ` ${Math.round(distance * 0.00062137)} mi, `
+  ///////RONALD
+
   return (
     <div>
       {`${route.routes[0].legs.length} stops,`}
-      {` ${Math.round(distance / 100) / 10} km, `}
+      {fixDistance}
       {` approx ${hourString} ${minuteString}`}
     </div>
   )

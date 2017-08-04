@@ -3,6 +3,12 @@ import polyline from '@mapbox/polyline'
 
 import config from '../config'
 
+//////////
+/*import Settings from '../models/settings'
+let settings = Settings.findOne({'organization': 'Foodbank Template'})
+console.log(settings.distanceUnit)*/
+/////////
+
 const baseUrl = 'http://open.mapquestapi.com/directions/v2'
 const directionsUrl = `${baseUrl}/route?key=${config.mapquestKey}`
 const optimizeUrl = `${baseUrl}/optimizedroute?key=${config.mapquestKey}`

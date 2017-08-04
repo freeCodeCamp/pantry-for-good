@@ -56,6 +56,33 @@ const General = () =>
             rows="5"
           />
         </Col>
+
+
+        <Col lg={3}>
+
+          <p>'Only km (kilometers) or mi (miles)'</p>
+
+
+          <RFFieldGroup
+            name="distanceUnit"
+            label="Distance Unit"
+            type="text"
+            required
+          />
+        </Col>
+        <Clearfix visibleSmBlock visibleMdBlock />
+
+        <Col lg={3}>
+          <RFFieldGroup
+            name="moneyUnit"
+            label="Money Unit"
+            type="text"
+            required
+          />
+        </Col>
+        <Clearfix visibleSmBlock visibleMdBlock />
+
+
       </Row>
     </BoxBody>
   </Box>

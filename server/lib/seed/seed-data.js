@@ -87,7 +87,11 @@ export const getSettingsFields = () => {
     clientIntakeNumber: faker.phone.phoneNumber(),
     supportNumber: faker.phone.phoneNumber(),
     location: {lat, lng},
-    gmapsApiKey: config.gmapsApiKey
+    gmapsApiKey: config.gmapsApiKey,
+
+    distanceUnit: 'km',
+
+    moneyUnit: '$'
   }
 }
 
