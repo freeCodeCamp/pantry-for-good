@@ -19,7 +19,7 @@ export default {
     Object.assign(settings, {
       googleAuthentication: !!(config.oauth.googleClientID && config.oauth.googleClientSecret)
     })
-
+    
     // Remove unnecessary info before sending off the object to the client
     delete settings.__v
 
