@@ -8,7 +8,7 @@ const mapStateToProps = state => ({
 
 const Footer = ({settings}) =>
   <footer className="main-footer">
-    <strong>Copyright &copy; 2016&nbsp;
+    <strong>Copyright &copy; 2017&nbsp;
       <Link to="/">{settings && settings.organization}</Link>.
     </strong>
     &ensp;All rights reserved.
