@@ -1,13 +1,16 @@
-This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com).
+This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works. 
 
-You can test it out by deploying to [Heroku](https://www.heroku.com):
+The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something feel free to leave a comment.
+
+## Installation
+The app is designed to be installed locally (mac, linux or windows) or on [Heroku](https://www.heroku.com).
+
+You can deploy it to Heroku by clicking the button. An admin account with email `admin@example.com` and password `password` will be created.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
 
-The button creates an admin account with username `admin@example.com` and password `password`.
-
 ------------
-### Quick Start Steps:
+### Local installation summary:
 1. Install [Node.js](http://nodejs.org) and [MongoDB](https://docs.mongodb.com/manual/installation/#mongodb-community-edition)
 2. Start MongoDB
 3. `git clone https://github.com/freeCodeCamp/Pantry-for-Good.git`
@@ -21,7 +24,7 @@ The button creates an admin account with username `admin@example.com` and passwo
 ------------
 ### Detailed local development installation steps
 
-You'll need to have a **Node.js** version > 6 installed. Either use your OS's package manager or follow the installation instructions on the [official website](http://nodejs.org).
+You'll need to have a **Node.js** version >= 6 installed. Either use your OS's package manager or follow the installation instructions on the [official website](http://nodejs.org).
 
 This app uses **MongoDB** as its database engine. Follow [these instructions](https://docs.mongodb.com/manual/installation/#mongodb-community-edition) to install it locally and start the MongoDB server on your machine.
 
@@ -47,9 +50,3 @@ Sendgrid email service API.  Required for the password reset by email to work.
 - Register for a trial account or deploy the app and get the username/password from the heroku config vars
 - Go to [Settings > API Keys](https://app.sendgrid.com/settings/api_keys) and create a key
 - Paste the key in `secrets.js` or the `SENDGRID_API_KEY` config var of your deployed app.
-
-
-------------
-### Contributing
-
-We welcome pull requests from seasoned Javascript developers. Please read our [contributing guide](CONTRIBUTING.md) and [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide), then check out our open issues.
