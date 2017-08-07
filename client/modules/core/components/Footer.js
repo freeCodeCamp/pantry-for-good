@@ -6,9 +6,11 @@ const mapStateToProps = state => ({
   settings: state.settings.data,
 })
 
+var date = new Date();
+
 const Footer = ({settings}) =>
   <footer className="main-footer">
-    <strong>Copyright &copy; 2017&nbsp;
+    <strong>Copyright &copy; {{ year }}&nbsp;
       <Link to="/">{settings && settings.organization}</Link>.
     </strong>
     &ensp;All rights reserved.
