@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
 })
 
 var date = new Date();
+var year = date.getFullYear();
 
 const Footer = ({settings}) =>
   <footer className="main-footer">
