@@ -69,6 +69,14 @@ function validate(values) {
     errors.supportNumber = 'Support Number is required'
   }
 
+  if (!values.distanceUnit) {
+    errors.distanceUnit = 'Distance Unit is required'
+  }
+
+  if (!values.moneyUnit) {
+    errors.moneyUnit = 'Money Unit is required'
+  }
+
   return errors
 }
 

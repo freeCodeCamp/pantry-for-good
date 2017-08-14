@@ -44,6 +44,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
 })
 
 const DriverListDetail = ({
+  settings,////////RONALD
   driver,
   assign,
   clearRoute,
@@ -71,6 +72,7 @@ const DriverListDetail = ({
         </span>
         <i className="fa fa-users" style={{ color: '#777' }} />
       </div>
+
     </div>
     {route ?
       <div className="text-center" style={{ margin: '0 auto' }}>

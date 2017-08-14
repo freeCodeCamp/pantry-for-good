@@ -56,6 +56,27 @@ const General = () =>
             rows="5"
           />
         </Col>
+        <Col lg={3}>
+          <RFFieldGroup
+            name="distanceUnit"
+            label="Distance Unit"
+            type="select"
+            required
+          >
+          <option value="km">km</option>
+          <option value="mi">mi</option>
+          </RFFieldGroup>
+        </Col>
+        <Clearfix visibleSmBlock visibleMdBlock />
+        <Col lg={3}>
+          <RFFieldGroup
+            name="moneyUnit"
+            label="Money Unit"
+            type="text"
+            required
+          />
+        </Col>
+        <Clearfix visibleSmBlock visibleMdBlock />
       </Row>
     </BoxBody>
   </Box>
