@@ -63,8 +63,8 @@ const General = () =>
             type="select"
             required
           >
-          <option value="km">km</option>
-          <option value="mi">mi</option>
+            <option value="km">km</option>
+            <option value="mi">mi</option>
           </RFFieldGroup>
         </Col>
         <Clearfix visibleSmBlock visibleMdBlock />
