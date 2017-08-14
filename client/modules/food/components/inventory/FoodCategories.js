@@ -6,6 +6,7 @@ import NewCategory from './NewCategory'
 import selectors from '../../../../store/selectors'
 import { loadFoods, saveFood, deleteFood } from '../../reducers/category'
 import { CALL_API } from '../../../../store/middleware/api'
+import { Box, BoxHeader, BoxBody } from '../../../../components/box'
 
 class FoodCategories extends Component {
   componentWillMount = () => {
@@ -46,12 +47,12 @@ class FoodCategories extends Component {
 
   render() {
     return (
-      <div className="box">
-        <div className="box-header">
-          <h3 className="box-title">Categories</h3>
-        </div>
-
-        <div className="box-body table-responsive no-padding">
+      <Box>
+        <BoxHeader heading="Categories" />
+        <BoxBody
+          loading={this.props.loadingFoods || this.props.savingFoods}
+          error={this.props.loadFoodsError || this.props.saveFoodsError}
+          errorBottom={true}>
           <table className="table table-striped table-bordered">
             <thead>
               <tr><th>Name</th></tr>
@@ -60,29 +61,11 @@ class FoodCategories extends Component {
               {this.getTableRows()}
             </tbody>
           </table>
-        </div>
-
-        <div className="box-footer">
-          <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
-
-          {this.props.saveFoodsError &&
-            <div className="text-center text-danger">
-                <strong>{this.props.saveFoodsError}</strong>
-            </div>
-          }
-          {this.props.loadFoodsError &&
-            <div className="text-center text-danger">
-                <strong>{this.props.loadFoodsError}</strong>
-            </div>
-          }
-        </div>
-
-        {(this.props.loadingFoods || this.props.savingFoods) &&
-          <div className="overlay">
-            <i className="fa fa-refresh fa-spin"></i>
+          <div>
+            <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
           </div>
-        }
-      </div>
+        </BoxBody>
+      </Box>
     )
   }
 }

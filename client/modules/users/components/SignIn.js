@@ -84,7 +84,7 @@ class SignIn extends React.Component {
                 <i className="fa fa-google" />{' '}
                 Sign in with Google
               </a>
-          </div>
+            </div>
           }
         </div>
         <div className="form-group">

@@ -99,7 +99,7 @@ CustomerSchema.pre('save', async function(next) {
   if (process.env.NODE_ENV === 'test') return next()
 
   const addressFields = await getFieldsByType(
-      questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS)
+    questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS)
 
   const address = addressFields.map(field => field.value).join(', ')
 

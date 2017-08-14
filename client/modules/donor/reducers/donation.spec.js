@@ -51,7 +51,7 @@ describe('donation reducer', function() {
       const callApiMock = sinon.stub().resolves(response)
       reducer.default.__Rewire__('callApi', callApiMock)
 
-      const result = reducer.saveDonation({_id: 1}, {id: 1})(dispatchMock)
+      const result = reducer.saveDonation({_id: 1}, {_id: 1})(dispatchMock)
       reducer.default.__ResetDependency__('callApi')
 
       expect(dispatchMock.firstCall).to.have.been.calledWith({

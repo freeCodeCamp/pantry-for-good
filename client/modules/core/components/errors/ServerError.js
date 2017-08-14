@@ -3,7 +3,7 @@ import React from 'react'
 const ServerErrorPage = () =>
   <section className="content" style={{backgroundColor: 'white'}}>
     <div className="error-page">
-      <h2 className="headline text-red">500}</h2>
+      <h2 className="headline text-red">500&#125;</h2>
       <div className="error-content">
         <h3>
           <i className="fa fa-warning text-red" />

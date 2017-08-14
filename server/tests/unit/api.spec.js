@@ -41,10 +41,10 @@ describe('Api router', function() {
     expect(apiRouterMock.use).to.have.been.called
   })
 
-  it('checks admin/ routes for admin role', function() {
+  it('checks admin/ routes for admin role', function () {
     expect(userControllerMock.hasAuthorization)
-        .to.have.been.calledWith([ADMIN_ROLE])
+      .to.have.been.calledWith([ADMIN_ROLE])
     expect(apiRouterMock.all).to.have.been
-        .calledWith('/admin/*')
+      .calledWith('/admin/*')
   })
 })

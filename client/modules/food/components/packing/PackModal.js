@@ -31,22 +31,26 @@ class PackModal extends Component {
 
   generateCheckBoxes = itemList => {
     const sortedList = _.sortBy(itemList, 'name')
-    return sortedList.map(foodItem =>
-      <div key={foodItem._id} className='checkbox' >
-        <label>
-          <input type='checkbox'
-            name={foodItem._id}
-            onChange={this.onCheckBoxChange}
-            style={{opacity: 1, zIndex: 0}}
-            checked={this.state.selectedItems.has(foodItem)}/>
-          {foodItem.name}
-        </label>
-      </div>
-    )
+    return sortedList.map(foodItem => {
+      // If the food is not in the scheduledFoods use a * to indicate that
+      const notInScheduledFoods = this.props.scheduledFoods.find(x => x._id === foodItem._id) ? '' : '*'
+      return (
+        <div key={foodItem._id} className='checkbox' >
+          <label>
+            <input type='checkbox'
+              name={foodItem._id}
+              onChange={this.onCheckBoxChange}
+              style={{opacity: 1, zIndex: 0}}
+              checked={this.state.selectedItems.has(foodItem)}/>
+            {notInScheduledFoods}{foodItem.name}
+          </label>
+        </div>
+      )
+    })
   }
 
   onCheckBoxChange = e => {
-    const targetItem = _.find(this.props.scheduledFoods, {_id: e.target.name})
+    const targetItem = _.find(this.props.allFoods, {_id: e.target.name})
     if (!targetItem) return
 
     const newSelectedItems = new Set(this.state.selectedItems)
@@ -63,14 +67,16 @@ class PackModal extends Component {
   generateOtherItemSelect = () => {
     const preferredItems = this.props.customer.packingList || []
     const itemsInCheckboxList = [...preferredItems, ...this.state.otherItems]
-    let itemsNotInCheckBoxList = _.without(this.props.scheduledFoods, ...itemsInCheckboxList)
-
-    const selectBoxOptionList = _.sortBy(itemsNotInCheckBoxList, 'name').map(food => <option key={food._id} value={food._id}>{food.name}</option>)
-
+    const itemsNotInCheckBoxList = _.without(this.props.allFoods, ...itemsInCheckboxList)
+    const selectBoxOptionList = _.sortBy(itemsNotInCheckBoxList, 'name').map(food => {
+      // If the food is not in the scheduledFoods use a * to indicate that
+      const notInScheduledFoods = this.props.scheduledFoods.find(x => x._id === food._id) ? '' : '*'
+      return (<option key={food._id} value={food._id}>{notInScheduledFoods}{food.name}</option>)
+    })
     return (
       <FormGroup controlId="formSelectOtherItem">
         <FormControl componentClass="select" onChange={this.onSelectedFoodChanged}>
-          <option value=''>Select Other Food Item</option>
+          <option value='' disabled='disabled' selected='selected'>Select Other Food Item</option>
           {selectBoxOptionList}
         </FormControl>
         <Button onClick={this.onAddFoodClick}>Add Selected Food</Button>
@@ -86,7 +92,7 @@ class PackModal extends Component {
    * Handler for when uses clicks the button to add the selected food to the "other items" list
    */
   onAddFoodClick = () => {
-    const item = _.find(this.props.scheduledFoods, {_id: this.state.otherItemSelectBoxValue})
+    const item = _.find(this.props.allFoods, {_id: this.state.otherItemSelectBoxValue})
     if (!item) return
 
     const updatedOtherItems = new Set(this.state.otherItems)
@@ -123,6 +129,7 @@ class PackModal extends Component {
                   {this.generateCheckBoxes([...this.state.otherItems])}
                 </Well>
                 {this.generateOtherItemSelect()}
+                * Indicates food items not scheduled for this week
               </ErrorWrapper>
             </form>
           </Modal.Body>
@@ -159,7 +166,8 @@ PackModal.propTypes = {
   packSaveError: PropTypes.object,
   packSaving: PropTypes.bool.isRequired,
   packSelected: PropTypes.func.isRequired,
-  scheduledFoods: PropTypes.array.isRequired
+  scheduledFoods: PropTypes.array.isRequired,
+  allFoods: PropTypes.array.isRequired
 }
 
 export default PackModal

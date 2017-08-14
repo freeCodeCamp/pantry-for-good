@@ -8,8 +8,8 @@ import Page from '../models/page'
 
 const clientPath = '/media/pages'
 const serverPath = process.env.NODE_ENV === 'production' ?
-      'dist/client/media/pages' :
-      'assets/media/pages'
+  'dist/client/media/pages' :
+  'assets/media/pages'
 
 try {
   mkdirSync(serverPath)

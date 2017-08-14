@@ -27,14 +27,14 @@ describe('donor reducer', function() {
     })
 
     it('saves a donor', function() {
-      const action = reducer.saveDonor({id: 1}, true)
+      const action = reducer.saveDonor({_id: 1}, true)
 
       expect(action).to.have.property(CALL_API)
       const {endpoint, method, body, schema, types} = action[CALL_API]
 
       expect(endpoint).to.equal('admin/donors/1')
       expect(method).to.equal('PUT')
-      expect(body).to.eql({id: 1})
+      expect(body).to.eql({_id: 1})
       expect(schema).to.equal(donorSchema)
       expect(types.length).to.equal(3)
     })

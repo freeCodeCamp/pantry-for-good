@@ -17,14 +17,19 @@
     "build:client": "gulp build-client",
     "clean": "shx rm -rf dist",
     "start": "node dist/server/server.js",
-    "lint": "npm run lint:server; npm run lint:client",
+    "lint": "npm run lint:server && npm run lint:client",
     "lint:server": "eslint server",
     "lint:client": "eslint client",
-    "test": "npm run test:server:once; npm run test:client:once",
+    "test": "npm run test:server:once && npm run test:client:once",
     "test:client": "npm run test:client:once -- --watch",
     "test:server": "npm run test:server:once -- --watch",
     "test:client:once": "NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js 'client/**/*.spec.js'",
     "test:server:once": "NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/**/*.spec.js'"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run lint && npm run test"
+    }
   },
   "dependencies": {
     "@mapbox/polyline": "^0.2.0",
@@ -130,6 +135,7 @@
     "enzyme": "^2.8.2",
     "eslint": "^4.1.1",
     "eslint-plugin-react": "^7.1.0",
+    "ghooks": "^2.0.0",
     "ignore-styles": "^5.0.1",
     "jsdom": "^11.1.0",
     "mocha": "^3.2.0",

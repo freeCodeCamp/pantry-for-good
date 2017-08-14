@@ -49,7 +49,7 @@ describe('volunteer reducer', function() {
     })
 
     it('saves an existing volunteer', function() {
-      const volunteer = {id: 1, type: 'volunteer'}
+      const volunteer = {_id: 1, type: 'volunteer'}
       const action = reducer.saveVolunteer(volunteer)
 
       expect(action).to.have.property(CALL_API)
@@ -59,7 +59,7 @@ describe('volunteer reducer', function() {
     })
 
     it('saves a volunteer as admin', function() {
-      const volunteer = {id: 1, type: 'volunteer'}
+      const volunteer = {_id: 1, type: 'volunteer'}
       const action = reducer.saveVolunteer(volunteer, true)
 
       expect(action).to.have.property(CALL_API)

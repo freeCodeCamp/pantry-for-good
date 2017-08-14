@@ -6,6 +6,7 @@ import Autosuggest from 'react-bootstrap-autosuggest'
 
 import selectors from '../../../../store/selectors'
 import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
+import { Box, BoxBody } from '../../../../components/box'
 
 class FoodItems extends React.Component {
   constructor(props) {
@@ -25,9 +26,9 @@ class FoodItems extends React.Component {
   componentWillReceiveProps = nextProps => {
     // If the modal is open and a save is complete, close the modal
     if (this.state.showModal &&
-        this.props.savingFoodItem &&
-        !nextProps.savingFoodItem &&
-        !nextProps.foodItemSaveError) {
+        this.props.saving &&
+        !nextProps.saving &&
+        !nextProps.saveError) {
       this.closeModal()
     }
   }
@@ -55,6 +56,7 @@ class FoodItems extends React.Component {
         hasBeenChanged: false
       })
     }
+    this.props.clearFlags()
   }
 
   closeModal = () => {
@@ -140,7 +142,7 @@ class FoodItems extends React.Component {
     foodName: value => {
       if (typeof value === 'string') {
         // The user entered a food name that does not exist yet
-        this.setState({ 
+        this.setState({
           modalInputFields: {
             ...this.state.modalInputFields,
             name: value,
@@ -207,7 +209,7 @@ class FoodItems extends React.Component {
   handelModalSubmit = e => {
     e.preventDefault()
 
-    if (this.state.validInput && !this.props.savingFoodItem) {
+    if (this.state.validInput && !this.props.saving) {
       this.saveFood()
     }
   }
@@ -226,94 +228,88 @@ class FoodItems extends React.Component {
       afterSearch: searchText => this.updateSearchText(searchText)
     }
     return (
-      <div className="box">
-
-        <BootstrapTable data={this.props.foodItems} pagination keyField='_id' options={tableOptions} striped search>
-          <TableHeaderColumn dataField="name" dataSort>Name</TableHeaderColumn>
-          <TableHeaderColumn dataField="categoryId" dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
-          <TableHeaderColumn dataField="quantity" width='70px' dataAlign="right" dataSort>Qty</TableHeaderColumn>
-          <TableHeaderColumn width="140px" dataAlign="center" dataFormat={this.getActionButtons}></TableHeaderColumn>
-        </BootstrapTable>
+      <div>
+        <Box>
+          <BoxBody
+            // Don't show loading spinner or error message on main page when modal is showing
+            loading={this.state.showModal ? undefined : (this.props.loading || this.props.saving)}
+            error={this.state.showModal ? undefined : (this.props.loadError || this.props.saveError)}
+            errorBottom={true}>
+            <BootstrapTable data={this.props.foodItems} pagination keyField='_id' options={tableOptions} striped search>
+              <TableHeaderColumn dataField="name" dataSort>Name</TableHeaderColumn>
+              <TableHeaderColumn dataField="categoryId" dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
+              <TableHeaderColumn dataField="quantity" width='70px' dataAlign="right" dataSort>Qty</TableHeaderColumn>
+              <TableHeaderColumn width="140px" dataAlign="center" dataFormat={this.getActionButtons}></TableHeaderColumn>
+            </BootstrapTable>
+          </BoxBody>
+        </Box>
 
         <Modal show={!!this.state.showModal} onHide={this.closeModal}>
-          <div className="box">
-            <Modal.Header closeButton>
-              <Modal.Title>{this.state.showModal} Food</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <form onSubmit={this.handelModalSubmit}>
-                <FormGroup controlId="foodName" validationState={this.getValidationState.foodName()} >
-                  <ControlLabel>Food Name</ControlLabel>
-                  <Autosuggest
-                    value={this.state.modalInputFields.name}
-                    datalist={this.props.foodItems}
-                    placeholder="Food Name"
-                    itemValuePropName='name'
-                    itemReactKeyPropName='name'
-                    itemSortKeyPropName='nameLowerCased'
-                    onSelect={this.handleChange.foodName}
-                    autoFocus={this.state.showModal === 'Add'}
-                  />
-                </FormGroup>
+          <Box>
+            <BoxBody
+              loading={this.props.loading || this.props.saving}
+              error={this.props.saveError}
+              errorBottom={true}>
+              <Modal.Header closeButton>
+                <Modal.Title>{this.state.showModal} Food</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <form onSubmit={this.handelModalSubmit}>
+                  <FormGroup controlId="foodName" validationState={this.getValidationState.foodName()} >
+                    <ControlLabel>Food Name</ControlLabel>
+                    <Autosuggest
+                      value={this.state.modalInputFields.name}
+                      datalist={this.props.foodItems}
+                      placeholder="Food Name"
+                      itemValuePropName='name'
+                      itemReactKeyPropName='name'
+                      itemSortKeyPropName='nameLowerCased'
+                      onSelect={this.handleChange.foodName}
+                      autoFocus={this.state.showModal === 'Add'}
+                    />
+                  </FormGroup>
 
-                <FormGroup controlId="foodCategory" validationState={this.getValidationState.foodCategory()}>
-                  <ControlLabel>Category</ControlLabel>
-                  <FormControl componentClass="select" placeholder="select category"
-                    onChange={this.handleChange.foodCategory}
-                    value={this.state.modalInputFields.categoryId} 
-                    autoFocus={this.state.showModal !== 'Add'}
+                  <FormGroup controlId="foodCategory" validationState={this.getValidationState.foodCategory()}>
+                    <ControlLabel>Category</ControlLabel>
+                    <FormControl componentClass="select" placeholder="select category"
+                      onChange={this.handleChange.foodCategory}
+                      value={this.state.modalInputFields.categoryId}
+                      autoFocus={this.state.showModal !== 'Add'}
                     >
-                    {(this.state.showModal === 'Add') &&
-                      <option value="">Select Category</option>
-                    }
-                    {this.props.foodCategories.map(category =>
-                      <option key={category._id} value={category._id}>{category.category}</option>
-                    )}
-                  </FormControl>
-                </FormGroup>
+                      {(this.state.showModal === 'Add') &&
+                        <option value="">Select Category</option>
+                      }
+                      {this.props.foodCategories.map(category =>
+                        <option key={category._id} value={category._id}>{category.category}</option>
+                      )}
+                    </FormControl>
+                  </FormGroup>
 
-                <FormGroup controlId="foodQuantity" validationState={this.getValidationState.foodQuantity()} >
-                  <ControlLabel>Quantity</ControlLabel>
-                  <FormControl
-                    type="number"
-                    min="0"
-                    value={this.state.modalInputFields.quantity}
-                    placeholder="Quantity"
-                    onChange={this.handleChange.foodQuantity}
-                  />
-                </FormGroup>
-                <input type="submit" style={{position: "absolute", left: "-9999px", width: "1px", height: "1px"}} />
+                  <FormGroup controlId="foodQuantity" validationState={this.getValidationState.foodQuantity()} >
+                    <ControlLabel>Quantity</ControlLabel>
+                    <FormControl
+                      type="number"
+                      min="0"
+                      value={this.state.modalInputFields.quantity}
+                      placeholder="Quantity"
+                      onChange={this.handleChange.foodQuantity}
+                    />
+                  </FormGroup>
+                  <input type="submit" style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px" }} />
 
-              </form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={this.closeModal}>Cancel</Button>
-              <Button className={this.state.validInput && 'btn-success'}
-                      onClick={this.saveFood}
-                      disabled={!this.state.validInput || this.props.savingFoodItem}>
-                        {this.state.showModal === 'Add' ? 'Add' : 'Update'}
-              </Button>
-            </Modal.Footer>
-            {this.props.saveFoodItemError &&
-              <div className="alert alert-danger">{this.props.saveFoodItemError}</div>
-            }
-            {this.props.savingFoodItem &&
-              <div className="overlay">
-                <i className="fa fa-refresh fa-spin"></i>
-              </div>
-            }
-          </div>
+                </form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button onClick={this.closeModal}>Cancel</Button>
+                <Button className={this.state.validInput && 'btn-success'}
+                  onClick={this.saveFood}
+                  disabled={!this.state.validInput || this.props.saving}>
+                  {this.state.showModal === 'Add' ? 'Add' : 'Update'}
+                </Button>
+              </Modal.Footer>
+            </BoxBody>
+          </Box>
         </Modal>
-
-        {(this.props.saveFoodItemError && !this.state.showModal) &&
-          <div className="alert alert-danger">{this.props.saveFoodItemError}</div>
-        }
-
-        {(this.props.fetching || this.props.savingFoodItem) &&
-          <div className="overlay">
-            <i className="fa fa-refresh fa-spin"></i>
-          </div>
-        }
       </div>)
   }
 
@@ -325,8 +321,9 @@ const mapStateToProps = state => ({
     ({...item, nameLowerCased: item.name.toLowerCase()})),
   foodCategories: selectors.food.category.getAll(state),
   loading: selectors.food.category.loading(state),
-  savingFoodItem: selectors.food.item.saving(state),
-  saveFoodItemError: selectors.food.item.saveError(state),
+  loadError: selectors.food.category.loadError(state),
+  saving: selectors.food.item.saving(state),
+  saveError: selectors.food.item.saveError(state),
 })
 
 const mapDispatchToProps = dispatch => ({
