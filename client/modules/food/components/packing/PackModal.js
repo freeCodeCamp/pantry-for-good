@@ -76,7 +76,7 @@ class PackModal extends Component {
     return (
       <FormGroup controlId="formSelectOtherItem">
         <FormControl componentClass="select" onChange={this.onSelectedFoodChanged}>
-          <option value='' disabled='disabled' selected='selected'>Select Other Food Item</option>
+          <option value='' selected='selected'>Select Other Food Item</option>
           {selectBoxOptionList}
         </FormControl>
         <Button onClick={this.onAddFoodClick}>Add Selected Food</Button>
