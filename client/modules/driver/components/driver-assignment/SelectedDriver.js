@@ -44,7 +44,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
 })
 
 const DriverListDetail = ({
-  settings,////////RONALD
   driver,
   assign,
   clearRoute,
