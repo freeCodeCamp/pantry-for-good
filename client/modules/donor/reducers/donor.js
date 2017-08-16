@@ -1,6 +1,6 @@
 import {denormalize} from 'normalizr'
 import {createSelector} from 'reselect'
-import {get} from 'lodash'
+import {get, omit} from 'lodash'
 
 import {donor as donorSchema, arrayOfDonors} from '../../../../common/schemas'
 import {CALL_API} from '../../../store/middleware/api'
@@ -32,7 +32,7 @@ export const saveDonor = (donor, admin) => {
     [CALL_API]: {
       endpoint,
       method: donor._id ? 'PUT' : 'POST',
-      body: donor,
+      body: omit(donor, 'donations'), // circular ref to donor crashes normalize
       schema: donorSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
     }
