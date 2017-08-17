@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
 import {Link} from 'react-router-dom'
-import {Button} from 'react-bootstrap'
+import {ButtonToolbar, Button} from 'react-bootstrap'
 
 import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../../common/constants'
 import {toForm, fromForm} from '../../../lib/questionnaire-helpers'
@@ -12,6 +12,7 @@ import {loadCustomer, saveCustomer} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {loadFoods} from '../../food/reducers/category'
 
+import {Box, BoxHeader, BoxBody} from '../../../components/box'
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import {Questionnaire} from '../../../components/questionnaire'
 
@@ -55,6 +56,15 @@ class CustomerEdit extends Component {
   saveCustomer = form =>
     this.props.saveCustomer(fromForm(form), this.isAdmin)
 
+  saveCustomerStatus = status => () => {
+    const customer = this.props.getCustomer(this.props.customerId)
+    if (!customer) return
+    this.props.saveCustomer({
+      ...customer,
+      status
+    }, this.isAdmin)
+  }
+
   handleSubmitSuccess = () =>
     this.props.push(this.isAdmin ? '/customers/list' : '/customers')
 
@@ -86,6 +96,36 @@ class CustomerEdit extends Component {
                 onSubmitSuccess={this.handleSubmitSuccess}
                 initialValues={toForm(customer, questionnaire)}
               />
+            }
+            { customer && !loading &&
+              <Box>
+                <BoxHeader heading="Status" />
+                <BoxBody loading={savingCustomers}>
+                  <p>
+                    You
+                    {customer.status === 'Accepted' ? ' will ' : ' won\'t ' }
+                    receive deliveries.
+                  </p>
+                  <ButtonToolbar>
+                    <Button
+                      bsStyle="success"
+                      active={customer.status === 'Accepted'}
+                      disabled={savingCustomers || customer.status === 'Accepted'}
+                      onClick={this.saveCustomerStatus('Accepted')}
+                    >
+                      Available
+                    </Button>
+                    <Button
+                      bsStyle="warning"
+                      active={customer.status === 'Inactive'}
+                      disabled={savingCustomers || customer.status === 'Inactive'}
+                      onClick={this.saveCustomerStatus('Inactive')}
+                    >
+                      Away
+                    </Button>
+                  </ButtonToolbar>
+                </BoxBody>
+              </Box>
             }
             <div className="text-right">
               <Button
