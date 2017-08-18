@@ -24,7 +24,8 @@
     "test:client": "npm run test:client:once -- --watch",
     "test:server": "npm run test:server:once -- --watch",
     "test:client:once": "cross-env NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js 'client/**/*.spec.js'",
-    "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/**/*.spec.js'"
+    "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/**/*.spec.js'",
+    "flow" : "flow"
   },
   "config": {
     "ghooks": {
@@ -128,6 +129,7 @@
   "devDependencies": {
     "babel-eslint": "^7.2.1",
     "babel-plugin-rewire": "^1.0.0",
+    "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.24.0",
     "chai": "^4.0.2",
     "chai-as-promised": "^7.1.1",
@@ -136,6 +138,7 @@
     "enzyme": "^2.8.2",
     "eslint": "^4.1.1",
     "eslint-plugin-react": "^7.1.0",
+    "flow-bin": "^0.53.1",
     "ghooks": "^2.0.0",
     "ignore-styles": "^5.0.1",
     "jsdom": "^11.1.0",
