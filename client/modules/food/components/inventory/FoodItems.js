@@ -7,6 +7,7 @@ import Autosuggest from 'react-bootstrap-autosuggest'
 import selectors from '../../../../store/selectors'
 import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
 import { Box, BoxBody } from '../../../../components/box'
+import { showConfirmDialog, hideDialog } from '../../../core/reducers/dialog'
 
 class FoodItems extends React.Component {
   constructor(props) {
@@ -88,7 +89,15 @@ class FoodItems extends React.Component {
       </Button>
       {' '}
       <Button
-        onClick={this.props.deleteFoodItem(row.categoryId, row._id)}
+        onClick={() => this.props.showConfirmDialog(
+          this.props.hideDialog,
+          () => {
+            this.props.deleteFoodItem(row.categoryId, row._id)
+            this.props.hideDialog()
+          },
+          'Any deleted fields will be permanently lost',
+          'Delete Item'
+        )}
         bsStyle="danger" bsSize="xs">
         <i className="fa fa-trash" style={{marginRight: '8px'}} />Delete
       </Button>
@@ -328,8 +337,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   saveFoodItem: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
-  deleteFoodItem: (categoryId, _id) => () => dispatch(deleteFoodItem(categoryId, _id)),
-  clearFlags: () => dispatch(clearFlags())
+  deleteFoodItem: (categoryId, _id) => dispatch(deleteFoodItem(categoryId, _id)),
+  clearFlags: () => dispatch(clearFlags()),
+  hideDialog : () => dispatch(hideDialog()),
+  showConfirmDialog: (cancel, confirm, message, label) =>
+    dispatch(showConfirmDialog(cancel, confirm, message, label)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodItems)
