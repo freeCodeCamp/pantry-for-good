@@ -4,8 +4,7 @@ import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles} from '../../common/constants'
 import Donor from '../models/donor'
 import User from '../models/user'
-import {updateCustomer} from '../lib/update-linked-fields'
-import {updateVolunteer} from '../lib/update-linked-fields'
+import {updateFields} from '../lib/update-linked-fields'
 
 export default {
   /**
@@ -20,8 +19,7 @@ export default {
     const savedDonor = await donor.save()
 
     await User.findOneAndUpdate({_id: donor._id}, {$push: {roles: clientRoles.DONOR}})
-    updateCustomer(req.body.fields, donor._id)
-    updateVolunteer(req.body.fields,donor._id)
+    updateFields(clientRoles.DONOR,req.body.fields,donor._id)
     res.json(savedDonor)
   },
 
@@ -38,8 +36,7 @@ export default {
   async update(req, res) {
     const donor = extend(req.donor, req.body)
     const savedDonor = await donor.save()
-    updateCustomer(req.body.fields, donor._id)
-    updateVolunteer(req.body.fields,donor._id)
+    updateFields(clientRoles.DONOR,req.body.fields,donor._id)
     res.json(savedDonor)
   },
 

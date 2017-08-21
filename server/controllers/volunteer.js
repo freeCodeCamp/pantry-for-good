@@ -4,8 +4,7 @@ import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles} from '../../common/constants'
 import User from '../models/user'
 import Volunteer from '../models/volunteer'
-import {updateCustomer} from '../lib/update-linked-fields'
-import {updateDonor} from '../lib/update-linked-fields'
+import {updateFields} from '../lib/update-linked-fields'
 
 export default {
   /**
@@ -22,8 +21,7 @@ export default {
     )
 
     const savedVolunteer = await volunteer.save()
-    updateCustomer(req.body.fields, volunteer._id)
-    updateDonor(req.body.fields, volunteer._id)
+    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
     res.json(savedVolunteer)
   },
 
@@ -52,8 +50,7 @@ export default {
     const newVolunteer = await volunteer.save()
 
     if (!volunteer.roles || !req.user.roles.find(r => r === ADMIN_ROLE)) {
-      updateCustomer(req.body.fields, volunteer._id)
-      updateDonor(req.body.fields, volunteer._id)
+      updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
       return res.json(newVolunteer)
     }
     const oldRoles = difference(user.roles, volunteer.roles)
@@ -63,8 +60,7 @@ export default {
     if (newRoles.length || oldRoles.length){
       await User.findByIdAndUpdate(volunteer._id, {$set: {roles}})
     }
-    updateCustomer(req.body.fields, volunteer._id)
-    updateDonor(req.body.fields, volunteer._id)
+    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
     res.json({
       ...newVolunteer.toObject(),
       roles
