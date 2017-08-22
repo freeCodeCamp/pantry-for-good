@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {flatten} from 'lodash'
+import {flatten, omit} from 'lodash'
 import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
@@ -56,7 +56,7 @@ class VolunteerCreate extends Component {
     this.isAdmin = props.user.roles.find(role => role === ADMIN_ROLE)
     this.state = {
       volunteer: {
-        ...this.props.user,
+        ...omit(this.props.user, '_id'),
         fields: []
       },
       pendingVolunteer: {}

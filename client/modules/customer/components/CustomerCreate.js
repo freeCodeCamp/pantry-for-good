@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {flatten} from 'lodash'
+import {flatten, omit} from 'lodash'
 import {connect} from 'react-redux'
 import {submit} from 'redux-form'
 import {push} from 'react-router-redux'
@@ -60,7 +60,7 @@ class CustomerCreate extends Component {
     this.isAdmin = this.props.user.roles.find(r => r === ADMIN_ROLE)
     this.state = {
       customer: {
-        ...this.props.user,
+        ...omit(this.props.user, '_id'),
         household: [],
         foodPreferences: [],
         fields: []
