@@ -5,8 +5,7 @@ import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import mailer from '../lib/mail/mail-helpers'
 import User from '../models/user'
-import {updateVolunteer} from '../lib/update-linked-fields'
-import {updateDonor} from '../lib/update-linked-fields'
+import {updateFields} from '../lib/update-linked-fields'
 
 
 export default {
@@ -23,8 +22,7 @@ export default {
     )
 
     const savedCustomer = await customer.save()
-    updateVolunteer(req.body.fields,customer._id)
-    updateDonor(req.body.fields, customer._id)
+    updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
     res.json(savedCustomer)
 
     // mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
@@ -51,8 +49,7 @@ export default {
     } else {
       mailer.sendUpdate(newCustomer)
     }
-    updateVolunteer(req.body.fields,customer._id)
-    updateDonor(req.body.fields, customer._id)
+    updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
     res.json(newCustomer)
   },
 
