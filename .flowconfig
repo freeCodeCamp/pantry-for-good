@@ -1,0 +1,12 @@
+[ignore]
+.*/node_modules/.*
+
+[include]
+
+[libs]
+flow-typed/npm
+
+[lints]
+
+[options]
+module.name_mapper='.*\.\(svg\|png\|jpg\|gif\|css\)$' -> '<PROJECT_ROOT>/flow-typed/npm/EmptyModule.js'
