@@ -6,7 +6,7 @@ import {clientRoles} from '../../common/constants'
 /**
 * Update fields of address
 */
- async function updatedModel(Model, reqBodyFields, userId) {
+async function updatedModel(Model, reqBodyFields, userId) {
   const model = await Model.findById(userId)
   if (model != undefined && model != null && model != {}) {
     let modelFields = model.fields
