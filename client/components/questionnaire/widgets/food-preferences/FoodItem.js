@@ -14,7 +14,7 @@ const enhance = compose(
   withPropsOnChange(
     ['selectedItems'],
     ({item, selectedItems}) => ({
-      selected: !!selectedItems.find(sel => sel._id === item._id)
+      selected: !!selectedItems.find(sel => sel && sel._id === item._id)
     })
   ),
   withHandlers({
