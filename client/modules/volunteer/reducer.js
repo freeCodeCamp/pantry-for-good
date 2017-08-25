@@ -36,7 +36,8 @@ export const saveVolunteer = (volunteer, admin) => {
       body: volunteer,
       schema: volunteerSchema,
       types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
-    }
+    },
+    meta: {submitValidate: true}
   }
 }
 

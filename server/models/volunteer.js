@@ -4,6 +4,11 @@ import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import locationSchema from './location-schema'
 import {getValidator} from '../lib/questionnaire-helpers'
 
+import nodeGeocoder from 'node-geocoder'
+import {fieldTypes} from '../../common/constants'
+import {getFieldsByType} from '../lib/questionnaire-helpers'
+import {preFunction} from '../lib/pre-save-functions'
+
 const {Schema} = mongoose
 
 var VolunteerSchema = new Schema({
@@ -79,6 +84,11 @@ var VolunteerSchema = new Schema({
 
 VolunteerSchema.path('fields')
   .validate(getValidator(questionnaireIdentifiers.VOLUNTEER), 'Invalid field')
+
+  /**
+   * Hook a pre save method to construct the geolocation of the address
+   */
+  preFunction(VolunteerSchema, questionnaireIdentifiers.VOLUNTEER)
 
 /**
  * Virtual getters & setters
