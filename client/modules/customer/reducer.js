@@ -55,8 +55,22 @@ export const createSelectors = path => {
   const getAll = createSelector(
     state => get(state, path).ids,
     getEntities,
-    (customers, entities) =>
-      denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
+    (customers, entities) => {
+      let customerList = denormalize({customers}, {customers: arrayOfCustomers}, entities).customers
+      if (customerList) {
+        // For each customer, filter out items marked as deleted in the foodPreferences array
+        customerList = customerList.map(customer => {
+          if (!customer.foodPreferences) {
+            return customer
+          } else {
+            // Filter out deleted items that may be in foodPreferences
+            const foodPreferences = customer.foodPreferences.filter(item => (item && item.deleted) ? !item.deleted : true )
+            return {...customer, foodPreferences}
+          }
+        })
+      }
+      return customerList
+    }
   )
 
   return {

@@ -246,7 +246,7 @@ describe('Food Api', function() {
         .expect(200)
         .expect(res => {
           expect(res.body).to.have.length(1)
-          expect(res.body[0].items).to.have.length(0)
+          expect(res.body[0].items.filter(item => !item.deleted)).to.have.length(0)
         })
     })
   })

@@ -93,7 +93,7 @@ export const createSelectors = path => {
     state => get(state, path).ids,
     getEntities,
     (foodItems, entities) =>
-      denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems
+      denormalize({foodItems}, {foodItems: arrayOfFoodItems}, entities).foodItems.filter(item => !item.deleted)
   )
 
   return {

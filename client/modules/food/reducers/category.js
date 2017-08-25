@@ -46,11 +46,35 @@ export const createSelectors = path => {
       getEntities,
       (foodCategories, entities) =>
         denormalize({foodCategories}, {foodCategories: arrayOfFoodCategories}, entities).foodCategories
+          // filter categories marked as deleted
+          .filter(c => !c.deleted)
+          // For each category, filter out items marked as deleted in the items array if it exists
+          .map(category => {
+            if (category.items) {
+              return {
+                ...category,
+                items: category.items.filter(item => item && !item.deleted)
+              }
+            } else {
+              return category
+            }
+          })
     ),
     getOne: state => id => createSelector(
       getEntities,
-      entities =>
-        denormalize({foodCategories: id}, {foodCategories: foodCategory}, entities).foodCategories
+      entities => {
+        const category = denormalize({foodCategories: id}, {foodCategories: foodCategory}, entities).foodCategories
+        if (!category || category.deleted) {
+          return undefined
+        } else if (category.items) {
+          return {
+            ...category,
+            items: category.items.filter(item => item && !item.deleted)
+          }
+        } else {
+          return category
+        }
+      }
     )(state),
     loading: state => get(state, path).fetching,
     loadError: state => get(state, path).fetchError,

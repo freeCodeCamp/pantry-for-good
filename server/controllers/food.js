@@ -17,16 +17,14 @@ export default {
   async create(req, res) {
     const food = new Food(req.body)
 
-    try {
-      const savedFood = await food.save()
-      res.json(savedFood)
-    } catch (error) {
-      // Check if it is a unique key error(11000) from the category field
-      if (error.code === 11000 && error.errmsg.match('category'))
-        throw new ValidationError({category: 'That category already exists'})
+    const existingFoodCategory = await Food.find({'category': food.category, 'deleted': false}).lean()
 
-      throw error
+    if (existingFoodCategory.length) {
+      throw new ValidationError(['category'], 'That category already exists' )
     }
+
+    const savedFood = await food.save()
+    res.json(savedFood)
   },
 
   /**
@@ -45,12 +43,17 @@ export default {
   async delete(req, res) {
     const food = req.food
 
-    // Prevent remove if food category contains food items
-    if (food.items.length) {
+    // Prevent deleting if food category contains food items not marked as deleted
+    if (food.items.filter(item => !item.deleted).length) {
       throw new BadRequestError('Food category must be empty before deleting')
     }
 
-    await food.remove()
+    // If the category has items then mark it as deleted instead of deleting from the database
+    if (food.items.length) {
+      await Food.findByIdAndUpdate(food._id, {deleted: true})
+    } else {
+      await food.remove()
+    }
     res.json(food)
   },
 
@@ -72,7 +75,9 @@ export default {
     item.name = item.name.trim()
 
     //Check to see if an item with the same name already exists in a category
-    let categoryWithExistingItem = await Food.findOne({ 'items.name': { $regex: `^${item.name}$`, $options: "i" } }, { 'items.$': 1 }).lean()
+    let categoryWithExistingItem = await Food.findOne(
+      { 'items.name': { $regex: `^${item.name}$`, $options: "i" }, 'items.deleted': false },
+      { 'items.$': 1 }).lean()
 
     if (categoryWithExistingItem) {
       const existingFoodItem = categoryWithExistingItem.items[0]
@@ -108,7 +113,11 @@ export default {
   async deleteItem(req, res) {
     const categoryId = req.food._id
     const foodItemId = req.itemId
-    await Food.findByIdAndUpdate(categoryId, { $pull: { items: { _id: foodItemId } } })
+    await Food.update({"_id": categoryId, "items._id": foodItemId}, { $set: {"items.$.deleted": true} })
+
+    // Delete the food item from customer preferences
+    await Customer.update({}, { $pull: { "foodPreferences": foodItemId } }, {multi: true})
+
     res.json({deletedItemId: req.itemId})
   },
 

@@ -19,17 +19,24 @@ const FoodItemSchema = new Schema({
   frequency: {
     type: Number,
     default: 0
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 })
 
 const FoodSchema = new Schema({
   category: {
     type: String,
-    unique: true,
     required: 'Please fill in a category name',
     trim: true
   },
-  items: [FoodItemSchema]
+  items: [FoodItemSchema],
+  deleted: {
+    type: Boolean,
+    default: false
+  }
 })
 
 export default mongoose.model(modelTypes.FOOD, FoodSchema)
