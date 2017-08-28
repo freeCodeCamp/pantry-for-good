@@ -79,7 +79,7 @@ class PackModal extends Component {
           <option value='' selected='selected'>Select Other Food Item</option>
           {selectBoxOptionList}
         </FormControl>
-        <Button onClick={this.onAddFoodClick}>Add Selected Food</Button>
+        <Button onClick={this.onAddFoodClick} disabled={this.state.otherItemSelectBoxValue ? false : true}>Add Selected Food</Button>
       </FormGroup>
     )
   }
