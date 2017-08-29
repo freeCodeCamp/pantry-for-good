@@ -27,11 +27,6 @@
     "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js 'server/**/*.spec.js'",
     "flow" : "flow"
   },
-  "config": {
-    "ghooks": {
-      "pre-commit": "npm run lint && npm run test"
-    }
-  },
   "dependencies": {
     "@mapbox/polyline": "^0.2.0",
     "admin-lte": "^2.3.11",
