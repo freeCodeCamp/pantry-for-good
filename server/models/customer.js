@@ -1,12 +1,10 @@
 import mongoose from 'mongoose'
-import nodeGeocoder from 'node-geocoder'
 import moment from 'moment'
 
-import {fieldTypes, modelTypes, questionnaireIdentifiers} from '../../common/constants'
-import {ValidationError} from '../lib/errors'
+import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import locationSchema from './location-schema'
-import {getFieldsByType, getValidator} from '../lib/questionnaire-helpers'
-import {preFunction} from '../lib/pre-save-functions'
+import {getValidator} from '../lib/questionnaire-helpers'
+import {locateQuestionnaire} from '../lib/geolocate'
 
 const {Schema} = mongoose
 
@@ -88,9 +86,18 @@ CustomerSchema.path('fields')
   .validate(getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
 
 /**
- * Hook a pre save method to construct the geolocation of the address
+ * Hook a pre save method for geolocation
  */
-preFunction(CustomerSchema, questionnaireIdentifiers.CUSTOMER)
+CustomerSchema.pre('save', async function(next) {
+  const result = await locateQuestionnaire(this.fields, questionnaireIdentifiers.CUSTOMER)
+  if (result instanceof Error)
+    return next(result)
+
+  if (result)
+    this.location = result
+
+  return next()
+})
 
 /**
  * Virtual getters & setters
