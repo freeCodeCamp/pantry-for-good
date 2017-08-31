@@ -178,6 +178,7 @@ class PackingList extends Component {
             search
           >
             <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
+            <TableHeaderColumn dataField="customerName" width="100px">Customer Name</TableHeaderColumn>
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
             </TableHeaderColumn>
