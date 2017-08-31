@@ -22,7 +22,8 @@ export const saveSettings = settings => ({
     method: 'POST',
     body: settings,
     types: [SAVE_REQUEST, SAVE_SUCCESS, SAVE_FAILURE]
-  }
+  },
+  meta: {submitValidate: true}
 })
 
 export default (state = {}, action) => {

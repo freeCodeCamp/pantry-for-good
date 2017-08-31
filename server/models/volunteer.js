@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
 import locationSchema from './location-schema'
 import {getValidator} from '../lib/questionnaire-helpers'
+import {locateQuestionnaire} from '../lib/geolocate'
 
 const {Schema} = mongoose
 
@@ -79,6 +80,20 @@ var VolunteerSchema = new Schema({
 
 VolunteerSchema.path('fields')
   .validate(getValidator(questionnaireIdentifiers.VOLUNTEER), 'Invalid field')
+
+/**
+ * Hook a pre save method for geolocation
+ */
+VolunteerSchema.pre('save', async function(next) {
+  const result = await locateQuestionnaire(this.fields, questionnaireIdentifiers.VOLUNTEER)
+  if (result instanceof Error)
+    return next(result)
+
+  if (result)
+    this.location = result
+
+  return next()
+})
 
 /**
  * Virtual getters & setters

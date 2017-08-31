@@ -97,7 +97,7 @@ class CustomerEdit extends Component {
                 initialValues={toForm(customer, questionnaire)}
               />
             }
-            { customer && !loading &&
+            { customer && !loading && customer.status !== "Rejected" &&
               <Box>
                 <BoxHeader heading="Status" />
                 <BoxBody loading={savingCustomers}>

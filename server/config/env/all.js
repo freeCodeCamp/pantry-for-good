@@ -11,6 +11,7 @@ export default {
   host,
   port,
   sessionCollection: 'sessions',
+  sessionIdleTimeout: 3600000,
   mailFrom: `no-reply@${host}`,
   oauth: {
     googleCallbackURL: `${url}/api/auth/google/callback`

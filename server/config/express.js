@@ -30,7 +30,9 @@ export default function(io) {
 
   const sharedSession = session({
     saveUninitialized: false,
+    cookie: { maxAge: config.sessionIdleTimeout },
     resave: true,
+    rolling: true,
     secret: config.sessionSecret,
     store: new mongoStore({
       mongooseConnection: mongoose.connection,

@@ -1,10 +1,11 @@
 import {intersection} from 'lodash'
 
-import {ForbiddenError} from '../lib/errors'
+import {ForbiddenError, ValidationError} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import config from '../config'
 import Settings from '../models/settings'
 
+import {locateAddress} from '../lib/geolocate'
 
 export default {
   async read (req, res) {
@@ -19,26 +20,36 @@ export default {
     Object.assign(settings, {
       googleAuthentication: !!(config.oauth.googleClientID && config.oauth.googleClientSecret)
     })
-    
+
     // Remove unnecessary info before sending off the object to the client
     delete settings.__v
 
     res.json(settings)
   },
 
-  async save (req, res) {
+  async save (req, res, next) {
     const {user} = req
 
     if (!user || !user.roles.find(role => role === ADMIN_ROLE)) {
       throw new ForbiddenError
     }
 
-    const count = await Settings.count()
-    const query = count ?
-      Settings.findByIdAndUpdate(req.body._id, req.body, {new: true}) :
-      Settings.create(req.body)
+    const location = await locateAddress(req.body.address)
 
-    const settings = await query.select('+gmapsApiKey +gmapsClientId')
-    res.json(settings)
+    if (!location) return next(new ValidationError({address: 'Address not found'}))
+
+    const settings = {
+      ...req.body,
+      location
+    }
+
+    const count = await Settings.count()
+
+    const query = count ?
+      Settings.findByIdAndUpdate(settings._id, settings, {new: true}) :
+      Settings.create(settings)
+
+    const savedSettings = await query.select('+gmapsApiKey +gmapsClientId')
+    res.json(savedSettings)
   }
 }
