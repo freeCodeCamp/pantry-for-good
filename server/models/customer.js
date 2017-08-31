@@ -6,6 +6,7 @@ import {fieldTypes, modelTypes, questionnaireIdentifiers} from '../../common/con
 import {ValidationError} from '../lib/errors'
 import locationSchema from './location-schema'
 import {getFieldsByType, getValidator} from '../lib/questionnaire-helpers'
+import {preFunction} from '../lib/pre-save-functions'
 
 const {Schema} = mongoose
 
@@ -86,35 +87,10 @@ const CustomerSchema = new Schema({
 CustomerSchema.path('fields')
   .validate(getValidator(questionnaireIdentifiers.CUSTOMER), 'Invalid field')
 
-// Initialize geocoder options for pre save method
-const geocoder = nodeGeocoder({
-  provider: 'google',
-  formatter: null
-})
-
 /**
  * Hook a pre save method to construct the geolocation of the address
  */
-CustomerSchema.pre('save', async function(next) {
-  if (process.env.NODE_ENV === 'test') return next()
-
-  const addressFields = await getFieldsByType(
-    questionnaireIdentifiers.CUSTOMER, this.fields, fieldTypes.ADDRESS)
-
-  const address = addressFields.map(field => field.value).join(', ')
-
-  const [result] = await geocoder.geocode(address)
-
-  if (!result) return next(new ValidationError({
-    fields: Object.assign({}, ...addressFields.map((field, i) => ({
-      [field.meta]: i === 0 ? 'Address not found' : ' '}
-    )))
-  }))
-
-  const {latitude, longitude} = result
-  this.location = {lat: latitude, lng: longitude}
-  return next()
-})
+preFunction(CustomerSchema, questionnaireIdentifiers.CUSTOMER)
 
 /**
  * Virtual getters & setters
