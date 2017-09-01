@@ -147,6 +147,7 @@ class PackingList extends Component {
       acc + c.packingList.length, 0)
     // Don't show error when modal is showing
     const error = this.state.showModal ? null : (loadError || packSaveError)
+
     return (
       <Box>
         <BoxHeader heading="Packing List" />
@@ -178,6 +179,7 @@ class PackingList extends Component {
             search
           >
             <TableHeaderColumn dataField="_id" width="70px" dataSort>#</TableHeaderColumn>
+            <TableHeaderColumn dataField="fullName" width="125px">Customer Name</TableHeaderColumn>
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
             </TableHeaderColumn>
