@@ -17,7 +17,7 @@ import RoleSelector from './RoleSelector'
 const mapStateToProps = (state, ownProps) => {
   const {volunteerId} = ownProps.match.params
   return {
-    user: selectors.user.getUser(state),
+    user: selectors.auth.getUser(state),
     savingVolunteers: selectors.volunteer.saving(state),
     saveVolunteersError: selectors.volunteer.saveError(state),
     volunteer: selectors.volunteer.getOne(state)(volunteerId),

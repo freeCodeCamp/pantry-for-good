@@ -3,7 +3,7 @@ import {routerReducer as router} from 'react-router-redux'
 import {reducer as form} from 'redux-form'
 
 import app from '../modules/core/reducers'
-import auth from '../modules/users/reducer'
+import auth from '../modules/users/authReducer'
 import customer from '../modules/customer/reducer'
 import donation from '../modules/donor/reducers/donation'
 import donor from '../modules/donor/reducers/donor'

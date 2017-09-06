@@ -4,7 +4,7 @@ import {push} from 'react-router-redux'
 import {Col, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
-import {forgotPassword, clearFlags} from '../reducer'
+import {forgotPassword, clearFlags} from '../authReducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import LoadingWrapper from '../../../components/LoadingWrapper'
@@ -91,10 +91,10 @@ class ForgotPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
-  fetching: selectors.user.fetching(state),
-  error: selectors.user.error(state),
-  success: selectors.user.success(state)
+  user: selectors.auth.getUser(state),
+  fetching: selectors.auth.fetching(state),
+  error: selectors.auth.error(state),
+  success: selectors.auth.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({

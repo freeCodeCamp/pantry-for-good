@@ -17,7 +17,7 @@ import {Questionnaire} from '../../../components/questionnaire'
 const FORM_NAME = 'donorForm'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   savingDonors: selectors.donor.saving(state),
   saveDonorsError: selectors.donor.saveError(state),
   getDonor: selectors.donor.getOne(state),

@@ -19,7 +19,7 @@ import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {loadFoods} from '../../food/reducers/category'
 import {loadDonor} from '../../donor/reducers/donor'
 import {loadVolunteer} from '../../volunteer/reducer'
-import {loadUser} from '../../users/reducer'
+import {loadUser} from '../../users/authReducer'
 
 import {Page, PageHeader, PageBody} from '../../../components/page'
 import AssistanceInfo from '../../../components/AssistanceInfo'
@@ -28,7 +28,7 @@ import {Questionnaire} from '../../../components/questionnaire'
 const FORM_NAME = 'questionnaireForm'
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   savingCustomers: selectors.customer.saving(state),
   saveCustomersError: selectors.customer.saveError(state),
   questionnaire: selectors.questionnaire.getOne(state)(questionnaireIdentifiers.CUSTOMER),
@@ -37,7 +37,7 @@ const mapStateToProps = state => ({
   loadError: selectors.questionnaire.loadError(state) ||
     selectors.settings.error(state) || selectors.food.category.loadError(state),
   loadingUserData: selectors.donor.loading(state) || selectors.volunteer.loading(state),
-  loadingUser: selectors.user.fetching(state),
+  loadingUser: selectors.auth.fetching(state),
   settings: selectors.settings.getSettings(state),
   getDonor: selectors.donor.getOne(state),
   getVolunteer: selectors.volunteer.getOne(state)

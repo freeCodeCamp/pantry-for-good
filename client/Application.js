@@ -3,16 +3,16 @@ import {connect} from 'react-redux'
 
 import {ADMIN_ROLE} from '../common/constants'
 import selectors from './store/selectors'
-import {loadUser} from './modules/users/reducer'
+import {loadUser} from './modules/users/authReducer'
 import {loadMedia} from './modules/settings/reducers/media'
 import {loadSettings} from './modules/settings/reducers/settings'
 import Router from './Router'
 import ServerError from './modules/core/components/errors/ServerError'
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
-  loading: selectors.user.fetching(state),
-  error: selectors.user.error(state)
+  user: selectors.auth.getUser(state),
+  loading: selectors.auth.fetching(state),
+  error: selectors.auth.error(state)
 })
 
 const mapDispatchToProps = dispatch => ({

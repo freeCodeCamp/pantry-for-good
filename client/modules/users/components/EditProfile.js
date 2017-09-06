@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Col, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
-import {setProfile, clearFlags} from '../reducer'
+import {setProfile, clearFlags} from '../authReducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import LoadingWrapper from '../../../components/LoadingWrapper'
@@ -91,10 +91,10 @@ class EditProfile extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
-  fetchingUser: selectors.user.fetching(state),
-  fetchUserError: selectors.user.error(state),
-  fetchUserSuccess: selectors.user.success(state)
+  user: selectors.auth.getUser(state),
+  fetchingUser: selectors.auth.fetching(state),
+  fetchUserError: selectors.auth.error(state),
+  fetchUserSuccess: selectors.auth.success(state)
 })
 
 const mapDispatchToProps = dispatch => ({

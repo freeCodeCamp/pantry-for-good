@@ -33,7 +33,7 @@ const getProcessingInstructions = bindings => [{
 }]
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   getPage: selectors.page.getOne(state),
   settings: selectors.settings.getSettings(state)
 })
