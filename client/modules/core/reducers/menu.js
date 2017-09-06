@@ -125,6 +125,12 @@ function getMenuItems(user) {
     roles: [ADMIN_ROLE]
   }]
 
+  const adminUserAccountItems = [{
+    title: 'User Accounts',
+    link: 'users/list',
+    roles: [ADMIN_ROLE]
+  }]
+
   const foodItems = [{
     title: 'Food Schedule',
     link: 'schedule',
@@ -178,7 +184,8 @@ function getMenuItems(user) {
     ...adminClientItems,
     ...foodItems,
     ...deliveryItems,
-    ...settingsItems
+    ...settingsItems,
+    ...adminUserAccountItems
   ]
 
 
