@@ -15,6 +15,7 @@ import media from '../modules/settings/reducers/media'
 import questionnaire from '../modules/questionnaire/reducers/api'
 import questionnaireEditor from '../modules/questionnaire/reducers/editor'
 import settings from '../modules/settings/reducers/settings'
+import user from '../modules/users/userReducer'
 import volunteer from '../modules/volunteer/reducer'
 
 export default combineReducers({
@@ -33,5 +34,6 @@ export default combineReducers({
   questionnaireEditor,
   router,
   settings,
+  user,
   volunteer
 })

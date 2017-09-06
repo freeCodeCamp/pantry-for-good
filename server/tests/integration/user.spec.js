@@ -214,4 +214,128 @@ describe('User Api', function() {
         })
     })
   })
+
+  describe('listing user accounts', function () {
+    it('returns an empty array when there are no accounts', async function () {
+      const request = supertest.agent(app())
+      return await request.get('/api/users')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(0)
+        })
+    })
+
+    it('returns one account when there is one account', async function () {
+      await User.create({
+        firstName: 'Frank',
+        lastName: 'Harper',
+        email: 'fharper@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+
+      const request = supertest.agent(app())
+      return await request.get('/api/users')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(1)
+          expect(res.body[0].firstName).to.equal('Frank')
+          expect(res.body[0].lastName).to.equal('Harper')
+          expect(res.body[0].email).to.equal('fharper@example.com')
+        })
+    })
+
+    it('returns two account when there is two accounts', async function () {
+      await User.create({
+        firstName: 'Frank',
+        lastName: 'Harper',
+        email: 'fharper@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+      await User.create({
+        firstName: 'Bill',
+        lastName: 'Willis',
+        email: 'mwillis@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+
+      const request = supertest.agent(app())
+      return await request.get('/api/users')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(2)
+          const frank = res.body.find(user => user.firstName === 'Frank')
+          expect(frank.firstName).to.equal('Frank')
+          expect(frank.lastName).to.equal('Harper')
+          expect(frank.email).to.equal('fharper@example.com')
+          const bill = res.body.find(user => user.firstName === 'Bill')
+          expect(bill.firstName).to.equal('Bill')
+          expect(bill.lastName).to.equal('Willis')
+          expect(bill.email).to.equal('mwillis@example.com')
+        })
+    })
+  })
+
+  describe('getting a user by userId', function () {
+    it('Gets the user', async function () {
+      const user = await User.create({
+        firstName: 'Frank',
+        lastName: 'Harper',
+        email: 'fharper@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+      await User.create({
+        firstName: 'Bill',
+        lastName: 'Willis',
+        email: 'mwillis@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+
+      const request = supertest.agent(app())
+      return await request.get(`/api/users/${user._id}`)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.firstName).to.equal('Frank')
+          expect(res.body.lastName).to.equal('Harper')
+          expect(res.body.email).to.equal('fharper@example.com')
+        })
+    })
+
+    it('returns when the user does not exist', async function () {
+      const user = await User.create({
+        firstName: 'Frank',
+        lastName: 'Harper',
+        email: 'fharper@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+      await User.create({
+        firstName: 'Bill',
+        lastName: 'Willis',
+        email: 'mwillis@example.com',
+        password: '12345678',
+        provider: 'local'
+      })
+
+      await User.remove({_id: user._id})
+
+      const request = supertest.agent(app())
+      return await request.get(`/api/users/${user._id}`)
+        .expect(400)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body.message).to.equal(`UserId ${user._id} not found`)
+        })
+    })
+
+  })
+
 })

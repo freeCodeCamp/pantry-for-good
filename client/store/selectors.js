@@ -10,6 +10,7 @@ import {createSelectors as createQuestionnaireSelectors} from '../modules/questi
 import {createSelectors as createQEditorSelectors} from '../modules/questionnaire/reducers/editor'
 import {createSelectors as createSettingsSelectors} from '../modules/settings/reducers/settings'
 import {createSelectors as createAuthSelectors} from '../modules/users/authReducer'
+import {createSelectors as createUserSelectors} from '../modules/users/userReducer'
 import {createSelectors as createVolunteerSelectors} from '../modules/volunteer/reducer'
 
 const customerSelectors = createCustomerSelectors('customer')
@@ -28,5 +29,6 @@ export default {
   questionnaire: createQuestionnaireSelectors('questionnaire'),
   qEditor: createQEditorSelectors('questionnaireEditor'),
   settings: createSettingsSelectors('settings'),
+  user: createUserSelectors('user'),
   volunteer: createVolunteerSelectors('volunteer')
 }
