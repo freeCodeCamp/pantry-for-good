@@ -81,8 +81,8 @@ export const getSettingsFields = () => {
     [40.720230, -73.984029, '176 Stanton St', 'New York', 'NY 10002']
 
   return {
-    organization: 'Foodbank Template',
-    url: 'www.example.com',
+    organization: 'Pantry for Good',
+    url: 'https://github.com/FreeCodeCamp/pantry-for-good',
     address: `${street} ${city} ${zip}`,
     clientIntakeNumber: faker.phone.phoneNumber(),
     supportNumber: faker.phone.phoneNumber(),
@@ -94,7 +94,7 @@ export const getSettingsFields = () => {
 export const pages = [{
   identifier: pageIdentifiers.HOME,
   title: 'Home',
-  body: '<p><span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is a volunteer run organization based in (location) with the mission of helping families who are in need. We provide weekly non-perishable and freshly baked goods, to ensure that every family has delicious meals.</p><p>The organization was founded in (year) in memory of (founder), who was very kind and sensitive to the needs of others.</p><p><a href="/customers">Customer Information (internal link)</a></p><p><a href="http://google.com">Google (external link)</a></p>'
+  body: '<p><span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is an application for managing food bank operations created as part of the Open Source for Good project at <a href="https://www.freecodecamp.org/">freeCodeCamp</a>.</p><p>The content of this page and the site branding can be changed by an administrator on the <a href="/settings">settings</a> page.</p>'
 }, {
   identifier: pageIdentifiers.CUSTOMER,
   title: 'Customers',
