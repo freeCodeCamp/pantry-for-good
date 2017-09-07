@@ -5,6 +5,7 @@ import {Route} from 'react-router-dom'
 import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
 import UserList from './components/UserList'
 import ChangePassword from './components/ChangePassword'
+import ConfirmNewGoogleAccount from './components/ConfirmNewGoogleAccount'
 import EditProfile from './components/EditProfile'
 import EditUser from './components/EditUser'
 import ForgotPassword from './components/ForgotPassword'
@@ -53,6 +54,11 @@ const UserRouter = ({match}) =>
     />
     <Route path={`${match.url}/signin`} exact component={SignIn} />
     <Route path={`${match.url}/signup`} exact component={SignUp} />
+    <Route
+      path={`${match.url}/confirm-new-google-account`}
+      exact
+      component={ConfirmNewGoogleAccount}
+    />
   </SwitchWithNotFound>
 
 export default UserRouter

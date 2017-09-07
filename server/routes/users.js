@@ -44,16 +44,19 @@ export default () => {
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/userinfo.email'
       ]
-    }, (err, user) => {
+    }, (err, user, googleProfile) => {
       if (err) {
         return res.status(500).send(err.message)
-      } else if (!user) {
-        return res.status(500).send("Server error. Could not login the user")
-      } else {
+      } else if (user) {
         req.login(user, err => {
           if (err) return res.status(500).send(err.message)
           return res.redirect('/')
         })
+      } else if (googleProfile) {
+        //google login but no account exists
+        return res.redirect('/users/confirm-new-google-account')
+      } else {
+        return res.status(500).send("Server error. Could not login the user")
       }
     })(req, res, next)
   )
