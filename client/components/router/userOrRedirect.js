@@ -7,7 +7,7 @@ import {Redirect} from 'react-router'
 import selectors from '../../store/selectors'
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state)
+  user: selectors.auth.getUser(state)
 })
 
 const noUser = ({user}) => !user || !user.roles

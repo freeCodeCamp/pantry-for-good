@@ -17,7 +17,7 @@ import DonationView from './DonationView'
 import DonationCreate from './DonationCreate'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   savingDonors: selectors.donor.saving(state),
   saveDonorsError: selectors.donor.saveError(state),
   savingDonations: selectors.donation.saving(state),

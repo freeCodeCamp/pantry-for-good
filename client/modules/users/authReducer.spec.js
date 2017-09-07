@@ -1,7 +1,7 @@
-import * as reducer from './reducer'
+import * as reducer from './authReducer'
 import {CALL_API} from '../../store/middleware/api'
 
-describe('user reducer', function() {
+describe('auth reducer', function() {
   describe('action creators', function() {
     it('saves users profile', function() {
       const user = {_id: 1, name: 'foo'}
@@ -119,7 +119,7 @@ describe('user reducer', function() {
 
   describe('selectors', function() {
     it('creates selectors', function() {
-      const selectors = reducer.createSelectors('users')
+      const selectors = reducer.createSelectors('auth')
       expect(selectors).to.be.an('object')
       expect(selectors).to.include.keys(['getUser', 'fetching'])
     })

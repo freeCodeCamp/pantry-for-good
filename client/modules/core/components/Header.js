@@ -8,7 +8,7 @@ import ClientNavbar from './navbar/ClientNavbar'
 import AdminNavbar from './navbar/AdminNavbar'
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   route: state.router.location,
   settings: selectors.settings.getSettings(state)
 })

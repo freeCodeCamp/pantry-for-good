@@ -16,7 +16,7 @@ import {Page, PageHeader, PageBody} from '../../../components/page'
 import {QuestionnaireView} from '../../../components/questionnaire-view'
 
 const mapStateToProps = (state, ownProps) => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   savingCustomers: selectors.customer.saving(state),
   saveCustomersError: selectors.customer.saveError(state),
   getCustomer: selectors.customer.getOne(state),

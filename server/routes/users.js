@@ -5,8 +5,12 @@ import users from '../controllers/users'
 const userRouter = Router({mergeParams: true})
 
 export default () => {
-  // Setting up the users profile api
+  userRouter.route('/users').get(users.list)
+
+  // Get the current logged on user
   userRouter.route('/users/me').get(users.me)
+
+  userRouter.route('/users/:userId').get(users.getById)
   userRouter.route('/users').put(users.update)
 
   // Setting up the users password api

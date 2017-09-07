@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 import {push} from 'react-router-redux'
 
 import selectors from '../../../store/selectors'
-import {signUp, clearFlags} from '../reducer'
+import {signUp, clearFlags} from '../authReducer'
 import userClientRole from '../../../lib/user-client-role'
 import {showDialog, hideDialog} from '../../core/reducers/dialog'
 
@@ -166,9 +166,9 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
-  fetchingUser: selectors.user.fetching(state),
-  fetchUserError: selectors.user.error(state),
+  user: selectors.auth.getUser(state),
+  fetchingUser: selectors.auth.fetching(state),
+  fetchUserError: selectors.auth.error(state),
   googleAuthentication: get(selectors.settings.getSettings(state), 'googleAuthentication')
 })
 

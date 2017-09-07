@@ -9,7 +9,8 @@ import {createSelectors as createMediaSelectors} from '../modules/settings/reduc
 import {createSelectors as createQuestionnaireSelectors} from '../modules/questionnaire/reducers/api'
 import {createSelectors as createQEditorSelectors} from '../modules/questionnaire/reducers/editor'
 import {createSelectors as createSettingsSelectors} from '../modules/settings/reducers/settings'
-import {createSelectors as createUserSelectors} from '../modules/users/reducer'
+import {createSelectors as createAuthSelectors} from '../modules/users/authReducer'
+import {createSelectors as createUserSelectors} from '../modules/users/userReducer'
 import {createSelectors as createVolunteerSelectors} from '../modules/volunteer/reducer'
 
 const customerSelectors = createCustomerSelectors('customer')
@@ -17,6 +18,7 @@ const deliverySelectors = createDeliverySelectors('delivery', customerSelectors)
 
 export default {
   app: createAppSelectors('app'),
+  auth: createAuthSelectors('auth'),
   customer: customerSelectors,
   delivery: deliverySelectors,
   donation: createDonationSelectors('donation'),
@@ -27,6 +29,6 @@ export default {
   questionnaire: createQuestionnaireSelectors('questionnaire'),
   qEditor: createQEditorSelectors('questionnaireEditor'),
   settings: createSettingsSelectors('settings'),
-  user: createUserSelectors('auth'),
+  user: createUserSelectors('user'),
   volunteer: createVolunteerSelectors('volunteer')
 }

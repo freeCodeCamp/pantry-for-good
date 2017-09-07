@@ -1,7 +1,7 @@
 import {intersection, partition} from 'lodash'
 
 import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../../../common/constants'
-import {LOAD_SUCCESS, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/reducer'
+import {LOAD_SUCCESS, CLEAR_USER, SIGNIN_SUCCESS, SIGNUP_SUCCESS} from '../../users/authReducer'
 
 export default (state = {items: []}, action) => {
   switch (action.type) {
@@ -125,6 +125,12 @@ function getMenuItems(user) {
     roles: [ADMIN_ROLE]
   }]
 
+  const adminUserAccountItems = [{
+    title: 'User Accounts',
+    link: 'users/list',
+    roles: [ADMIN_ROLE]
+  }]
+
   const foodItems = [{
     title: 'Food Schedule',
     link: 'schedule',
@@ -178,7 +184,8 @@ function getMenuItems(user) {
     ...adminClientItems,
     ...foodItems,
     ...deliveryItems,
-    ...settingsItems
+    ...settingsItems,
+    ...adminUserAccountItems
   ]
 
 

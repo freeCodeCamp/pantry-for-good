@@ -6,7 +6,7 @@ import selectors from '../../../../store/selectors'
 import SidebarMenu from './SidebarMenu'
 
 const mapStateToProps = state => ({
-  user: selectors.user.getUser(state),
+  user: selectors.auth.getUser(state),
   menu: state.app.menu,
   route: state.router.location
 })

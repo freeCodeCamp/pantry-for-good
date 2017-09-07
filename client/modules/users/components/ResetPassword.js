@@ -4,7 +4,7 @@ import {Col, Row} from 'react-bootstrap'
 import { replace } from 'react-router-redux'
 
 import selectors from '../../../store/selectors'
-import {resetPassword, clearFlags} from '../reducer'
+import {resetPassword, clearFlags} from '../authReducer'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import LoadingWrapper from '../../../components/LoadingWrapper'
@@ -112,9 +112,9 @@ class ResetPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  fetching: selectors.user.fetching(state),
-  error: selectors.user.error(state),
-  success: selectors.user.success(state)
+  fetching: selectors.auth.fetching(state),
+  error: selectors.auth.error(state),
+  success: selectors.auth.success(state)
 
 })
 
