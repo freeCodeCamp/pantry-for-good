@@ -1,5 +1,5 @@
 import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
-import Food from '../../models/food'
+import Food, {FoodItem} from '../../models/food'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
 
@@ -249,5 +249,49 @@ describe('Food Api', function() {
           expect(res.body[0].items.filter(item => !item.deleted)).to.have.length(0)
         })
     })
+
+    it('creates a new item when a deleted item with the same name exists', async function() {
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const {app} = await createUserSession(testAdmin)
+      const request = supertest.agent(app)
+
+      const apple = await FoodItem.create({name: 'apple', quantity: 2, deleted: true})
+      const category = await Food.create({category: 'fruits', items: [apple]})
+
+      return request.post(`/api/foods/${category._id}/items`)
+        .send({ name: 'apple', quantity: 10 })
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('items')
+          expect(res.body.items).to.be.an('array')
+          expect(res.body.items).to.have.length(2)
+          const item = res.body.items.find(i => i.name === 'apple' && i.deleted === false && i.quantity === 10)
+          expect(item).to.not.be.undefined
+        })
+    })
+
+    it('creates a new item when  deleted item with the same name exists and another item is not deleted', async function() {
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const {app} = await createUserSession(testAdmin)
+      const request = supertest.agent(app)
+
+      const apple = await FoodItem.create({name: 'apple', quantity: 2, deleted: true})
+      const banana = await FoodItem.create({name: 'banana', quantity: 5, deleted: false})
+      const category = await Food.create({category: 'fruits', items: [apple, banana]})
+
+      return request.post(`/api/foods/${category._id}/items`)
+        .send({ name: 'apple', quantity: 10 })
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('items')
+          expect(res.body.items).to.be.an('array')
+          expect(res.body.items).to.have.length(3)
+          const item = res.body.items.find(i => i.name === 'apple' && i.deleted === false && i.quantity === 10)
+          expect(item).to.not.be.undefined
+        })
+    })
+
   })
 })
