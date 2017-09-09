@@ -38,7 +38,7 @@ class UserList extends Component {
 
   render = () =>
     <Box>
-      <BoxHeader heading="User Accouts" />
+      <BoxHeader heading="User Accounts" />
       <BoxBody
         loading={this.props.loading}
         error={this.props.loadError}
