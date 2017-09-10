@@ -1,8 +1,7 @@
 import React from 'react'
-import {values} from 'lodash'
 import {Route} from 'react-router-dom'
 
-import {ADMIN_ROLE, clientRoles} from '../../../common/constants'
+import {ADMIN_ROLE} from '../../../common/constants'
 import UserList from './components/UserList'
 import ChangePassword from './components/ChangePassword'
 import ConfirmNewGoogleAccount from './components/ConfirmNewGoogleAccount'
@@ -14,11 +13,11 @@ import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import requireRole from '../../components/router/requireRole'
 import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
+import userOrRedirect from '../../components/router/userOrRedirect'
 
 import './css/users.css'
 
 const IsAdmin = requireRole([ADMIN_ROLE])
-const IsUser = requireRole([ADMIN_ROLE, ...values(clientRoles)])
 
 const UserRouter = ({match}) =>
   <SwitchWithNotFound>
@@ -35,12 +34,12 @@ const UserRouter = ({match}) =>
     <Route
       path={`${match.url}/change-password`}
       exact
-      component={IsUser(ChangePassword)}
+      component={userOrRedirect(ChangePassword)}
     />
     <Route
       path={`${match.url}/profile`}
       exact
-      component={IsUser(EditProfile)}
+      component={userOrRedirect(EditProfile)}
     />
     <Route
       path={`${match.url}/forgot-password`}
