@@ -19,7 +19,7 @@ export default function() {
       try {
         const user = await User.findOne({'google.id': profile.id})
         if (action === 'login') {
-          login(user, cb)
+          cb(null, user, profile)
         } else if (action === 'signup') {
           signup(user, profile, cb)
         } else {
@@ -30,14 +30,6 @@ export default function() {
       }
     }
   ))
-}
-
-const login = (user, cb) => {
-  if (user) {
-    cb(null, user)
-  } else {
-    throw new Error("Could not find account with that googleID")
-  }
 }
 
 const signup = (user, profile, cb) => {
