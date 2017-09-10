@@ -76,8 +76,9 @@ export default {
 
     //Check to see if an item with the same name already exists in a category
     let categoryWithExistingItem = await Food.findOne(
-      { 'items.name': { $regex: `^${item.name}$`, $options: "i" }, 'items.deleted': false },
-      { 'items.$': 1 }).lean()
+      { items: {$elemMatch:{name: {$regex: `^${item.name}$`, $options: "i"}, deleted: false }} },
+      { 'items.$': 1 }
+    ).lean()
 
     if (categoryWithExistingItem) {
       const existingFoodItem = categoryWithExistingItem.items[0]
