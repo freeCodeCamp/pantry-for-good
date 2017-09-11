@@ -25,7 +25,7 @@
     "test:server": "npm run test:server:once -- --watch",
     "test:client:once": "cross-env NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js \"client/**/*.spec.js\"",
     "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js \"server/**/*.spec.js\"",
-    "flow" : "flow"
+    "flow": "flow"
   },
   "config": {
     "ghooks": {
