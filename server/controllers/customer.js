@@ -1,7 +1,7 @@
-import {extend, intersection} from 'lodash'
+import {extend, intersection, includes} from 'lodash'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
-import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
+import {ADMIN_ROLE, clientRoles, volunteerRoles, customerStatus} from '../../common/constants'
 import Customer from '../models/customer'
 import mailer from '../lib/mail/mail-helpers'
 import User from '../models/user'
@@ -103,6 +103,30 @@ export default {
 
     if (!req.customer || req.customer._id !== +req.user.id)
       throw new ForbiddenError
+
+    next()
+  },
+
+  /**
+   * Customer Middleware
+   */
+  async canChangeStatus(req, res, next) {
+    const unrestrictedRoles = [
+      ADMIN_ROLE,
+    ]
+    const restrictedStatus = [
+      customerStatus.REJECTED,
+      customerStatus.PENDING,
+    ]
+
+    if (req.user && !intersection(req.user.roles, unrestrictedRoles).length) {
+      const customer = extend(req.customer, req.body)
+      const oldCustomer = await Customer.findById(customer._id)
+
+      const statusChanged = oldCustomer.status !== customer.status
+      if (statusChanged && includes(restrictedStatus, oldCustomer.status))
+        throw new ForbiddenError
+    }
 
     next()
   }

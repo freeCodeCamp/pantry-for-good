@@ -67,3 +67,10 @@ export const questionnaireIdentifiers = {
   DONOR: 'questionnaire/donors',
   VOLUNTEER: 'questionnaire/volunteers'
 }
+
+export const customerStatus = {
+  ACCEPTED: 'Accepted',
+  REJECTED: 'Rejected',
+  PENDING: 'Pending',
+  INACTIVE: 'Inactive'
+}
