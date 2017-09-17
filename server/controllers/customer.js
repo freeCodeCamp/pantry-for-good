@@ -120,11 +120,8 @@ export default {
     ]
 
     if (req.user && !intersection(req.user.roles, unrestrictedRoles).length) {
-      const customer = extend(req.customer, req.body)
-      const oldCustomer = await Customer.findById(customer._id)
-
-      const statusChanged = oldCustomer.status !== customer.status
-      if (statusChanged && includes(restrictedStatus, oldCustomer.status))
+      const statusChanged = req.customer.status !== req.body.status
+      if (statusChanged && includes(restrictedStatus, req.customer.status))
         throw new ForbiddenError
     }
 

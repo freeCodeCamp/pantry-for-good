@@ -11,8 +11,7 @@ const deleteSchema = {...sync, type: 'customer/DELETE_SUCCESS'}
 
 export default () => {
   const {requiresLogin} = userController
-  const {hasAuthorization} = customerController
-  const {canChangeStatus} = customerController
+  const {hasAuthorization, canChangeStatus} = customerController
 
   const customerRouter = Router({mergeParams: true})
 
