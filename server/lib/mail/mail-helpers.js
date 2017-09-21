@@ -15,7 +15,6 @@ export default {
   async send(toEmail, toName, identifier, bindings = null) {
     const settings = await Settings.findOne().lean()
     const mail = await mailGenerator(identifier, {...settings, ...bindings})
-
     if (!mail) return
 
     try {
@@ -90,14 +89,14 @@ export default {
   },
 
   async sendReceipt(donation) {
-    const {donor} = donation
+    const {donor, items} = donation
     const {firstName, lastName, email} = donor
     const fullName = `${firstName} ${lastName}`
     await this.send(
       email,
       fullName,
       pageIdentifiers.DONATION_RECEIPT,
-      {firstName, lastName, fullName}
+      {firstName, lastName, fullName, items}
     )
   }
 }

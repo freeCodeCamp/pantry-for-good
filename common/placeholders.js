@@ -32,7 +32,14 @@ const placeholders = [
     label: 'Signature',
     type: placeholderTypes.ATTACHMENT,
     format: () => '<img src="cid:signature" alt="Signature" />'
-  }
+  },
+  {
+    id: 'items',
+    label: 'Donation Receipt Information',
+    type: placeholderTypes.EMAIL,
+    required: true,
+    format: value => table(value)
+  },
 ]
 
 function getPagePlaceholders() {
@@ -57,6 +64,16 @@ function getPlaceholders(types) {
     placeholders = placeholders.concat(getAttachmentPlaceholders())
 
   return placeholders
+}
+
+function table(value) {
+  let tableFinal = `<table><tr><td><p>Item</p></td><td><p>Value</p></td></tr>`
+  let total = 0
+  for (let i = 0; i < value.length; i++) {
+    tableFinal += `<tr><td><p>"${value[i].name}"</p></td><td><p>"${value[i].value}"</p></td></tr>`
+    total += value[i].value
+  }
+  return tableFinal + `<tr><td><p>Total:</p></td><td><p>"${total}"</p></td></tr></table>`
 }
 
 export {
