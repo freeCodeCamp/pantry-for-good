@@ -48,14 +48,6 @@ const General = () =>
 
       <Row>
         <Clearfix visibleSmBlock visibleMdBlock />
-        <Col lg={6}>
-          <RFFieldGroup
-            name="address"
-            label="Address"
-            type="textarea"
-            rows="5"
-          />
-        </Col>
         <Col lg={3}>
           <RFFieldGroup
             name="distanceUnit"
@@ -76,7 +68,22 @@ const General = () =>
             required
           />
         </Col>
+        <Col lg={3}>
+          <RFFieldGroup
+            name="EIN"
+            label="EIN"
+            type="text"
+          />
+        </Col>
         <Clearfix visibleSmBlock visibleMdBlock />
+        <Col lg={6}>
+          <RFFieldGroup
+            name="address"
+            label="Address"
+            type="textarea"
+            rows="5"
+          />
+        </Col>
       </Row>
     </BoxBody>
   </Box>

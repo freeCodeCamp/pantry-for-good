@@ -48,6 +48,11 @@ const SettingsSchema = new Schema({
     trim: true,
     default: '$'
   },
+  EIN: {
+    type: String,
+    trim: true,
+    default: ''
+  },
 })
 
 export default mongoose.model(modelTypes.SETTINGS, SettingsSchema)
