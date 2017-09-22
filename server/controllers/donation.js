@@ -12,7 +12,7 @@ export default {
     }
 
     if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
-        newDonation.donor !== req.user.id) {
+        newDonation.donor !== req.user._id) {
       throw new UnauthorizedError
     }
 
