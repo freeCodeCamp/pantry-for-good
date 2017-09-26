@@ -10,7 +10,7 @@ import userClientRole from '../../../lib/user-client-role'
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
 
-class SignIn extends React.Component {
+export class SignIn extends React.Component {
   constructor(props) {
     super(props)
     this.redirectIfAlreadySignedIn(this.props)
