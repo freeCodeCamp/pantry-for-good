@@ -174,14 +174,16 @@ export const pages = [{
 <p>
   <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> is committed to protecting your personal information by following responsible information handling practices and in keeping with privacy laws. All information remains strictly confidential as outlined by <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span>'s Privacy Policy that can be accessed at <span class="ql-placeholder-content" data-id="url" data-label="Foodbank Website"></span>.
 </p>
-<p>If you have any questions or concerns, feel free to contact us.</p>`
+<p>If you have any questions or concerns, feel free to contact us.</p>
+`
 }, {
   identifier: pageIdentifiers.DONATION_RECEIPT,
   title: 'Donation Receipt',
   type: pageTypes.EMAIL,
   subject: '<p>Receipt for Your Donation to <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>',
   body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
-`
+<p>Here you have a list of the donations our organization recibed from you:</p>
+<p><span class="ql-placeholder-content" data-id="items" data-label="Donation Receipt information" data-required="true"></span></p>`
 }]
 
 const commonFields = [
