@@ -182,8 +182,9 @@ export const pages = [{
   type: pageTypes.EMAIL,
   subject: '<p>Receipt for Your Donation to <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>',
   body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
-<p>Here you have a list of the donations our organization recibed from you:</p>
-<p><span class="ql-placeholder-content" data-id="items" data-label="Donation Receipt information" data-required="true"></span></p>`
+<p>Thanks for your donations to:</p>
+<p><span class="ql-placeholder-content" data-id="receipt" data-label="Donation Receipt" data-required="true"></span></p>
+`
 }]
 
 const commonFields = [

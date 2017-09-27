@@ -48,7 +48,7 @@ const SettingsSchema = new Schema({
     trim: true,
     default: '$'
   },
-  EIN: {
+  ein: {
     type: String,
     trim: true,
     default: ''
