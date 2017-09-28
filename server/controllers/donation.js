@@ -6,9 +6,10 @@ import mailer from '../lib/mail/mail-helpers'
 
 export default {
   async create(req, res) {
+
     let newDonation = {
       ...req.body,
-      total: req.body.items.reduce((acc, item) => acc + item.value, 0)
+      total: req.body.items.reduce((acc, item) => acc + Number(item.value), 0)
     }
 
     if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
