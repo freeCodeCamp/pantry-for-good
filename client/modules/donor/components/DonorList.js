@@ -27,7 +27,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadDonors: () => dispatch(loadDonors()),
-  deleteDonor: donor => () => dispatch(deleteDonor(donor._id)),
+  deleteDonor: donor => dispatch(deleteDonor(donor._id)),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   showDialog: (cancel, confirm, message) =>
     dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
@@ -47,7 +47,10 @@ class DonorList extends Component {
 
   deleteDonor = donor => () => this.props.showDialog(
     this.props.hideDialog,
-    this.props.deleteDonor(donor),
+    () => {
+      this.props.deleteDonor(donor)
+      this.props.hideDialog()
+    },
     `Donor ${donor.fullName} will be permanently deleted`
   )
 
