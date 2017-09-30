@@ -98,14 +98,15 @@ class CustomerEdit extends Component {
               />
             }
             { customer && !loading && customer.status !== "Rejected" &&
-              <Box>
-                <BoxHeader heading="Status" />
-                <BoxBody loading={savingCustomers}>
-                  <p>
-                    You
-                    {customer.status === 'Accepted' ? ' will ' : ' won\'t ' }
-                    receive deliveries.
-                  </p>
+            <Box>
+              <BoxHeader heading="Status" />
+              <BoxBody loading={savingCustomers}>
+                <p>
+                  You
+                  {customer.status === 'Accepted' ? ' will ' : ' won\'t ' }
+                  receive deliveries.
+                </p>
+                { customer.status !== 'Pending' &&
                   <ButtonToolbar>
                     <Button
                       bsStyle="success"
@@ -124,8 +125,9 @@ class CustomerEdit extends Component {
                       Away
                     </Button>
                   </ButtonToolbar>
-                </BoxBody>
-              </Box>
+                }
+              </BoxBody>
+            </Box>
             }
             <div className="text-right">
               <Button
