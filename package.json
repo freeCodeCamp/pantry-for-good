@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@mapbox/polyline": "^0.2.0",
-    "admin-lte": "^2.3.11",
+    "admin-lte": "~2.3.11",
     "autoprefixer": "^7.1.1",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.1.1",
