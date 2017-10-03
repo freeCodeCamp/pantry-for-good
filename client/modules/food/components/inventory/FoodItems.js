@@ -257,7 +257,7 @@ class FoodItems extends React.Component {
       <div>
         <Box>
           <BoxBody
-
+            // Don't show loading spinner or error message on main page when modal is showing
             loading={this.state.showModal ? undefined : (this.props.loading || this.props.saving)}
             error={this.state.showModal ? undefined : (this.props.loadError || this.props.saveError)}
             errorBottom={true}>
