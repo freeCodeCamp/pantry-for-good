@@ -55,6 +55,13 @@ class VolunteerList extends Component {
     })) :
     []
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {loading, loadError} = this.props
 
@@ -73,7 +80,8 @@ class VolunteerList extends Component {
                 options={{
                   defaultSortName: "_id",
                   defaultSortOrder: 'desc',
-                  noDataText: loading ? '' : 'No volunteers found'
+                  noDataText: loading ? '' : 'No volunteers found',
+                  sizePerPageDropDown: this.renderSizePerPageDropDown
                 }}
                 hover
                 striped

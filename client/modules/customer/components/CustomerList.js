@@ -56,6 +56,13 @@ class CustomerList extends Component {
     })) :
     []
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {loading, loadError} = this.props
 
@@ -74,7 +81,8 @@ class CustomerList extends Component {
                 options={{
                   defaultSortName: "_id",
                   defaultSortOrder: 'desc',
-                  noDataText: loading ? '' : 'No customers found'
+                  noDataText: loading ? '' : 'No customers found',
+                  sizePerPageDropDown: this.renderSizePerPageDropDown
                 }}
                 hover
                 striped
