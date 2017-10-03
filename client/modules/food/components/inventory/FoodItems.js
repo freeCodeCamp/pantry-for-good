@@ -20,7 +20,10 @@ class FoodItems extends React.Component {
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
       searchText: "",
-      hasBeenChanged: false
+      hasBeenChanged: false,
+
+      //store initial value
+      initialModalInputFields: { name: "", categoryId: "", quantity: "" },
     }
   }
 
@@ -49,6 +52,11 @@ class FoodItems extends React.Component {
       this.setState({
         showModal: 'Edit',
         editModalFood: food,
+        initialModalInputFields: {
+          name: food.name,
+          categoryId: food.categoryId,
+          quantity: food.quantity.toString()
+        },
         modalInputFields: {
           name: food.name,
           categoryId: food.categoryId,
@@ -58,6 +66,7 @@ class FoodItems extends React.Component {
       })
     }
     this.props.clearFlags()
+
   }
 
   closeModal = () => {
@@ -125,11 +134,11 @@ class FoodItems extends React.Component {
   getValidationState = {
     // The following 3 functions validate the individual input fields and return the validation state used for react-bootstrap-table
     foodName: () =>
-      this.state.modalInputFields.name.trim().length || !this.state.hasBeenChanged ? null : 'error',
+      this.state.modalInputFields.name.trim().length ? null : 'error',
     foodQuantity: () =>
-      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) || !this.state.hasBeenChanged  ? null : 'error',
+      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) ? null : 'error',
     foodCategory: () =>
-      (this.state.modalInputFields.categoryId !== "") || !this.state.hasBeenChanged  ? null : 'error',
+      (this.state.modalInputFields.categoryId !== "") ? null : 'error',
     // This returns true or false if all fields are valid
     all: () =>
       this.getValidationState.foodName() === null &&
@@ -143,6 +152,14 @@ class FoodItems extends React.Component {
   validate = () => {
     this.setState({ validInput: this.getValidationState.all() })
   }
+
+  /**
+   *  check whether newly edited values are different from the inital values
+   */
+   checkChanged = () => {
+     //console.log(JSON.stringify(this.state.initialModalInputFields), JSON.stringify(this.state.modalInputFields))
+     return JSON.stringify(this.state.initialModalInputFields) === JSON.stringify(this.state.modalInputFields) ? false : true
+   }
 
   /**
    * functions to handle any changes of user input fields in the add/edit modal
@@ -240,7 +257,7 @@ class FoodItems extends React.Component {
       <div>
         <Box>
           <BoxBody
-            // Don't show loading spinner or error message on main page when modal is showing
+
             loading={this.state.showModal ? undefined : (this.props.loading || this.props.saving)}
             error={this.state.showModal ? undefined : (this.props.loadError || this.props.saveError)}
             errorBottom={true}>
@@ -310,9 +327,9 @@ class FoodItems extends React.Component {
               </Modal.Body>
               <Modal.Footer>
                 <Button onClick={this.closeModal}>Cancel</Button>
-                <Button className={this.state.validInput && 'btn-success'}
+                <Button className={this.state.validInput && this.checkChanged() && 'btn-success'}
                   onClick={this.saveFood}
-                  disabled={!this.state.validInput || this.props.saving}>
+                  disabled={!this.state.validInput || !this.checkChanged() || this.props.saving}>
                   {this.state.showModal === 'Add' ? 'Add' : 'Update'}
                 </Button>
               </Modal.Footer>
