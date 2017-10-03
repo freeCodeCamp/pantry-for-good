@@ -40,3 +40,11 @@ li.treeview.active > a > span::after {
 .smallModal > .modal-dialog {
   width: 300px;
 }
+
+/* invert bootstrap table pagination */
+.react-bs-table-pagination ul.dropdown-menu[aria-labelledby="pageDropDown"] {
+  top: unset;
+  bottom: calc(100% + 1rem);
+  background-color: #f4f4f4;
+  border-color: #ccc;
+}
