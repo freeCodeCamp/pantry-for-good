@@ -10,6 +10,7 @@ const placeholders = [
   {id: 'url', label: 'Foodbank Website'},
   {id: 'clientIntakeNumber', label: 'Client Intake Number'},
   {id: 'supportNumber', label: 'Support Number'},
+  {id: 'ein', label: 'Employer Identification Number'},
 
   {id: 'firstName', label: 'User First Name', type: placeholderTypes.EMAIL},
   {id: 'lastName', label: 'User Last Name', type: placeholderTypes.EMAIL},
@@ -34,11 +35,11 @@ const placeholders = [
     format: () => '<img src="cid:signature" alt="Signature" />'
   },
   {
-    id: 'items',
-    label: 'Donation Receipt Information',
+    id: 'receipt',
+    label: 'Donation Receipt',
     type: placeholderTypes.EMAIL,
     required: true,
-    format: value => table(value)
+    format: value => renderReceipt(value)
   },
 ]
 
@@ -66,14 +67,25 @@ function getPlaceholders(types) {
   return placeholders
 }
 
-function table(value) {
-  let tableFinal = `<table><tr><td><p>Item</p></td><td><p>Value</p></td></tr>`
-  let total = 0
-  for (let i = 0; i < value.length; i++) {
-    tableFinal += `<tr><td><p>"${value[i].name}"</p></td><td><p>"${value[i].value}"</p></td></tr>`
-    total += value[i].value
+function renderReceipt(values) {
+  const ids = ['organization', 'address', 'url', 'supportNumber', 'ein']
+  let table = '<table>'
+
+  for (let i = 0; i < ids.length; i++) {
+    const placeholder = placeholders.find(p => p.id === ids[i])
+    table += `<tr><td>${placeholder.label}:</td><td> ${values[ids[i]]}</td></tr>`
   }
-  return tableFinal + `<tr><td><p>Total:</p></td><td><p>"${total}"</p></td></tr></table>`
+
+  table += `<tr><td><p>Here you have a list of the donations our organization recibed from you:</p></td></tr>`
+  const items = values.items
+  table += `<tr><td><p>Item</p></td><td><p>Value</p></td></tr>`
+  let total = 0
+  for (let i = 0; i < items.length; i++) {
+    table += `<tr><td><p>${items[i].name}</p></td><td><p>${items[i].value}</p></td></tr>`
+    total += items[i].value
+  }
+
+  return table + `<tr><td><p>Total:</p></td><td><p>${total}</p></td></tr></table>`
 }
 
 export {

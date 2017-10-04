@@ -3,7 +3,7 @@ import {readFileSync} from 'fs'
 import {resolve} from 'path'
 import striptags from 'striptags'
 import transformHtml, {h, getAttr, hasClass} from './html-transform'
-import {trim, uniq} from 'lodash'
+import {trim, uniq, isUndefined} from 'lodash'
 
 import config from '../../config'
 import Page from '../../models/page'
@@ -74,11 +74,18 @@ function transformSubject(subject, bindings) {
 }
 
 function bindPlaceholder(node, bindings, attachments) {
+
   const id = getAttr(node, 'data-id')
   const placeholder = placeholders.find(pl => pl.id === id)
 
+  //Receipt Placeholder only
+  if (id === 'receipt') {
+    return h(placeholder.format(bindings))
+  }
+
   if (!placeholder) throw new Error('Invalid placeholder', id)
-  if (!bindings[id] && placeholder.type !== placeholderTypes.ATTACHMENT)
+
+  if (isUndefined(bindings[id]) && placeholder.type !== placeholderTypes.ATTACHMENT)
     throw new Error('Missing binding for placeholder', id)
 
   if (Array.isArray(attachments) && placeholder.type === placeholderTypes.ATTACHMENT)
