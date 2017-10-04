@@ -4,7 +4,7 @@ import { shallow } from 'enzyme'
 
 import { push as reactRouterReduxPush } from 'react-router-redux'
 
-import ConnectedSignIn, { SignIn } from './Signin'
+import ConnectedSignIn, { SignIn } from './SignIn'
 import { signIn as authReducerSignIn, clearFlags as authReducerClearFlags } from '../authReducer'
 
 describe('SignIn Class', function () {
