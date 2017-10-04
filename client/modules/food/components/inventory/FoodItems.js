@@ -20,7 +20,6 @@ class FoodItems extends React.Component {
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
       searchText: "",
-      hasBeenChanged: false,
 
       //store initial value
       initialModalInputFields: { name: "", categoryId: "", quantity: "" },
@@ -44,25 +43,20 @@ class FoodItems extends React.Component {
         showModal: 'Add',
         editModalFood: undefined,
         modalInputFields: { name: "", categoryId: "", quantity: "" },
-        hasBeenChanged: false
       })
     } else {
       // Open the modal in 'edit' mode
       const food = this.props.foodItems.find(food => food._id === _id)
+      const inputFields = {
+        name: food.name,
+        categoryId: food.categoryId,
+        quantity: food.quantity.toString()
+      }
       this.setState({
         showModal: 'Edit',
         editModalFood: food,
-        initialModalInputFields: {
-          name: food.name,
-          categoryId: food.categoryId,
-          quantity: food.quantity.toString()
-        },
-        modalInputFields: {
-          name: food.name,
-          categoryId: food.categoryId,
-          quantity: food.quantity
-        },
-        hasBeenChanged: false
+        initialModalInputFields: inputFields,
+        modalInputFields: inputFields,
       })
     }
     this.props.clearFlags()
@@ -75,7 +69,6 @@ class FoodItems extends React.Component {
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
-      hasBeenChanged: false
     })
     this.props.clearFlags()
   }
@@ -150,15 +143,17 @@ class FoodItems extends React.Component {
    * Re-computes the value for state.validInput
    */
   validate = () => {
-    this.setState({ validInput: this.getValidationState.all() })
+    this.setState({ validInput: this.getValidationState.all() && this.checkChanged() })
   }
 
   /**
    *  check whether newly edited values are different from the inital values
    */
    checkChanged = () => {
-     //console.log(JSON.stringify(this.state.initialModalInputFields), JSON.stringify(this.state.modalInputFields))
-     return JSON.stringify(this.state.initialModalInputFields) === JSON.stringify(this.state.modalInputFields) ? false : true
+     return Object.keys(this.state.modalInputFields).map(key =>
+       this.state.initialModalInputFields[key] !== this.state.modalInputFields[key]
+     ).reduce((acc, x) => acc || x, false)
+
    }
 
   /**
@@ -174,7 +169,6 @@ class FoodItems extends React.Component {
             name: value,
             categoryId: this.state.modalInputFields.categoryId
           },
-          hasBeenChanged: true
         }, this.validate)
       } else if (value !== null) {
         // The user entered an existing food name and autosuggest provided the object for that food
@@ -184,7 +178,6 @@ class FoodItems extends React.Component {
             name: value ? value.name : "",
             categoryId: value ? value.categoryId : ""
           },
-          hasBeenChanged: true
         }, this.validate)
       } else {
         this.setState({
@@ -193,7 +186,6 @@ class FoodItems extends React.Component {
             name: "",
             categoryId: this.state.modalInputFields.categoryId
           },
-          hasBeenChanged: true
         }, this.validate)
       }
     },
@@ -327,9 +319,9 @@ class FoodItems extends React.Component {
               </Modal.Body>
               <Modal.Footer>
                 <Button onClick={this.closeModal}>Cancel</Button>
-                <Button className={this.state.validInput && this.checkChanged() && 'btn-success'}
+                <Button className={this.state.validInput && 'btn-success'}
                   onClick={this.saveFood}
-                  disabled={!this.state.validInput || !this.checkChanged() || this.props.saving}>
+                  disabled={!this.state.validInput || this.props.saving}>
                   {this.state.showModal === 'Add' ? 'Add' : 'Update'}
                 </Button>
               </Modal.Footer>
