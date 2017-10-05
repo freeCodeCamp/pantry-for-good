@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 
 import General from './General'
+import ReceiptFields from './ReceiptFields'
 import Keys from './Keys'
 import Images from './Images'
 import withConfirmNavigation from '../../../components/withConfirmNavigation'
@@ -27,6 +28,7 @@ const enhance = compose(
 const SettingsForm = ({handleSubmit}) =>
   <div>
     <General />
+    <ReceiptFields />
     <Images />
     <Keys />
 

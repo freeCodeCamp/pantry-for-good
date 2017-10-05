@@ -68,13 +68,6 @@ const General = () =>
             required
           />
         </Col>
-        <Col lg={3}>
-          <RFFieldGroup
-            name="EIN"
-            label="EIN"
-            type="text"
-          />
-        </Col>
         <Clearfix visibleSmBlock visibleMdBlock />
         <Col lg={6}>
           <RFFieldGroup

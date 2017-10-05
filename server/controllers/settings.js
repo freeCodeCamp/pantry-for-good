@@ -40,7 +40,7 @@ export default {
 
     const settings = {
       ...req.body,
-      location
+      location,
     }
 
     const count = await Settings.count()
