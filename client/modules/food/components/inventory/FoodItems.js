@@ -20,7 +20,9 @@ class FoodItems extends React.Component {
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
       searchText: "",
-      hasBeenChanged: false
+
+      //store initial value
+      initialModalInputFields: { name: "", categoryId: "", quantity: "" },
     }
   }
 
@@ -41,23 +43,24 @@ class FoodItems extends React.Component {
         showModal: 'Add',
         editModalFood: undefined,
         modalInputFields: { name: "", categoryId: "", quantity: "" },
-        hasBeenChanged: false
       })
     } else {
       // Open the modal in 'edit' mode
       const food = this.props.foodItems.find(food => food._id === _id)
+      const inputFields = {
+        name: food.name,
+        categoryId: food.categoryId,
+        quantity: food.quantity.toString()
+      }
       this.setState({
         showModal: 'Edit',
         editModalFood: food,
-        modalInputFields: {
-          name: food.name,
-          categoryId: food.categoryId,
-          quantity: food.quantity
-        },
-        hasBeenChanged: false
+        initialModalInputFields: inputFields,
+        modalInputFields: inputFields,
       })
     }
     this.props.clearFlags()
+
   }
 
   closeModal = () => {
@@ -66,7 +69,6 @@ class FoodItems extends React.Component {
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
-      hasBeenChanged: false
     })
     this.props.clearFlags()
   }
@@ -125,11 +127,11 @@ class FoodItems extends React.Component {
   getValidationState = {
     // The following 3 functions validate the individual input fields and return the validation state used for react-bootstrap-table
     foodName: () =>
-      this.state.modalInputFields.name.trim().length || !this.state.hasBeenChanged ? null : 'error',
+      this.state.modalInputFields.name.trim().length ? null : 'error',
     foodQuantity: () =>
-      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) || !this.state.hasBeenChanged  ? null : 'error',
+      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) ? null : 'error',
     foodCategory: () =>
-      (this.state.modalInputFields.categoryId !== "") || !this.state.hasBeenChanged  ? null : 'error',
+      (this.state.modalInputFields.categoryId !== "") ? null : 'error',
     // This returns true or false if all fields are valid
     all: () =>
       this.getValidationState.foodName() === null &&
@@ -141,8 +143,18 @@ class FoodItems extends React.Component {
    * Re-computes the value for state.validInput
    */
   validate = () => {
-    this.setState({ validInput: this.getValidationState.all() })
+    this.setState({ validInput: this.getValidationState.all() && this.checkChanged() })
   }
+
+  /**
+   *  check whether newly edited values are different from the inital values
+   */
+   checkChanged = () => {
+     return Object.keys(this.state.modalInputFields).map(key =>
+       this.state.initialModalInputFields[key] !== this.state.modalInputFields[key]
+     ).reduce((acc, x) => acc || x, false)
+
+   }
 
   /**
    * functions to handle any changes of user input fields in the add/edit modal
@@ -157,7 +169,6 @@ class FoodItems extends React.Component {
             name: value,
             categoryId: this.state.modalInputFields.categoryId
           },
-          hasBeenChanged: true
         }, this.validate)
       } else if (value !== null) {
         // The user entered an existing food name and autosuggest provided the object for that food
@@ -167,7 +178,6 @@ class FoodItems extends React.Component {
             name: value ? value.name : "",
             categoryId: value ? value.categoryId : ""
           },
-          hasBeenChanged: true
         }, this.validate)
       } else {
         this.setState({
@@ -176,7 +186,6 @@ class FoodItems extends React.Component {
             name: "",
             categoryId: this.state.modalInputFields.categoryId
           },
-          hasBeenChanged: true
         }, this.validate)
       }
     },
