@@ -66,6 +66,13 @@ class Schedule extends Component {
     return true
   }
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {loading, saving, error} = this.props
 
@@ -81,7 +88,8 @@ class Schedule extends Component {
                 options={{
                   defaultSortName: "name",
                   defaultSortOrder: 'desc',
-                  noDataText: loading ? '' : 'No items found'
+                  noDataText: loading ? '' : 'No items found',
+                  sizePerPageDropDown: this.renderSizePerPageDropDown
                 }}
                 cellEdit={{
                   mode: 'click',

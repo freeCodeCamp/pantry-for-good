@@ -35,7 +35,14 @@ class Packages extends Component {
   formatContents = contentList => {
     return contentList.reduce((prev, curr) => {return `${prev} ${curr.name},`}, "")
   }
-  
+
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   getActionButtons = (_, foodPackage) =>
     <div>
       <Button bsStyle="danger"
@@ -55,6 +62,7 @@ class Packages extends Component {
             options={{
               defaultSortName: "datePacked",
               defaultSortOrder: 'desc',
+              sizePerPageDropDown: this.renderSizePerPageDropDown,
               noDataText: loading ? '' : 'No packages'
             }}
             hover

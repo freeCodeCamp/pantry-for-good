@@ -78,6 +78,13 @@ class DonorList extends Component {
       </Button>
     </div>
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {loading, loadError, savingDonors, saveDonorsError} = this.props
     return (
@@ -95,7 +102,8 @@ class DonorList extends Component {
                 options={{
                   defaultSortName: "_id",
                   defaultSortOrder: 'desc',
-                  noDataText: loading ? '' : 'No donors found'
+                  noDataText: loading ? '' : 'No donors found',
+                  sizePerPageDropDown: this.renderSizePerPageDropDown
                 }}
                 hover
                 striped

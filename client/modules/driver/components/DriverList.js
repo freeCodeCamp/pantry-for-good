@@ -44,6 +44,13 @@ class DriverAdmin extends Component {
       </Link>
     </div>
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {drivers, loading, loadError} = this.props
 
@@ -62,7 +69,8 @@ class DriverAdmin extends Component {
                 options={{
                   defaultSortName: "_id",
                   defaultSortOrder: 'desc',
-                  noDataText: loading ? '' : 'No drivers found'
+                  noDataText: loading ? '' : 'No drivers found',
+                  sizePerPageDropDown: this.renderSizePerPageDropDown
                 }}
                 hover
                 striped

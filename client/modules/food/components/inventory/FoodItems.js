@@ -223,6 +223,13 @@ class FoodItems extends React.Component {
     }
   }
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render = () => {
     // set options for react-bootstrap-table
     const tableOptions = {
@@ -230,6 +237,7 @@ class FoodItems extends React.Component {
       toolBar: this.createCustomToolBar,
       defaultSortName: 'name',
       defaultSortOrder: 'asc',
+      sizePerPageDropDown: this.renderSizePerPageDropDown,
       noDataText: (this.props.foodCategories.length === 0)
         ? 'No foods in inventory. Add a category prior to adding a food'
         : 'No foods in inventory matching ' + this.state.searchText,

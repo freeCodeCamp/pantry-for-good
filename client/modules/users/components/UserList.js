@@ -36,6 +36,13 @@ class UserList extends Component {
       </Link>
     </div>
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render = () =>
     <Box>
       <BoxHeader heading="User Accounts" />
@@ -49,7 +56,8 @@ class UserList extends Component {
           options={{
             defaultSortName: "_id",
             defaultSortOrder: 'asc',
-            noDataText: this.props.loading ? '' : 'No Accounts Found'
+            noDataText: this.props.loading ? '' : 'No Accounts Found',
+            sizePerPageDropDown: this.renderSizePerPageDropDown
           }}
           hover
           striped

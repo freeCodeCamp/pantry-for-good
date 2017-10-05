@@ -140,6 +140,13 @@ class PackingList extends Component {
     this.props.clearPackingFlags()
   }
 
+  renderSizePerPageDropDown = (props) => {
+    return (
+      <SizePerPageDropDown
+        variation='dropup'/>
+    );
+  }
+
   render() {
     const {loading, packSaving, loadError, packSaveError, packedCustomers} = this.props
     const {selected} = this.state
@@ -163,7 +170,8 @@ class PackingList extends Component {
             options={{
               defaultSortName: "_id",
               defaultSortOrder: 'desc',
-              noDataText: loading ? '' : 'Nothing to pack'
+              noDataText: loading ? '' : 'Nothing to pack',
+              sizePerPageDropDown: this.renderSizePerPageDropDown
             }}
             selectRow={{
               mode: 'checkbox',
