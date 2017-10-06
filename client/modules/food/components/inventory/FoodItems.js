@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import Autosuggest from 'react-bootstrap-autosuggest'
 
 import selectors from '../../../../store/selectors'
@@ -232,12 +232,7 @@ class FoodItems extends React.Component {
     }
   }
 
-  renderSizePerPageDropDown = (props) => {
-    return (
-      <SizePerPageDropDown
-        variation='dropup'/>
-    );
-  }
+  renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
   render = () => {
     // set options for react-bootstrap-table

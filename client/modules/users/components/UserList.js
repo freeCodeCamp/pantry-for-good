@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../store/selectors'
@@ -36,12 +36,7 @@ class UserList extends Component {
       </Link>
     </div>
 
-  renderSizePerPageDropDown = (props) => {
-    return (
-      <SizePerPageDropDown
-        variation='dropup'/>
-    );
-  }
+  renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
   render = () =>
     <Box>

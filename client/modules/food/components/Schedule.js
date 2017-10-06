@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import moment, {utc} from 'moment'
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 import DayPicker from 'react-day-picker'
 import 'react-day-picker/lib/style.css'
@@ -66,12 +66,7 @@ class Schedule extends Component {
     return true
   }
 
-  renderSizePerPageDropDown = (props) => {
-    return (
-      <SizePerPageDropDown
-        variation='dropup'/>
-    );
-  }
+  renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
   render() {
     const {loading, saving, error} = this.props

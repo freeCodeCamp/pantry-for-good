@@ -4,7 +4,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
@@ -36,12 +36,7 @@ class Packages extends Component {
     return contentList.reduce((prev, curr) => {return `${prev} ${curr.name},`}, "")
   }
 
-  renderSizePerPageDropDown = (props) => {
-    return (
-      <SizePerPageDropDown
-        variation='dropup'/>
-    );
-  }
+  renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
   getActionButtons = (_, foodPackage) =>
     <div>

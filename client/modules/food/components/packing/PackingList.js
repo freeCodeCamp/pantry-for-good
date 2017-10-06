@@ -6,7 +6,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {compose, withProps} from 'recompose'
 import {Button} from 'react-bootstrap'
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
+import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
@@ -140,12 +140,7 @@ class PackingList extends Component {
     this.props.clearPackingFlags()
   }
 
-  renderSizePerPageDropDown = (props) => {
-    return (
-      <SizePerPageDropDown
-        variation='dropup'/>
-    );
-  }
+  renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
   render() {
     const {loading, packSaving, loadError, packSaveError, packedCustomers} = this.props
