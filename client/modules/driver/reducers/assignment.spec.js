@@ -3,10 +3,14 @@ import * as reducer from './assignment'
 
 describe('assignment reducer', function() {
   describe('action creators', function() {
+
     const cluster = {
-      isMarkerInClusterBounds(marker) {
-        return inRange(marker.getPosition())
-      }
+      getMarkers(){
+        return [
+          {position: {lat: function(){return 6}, lng: function(){return 6}}},
+          {position: {lat: function(){return 8}, lng: function(){return 8}}}
+        ]
+      },
     }
 
     it('selectCluster selects unselected customers', function() {
