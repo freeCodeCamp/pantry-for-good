@@ -14,11 +14,11 @@ const FoodItemSchema = new Schema({
     default: 0
   },
   startDate: {
-    type: Date
+    type: Date.now
   },
   frequency: {
     type: Number,
-    default: 0
+    default: 1
   },
   deleted: {
     type: Boolean,
