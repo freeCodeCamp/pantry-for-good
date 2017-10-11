@@ -5,12 +5,9 @@ describe('assignment reducer', function() {
   describe('action creators', function() {
 
     const cluster = {
-      getMarkers(){
-        return [
-          {position: {lat: function(){return 6}, lng: function(){return 6}}},
-          {position: {lat: function(){return 8}, lng: function(){return 8}}}
-        ]
-      },
+      getBounds(){ return { contains: function(position){
+        return inRange(position)
+      } }}
     }
 
     it('selectCluster selects unselected customers', function() {

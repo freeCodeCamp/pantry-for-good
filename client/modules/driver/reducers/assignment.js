@@ -1,4 +1,4 @@
-import {difference, get, union, find} from 'lodash'
+import {difference, get, union} from 'lodash'
 import {createSelector} from 'reselect'
 import {normalize} from 'normalizr'
 
@@ -35,18 +35,8 @@ export const toggleCustomer = customerId => ({
 
 export const selectCluster = (cluster, customers, selectedCustomerIds) => {
 
-  const fakeMarkers = customers.map(customer => ({
-    ...customer,
-    lat: customer.location.lat,
-    lng: customer.location.lng,
-  }))
-
-  const markersInCluster = cluster.getMarkers().reduce((acc, curr) => {
-    return acc.concat(find(fakeMarkers,
-      { lat: Number(curr.position.lat().toFixed(6)),
-        lng: Number(curr.position.lng().toFixed(6)) }
-    ))
-  },[])
+  const bound = cluster.getBounds();
+  const markersInCluster = customers.filter(customer => bound.contains(customer.location));
 
   const allMarkersSelected = markersInCluster.reduce((acc, m) =>
     selectedCustomerIds.find(id => id === m._id) ? acc : false

@@ -71,6 +71,7 @@ const Markers = ({
           icon={isSelected(customer._id) ? selectedCustomerIcon : customerIcon}
           position={customer.location}
           onClick={toggleCustomer(customer._id)}
+          title={customer._id.toString()}
         />
       )}
     </MarkerClusterer>
