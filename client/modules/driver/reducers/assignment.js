@@ -34,13 +34,9 @@ export const toggleCustomer = customerId => ({
 })
 
 export const selectCluster = (cluster, customers, selectedCustomerIds) => {
-  const fakeMarkers = customers.map(customer => ({
-    ...customer,
-    getPosition: function() {return customer.location}
-  }))
 
-  const markersInCluster = fakeMarkers.filter(marker =>
-    cluster.isMarkerInClusterBounds(marker))
+  const bound = cluster.getBounds();
+  const markersInCluster = customers.filter(customer => bound.contains(customer.location));
 
   const allMarkersSelected = markersInCluster.reduce((acc, m) =>
     selectedCustomerIds.find(id => id === m._id) ? acc : false
