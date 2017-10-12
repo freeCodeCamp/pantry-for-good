@@ -75,20 +75,23 @@ describe('questionnaire api reducer', function() {
       const state = {
         entities: {
           questionnaires: {
-            1: {_id: 1, identifier: 1, sections: [
-              {_id: 1, fields: [{_id: 1, type: fieldTypes.TEXT}]}
-            ]},
-            2: {_id: 2, identifier: 2, sections: [
-              {_id: 2, fields: [
-                {_id: 1, type: fieldTypes.TEXT},
-                {_id: 2, type: widgetTypes.HOUSEHOLD},
-                {_id: 3, type: fieldTypes.DATE}
-              ]}
-            ]},
+            1: {_id: 1, identifier: 1, sections: [1]},
+            2: {_id: 2, identifier: 2, sections: [2]},
             3: {_id: 3, identifier: 3}
+          },
+          sections: {
+            1: {_id: 1, fields: [1]},
+            2: {_id: 2, fields: [1, 2, 3]},
+          },
+          fields: {
+            1: {_id: 1, type: fieldTypes.TEXT},
+            2: {_id: 2, type: widgetTypes.HOUSEHOLD},
+            3: {_id: 3, type: fieldTypes.DATE},
           }
         },
-        questionnaires: {ids: [1, 2, 3]}
+        questionnaires: {ids: [1, 2, 3]},
+        sections: {ids: [1, 2]},
+        fields: {ids: [1, 2, 3]}
       }
 
       const questionnaires = selectors.getLinkableFields(state)(1)
