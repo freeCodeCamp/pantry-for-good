@@ -35,6 +35,12 @@ class Category extends React.Component {
     this.props.onItemRemove(this.props.id)
   }
 
+  moveCursor = e => {
+    let storedValue = e.target.value
+    e.target.value = ''
+    e.target.value = storedValue
+  }
+
   render = () => {
     if (this.state.showEdit) {
       return (
@@ -47,6 +53,7 @@ class Category extends React.Component {
                 value={this.state.editedName}
                 onChange={this.onChange}
                 onKeyDown={this.onEnterSubmitEdit}
+                onFocus={this.moveCursor}
                 required
                 autoFocus
               />
