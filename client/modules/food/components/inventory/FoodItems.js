@@ -147,6 +147,19 @@ class FoodItems extends React.Component {
   }
 
   /**
+   *  callback for setState when user selects an existing food name from Autosuggest
+   */
+  validateFocus = () => {
+    this.validate
+    this.quantity.focus()
+
+    //moves cursor to end of field on edit
+    let storedValue = this.quantity.value
+    this.quantity.value = ''
+    this.quantity.value = storedValue
+  }
+
+  /**
    *  check whether newly edited values are different from the inital values
    */
    checkChanged = () => {
@@ -178,7 +191,7 @@ class FoodItems extends React.Component {
             name: value ? value.name : "",
             categoryId: value ? value.categoryId : ""
           },
-        }, this.validate)
+        }, this.validateFocus)
       } else {
         this.setState({
           modalInputFields: {
@@ -314,6 +327,7 @@ class FoodItems extends React.Component {
                       value={this.state.modalInputFields.quantity}
                       placeholder="Quantity"
                       onChange={this.handleChange.foodQuantity}
+                      inputRef={ref => {this.quantity = ref}}
                     />
                   </FormGroup>
                   <input type="submit" style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px" }} />
