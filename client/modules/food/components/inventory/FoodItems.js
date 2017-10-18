@@ -20,7 +20,8 @@ class FoodItems extends React.Component {
       modalInputFields: { name: "", categoryId: "", quantity: "" },
       validInput: false,
       searchText: "",
-
+      //touched input fields
+      touched: { foodName: false, foodCategory: false, foodQuantity: false },
       //store initial value
       initialModalInputFields: { name: "", categoryId: "", quantity: "" },
     }
@@ -43,6 +44,7 @@ class FoodItems extends React.Component {
         showModal: 'Add',
         editModalFood: undefined,
         modalInputFields: { name: "", categoryId: "", quantity: "" },
+        touched: { foodName: false, foodCategory: false, foodQuantity: false },
       })
     } else {
       // Open the modal in 'edit' mode
@@ -57,6 +59,7 @@ class FoodItems extends React.Component {
         editModalFood: food,
         initialModalInputFields: inputFields,
         modalInputFields: inputFields,
+        touched: { foodName: true, foodCategory: true, foodQuantity: true },
       })
     }
     this.props.clearFlags()
@@ -68,6 +71,7 @@ class FoodItems extends React.Component {
       showModal: false,
       editModalFood: undefined,
       modalInputFields: { name: "", categoryId: "", quantity: "" },
+      touched: { foodName: false, foodCategory: false, foodQuantity: false },
       validInput: false,
     })
     this.props.clearFlags()
@@ -127,11 +131,11 @@ class FoodItems extends React.Component {
   getValidationState = {
     // The following 3 functions validate the individual input fields and return the validation state used for react-bootstrap-table
     foodName: () =>
-      this.state.modalInputFields.name.trim().length ? null : 'error',
+      !this.state.touched.foodName || this.state.modalInputFields.name.trim().length ? null : 'error',
     foodQuantity: () =>
-      (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) ? null : 'error',
+      !this.state.touched.foodQuantity || (this.state.modalInputFields.quantity !== "" && this.state.modalInputFields.quantity >= 0) ? null : 'error',
     foodCategory: () =>
-      (this.state.modalInputFields.categoryId !== "") ? null : 'error',
+      !this.state.touched.foodCategory || (this.state.modalInputFields.categoryId !== "") ? null : 'error',
     // This returns true or false if all fields are valid
     all: () =>
       this.getValidationState.foodName() === null &&
@@ -144,6 +148,12 @@ class FoodItems extends React.Component {
    */
   validate = () => {
     this.setState({ validInput: this.getValidationState.all() && this.checkChanged() })
+  }
+
+  touch = {
+    foodName: () => this.setState({ touched: { ...this.state.touched, foodName: true } }, this.validate),
+    foodCategory: () => this.setState({ touched: { ...this.state.touched, foodCategory: true } }, this.validate),
+    foodQuantity: () => this.setState({ touched: { ...this.state.touched, foodQuantity: true } }, this.validate),
   }
 
   /**
@@ -300,6 +310,7 @@ class FoodItems extends React.Component {
                       itemSortKeyPropName='nameLowerCased'
                       onSelect={this.handleChange.foodName}
                       autoFocus={this.state.showModal === 'Add'}
+                      onFocus={this.touch.foodName}
                     />
                   </FormGroup>
 
@@ -309,6 +320,7 @@ class FoodItems extends React.Component {
                       onChange={this.handleChange.foodCategory}
                       value={this.state.modalInputFields.categoryId}
                       autoFocus={this.state.showModal !== 'Add'}
+                      onFocus={this.touch.foodCategory}
                     >
                       {(this.state.showModal === 'Add') &&
                         <option value="">Select Category</option>
@@ -327,6 +339,7 @@ class FoodItems extends React.Component {
                       value={this.state.modalInputFields.quantity}
                       placeholder="Quantity"
                       onChange={this.handleChange.foodQuantity}
+                      onFocus={this.touch.foodQuantity}
                       inputRef={ref => {this.quantity = ref}}
                     />
                   </FormGroup>
