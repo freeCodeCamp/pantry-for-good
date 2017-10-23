@@ -159,15 +159,17 @@ class FoodItems extends React.Component {
   /**
    *  callback for setState when user selects an existing food name from Autosuggest
    */
-  validateFocus = () => {
-    this.validate
-    this.quantity.focus()
-
-    //moves cursor to end of field on edit
-    let storedValue = this.quantity.value
-    this.quantity.value = ''
-    this.quantity.value = storedValue
-  }
+   validateFocus = () => {
+     if(this.validate){
+       this.quantity.focus()
+     }
+     //moves cursor to end of field on edit
+     if(this.state.showModal === 'Edit'){
+       let storedValue = this.quantity.value
+       this.quantity.value = ''
+       this.quantity.value = storedValue
+     }
+   }
 
   /**
    *  check whether newly edited values are different from the inital values
