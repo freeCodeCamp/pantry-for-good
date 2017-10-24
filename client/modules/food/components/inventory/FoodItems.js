@@ -157,21 +157,6 @@ class FoodItems extends React.Component {
   }
 
   /**
-   *  callback for setState when user selects an existing food name from Autosuggest
-   */
-   validateFocus = () => {
-     if(this.validate){
-       this.quantity.focus()
-     }
-     //moves cursor to end of field on edit
-     if(this.state.showModal === 'Edit'){
-       let storedValue = this.quantity.value
-       this.quantity.value = ''
-       this.quantity.value = storedValue
-     }
-   }
-
-  /**
    *  check whether newly edited values are different from the inital values
    */
    checkChanged = () => {
@@ -203,7 +188,7 @@ class FoodItems extends React.Component {
             name: value ? value.name : "",
             categoryId: value ? value.categoryId : ""
           },
-        }, this.validateFocus)
+        }, () => this.quantity.focus())
       } else {
         this.setState({
           modalInputFields: {
