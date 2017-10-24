@@ -1,15 +1,15 @@
-This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works. 
+This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute, the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works. 
 
-The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something feel free to leave a comment.
+The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something, feel free to leave a comment.
 
-Some issues are quite large, don't feel like you have to finish them. Little bits help too!
+Some issues are quite large, don't feel like you have to finish them, it's ok. Little bits help too!
 
 There's a demo app hosted at https://pantry-for-good.herokuapp.com, though it might be a bit behind the current version.
 
 ## Installation
 The app is designed to be installed locally (mac, linux or windows) or on [Heroku](https://www.heroku.com).
 
-You can deploy it to Heroku by clicking the button. An admin account with email `admin@example.com` and password `password` will be created.
+You can deploy it to Heroku by clicking the button. An admin account with `admin@example.com` as email and `password` as password will be created.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
 
@@ -37,7 +37,7 @@ Install [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) if 
 
 Move to the `Pantry-for-Good` directory and run the `npm install` command to install the application dependencies.
 
-Type `npm run dev` to start the application in development mode. If all goes well, it will be available at `http://localhost:8080`.  The application is pre-populated with an administrator account with username `admin@example.com` and password `password`.
+Type `npm run dev` to start the application in development mode. If all goes well, it will be available at `http://localhost:8080`.  The application is pre-populated with an administrator account with `admin@example.com` as username  and `password` as password.
 
 
 ------------
@@ -46,7 +46,7 @@ Type `npm run dev` to start the application in development mode. If all goes wel
 To use all the features of this application you will need to obtain API keys and install them in the application. Make a copy of the `server/config/env/secrets-template.js` file in the same directory and rename it `secrets.js`.  After following the instructions below to obtain API Keys, put your keys in this file.
 
 #### 1. [gmapsApiKey](https://developers.google.com/maps/documentation/javascript/get-api-key)
-Google Maps API key required for the deliveries feature
+Google Maps API key for the deliveries feature
 #### 2. [oauth](https://developers.google.com/identity/sign-in/web/devconsole-project)
 Google+ API for allowing users to register/login with google.
 #### 3. [sendgrid](https://sendgrid.com)
