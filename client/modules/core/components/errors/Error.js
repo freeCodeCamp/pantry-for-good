@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 const ErrorPage = ({msg, description, color, status}) =>
@@ -17,5 +18,12 @@ const ErrorPage = ({msg, description, color, status}) =>
       </div>
     </div>
   </section>
+
+ErrorPage.propTypes = {
+  msg: PropTypes.string,
+  description: PropTypes.string,
+  color: PropTypes.string,
+  status: PropTypes.string
+}
 
 export default ErrorPage

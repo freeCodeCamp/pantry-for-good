@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 
 import {ADMIN_ROLE} from '../../../../../common/constants'
@@ -27,6 +28,16 @@ const Sidebar = ({
       </section>
     </div>
   )
+}
+
+Sidebar.propTypes = {
+  user: PropTypes.shape({
+    roles: PropTypes.array
+  }),
+  menu: PropTypes.object,
+  route: PropTypes.shape({
+    pathname: PropTypes.string.isRequired
+  }).isRequired
 }
 
 export default connect(mapStateToProps)(Sidebar)

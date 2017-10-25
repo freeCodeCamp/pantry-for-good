@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Button} from 'react-bootstrap'
 
 import {RFFieldGroup} from '../../../form'
@@ -44,6 +45,12 @@ const HouseholdRow = ({dependent, showDelete, handleDelete}) =>
       </Button>
     }
   </li>
+
+HouseholdRow.propTypes = {
+  dependent: PropTypes.string,
+  showDelete: PropTypes.bool,
+  handleDelete: PropTypes.func.isRequired
+}
 
 export default HouseholdRow
 

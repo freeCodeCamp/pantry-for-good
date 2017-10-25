@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
 import NavbarUserMenu from './NavbarUserMenu'
@@ -13,5 +14,12 @@ const AdminNavbar = ({user, settings}) =>
       <NavbarUserMenu user={user} />
     </nav>
   </header>
+
+AdminNavbar.propTypes = {
+  user: PropTypes.object,
+  settings: PropTypes.shape({
+    organization: PropTypes.string
+  })
+}
 
 export default AdminNavbar

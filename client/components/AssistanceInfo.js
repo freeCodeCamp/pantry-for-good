@@ -1,5 +1,6 @@
 import React from 'react'
 import {Alert, Row, Col} from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 const AssistanceInfo = ({settings, heading, children}) =>
   <Row>
@@ -17,5 +18,13 @@ const AssistanceInfo = ({settings, heading, children}) =>
       </Alert>
     </Col>
   </Row>
+
+AssistanceInfo.propTypes = {
+  settings: PropTypes.shape({
+    supportNumber: PropTypes.string
+  }).isRequired,
+  heading: PropTypes.string,
+  children: PropTypes.node
+}
 
 export default AssistanceInfo

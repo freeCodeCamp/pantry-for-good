@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
 const NavbarUserMenu = ({user}) =>
@@ -26,5 +27,13 @@ const NavbarUserMenu = ({user}) =>
       </li>
     </ul>
   </div>
+
+NavbarUserMenu.propTypes = {
+  user: PropTypes.shape({
+    displayName: PropTypes.string,
+    email: PropTypes.string,
+    provider: PropTypes.string
+  }).isRequired
+}
 
 export default NavbarUserMenu
