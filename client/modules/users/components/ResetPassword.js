@@ -99,7 +99,7 @@ class ResetPassword extends React.Component {
                   }
                   {this.props.error &&
                     <div className="text-center text-danger">
-                      <strong>{this.props.error}</strong>
+                      <strong>{this.props.error.message}</strong>
                     </div>
                   }
                 </fieldset>
