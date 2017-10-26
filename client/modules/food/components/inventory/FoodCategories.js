@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import Category from './Category'
 import NewCategory from './NewCategory'
@@ -8,7 +9,7 @@ import { loadFoods, saveFood, deleteFood } from '../../reducers/category'
 import { CALL_API } from '../../../../store/middleware/api'
 import { Box, BoxHeader, BoxBody } from '../../../../components/box'
 
-class FoodCategories extends Component {
+export class FoodCategories extends Component {
   componentWillMount = () => {
     this.props.loadFoods()
   }
