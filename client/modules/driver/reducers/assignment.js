@@ -35,8 +35,8 @@ export const toggleCustomer = customerId => ({
 
 export const selectCluster = (cluster, customers, selectedCustomerIds) => {
 
-  const bound = cluster.getBounds();
-  const markersInCluster = customers.filter(customer => bound.contains(customer.location));
+  const bound = cluster.getBounds()
+  const markersInCluster = customers.filter(customer => bound.contains(customer.location))
 
   const allMarkersSelected = markersInCluster.reduce((acc, m) =>
     selectedCustomerIds.find(id => id === m._id) ? acc : false
