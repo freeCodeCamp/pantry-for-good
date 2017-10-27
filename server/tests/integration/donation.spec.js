@@ -59,6 +59,7 @@ describe('Donation Api', function() {
           expect(res.body.donor).to.have.property('_id', donor._id)
           expect(res.body.donation).to.be.an('object')
           expect(res.body.donation).to.have.property('total', 20)
+          expect(res.body.donation).to.have.property('description', donation.description)
           expect(res.body.donation.items).to.be.deep.eql(items)
         })
         .expect(200)
