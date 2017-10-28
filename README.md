@@ -2,7 +2,7 @@ This repository is for the Pantry-for-Good application designed by Open Source f
 
 The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something, feel free to leave a comment.
 
-Some issues are quite large, don't feel like you have to finish them, it's ok. Little bits help too!
+Some issues are quite large, don't feel like you have to finish them, it's okay. Little bits help, too!
 
 There's a demo app hosted at https://pantry-for-good.herokuapp.com, though it might be a bit behind the current version.
 
