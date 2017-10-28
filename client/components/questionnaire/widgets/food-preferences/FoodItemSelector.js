@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose, setPropTypes, withPropsOnChange} from 'recompose'
 import {ListGroup} from 'react-bootstrap'
@@ -21,10 +21,10 @@ const withItemsProp = withPropsOnChange(
 
 const enhance = compose(
   setPropTypes({
-    items: P.array,
-    selectedItems: P.array.isRequired,
-    selectedCategoryId: P.any,
-    handleItemsChange: P.func.isRequired
+    items: PropTypes.array,
+    selectedItems: PropTypes.array.isRequired,
+    selectedCategoryId: PropTypes.any,
+    handleItemsChange: PropTypes.func.isRequired
   }),
   connect(mapStateToProps),
   withItemsProp
@@ -54,5 +54,11 @@ const FoodItemSelector = ({
       />
     )}
   </ListGroup>
+
+FoodItemSelector.propTypes = {
+  items: PropTypes.array,
+  selectedItems: PropTypes.array.isRequired,
+  handleItemsChange: PropTypes.func.isRequired
+}
 
 export default enhance(FoodItemSelector)

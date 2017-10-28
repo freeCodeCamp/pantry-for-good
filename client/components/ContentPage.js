@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {Parser, ProcessNodeDefinitions} from 'html-to-react'
+import PropTypes from 'prop-types'
 
 import selectors from '../store/selectors'
 import {loadPage} from '../modules/page/reducer'
@@ -33,7 +34,6 @@ const getProcessingInstructions = bindings => [{
 }]
 
 const mapStateToProps = state => ({
-  user: selectors.auth.getUser(state),
   getPage: selectors.page.getOne(state),
   settings: selectors.settings.getSettings(state)
 })
@@ -71,6 +71,13 @@ class ContentPage extends Component {
       </div>
     )
   }
+}
+
+ContentPage.propTypes = {
+  url: PropTypes.string.isRequired,
+  loadPage: PropTypes.func.isRequired,
+  getPage: PropTypes.func.isRequired,
+  settings: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContentPage)

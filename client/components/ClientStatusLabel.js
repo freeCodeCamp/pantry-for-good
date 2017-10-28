@@ -1,6 +1,7 @@
 import React from 'react'
 import {Label} from 'react-bootstrap'
 import {get} from 'lodash'
+import PropTypes from 'prop-types'
 
 import {volunteerRoles} from '../../common/constants'
 
@@ -20,6 +21,10 @@ const ClientStatusLabel = ({client}) => {
       {driver ? 'Driver' : client.status}
     </Label>
   )
+}
+
+ClientStatusLabel.propTypes = {
+  client: PropTypes.object.isRequired,
 }
 
 export default ClientStatusLabel

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Table} from 'react-bootstrap'
 import {utc} from 'moment'
 
@@ -23,5 +24,12 @@ const HouseholdView = ({model, className}) =>
       </tbody>
     </Table>
   </div>
+
+HouseholdView.propTypes = {
+  model: PropTypes.shape({
+    household: PropTypes.array.isRequired
+  }),
+  className: PropTypes.string
+}
 
 export default HouseholdView

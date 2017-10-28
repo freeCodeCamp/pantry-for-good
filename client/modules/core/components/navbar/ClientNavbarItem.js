@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import ClientNavbarSubItem from './ClientNavbarSubItem'
 
@@ -25,5 +26,16 @@ const ClientNavbarItem = ({item, path, active, setActive}) =>
       path={path}
       setActive={setActive(0)}
     />
+
+ClientNavbarItem.propTypes = {
+  item: PropTypes.shape({
+    type: PropTypes.string,
+    title: PropTypes.string,
+    items: PropTypes.array
+  }).isRequired,
+  path: PropTypes.string,
+  active: PropTypes.bool,
+  setActive: PropTypes.func.isRequired
+}
 
 export default ClientNavbarItem

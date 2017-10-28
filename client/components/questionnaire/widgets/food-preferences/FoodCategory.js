@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {
   compose,
   setPropTypes,
@@ -13,10 +13,10 @@ import {Checkbox} from '../../../form'
 
 const enhance = compose(
   setPropTypes({
-    category: P.object.isRequired,
-    selectedItems: P.array.isRequired,
-    handleItemsChange: P.func.isRequired,
-    handleCategorySelect: P.func.isRequired
+    category: PropTypes.object.isRequired,
+    selectedItems: PropTypes.array.isRequired,
+    handleItemsChange: PropTypes.func.isRequired,
+    handleCategorySelect: PropTypes.func.isRequired
   }),
   withPropsOnChange(
     ['category', 'selectedItems'],
@@ -62,6 +62,15 @@ const FoodCategory = ({
       {`${numSelected} / ${category.items.length}`}
     </span>
   </div>
+
+FoodCategory.propTypes = {
+  category: PropTypes.object.isRequired,
+  numSelected: PropTypes.number,
+  partiallySelected: PropTypes.bool,
+  handleItemsChange: PropTypes.func.isRequired,
+  selectedCategoryId: PropTypes.string,
+  handleCategorySelect: PropTypes.func.isRequired
+}
 
 export default enhance(FoodCategory)
 

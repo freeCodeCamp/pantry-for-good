@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {ADMIN_ROLE} from '../common/constants'
 import selectors from './store/selectors'
@@ -57,6 +58,16 @@ class Application extends Component {
 
     return <Loading />
   }
+}
+
+Application.propTypes = {
+  load: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  error: PropTypes.shape({
+    message: PropTypes.string.isRequired
+  }),
+  user: PropTypes.object,
+  history: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application)

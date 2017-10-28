@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose, setPropTypes, withHandlers, withState} from 'recompose'
 import {get} from 'lodash'
@@ -15,8 +15,8 @@ const withCategorySelectHandler = withHandlers({
 
 const enhance = compose(
   setPropTypes({
-    selectedItems: P.array.isRequired,
-    handleItemsChange: P.func.isRequired
+    selectedItems: PropTypes.array.isRequired,
+    handleItemsChange: PropTypes.func.isRequired
   }),
   connect(state => ({
     foodCategories: selectors.food.category.getAll(state)
@@ -53,5 +53,13 @@ const FoodSelector = ({
       />
     </div>
   </div>
+
+FoodSelector.propTypes = {
+  foodCategories: PropTypes.array.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  handleItemsChange: PropTypes.func.isRequired,
+  selectedCategoryId: PropTypes.string,
+  handleCategorySelect: PropTypes.func.isRequired
+}
 
 export default enhance(FoodSelector)

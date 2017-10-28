@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import SidebarMenuItem from './SidebarMenuItem'
 
@@ -13,5 +14,12 @@ const SidebarMenu = ({menu, path}) =>
       />
     )}
   </ul>
+
+SidebarMenu.propTypes = {
+  menu: PropTypes.shape({
+    items: PropTypes.array
+  }).isRequired,
+  path: PropTypes.array
+}
 
 export default SidebarMenu

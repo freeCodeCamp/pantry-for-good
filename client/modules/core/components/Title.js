@@ -1,4 +1,5 @@
 import {Component} from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {capitalize, get} from 'lodash'
 
@@ -53,6 +54,18 @@ class Title extends Component {
   render() {
     return null
   }
+}
+
+Title.propTypes = {
+  settings: PropTypes.shape({
+    organization: PropTypes.string
+  }),
+  route: PropTypes.shape({
+    pathname: PropTypes.string
+  }),
+  getCustomer: PropTypes.func.isRequired,
+  getDonor: PropTypes.func.isRequired,
+  getVolunteer: PropTypes.func.isRequired
 }
 
 export default connect(mapStateToProps)(Title)

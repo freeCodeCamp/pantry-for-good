@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import {connect} from 'react-redux'
 import {trim} from 'lodash'
 
@@ -24,6 +26,12 @@ const Header = ({settings, user, route}) => {
       settings={settings}
       path={path}
     />
+}
+
+Header.propTypes = {
+  settings: PropTypes.object,
+  user: PropTypes.object,
+  route: PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps)(Header)

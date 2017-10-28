@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {compose, setPropTypes} from 'recompose'
 import {reduxForm} from 'redux-form'
 import {flatMap} from 'lodash'
@@ -20,10 +20,10 @@ const enhancer = compose(
   }),
   withConfirmNavigation,
   setPropTypes({
-    questionnaire: P.object,
-    loading: P.bool,
-    dirty: P.bool,
-    initialValues: P.object.isRequired
+    questionnaire: PropTypes.object,
+    loading: PropTypes.bool,
+    dirty: PropTypes.bool,
+    initialValues: PropTypes.object.isRequired
   })
 )
 
@@ -38,6 +38,11 @@ const Questionnaire = ({questionnaire, loading}) =>
       </Box>
     )}
   </div>
+
+Questionnaire.propTypes = {
+  questionnaire: PropTypes.object,
+  loading: PropTypes.bool
+}
 
 export default enhancer(Questionnaire)
 

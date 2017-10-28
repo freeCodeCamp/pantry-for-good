@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 
@@ -16,5 +17,11 @@ const Footer = ({settings}) =>
     </strong>
     &ensp;All rights reserved.
   </footer>
+
+Footer.propTypes =  {
+  settings: PropTypes.shape({
+    organization: PropTypes.string
+  })
+}
 
 export default connect(mapStateToProps)(Footer)
