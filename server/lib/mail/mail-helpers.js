@@ -40,7 +40,7 @@ export default {
         pageIdentifiers.CUSTOMER_ACCEPTED,
         {fullName, date}
       )
-    } else {
+    } else if (customer.status === 'Rejected'){
       await this.send(
         email,
         fullName,
