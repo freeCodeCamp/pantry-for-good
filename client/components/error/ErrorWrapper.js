@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 
 import Error from './Error'
 
@@ -26,13 +26,13 @@ const ErrorWrapper = ({
 }
 
 ErrorWrapper.propTypes = {
-  children: P.node,
-  error: P.oneOfType([
-    P.string,
-    P.shape({message: P.string})
+  children: PropTypes.node,
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({message: PropTypes.string})
   ]),
-  errorTop: P.bool,
-  errorBottom: P.bool
+  errorTop: PropTypes.bool,
+  errorBottom: PropTypes.bool
 }
 
 export default ErrorWrapper

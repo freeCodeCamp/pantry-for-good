@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
 class ClientNavbarSubItem extends Component {
@@ -30,6 +31,16 @@ class ClientNavbarSubItem extends Component {
         <Link to={`/${item.link}`}>{item.title}</Link>
       </li>
   }
+}
+
+ClientNavbarSubItem.propTypes = {
+  item: PropTypes.shape({
+    link: PropTypes.string,
+    title: PropTypes.string,
+    type: PropTypes.string
+  }).isRequired,
+  path: PropTypes.string,
+  setActive: PropTypes.func.isRequired
 }
 
 export default ClientNavbarSubItem

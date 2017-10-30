@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import {Box, BoxHeader, BoxBody} from '../box'
 import SectionView from './SectionView'
@@ -25,5 +26,15 @@ const QuestionnaireView = ({
       </Box>
     )}
   </div>
+
+QuestionnaireView.propTypes = {
+  model: PropTypes.shape({
+    fields: PropTypes.array.isRequired
+  }).isRequired,
+  questionnaire: PropTypes.shape({
+    sections: PropTypes.array.isRequired
+  }),
+  loading: PropTypes.bool
+}
 
 export default QuestionnaireView

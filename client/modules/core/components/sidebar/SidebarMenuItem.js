@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 import {head, tail} from 'lodash'
 
@@ -25,6 +26,17 @@ const SidebarMenuItem = ({item, path, depth}) => {
         <span>{item.title}</span>
       </Link>
     </li>
+}
+
+SidebarMenuItem.propTypes = {
+  item: PropTypes.shape({
+    items: PropTypes.array,
+    link: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    title: PropTypes.string
+  }).isRequired,
+  path: PropTypes.array,
+  depth: PropTypes.number
 }
 
 export default SidebarMenuItem

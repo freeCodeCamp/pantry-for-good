@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose, withHandlers, withState} from 'recompose'
 import {Link} from 'react-router-dom'
@@ -68,5 +69,16 @@ const ClientNavbar = ({items, user, settings, path, active, setActive}) =>
       </div>
     </nav>
   </header>
+
+ClientNavbar.propTypes = {
+  items: PropTypes.array,
+  user: PropTypes.object,
+  settings: PropTypes.shape({
+    organization: PropTypes.string
+  }),
+  path: PropTypes.string,
+  active: PropTypes.object,
+  setActive: PropTypes.func.isRequired
+}
 
 export default enhance(ClientNavbar)

@@ -82,6 +82,7 @@ const General = () =>
             label="Address"
             type="textarea"
             rows="5"
+            required
           />
         </Col>
       </Row>

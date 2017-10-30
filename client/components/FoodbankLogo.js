@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import selectors from '../store/selectors'
 
@@ -13,5 +14,15 @@ const FoodbankLogo = ({settings, media}) =>
     alt={settings && settings.organization}
     src={`/${media && media.path + media.logo}`}
   />
+
+FoodbankLogo.propTypes = {
+  media: PropTypes.shape({
+    path: PropTypes.string,
+    logo: PropTypes.string
+  }),
+  settings: PropTypes.shape({
+    organization: PropTypes.string
+  })
+}
 
 export default connect(mapStateToProps)(FoodbankLogo)

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {values} from 'lodash'
 import {utc} from 'moment'
 
@@ -10,6 +11,15 @@ const SectionView = ({section, model}) =>
   <div style={{display: 'flex', flexWrap: 'wrap'}}>
     {section.fields.map(field => renderField(field, model))}
   </div>
+
+SectionView.propTypes = {
+  model: PropTypes.shape({
+    fields: PropTypes.array.isRequired
+  }).isRequired,
+  section: PropTypes.shape({
+    fields: PropTypes.array.isRequired
+  }).isRequired
+}
 
 export default SectionView
 

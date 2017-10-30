@@ -48,8 +48,8 @@ export default enhance(SettingsForm)
 
 function validate(values) {
   let errors = {}
-
-  if (!values.organization) {
+  
+  if (!values.organization || /^\s+$/.test(values.organization)) {
     errors.organization = 'Organization name is required'
   }
 

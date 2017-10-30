@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {ListGroup} from 'react-bootstrap'
 
 import FoodCategory from './FoodCategory'
@@ -25,11 +25,11 @@ const FoodCategorySelector = ({
   </ListGroup>
 
 FoodCategorySelector.propTypes = {
-  foodCategories: P.array.isRequired,
-  selectedItems: P.array.isRequired,
-  handleItemsChange: P.func.isRequired,
-  selectedCategoryId: P.any,
-  handleCategorySelect: P.func.isRequired
+  foodCategories: PropTypes.array.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  handleItemsChange: PropTypes.func.isRequired,
+  selectedCategoryId: PropTypes.any,
+  handleCategorySelect: PropTypes.func.isRequired
 }
 
 export default FoodCategorySelector

@@ -1,5 +1,5 @@
 import React from 'react'
-import P from 'prop-types'
+import PropTypes from 'prop-types'
 import {compose, setPropTypes, withHandlers, withPropsOnChange} from 'recompose'
 import {ListGroupItem} from 'react-bootstrap'
 
@@ -7,9 +7,9 @@ import {Checkbox} from '../../../form'
 
 const enhance = compose(
   setPropTypes({
-    selectedItems: P.array,
-    item: P.object.isRequired,
-    handleItemsChange: P.func.isRequired
+    selectedItems: PropTypes.array,
+    item: PropTypes.object.isRequired,
+    handleItemsChange: PropTypes.func.isRequired
   }),
   withPropsOnChange(
     ['selectedItems'],
@@ -40,5 +40,11 @@ const FoodItem = ({item, selected, handleItemsChange}) =>
       {item.name}
     </span>
   </ListGroupItem>
+
+FoodItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  handleItemsChange: PropTypes.func.isRequired,
+  selected: PropTypes.bool
+}
 
 export default enhance(FoodItem)

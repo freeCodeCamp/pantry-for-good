@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {compose, withHandlers} from 'recompose'
 import {ButtonToolbar, Button, Modal} from 'react-bootstrap'
@@ -43,6 +44,13 @@ const Dialog = ({visible, hideModal, dialog, handleAction}) => {
       </Modal.Footer>
     </Modal>
   )
+}
+
+Dialog.propTypes = {
+  visible: PropTypes.bool,
+  hideModal: PropTypes.func.isRequired,
+  dialog: PropTypes.object,
+  handleAction: PropTypes.func.isRequired
 }
 
 export default compose(

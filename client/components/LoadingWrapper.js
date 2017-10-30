@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const LoadingWrapper = ({loading, children, ...props}) =>
   <div {...props}>
@@ -9,5 +10,10 @@ const LoadingWrapper = ({loading, children, ...props}) =>
       </div>
     }
   </div>
+
+LoadingWrapper.propTypes = {
+  loading: PropTypes.bool,
+  children: PropTypes.node
+}
 
 export default LoadingWrapper
