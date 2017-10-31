@@ -7,6 +7,8 @@ Some issues are quite large, don't feel like you have to finish them, it's ok. L
 There's a demo app hosted at https://pantry-for-good.herokuapp.com, though it might be a bit behind the current version.
 
 ## Installation
+
+[![Join the chat at https://gitter.im/FreeCodeCamp/pantry-for-good](https://badges.gitter.im/FreeCodeCamp/pantry-for-good.svg)](https://gitter.im/FreeCodeCamp/pantry-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 The app is designed to be installed locally (mac, linux or windows) or on [Heroku](https://www.heroku.com).
 
 You can deploy it to Heroku by clicking the button. An admin account with `admin@example.com` as email and `password` as password will be created.
