@@ -1,3 +1,6 @@
+[![Join the chat at https://gitter.im/FreeCodeCamp/pantry-for-good](https://badges.gitter.im/FreeCodeCamp/pantry-for-good.svg)](https://gitter.im/FreeCodeCamp/pantry-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
+
 This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute, the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works. 
 
 The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something, feel free to leave a comment.
@@ -8,12 +11,9 @@ There's a demo app hosted at https://pantry-for-good.herokuapp.com, though it mi
 
 ## Installation
 
-[![Join the chat at https://gitter.im/FreeCodeCamp/pantry-for-good](https://badges.gitter.im/FreeCodeCamp/pantry-for-good.svg)](https://gitter.im/FreeCodeCamp/pantry-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 The app is designed to be installed locally (mac, linux or windows) or on [Heroku](https://www.heroku.com).
 
-You can deploy it to Heroku by clicking the button. An admin account with `admin@example.com` as email and `password` as password will be created.
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
+You can deploy it to Heroku by clicking the deploy button above. An admin account with `admin@example.com` as email and `password` as password will be created.
 
 ------------
 ### Local installation summary:
