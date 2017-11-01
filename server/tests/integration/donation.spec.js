@@ -1,6 +1,7 @@
 import {
   questionnaireIdentifiers,
   clientRoles,
+  ADMIN_ROLE,
 } from '../../../common/constants'
 import Donor from '../../models/donor'
 import Donation from '../../models/donation'
@@ -65,7 +66,7 @@ describe('Donation Api', function() {
         .expect(200)
     })
 
-    it('unauthorized to create donation', async function() {
+    it('does not allow non-admins to create donations for other donors', async function() {
       const testDonor = await createTestUser('userdonor', clientRoles.DONOR)
       const testDonor2 = await createTestUser('userdonor2', clientRoles.DONOR)
       const firstSession = await createUserSession(testDonor)
@@ -88,6 +89,31 @@ describe('Donation Api', function() {
       return request.post('/api/donations')
         .send(donation)
         .expect(401)
+    })
+
+    it('allows admins to create donations for other donors', async function() {
+      const admin = await createTestUser('admin', ADMIN_ROLE)
+      const testDonor = await createTestUser('userdonor', clientRoles.DONOR)
+      const firstSession = await createUserSession(admin)
+      const secondSession = await createUserSession(testDonor)
+      const request = supertest.agent(firstSession.app)
+
+      const donor = await Donor.create({
+        ...secondSession.user,
+        _id: secondSession.user.id,
+      })
+
+      const donation = {
+        donor: donor._id,
+        description: 'User Donation',
+        items: [
+          {name: 'Potatoes', value: 10},
+        ]
+      }
+
+      return request.post('/api/donations')
+        .send(donation)
+        .expect(200)
     })
 
   })
