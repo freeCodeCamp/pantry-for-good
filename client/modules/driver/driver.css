@@ -3,6 +3,7 @@
 }
 
 .assignForm > .box > .box-body {
+	overflow-y: auto;
 	height: calc(100vh - 170px);
 }
 
@@ -22,7 +23,7 @@
 
 /* ugly way to freeze table headers */
 .customerSelector .table-responsive > table > thead {
-	position: absolute;
+	position: static;
 	width: calc(100% - 35px);
 	z-index: 2;
 	background-color: #ffffff;
@@ -41,7 +42,6 @@
 }
 
 .customerSelector .table-responsive > table > tbody {
-	display: block;
 	padding-top: 38px
 }
 
