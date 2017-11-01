@@ -116,5 +116,34 @@ describe('Donation Api', function() {
         .expect(200)
     })
 
+    it('approves a donation', async function() {
+      const admin = await createTestUser('admin', ADMIN_ROLE)
+      const testDonor = await createTestUser('userdonor', clientRoles.DONOR)
+      const firstSession = await createUserSession(admin)
+      const secondSession = await createUserSession(testDonor)
+      const request = supertest.agent(firstSession.app)
+
+      const donor = await Donor.create({
+        ...secondSession.user,
+        _id: secondSession.user.id,
+      })
+
+      const response = await request.post('/api/donations')
+        .send({
+          donor: donor._id,
+          description: 'User Donation',
+          items: [
+            {name: 'Potatoes', value: 10},
+          ]
+        })
+
+      return request.put('/api/admin/donations/' + response.body.donation._id + '/approve')
+        .expect(res => {
+          expect(res.body.donor).to.be.an('object')
+          expect(res.body).to.have.property('approved', true)
+        })
+        .expect(200)
+    })
+
   })
 })
