@@ -64,5 +64,31 @@ describe('Donation Api', function() {
         })
         .expect(200)
     })
+
+    it('unauthorized to create donation', async function() {
+      const testDonor = await createTestUser('userdonor', clientRoles.DONOR)
+      const testDonor2 = await createTestUser('userdonor2', clientRoles.DONOR)
+      const firstSession = await createUserSession(testDonor)
+      const secondSession = await createUserSession(testDonor2)
+      const request = supertest.agent(firstSession.app)
+
+      const donor2 = await Donor.create({
+        ...secondSession.user,
+        _id: secondSession.user.id,
+      })
+
+      const donation = {
+        donor: donor2._id,
+        description: 'User Donation',
+        items: [
+          {name: 'Potatoes', value: 10},
+        ]
+      }
+
+      return request.post('/api/donations')
+        .send(donation)
+        .expect(401)
+    })
+
   })
 })
