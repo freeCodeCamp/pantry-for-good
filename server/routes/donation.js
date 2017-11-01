@@ -4,7 +4,7 @@ import donationController from '../controllers/donation'
 const donationRouter = express.Router({mergeParams: true})
 
 donationRouter.route('/donations')
-  .post(donationController.create)
+  .post(donationController.hasAuthorization, donationController.create)
 
 donationRouter.route('/admin/donations/:donationId/approve')
   .put(donationController.approve)

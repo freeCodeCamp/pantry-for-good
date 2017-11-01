@@ -12,11 +12,6 @@ export default {
       total: req.body.items.reduce((acc, item) => acc + Number(item.value), 0)
     }
 
-    if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
-        newDonation.donor !== req.user._id) {
-      throw new UnauthorizedError
-    }
-
     const donation = await Donation.create(newDonation)
     const donor = await Donor.findByIdAndUpdate(donation.donor,
       {$push: {donations: donation}},
@@ -53,7 +48,8 @@ export default {
 
   hasAuthorization(req, res, next) {
     if (req.user.roles.find(r => r === ADMIN_ROLE) ||
-        req.params.donationId === req.user._id) {
+        req.params.donationId === req.user._id ||
+        req.body.donor === req.user._id) {
       return next()
     }
 
