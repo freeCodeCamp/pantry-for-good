@@ -27,7 +27,7 @@ export class SignIn extends React.Component {
   redirectIfAlreadySignedIn(props) {
     if (props.user && props.user._id) {
       const role = userClientRole(props.user)
-      props.push(role ? `/${role}s` : '/')
+      props.push(role ? `/${role.split('/')[1]}s` : '/')
     }
   }
 
