@@ -63,13 +63,14 @@ const CustomerSelector = ({
 }) =>
   <div className="customerSelector">
     <div style={{display: 'flex'}}>
-      <label style={{marginRight: '40px'}}>Customers:</label>
+      <label style={{marginRight: '40px'}}>Customers Assigned To:</label>
       <FilterCustomers
         filter={filter}
         handleFilterChange={handleFilterChange}
         drivers={drivers}
       />
     </div>
+    <h4 className="text-center">Customers</h4>
     <Table responsive striped style={{overflowY: 'auto', maxHeight: '100%'}}>
       <thead>
         <tr>
@@ -106,7 +107,7 @@ const CustomerSelector = ({
         )}
         {!customers.length &&
           <tr>
-            <td className="text-center" colSpan="4">No matching customers.</td>
+            <td className="text-center alert alert-danger" colSpan="4">No matching customers.</td>
           </tr>
         }
       </tbody>
