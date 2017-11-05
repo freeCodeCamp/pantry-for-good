@@ -3,13 +3,14 @@ import { connect } from 'react-redux'
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import Autosuggest from 'react-bootstrap-autosuggest'
+import _ from 'lodash'
 
 import selectors from '../../../../store/selectors'
 import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
 import { Box, BoxBody } from '../../../../components/box'
 import { showConfirmDialog, hideDialog } from '../../../core/reducers/dialog'
 
-class FoodItems extends React.Component {
+export class FoodItems extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
