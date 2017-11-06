@@ -1,10 +1,10 @@
-import express from 'express'
+import Router from 'express-promise-router'
 import donationController from '../controllers/donation'
 
-const donationRouter = express.Router({mergeParams: true})
+const donationRouter = Router({mergeParams: true})
 
 donationRouter.route('/donations')
-  .post(donationController.hasAuthorization, donationController.create)
+  .post(donationController.create)
 
 donationRouter.route('/admin/donations/:donationId/approve')
   .put(donationController.approve)
