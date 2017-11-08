@@ -36,11 +36,14 @@ export const arrayOfSections = new schema.Array(section)
 export const arrayOfUsers = new schema.Array(user)
 export const arrayOfVolunteers = new schema.Array(volunteer)
 
+const shallowVolunteer = new schema.Entity('volunteers', {
+  fields: [{meta: field}],
+}, {idAttribute: '_id'})
 customer.define({
   fields: [{meta: field}],
   foodPreferences: arrayOfFoodItems,
   packingList: arrayOfFoodItems,
-  assignedTo: volunteer
+  assignedTo: shallowVolunteer
 })
 
 donation.define({donor})
@@ -63,7 +66,12 @@ foodCategory.define({
   items: arrayOfFoodItems
 })
 
+const shallowCustomer = new schema.Entity('customers', {
+  fields: [{meta: field}],
+  foodPreferences: arrayOfFoodItems,
+  packingList: arrayOfFoodItems,
+}, {idAttribute: '_id'})
 volunteer.define({
   fields: [{meta: field}],
-  customers: arrayOfCustomers
+  customers: new schema.Array(shallowCustomer)
 })
