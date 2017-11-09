@@ -46,6 +46,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
 const DriverListDetail = ({
   driver,
   assign,
+  settings,
   clearRoute,
   requestRoute,
   saveRoute,
@@ -75,7 +76,7 @@ const DriverListDetail = ({
     </div>
     {route ?
       <div className="text-center" style={{ margin: '0 auto' }}>
-        <RouteSummary route={route} />
+        <RouteSummary route={route} settings={settings}/>
         <Button
           bsStyle="primary"
           onClick={clearRoute}
