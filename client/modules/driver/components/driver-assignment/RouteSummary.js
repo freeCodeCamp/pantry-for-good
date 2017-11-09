@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const RouteSummary = ({route, settings}) => {
   const {distance, duration} = route.routes[0].legs.reduce((acc, x) => ({
@@ -23,6 +24,15 @@ const RouteSummary = ({route, settings}) => {
       {` approx ${hourString} ${minuteString}`}
     </div>
   )
+}
+
+RouteSummary.propTypes = {
+  route: PropTypes.shape({
+    routes: PropTypes.array
+  }).isRequired,
+  settings: PropTypes.shape({
+    distanceUnit: PropTypes.oneOf(['km', 'mi'])
+  }).isRequired
 }
 
 export default RouteSummary
