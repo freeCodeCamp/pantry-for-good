@@ -1,5 +1,5 @@
 export default {
-  gmapsApiKey: '',
+  gmapsApiKey: process.env.GMAPS_API_KEY || '',
   oauth: {
     googleClientID: process.env.GOOGLE_CLIENT_ID || '',
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',

@@ -1,3 +1,4 @@
+import keys from '../config/index'
 import nodeGeocoder from 'node-geocoder'
 import {fieldTypes} from '../../common/constants'
 import {getFieldsByType} from '../lib/questionnaire-helpers'
@@ -5,6 +6,7 @@ import {ValidationError} from '../lib/errors'
 
 const geocoder = nodeGeocoder({
   provider: 'google',
+  apiKey: keys.gmapsApiKey,
   formatter: null
 })
 
