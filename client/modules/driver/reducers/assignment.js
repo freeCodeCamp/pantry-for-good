@@ -141,7 +141,7 @@ export const createSelectors = (path, customerSelectors) => {
         customers.filter(customer => {
           if (!filter) return true
           if (filter === 'unassigned') return !customer.assignedTo
-          return String(get(customer.assignedTo, '_id')) === filter
+          return String(get(customer.assignedTo, '_id')) === String(filter)
         })
     ),
     isCustomerSelected: state => id => createSelector(
