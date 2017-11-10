@@ -98,7 +98,7 @@ class PageEditor extends React.Component {
 
     return (
       <div className="page-editor">
-        {page &&
+        {page && page.body !== undefined &&
           <div>
             {type === pageTypes.EMAIL &&
               <div>
