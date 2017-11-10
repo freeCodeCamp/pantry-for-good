@@ -97,7 +97,14 @@ export const requestGoogleRoute = (waypoints, optimize) => dispatch => {
 
       dispatch(setWaypoints(optimizedWaypoints))
     })
-    .catch(err => dispatch(routeFailure(err)))
+    .catch(err => {
+      if (err.isDirectionsError) {
+        dispatch(routeFailure(err.message))
+      } else {
+        console.error(err)
+        dispatch(routeFailure('There was an error processing your request.'))
+      }
+    })
 }
 
 export const requestCrudeRoute = waypoints => dispatch => {
