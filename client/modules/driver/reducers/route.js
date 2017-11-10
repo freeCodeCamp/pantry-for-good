@@ -206,7 +206,7 @@ export const createSelectors = path => {
 
   return {
     isFetching: state => get(state, path).routeFetching,
-    hasError: state => get(state, path).routeError,
+    hasError: state => get(state, path).error,
     getRoute: state => get(state, path).route,
     getWaypoints,
     getOrigin,
