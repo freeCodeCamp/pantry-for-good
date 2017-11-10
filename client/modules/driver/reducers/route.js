@@ -130,6 +130,7 @@ export default (state = {
     case CLEAR_ROUTE:
       return {
         ...state,
+        error: null,
         route: null
       }
     case ROUTE_REQUEST:
