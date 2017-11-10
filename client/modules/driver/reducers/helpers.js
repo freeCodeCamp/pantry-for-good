@@ -14,25 +14,21 @@ export const getGoogleRoute = (waypoints, optimize) => {
     reject = rej
   })
 
-  let directionsService
-  try {
-    directionsService = new google.maps.DirectionsService
-    directionsService.route({
-      origin: first(formattedWaypoints),
-      destination: last(formattedWaypoints),
-      waypoints: formattedWaypoints.slice(1, -1),
-      optimizeWaypoints: optimize,
-      travelMode: google.maps.TravelMode.DRIVING
-    }, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK) {
-        resolve(result)
-      } else {
-        reject(result)
-      }
-    })
-  } catch (err) {
-    reject('Direction service failure')
-  }
+  const directionsService = new google.maps.DirectionsService
+  directionsService.route({
+    origin: first(formattedWaypoints),
+    destination: last(formattedWaypoints),
+    waypoints: formattedWaypoints.slice(1, -1),
+    optimizeWaypoints: optimize,
+    travelMode: google.maps.TravelMode.DRIVING
+  }, (result, status) => {
+    if (status === google.maps.DirectionsStatus.OK) {
+      resolve(result)
+    } else {
+      reject(result)
+    }
+  })
+
   return result
 }
 
