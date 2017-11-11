@@ -20,17 +20,18 @@ export default () => {
 
   const foodRouter = Router({mergeParams: true})
 
+  foodRouter.use('/foods', requiresLogin)
   foodRouter.route('/foods')
-    .get(requiresLogin, foodController.list)
-    .post(foodController.hasAuthorization, websocketMiddleware(saveCatSchema), foodController.create)
+    .get(foodController.list)
+    .post(websocketMiddleware(saveCatSchema), foodController.create)
   foodRouter.route('/foods/:foodId')
-    .put(foodController.hasAuthorization, websocketMiddleware(saveCatSchema), foodController.update)
-    .delete(foodController.hasAuthorization, websocketMiddleware(deleteCatSchema), foodController.delete)
+    .put(websocketMiddleware(saveCatSchema), foodController.update)
+    .delete(websocketMiddleware(deleteCatSchema), foodController.delete)
   foodRouter.route('/foods/:foodId/items')
-    .post(foodController.hasAuthorization, websocketMiddleware(saveItemSchema), foodController.createItem)
+    .post(websocketMiddleware(saveItemSchema), foodController.createItem)
   foodRouter.route('/foods/:foodId/items/:itemId')
-    .put(foodController.hasAuthorization, websocketMiddleware(saveItemSchema), foodController.updateItem)
-    .delete(foodController.hasAuthorization, websocketMiddleware(deleteItemSchema), foodController.deleteItem)
+    .put(websocketMiddleware(saveItemSchema), foodController.updateItem)
+    .delete(websocketMiddleware(deleteItemSchema), foodController.deleteItem)
 
   // Finish by binding the food middleware
   foodRouter.param('foodId', foodController.foodById)

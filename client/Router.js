@@ -2,7 +2,7 @@ import React from 'react'
 import {ConnectedRouter} from 'react-router-redux'
 import {Route} from 'react-router-dom'
 
-import {ADMIN_ROLE, clientRoles} from '../common/constants'
+import {ADMIN_ROLE, volunteerRoles} from '../common/constants'
 
 import Sidebar from './modules/core/components/sidebar/Sidebar'
 import Header from './modules/core/components/Header'
@@ -25,7 +25,9 @@ import requireRole from './components/router/requireRole'
 import SwitchWithNotFound from './components/router/SwitchWithNotFound'
 
 const IsAdmin = requireRole([ADMIN_ROLE])
-const IsVolunteer = requireRole([ADMIN_ROLE, clientRoles.VOLUNTEER])
+const canInventory = requireRole([ADMIN_ROLE, volunteerRoles.INVENTORY])
+const canPack = requireRole([ADMIN_ROLE, volunteerRoles.PACKING])
+const canSchedule = requireRole([ADMIN_ROLE, volunteerRoles.SCHEDULE])
 
 const Router = ({history}) =>
   <ConnectedRouter history={history}>
@@ -40,9 +42,9 @@ const Router = ({history}) =>
           <Route path="/customers" component={Customers} />
           <Route path="/donors" component={Donors} />
           <Route path="/drivers" component={Drivers} />
-          <Route path="/inventory" exact component={IsVolunteer(Inventory)} />
-          <Route path="/packing" exact component={IsVolunteer(Packing)} />
-          <Route path="/schedule" exact component={IsVolunteer(Schedule)} />
+          <Route path="/inventory" exact component={canInventory(Inventory)} />
+          <Route path="/packing" exact component={canPack(Packing)} />
+          <Route path="/schedule" exact component={canSchedule(Schedule)} />
           <Route path="/settings" component={IsAdmin(Settings)} />
           <Route path="/users" component={Users} />
           <Route path="/volunteers" component={Volunteers} />
