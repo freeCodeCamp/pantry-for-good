@@ -11,6 +11,7 @@ import selectors from '../../../../store/selectors'
 import {listPackages, unpackPackage} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
+import moment from 'moment'
 
 const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
@@ -68,7 +69,7 @@ class Packages extends Component {
             <TableHeaderColumn  dataField="customer" dataFormat={customer => customer._id} >
               Customer
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="datePacked" >
+            <TableHeaderColumn dataField="datePacked" dataFormat={datePacked => moment(datePacked).format("MM/DD/YYYY")} >
               Date Packed
             </TableHeaderColumn>
             <TableHeaderColumn dataField="contents" dataFormat={this.formatContents} >
