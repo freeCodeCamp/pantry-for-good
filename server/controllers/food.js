@@ -6,15 +6,20 @@ import {
   NotFoundError,
   ValidationError
 } from '../lib/errors'
-import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
+import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Food from '../models/food'
+
+const {CUSTOMER} = clientRoles
+const {INVENTORY, SCHEDULE} = volunteerRoles
 
 export default {
   /**
    * Create a Food category
    */
   async create(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY])
+
     const food = new Food(req.body)
 
     const existingFoodCategory = await Food.find({'category': food.category, 'deleted': false}).lean()
@@ -31,6 +36,8 @@ export default {
    * Update a Food category
    */
   async update(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY])
+
     const food = extend(req.food, req.body)
 
     const savedFood = await food.save()
@@ -41,6 +48,8 @@ export default {
    * Delete a Food category
    */
   async delete(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY])
+
     const food = req.food
 
     // Prevent deleting if food category contains food items not marked as deleted
@@ -61,6 +70,8 @@ export default {
    * List of Food categories
    */
   async list(req, res) {
+    authorizeByRole(req.user.roles, [CUSTOMER, INVENTORY, SCHEDULE])
+
     const foods = await Food.find()
       .sort('category')
 
@@ -71,6 +82,8 @@ export default {
    * Create a food item
    */
   async createItem(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY])
+
     const item = req.body
     item.name = item.name.trim()
 
@@ -101,8 +114,13 @@ export default {
    * Update a food item
    */
   async updateItem(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY, SCHEDULE])
+
     const originalCategoryId = req.params.foodId
     const updatedItem = req.body
+
+    const involvesCategoryChange = !updatedItem.categoryId || updatedItem.categoryId === originalCategoryId
+    if (involvesCategoryChange) authorizeByRole(req.user.roles, [INVENTORY])
 
     const updatedCategory = await updateItemHelper(originalCategoryId, updatedItem)
     res.json(updatedCategory)
@@ -112,6 +130,8 @@ export default {
    * Delete a food item
    */
   async deleteItem(req, res) {
+    authorizeByRole(req.user.roles, [INVENTORY])
+
     const categoryId = req.food._id
     const foodItemId = req.itemId
     await Food.update({"_id": categoryId, "items._id": foodItemId}, { $set: {"items.$.deleted": true} })
@@ -137,19 +157,11 @@ export default {
   itemById(req, res, next, id) {
     req.itemId = id
     next()
-  },
+  }
+}
 
-  hasAuthorization(req, res, next) {
-    const authorizedRoles = [
-      ADMIN_ROLE,
-      volunteerRoles.INVENTORY,
-      volunteerRoles.PACKING,
-      volunteerRoles.SCHEDULE
-    ]
-
-    if (req.user && intersection(req.user.roles, authorizedRoles).length) {
-      return next()
-    }
+function authorizeByRole(userRoles, roles = []) {
+  if (!intersection(userRoles, [...roles, ADMIN_ROLE]).length) {
     throw new ForbiddenError
   }
 }
