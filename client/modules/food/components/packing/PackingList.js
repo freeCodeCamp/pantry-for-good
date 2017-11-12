@@ -107,7 +107,8 @@ class PackingList extends Component {
 
   handleSelectAll = isSelected => {
     const {selected} = this.state
-    const {customers} = this.props
+    const customers = this.props.packedCustomers.filter(c => c.foodPreferences.length > 0)
+
     this.setState({
       selected: isSelected || selected.length < customers.length ?
         customers.map(c => c._id) : []
@@ -145,6 +146,7 @@ class PackingList extends Component {
   render() {
     const {loading, packSaving, loadError, packSaveError, packedCustomers} = this.props
     const {selected} = this.state
+    const unselectable = packedCustomers.filter(c => c.foodPreferences.length === 0).map(c => c._id)
     const itemsToPack = packedCustomers.reduce((acc, c) =>
       acc + c.packingList.length, 0)
     // Don't show error when modal is showing
@@ -174,6 +176,7 @@ class PackingList extends Component {
               onSelect: this.handleSelect,
               onSelectAll: this.handleSelectAll,
               selected,
+              unselectable,
               columnWidth: '55px'
             }}
             hover
