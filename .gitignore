@@ -4,13 +4,12 @@ heroku_5svv90mx
 .sass-cache/
 npm-debug.log
 node_modules/
-public/lib
-public/dist
-app/tests/coverage/
-.bower-*/
+.vscode
 .idea/
 .c9/
 .env
 *.swp
 .settings/
 typings/
+server/config/env/secrets.js
+dist

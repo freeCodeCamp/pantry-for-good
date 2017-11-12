@@ -1,0 +1,46 @@
+/* partially checkable checkboxes */
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+input[type="checkbox"] + span::before {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 7px;
+  content: '\2003';
+  color: #333;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  padding: 5px 0 0 2px;
+  margin-right: 10px;
+  background-color: #eee;
+  background-image: linear-gradient(to bottom, #fff 0%, #eee 20%, #ddd 100%);
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: default;
+}
+input[type="checkbox"]:checked + span::before {
+  content: '\2713';
+}
+input[type="checkbox"]:focus + span::before {
+  outline: 5px auto -webkit-focus-ring-color;
+}
+input[type="checkbox"]:disabled + span {
+  background-color: #999;
+}
+input[type="checkbox"]:not(:disabled) + span:hover::before {
+  text-shadow: 0 1px 2px #ccf;
+  background-color: #ddd;
+  box-shadow: 0 1px 1px -1px #aaa;
+}
+
+.partial label input[type="checkbox"]:checked + span::before {
+  color: #aaa;
+}
+
+.checkbox-inline {
+  padding: 0;
+}

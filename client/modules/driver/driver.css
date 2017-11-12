@@ -1,0 +1,76 @@
+.googleMap {
+	height: calc(100vh - 130px)
+}
+
+.assignForm > .box > .box-body {
+	overflow-y: auto;
+	height: calc(100vh - 170px);
+}
+
+.box-body > div {
+	height: 100%;
+}
+
+.customerSelector {
+	padding-top: 10px;
+	overflow-y: hidden;
+	height: 100%;
+}
+
+.customerSelector .table-responsive {
+	height: calc(100% - 50px);
+}
+
+/* ugly way to freeze table headers */
+.customerSelector .table-responsive > table > thead {
+	position: static;
+	width: calc(100% - 35px);
+	z-index: 2;
+	background-color: #ffffff;
+}
+
+.customerSelector .table-responsive > table > thead > tr th {
+	border-bottom: none;
+}
+
+.customerSelector .table-responsive > table > thead th:nth-child(2) {
+	padding-left: 30px;
+}
+
+.customerSelector .table-responsive > table > thead th:nth-child(3) {
+	padding-left: 15px;
+}
+
+.customerSelector .table-responsive > table > tbody {
+	padding-top: 38px
+}
+
+/* ugh */
+.routeEditor {
+	height: calc(100vh - 130px);
+	width: 300px;
+	margin-right: 10px;
+}
+
+@media (min-width: 1200px) {
+	.routeEditor {
+		width: 400px;
+	}
+}
+
+.routeEditor > .row {
+	height: 100%;
+}
+
+.routeEditor > .row > div {
+	height: 100%;
+}
+
+.routeEditor > .row > div > .box {
+	height: 100%;
+}
+
+.routeEditor > .row > div > .box .box-body{
+	height: calc(100% - 40px);
+	overflow-y: auto;
+}

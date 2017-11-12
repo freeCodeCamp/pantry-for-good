@@ -1,0 +1,50 @@
+/* Error pages */
+.headline {
+	margin-top: -20px;
+}
+
+/* Print */
+@media print {
+	.table-responsive {
+		overflow: visible;
+	}
+}
+
+/* user dropdown white on white small screens */
+@media (max-width: 767px) {
+  .skin-blue .main-header .navbar .dropdown-menu li a {
+    color: inherit;
+  }
+  .skin-blue .main-header .navbar .dropdown-menu li a:hover {
+    color: #f6f6f6;
+  }
+  .skin-blue .main-header .navbar .dropdown-menu li.divider {
+    background-color: #eee !important;
+  }
+}
+
+/* treeview chevrons */
+li.treeview > a > span::after {
+  font-family: FontAwesome;
+  font-size: 10px;
+  font-weight: 300;
+  padding-right: 10px;
+  float: right;
+  content: '\f078';
+}
+
+li.treeview.active > a > span::after {
+  content: '\f077';
+}
+
+.smallModal > .modal-dialog {
+  width: 300px;
+}
+
+/* invert bootstrap table pagination */
+.react-bs-table-pagination ul.dropdown-menu[aria-labelledby="pageDropDown"] {
+  top: unset;
+  bottom: calc(100% + 1rem);
+  background-color: #f4f4f4;
+  border-color: #ccc;
+}
