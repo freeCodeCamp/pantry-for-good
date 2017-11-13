@@ -187,7 +187,7 @@ class PackingList extends Component {
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="lastPacked" width="150px" dataFormat={lastPacked => isValid(lastPacked)} >
+            <TableHeaderColumn dataField="lastPacked" width="150px" dataFormat={lastPacked => formatDate(lastPacked)} >
               Last Packed On
             </TableHeaderColumn>
             <TableHeaderColumn dataField="packingList" dataFormat={this.getItemList}>
@@ -260,11 +260,10 @@ function exists(thing) {
   return thing
 }
 
-function isValid(date) {
+function formatDate(date) {
   if (moment(date).isValid()) {
     return moment(date).format("MM/DD/YYYY")
-  }
-  else {
+  } else {
     return " "
   }
 }
