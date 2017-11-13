@@ -206,7 +206,7 @@ export const createSelectors = path => {
   const getDestination = state => get(state, path, {}).destination
 
   return {
-    isFetching: state => get(state, path).routeFetching,
+    isFetching: state => get(state, path).fetching,
     hasError: state => get(state, path).error,
     getRoute: state => get(state, path).route,
     getWaypoints,
