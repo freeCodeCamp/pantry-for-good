@@ -2,21 +2,19 @@ import {first, last} from 'lodash'
 import polyline from '@mapbox/polyline'
 
 const osrmUrl = 'https://router.project-osrm.org'
+const GOOGLE_ERROR_MAP = {
+  MAX_WAYPOINTS_EXCEEDED: 'Cannot find route for this many stops.',
+  OVER_QUERY_LIMIT: 'You have made too many requests for the current time period.'
+}
+const DEFAULT_GOOGLE_ERROR = 'There was an error calculating the route.'
 
 export const getGoogleRoute = (waypoints, optimize) => {
   const formattedWaypoints = waypoints.map(point => ({
     location: {lat: point.lat, lng: point.lng}
   }))
 
-  let resolve, reject
-  const result = new Promise((res, rej) => {
-    resolve = res
-    reject = rej
-  })
-
-  let directionsService
-  try {
-    directionsService = new google.maps.DirectionsService
+  return new Promise((resolve, reject) => {
+    const directionsService = new google.maps.DirectionsService
     directionsService.route({
       origin: first(formattedWaypoints),
       destination: last(formattedWaypoints),
@@ -27,13 +25,12 @@ export const getGoogleRoute = (waypoints, optimize) => {
       if (status === google.maps.DirectionsStatus.OK) {
         resolve(result)
       } else {
-        reject(result)
+        const error = new Error(GOOGLE_ERROR_MAP[status] || DEFAULT_GOOGLE_ERROR)
+        error.isDirectionsError = true
+        reject(error)
       }
     })
-  } catch (err) {
-    reject('Direction service failure')
-  }
-  return result
+  })
 }
 
 export const getOsrmRoute = (waypoints, optimize) => {
