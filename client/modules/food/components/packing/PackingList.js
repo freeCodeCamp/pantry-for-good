@@ -17,6 +17,7 @@ import {pack, clearPackingFlags} from '../../reducers/packing'
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 import {Checkbox} from '../../../../components/form'
 import PackModal from './PackModal'
+import moment from 'moment'
 
 const mapStateToProps = state => ({
   customers: selectors.customer.getScheduled(state),
@@ -189,7 +190,7 @@ class PackingList extends Component {
             <TableHeaderColumn dataField="householdSummary" width="90px">
               Household
             </TableHeaderColumn>
-            <TableHeaderColumn dataField="lastPacked" width="150px">
+            <TableHeaderColumn dataField="lastPacked" width="150px" dataFormat={lastPacked => formatDate(lastPacked)} >
               Last Packed On
             </TableHeaderColumn>
             <TableHeaderColumn dataField="packingList" dataFormat={this.getItemList}>
@@ -260,6 +261,14 @@ function equalIds(thing) {
 
 function exists(thing) {
   return thing
+}
+
+function formatDate(date) {
+  if (moment(date).isValid()) {
+    return moment(date).format("MM/DD/YYYY")
+  } else {
+    return " "
+  }
 }
 
 /**
