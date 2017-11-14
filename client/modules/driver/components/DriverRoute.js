@@ -31,7 +31,8 @@ const mapStateToProps = (state, ownProps) => ({
   loading: selectors.volunteer.loading(state) || selectors.customer.loading(state) ||
     selectors.questionnaire.loading(state) || selectors.settings.fetching(state),
   loadError: selectors.volunteer.loadError(state) || selectors.customer.loadError(state) ||
-    selectors.questionnaire.loadError(state) || selectors.settings.error(state)
+    selectors.questionnaire.loadError(state) || selectors.settings.error(state),
+  routeError: selectors.delivery.route.hasError(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -76,7 +77,7 @@ class DriverRoute extends Component {
   }
 
   render() {
-    const {driver, settings, waypoints, loading, loadError} = this.props
+    const {driver, settings, waypoints, loading, loadError, routeError} = this.props
 
     return (
       <Page>
@@ -105,7 +106,8 @@ class DriverRoute extends Component {
                 </BoxHeader>
                 <BoxBody
                   loading={loading}
-                  error={loadError}
+                  error={loadError || routeError}
+                  errorBottom
                   style={{height: '100%', overflowY: 'scroll'}}
                 >
                   {waypoints &&

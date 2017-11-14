@@ -137,6 +137,7 @@ export default (state = {
     case CLEAR_ROUTE:
       return {
         ...state,
+        error: null,
         route: null
       }
     case ROUTE_REQUEST:
@@ -212,8 +213,8 @@ export const createSelectors = path => {
   const getDestination = state => get(state, path, {}).destination
 
   return {
-    isFetching: state => get(state, path).routeFetching,
-    hasError: state => get(state, path).routeError,
+    isFetching: state => get(state, path).fetching,
+    hasError: state => get(state, path).error,
     getRoute: state => get(state, path).route,
     getWaypoints,
     getOrigin,
