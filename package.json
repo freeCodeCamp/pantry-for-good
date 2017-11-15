@@ -16,6 +16,7 @@
     "build:server": "gulp build-server",
     "build:client": "gulp build-client",
     "clean": "shx rm -rf dist",
+    "coverage": "cross-env NODE_ENV=test nyc mocha \"./{,!(node_modules)/**/}*.spec.js\"",
     "start": "node dist/server/server.js",
     "lint": "npm run lint:server && npm run lint:client",
     "lint:server": "eslint server",
@@ -128,6 +129,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.2.1",
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-plugin-rewire": "^1.0.0",
     "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.24.0",
@@ -143,6 +145,7 @@
     "ignore-styles": "^5.0.1",
     "jsdom": "^11.1.0",
     "mocha": "^3.2.0",
+    "nyc": "^11.3.0",
     "react-test-renderer": "^15.5.4",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",

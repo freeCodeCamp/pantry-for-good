@@ -1,0 +1,28 @@
+  {
+    "reporter": [
+      "lcov"
+    ],
+    "require": [
+      "babel-core/register",
+      "ignore-styles",
+      "./client/entry.test.js",
+      "./server/entry.test.js"
+    ],
+    "sourceMap": false,
+    "instrument": false,
+    "include": [
+      "client/**/*.js",
+      "server/**/*.js"
+    ],
+    "all": true,
+    "exclude": [
+      "**/*.spec.js",
+      "node_modules",
+      "flow-typed",
+      "client/entry.test.js",
+      "server/entry.test.js",
+      "server/index.js",
+      "server/config/env",
+      "server/tests"
+    ]
+  }

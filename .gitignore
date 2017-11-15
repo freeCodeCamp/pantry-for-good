@@ -13,3 +13,5 @@ node_modules/
 typings/
 server/config/env/secrets.js
 dist
+.nyc_output/
+coverage/
