@@ -98,13 +98,13 @@ async function seedUsers() {
   const clientCount = await User.count({roles: {$in: values(clientRoles)}})
   if (clientCount) return
 
-  const customers = range(45).map(i =>
+  const customers = range(800).map(i =>
     createTestUser(`customer ${i + 1}`, clientRoles.CUSTOMER))
   const volunteers = range(8).map(i =>
     createTestUser(`volunteer ${i + 1}`, clientRoles.VOLUNTEER))
   const donors = range(5).map(i =>
     createTestUser(`donor ${i + 1}`, clientRoles.DONOR))
-  const drivers = range(5).map(i =>
+  const drivers = range(50).map(i =>
     createTestUser(`driver ${i + 1}`, clientRoles.VOLUNTEER))
 
   await User.create([
