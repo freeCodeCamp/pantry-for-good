@@ -9,7 +9,7 @@
   ],
   "env": {
     "test": {
-      "plugins": ["babel-plugin-rewire"]
+      "plugins": ["istanbul", "babel-plugin-rewire"]
     }
   }
 }
