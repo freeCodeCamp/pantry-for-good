@@ -8,6 +8,7 @@ import ConfirmNewGoogleAccount from './components/ConfirmNewGoogleAccount'
 import EditProfile from './components/EditProfile'
 import EditUser from './components/EditUser'
 import ForgotPassword from './components/ForgotPassword'
+import guestOrRedirect from '../../components/router/guestOrRedirect'
 import ResetPassword from './components/ResetPassword'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
@@ -44,15 +45,15 @@ const UserRouter = ({match}) =>
     <Route
       path={`${match.url}/forgot-password`}
       exact
-      component={ForgotPassword}
+      component={guestOrRedirect(ForgotPassword)}
     />
     <Route
       path={`${match.url}/reset-password/:token`}
       exact
       component={ResetPassword}
     />
-    <Route path={`${match.url}/signin`} exact component={SignIn} />
-    <Route path={`${match.url}/signup`} exact component={SignUp} />
+    <Route path={`${match.url}/signin`} exact component={guestOrRedirect(SignIn)} />
+    <Route path={`${match.url}/signup`} exact component={guestOrRedirect(SignUp)} />
     <Route
       path={`${match.url}/confirm-new-google-account`}
       exact

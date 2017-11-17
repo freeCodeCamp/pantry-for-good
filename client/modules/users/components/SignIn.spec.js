@@ -2,8 +2,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import { push as reactRouterReduxPush } from 'react-router-redux'
-
 import ConnectedSignIn, { SignIn } from './SignIn'
 import { signIn as authReducerSignIn, clearFlags as authReducerClearFlags } from '../authReducer'
 
@@ -55,18 +53,6 @@ describe('SignIn Class', function () {
     expect(wrapper.state().email).to.eql('user@example.com')
     expect(wrapper.state().password).to.eql('12345678')
   })
-
-  it('calls props.push if a user is signed in', () => {
-    const spy = sinon.spy()
-    shallow(<SignIn user={{_id: 1}} push={spy} clearFlags={ () => {} } />)
-    expect(spy.called).to.eql(true)
-  })
-
-  it('does not call props.push if a user is not signed in', () => {
-    const spy = sinon.spy()
-    shallow(<SignIn user={null} push={spy} clearFlags={ () => {} } />)
-    expect(spy.called).to.eql(false)
-  })
 })
 
 describe('Connect(SignIn)', function () {
@@ -94,11 +80,6 @@ describe('Connect(SignIn)', function () {
 
   })
 
-  it('gets the user from the redux store', () => {
-    const wrapper = shallow(<ConnectedSignIn />, {context: {store: mockStore}})
-    expect(wrapper.props().user).to.eql(reduxState.auth.user)
-  })
-
   it ('gets the login error from the redux store', () => {
     const wrapper = shallow(<ConnectedSignIn />, {context: {store: mockStore}})
     expect(wrapper.props().fetchUserError).to.eql(mockStore.getState().auth.error)
@@ -119,14 +100,6 @@ describe('Connect(SignIn)', function () {
     wrapper.props().signIn('e', 'p')
     const actualDispatchedAction = mockStore.dispatch.args[0][0]
     const expectedDispatchedAction = authReducerSignIn({email: 'e', password: 'p'})
-    expect(actualDispatchedAction).to.eql(expectedDispatchedAction)
-  })
-
-  it ('dispatches the push action', () => {
-    const wrapper = shallow(<ConnectedSignIn />, {context: {store: mockStore}})
-    wrapper.props().push('/newLocation')
-    const actualDispatchedAction = mockStore.dispatch.args[0][0]
-    const expectedDispatchedAction = reactRouterReduxPush('/newLocation')
     expect(actualDispatchedAction).to.eql(expectedDispatchedAction)
   })
 

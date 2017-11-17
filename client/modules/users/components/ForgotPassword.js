@@ -1,6 +1,5 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {push} from 'react-router-redux'
 import {Col, Row} from 'react-bootstrap'
 
 import selectors from '../../../store/selectors'
@@ -12,7 +11,6 @@ import LoadingWrapper from '../../../components/LoadingWrapper'
 class ForgotPassword extends React.Component {
   constructor(props) {
     super(props)
-    this.redirectIfAlreadySignedIn(this.props)
     this.state = {
       email: ""
     }
@@ -20,10 +18,6 @@ class ForgotPassword extends React.Component {
 
   componentWillMount() {
     this.props.clearFlags()
-  }
-
-  componentWillReceiveProps = nextProps => {
-    this.redirectIfAlreadySignedIn(nextProps)
   }
 
   onFieldChange = e => {
@@ -34,12 +28,6 @@ class ForgotPassword extends React.Component {
   onSubmit = e => {
     e.preventDefault()
     this.props.resetPassword(this.state.email)
-  }
-
-  redirectIfAlreadySignedIn(props) {
-    if (props.user && props.user._id) {
-      props.push('/')
-    }
   }
 
   render = () => {
@@ -91,7 +79,6 @@ class ForgotPassword extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.auth.getUser(state),
   fetching: selectors.auth.fetching(state),
   error: selectors.auth.error(state),
   success: selectors.auth.success(state)
@@ -99,8 +86,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   resetPassword: email => dispatch(forgotPassword({ email })),
-  clearFlags: () => dispatch(clearFlags()),
-  push: location => dispatch(push(location))
+  clearFlags: () => dispatch(clearFlags())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword)
