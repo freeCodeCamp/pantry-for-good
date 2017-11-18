@@ -3,6 +3,8 @@ import fetch from 'isomorphic-fetch'
 import {normalize} from 'normalizr'
 import {SubmissionError} from 'redux-form'
 
+import {clearUser} from '../../modules/users/authReducer'
+
 let _socket
 
 const API_ROOT = process.env.NODE_ENV === 'production' ?
@@ -35,7 +37,7 @@ export function callApi(endpoint, method = 'GET', body, schema, responseSchema) 
   })
     .then(response =>
       response.json().then(json => {
-        if (!response.ok) return Promise.reject(json)
+        if (!response.ok) return Promise.reject({ ...json, status: response.status })
         if (responseSchema) return normalize(json, responseSchema)
         if (schema) return normalize(json, schema)
         return json
@@ -93,6 +95,7 @@ export default socket => {
         response
       })),
       error => {
+        if (error.status === 401) store.dispatch(clearUser())
         next(actionWith({
           type: failureType,
           error
