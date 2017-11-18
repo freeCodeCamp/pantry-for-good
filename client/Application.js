@@ -42,15 +42,21 @@ class Application extends Component {
   }
 
   componentDidUpdate() {
-    const {user} = this.props
     window.dispatchEvent(new Event('resize'))
-    if (user && user.roles.find(r => r === ADMIN_ROLE)) {
-      $('body').removeClass('layout-top-nav')
-    }
   }
 
   render() {
-    if (this.state.loaded) return <Router history={this.props.history} />
+    if (this.state.loaded) {
+      const {user} = this.props
+      const isAdmin = user && user.roles.find(r => r === ADMIN_ROLE)
+      return (
+        <div className={`skin-blue fixed ${!isAdmin && 'layout-top-nav'}`}>
+          <div className='wrapper'>
+            <Router history={this.props.history} />
+          </div>
+        </div>
+      )
+    }
 
     if (this.props.error) {
       return <ServerError />
