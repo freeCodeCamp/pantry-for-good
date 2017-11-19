@@ -2,6 +2,7 @@ import {ADMIN_ROLE} from '../../common/constants'
 import Donation from '../models/donation'
 import Donor from '../models/donor'
 import {UnauthorizedError} from '../lib/errors'
+import {BadRequestError} from '../lib/errors'
 import mailer from '../lib/mail/mail-helpers'
 
 export default {
@@ -9,7 +10,13 @@ export default {
 
     let newDonation = {
       ...req.body,
-      total: req.body.items.reduce((acc, item) => acc + Number(item.value), 0)
+      total: req.body.items.reduce((acc, item) => {
+        if (isNaN(Number(item.value))) {
+          throw new BadRequestError
+        } else {
+          return acc + Number(item.value)
+        }
+      },0 )
     }
 
     if (!req.user.roles.find(r => r === ADMIN_ROLE) &&
