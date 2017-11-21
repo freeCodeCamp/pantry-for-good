@@ -1,11 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {push} from 'react-router-redux'
 
 import selectors from '../../../store/selectors'
 import {signIn, clearFlags} from '../authReducer'
-import userClientRole from '../../../lib/user-client-role'
 
 import FieldGroup from '../../../components/form/FieldGroup'
 import {LoginBox} from '../../../components/login'
@@ -13,7 +11,6 @@ import {LoginBox} from '../../../components/login'
 export class SignIn extends React.Component {
   constructor(props) {
     super(props)
-    this.redirectIfAlreadySignedIn(this.props)
     this.state = {
       email: "",
       password: ""
@@ -22,13 +19,6 @@ export class SignIn extends React.Component {
 
   componentWillMount() {
     this.props.clearFlags()
-  }
-
-  redirectIfAlreadySignedIn(props) {
-    if (props.user && props.user._id) {
-      const role = userClientRole(props.user)
-      props.push(role ? `/${role.split('/')[1]}s` : '/')
-    }
   }
 
   onFieldChange = e => {
@@ -40,10 +30,6 @@ export class SignIn extends React.Component {
     e.preventDefault()
     this.props.signIn(this.state.email, this.state.password)
     this.setState({password: ""})
-  }
-
-  componentWillReceiveProps = nextProps => {
-    this.redirectIfAlreadySignedIn(nextProps)
   }
 
   render = () =>
@@ -95,7 +81,6 @@ export class SignIn extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.auth.getUser(state),
   fetchingUser: selectors.auth.fetching(state),
   fetchUserError: selectors.auth.error(state),
   googleAuthentication: (state.settings && state.settings.data) ? state.settings.data.googleAuthentication : false
@@ -105,8 +90,7 @@ const mapDispatchToProps = dispatch => ({
   signIn: (email, password) => {
     dispatch(signIn({ email, password }))
   },
-  clearFlags: () => dispatch(clearFlags()),
-  push: location => dispatch(push(location))
+  clearFlags: () => dispatch(clearFlags())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn)

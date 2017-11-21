@@ -55,7 +55,7 @@ describe('api middleware', function() {
       expect(fetchMock).to.calledWith('root/foo')
 
       return result.catch(err => {
-        expect(err).to.eql({error: 'error'})
+        expect(err).to.include({error: 'error'})
         expect(responseMock.json).to.have.been.calledOnce
       })
     })

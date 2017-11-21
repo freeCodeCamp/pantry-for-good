@@ -1,5 +1,8 @@
 import Router from 'express-promise-router'
 import donationController from '../controllers/donation'
+import usersController from '../controllers/users'
+
+const {requiresLogin} = usersController 
 
 const donationRouter = Router({mergeParams: true})
 
@@ -10,6 +13,6 @@ donationRouter.route('/admin/donations/:donationId/approve')
   .put(donationController.approve)
 
 donationRouter.route('/donations/:donationId')
-  .put(donationController.hasAuthorization, donationController.sendEmail)
+  .put(requiresLogin, donationController.hasAuthorization, donationController.sendEmail)
 
 export default donationRouter

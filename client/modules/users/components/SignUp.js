@@ -1,12 +1,10 @@
 import React from 'react'
-import {get, has, last} from 'lodash'
+import {get, has} from 'lodash'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
-import {push} from 'react-router-redux'
 
 import selectors from '../../../store/selectors'
 import {signUp, clearFlags} from '../authReducer'
-import userClientRole from '../../../lib/user-client-role'
 import {showDialog, hideDialog} from '../../core/reducers/dialog'
 
 import FieldGroup from '../../../components/form/FieldGroup'
@@ -17,7 +15,6 @@ import './signup.css'
 class SignUp extends React.Component {
   constructor(props) {
     super(props)
-    this.redirectIfAlreadySignedIn(this.props)
     this.state = {
       firstName: {value: '', touched: false},
       lastName: {value: '', touched: false},
@@ -29,13 +26,6 @@ class SignUp extends React.Component {
 
   componentWillMount() {
     this.props.clearFlags()
-  }
-
-  redirectIfAlreadySignedIn(props) {
-    if (props.user && props.user._id) {
-      const role = userClientRole(props.user)
-      props.push(role ? `/${last(role.split('/'))}s` : '/')
-    }
   }
 
   onFieldChange = e => {
@@ -61,10 +51,6 @@ class SignUp extends React.Component {
 
   googleSignup = () => {
     window.location = `/api/auth/google?action=signup`
-  }
-
-  componentWillReceiveProps = nextProps => {
-    this.redirectIfAlreadySignedIn(nextProps)
   }
 
   isValid = field => has(
@@ -166,7 +152,6 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  user: selectors.auth.getUser(state),
   fetchingUser: selectors.auth.fetching(state),
   fetchUserError: selectors.auth.error(state),
   googleAuthentication: get(selectors.settings.getSettings(state), 'googleAuthentication')
@@ -175,7 +160,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   signUp: user => dispatch(signUp(user)),
   clearFlags: () => dispatch(clearFlags()),
-  push: location => dispatch(push(location)),
   showDialog: dialogOptions => dispatch(showDialog(dialogOptions)),
   hideDialog: () => dispatch(hideDialog())
 })
