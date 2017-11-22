@@ -34,6 +34,122 @@ describe('Packing Api', function() {
     await resetDb()
   })
 
+  describe('packing GET route', function() {
+    it ('Returns empty array when no packages', async function() {
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      return request.get('/api/packing')
+        .expect(200)
+        .expect(function (res) {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(0)
+        })
+    })
+
+    it('Returns one item when there is 1 packed item', async function () {
+      const foodItems = [
+        new FoodItem({ name: 'Apple', quantity: 100, startDate: '2017-06-25', frequency: 1 }),
+        new FoodItem({ name: 'Banana', quantity: 100, startDate: '2017-06-25', frequency: 1 }),
+      ]
+      const food = await Food.create({ category: 'test', items: foodItems })
+
+      const foodItemIds = food.items.map(item => item._id.toString())
+
+      const customer = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      const package1 = await Package.create({
+        customer: customer._id,
+        status: 'Packed',
+        packedBy: 0,
+        contents: foodItemIds
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      const expected = [{
+        __v: package1.__v,
+        _id: package1._id.toString(),
+        customer: package1.customer,
+        datePacked: package1.datePacked.toISOString(),
+        packedBy: package1.packedBy,
+        status: package1.status,
+        contents: package1.contents.map(_id => _id.toString())
+      }]
+
+      return request.get('/api/packing')
+        .expect(200)
+        .expect(function (res) {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(1)
+          expect(res.body).to.eql(expected)
+        })
+    })
+
+    it('Returns 2 packages when there are 2 packages', async function () {
+
+      const foodItems = [
+        new FoodItem({ name: 'Apple', quantity: 100, startDate: '2017-06-25', frequency: 1 }),
+        new FoodItem({ name: 'Banana', quantity: 100, startDate: '2017-06-25', frequency: 1 }),
+      ]
+      const food = await Food.create({ category: 'test', items: foodItems })
+
+      const foodItemIds = food.items.map(item => item._id.toString())
+
+      const customer = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      const package1 = await Package.create({
+        customer: customer._id,
+        status: 'Packed',
+        packedBy: 0,
+        contents: foodItemIds[0]
+      })
+
+      const package2 = await Package.create({
+        customer: customer._id,
+        status: 'Packed',
+        packedBy: 0,
+        contents: foodItemIds[1]
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      const expected = [package1, package2].map(p => ({
+        __v: p.__v,
+        _id: p._id.toString(),
+        customer: p.customer,
+        datePacked: p.datePacked.toISOString(),
+        packedBy: p.packedBy,
+        status: p.status,
+        contents: p.contents.map(_id => _id.toString())
+      }))
+
+      return request.get('/api/packing')
+        .expect(200)
+        .expect(function (res) {
+          expect(res.body).to.be.an('array')
+          expect(res.body).to.have.length(2)
+          expect(res.body).to.eql(expected)
+        })
+    })
+  })
+
   describe('packing POST route', function() {
 
     it('Packs a package for one customer', async function() {
