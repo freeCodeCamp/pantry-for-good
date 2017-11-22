@@ -5,15 +5,20 @@ import {
   questionnaireIdentifiers
 } from '../../../common/constants'
 import Customer from '../../models/customer'
+import Volunteer from '../../models/volunteer'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
 import Questionnaire from '../../models/questionnaire'
+import Food, {FoodItem} from '../../models/food'
+import Package from '../../models/package'
 
 describe('Customer Api', function() {
   before(async function() {
     await initDb()
     await Customer.find().remove()
+    await Volunteer.find().remove()
     await User.find().remove()
+    await Package.find().remove()
     await Questionnaire.find().remove()
     await new Questionnaire({
       name: 'Customer Application',
@@ -28,6 +33,8 @@ describe('Customer Api', function() {
   afterEach(async function() {
     await Customer.find().remove()
     await User.find().remove()
+    await Package.find().remove()
+    await Volunteer.find().remove()
   })
 
   after(async function() {
@@ -197,6 +204,36 @@ describe('Customer Api', function() {
         .expect(200)
     })
 
+    it('Won\'t delete a customer that has packages', async function () {
+      const foodItems = [new FoodItem({ name: 'Apple', quantity: 100, startDate: '2017-06-25', frequency: 1 })]
+      const food = await Food.create({ category: 'test', items: foodItems })
+
+      const customer = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      await Package.create({
+        customer: customer._id,
+        status: 'Packed',
+        packedBy: 0,
+        contents: food.items.map(item => item._id.toString())
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      // delete the customer associated with the package
+      return request.delete(`/api/admin/customers/${customer._id}`)
+        .expect(409)
+        .expect(function(res) {
+          expect(res.body).to.have.property('message', 'This customer has packages and can\'t be deleted')
+        })
+    })
+
     it('assigns customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
@@ -229,5 +266,37 @@ describe('Customer Api', function() {
           expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
     })
+
+    it('When deleting a customer, it deletes its occurance in Volunteers.customers', async function() {
+      const customer1 = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      const customer2 = await Customer.create({
+        _id: 2,
+        firstName: 'Ben',
+        lastName: 'Franklin',
+        email: 'bf@example.com',
+      })
+
+      const volunteer = await Volunteer.create({
+        _id: 3,
+        customers: [customer1._id, customer2._id]
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      await request.delete(`/api/admin/customers/${customer1._id}`).expect(200)
+
+      const updatedVolunteer = await Volunteer.findById(volunteer._id).lean()
+      expect(updatedVolunteer.customers).to.eql([customer2._id])
+
+    })
+
   })
 })

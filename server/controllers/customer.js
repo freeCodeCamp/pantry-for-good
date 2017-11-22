@@ -3,6 +3,8 @@ import {extend, intersection, includes} from 'lodash'
 import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles, volunteerRoles, customerStatus} from '../../common/constants'
 import Customer from '../models/customer'
+import Volunteer from '../models/volunteer'
+import Package from '../models/package'
 import mailer from '../lib/mail/mail-helpers'
 import User from '../models/user'
 import {updateFields} from '../lib/update-linked-fields'
@@ -70,10 +72,19 @@ export default {
   async delete(req, res) {
     const id = req.customer._id
 
-    await User.findByIdAndRemove(id)
-    await Customer.findByIdAndRemove(id)
+    // Check to see if the customer is associated with any packages
+    const packageCount = await Package.find({customer: id}).count()
 
-    res.json(req.customer)
+    if (packageCount > 0) {
+      // Don't delete the customer since a package references its data
+      res.status(409).json({message: "This customer has packages and can't be deleted"})
+    } else {
+      // Remove the customer if it occurs in any Volunteers.customers
+      await Volunteer.update({}, { $pull: { "customers": id } }, {multi: true})
+
+      await Customer.findByIdAndRemove(id)
+      res.json(req.customer)
+    }
   },
   /**
    * Customer middleware
