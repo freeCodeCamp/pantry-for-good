@@ -29,7 +29,8 @@ li.treeview > a > span::after {
   font-size: 10px;
   font-weight: 300;
   padding-right: 10px;
-  float: right;
+  position: absolute;
+  right: 0px;
   content: '\f078';
 }
 
