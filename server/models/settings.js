@@ -5,6 +5,19 @@ import locationSchema from './location-schema'
 
 const {Schema} = mongoose
 
+const receiptFieldSchema = new Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  value: {
+    type: String,
+    required: true
+  }
+}, {
+  _id: false
+})
+
 const SettingsSchema = new Schema({
   organization: {
     type: String,
@@ -27,6 +40,7 @@ const SettingsSchema = new Schema({
     trim: true
   },
   location: locationSchema,
+  receiptFields: [receiptFieldSchema],
   gmapsApiKey: {
     type: String,
     trim: true,

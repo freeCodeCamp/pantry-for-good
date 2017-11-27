@@ -10,7 +10,10 @@ const placeholders = [
   {id: 'url', label: 'Foodbank Website'},
   {id: 'clientIntakeNumber', label: 'Client Intake Number'},
   {id: 'supportNumber', label: 'Support Number'},
-  {id: 'ein', label: 'Employer Identification Number'},
+  {id: 'receiptFields',
+    label: 'Receipt Fields',
+    format: value => `<p>${value.name}: ${value.value}</p>`
+  },
 
   {id: 'firstName', label: 'User First Name', type: placeholderTypes.EMAIL},
   {id: 'lastName', label: 'User Last Name', type: placeholderTypes.EMAIL},
@@ -68,12 +71,13 @@ function getPlaceholders(types) {
 }
 
 function renderReceipt(values) {
-  const ids = ['organization', 'address', 'url', 'supportNumber', 'ein']
+  const ids = ['organization', 'address', 'url', 'supportNumber', 'receiptFields']
   let table = '<table>'
 
   for (let i = 0; i < ids.length; i++) {
     const placeholder = placeholders.find(p => p.id === ids[i])
-    table += `<tr><td>${placeholder.label}:</td><td> ${values[ids[i]]}</td></tr>`
+    if (ids[i] === 'receiptFields')  table += `<tr><td>${values[ids[i]].name}:</td><td> ${values[ids[i]].value}</td></tr>`
+    else table += `<tr><td>${placeholder.label}:</td><td> ${values[ids[i]]}</td></tr>`
   }
 
   table += `<tr><td><p>Here you have a list of the donations our organization recibed from you:</p></td></tr>`
