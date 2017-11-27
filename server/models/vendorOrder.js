@@ -17,6 +17,9 @@ const VendorOrderSchema = new Schema({
     type: Number,
     ref: modelTypes.VENDOR
   },
+  Status: {
+    type:String
+  },
   placementDate: {
     type: Date,
     default: Date.now
