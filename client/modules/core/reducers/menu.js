@@ -24,7 +24,7 @@ const notVolunteer = `!${clientRoles.VOLUNTEER}`
 function getMenuItems(user) {
   if (!user) return []
 
-  const clientItems = [{
+  const items = [{
     title: 'Customers',
     type: 'treeview',
     link: 'customers',
@@ -110,84 +110,6 @@ function getMenuItems(user) {
       roles: [notVolunteer]
     }]
   }]
-
-  const adminClientItems = [{
-    title: 'Customers',
-    link: 'customers/list',
-    roles: [ADMIN_ROLE]
-  }, {
-    title: 'Volunteers',
-    link: 'volunteers/list',
-    roles: [ADMIN_ROLE]
-  }, {
-    title: 'Donors',
-    link: 'donors/list',
-    roles: [ADMIN_ROLE]
-  }]
-
-  const adminUserAccountItems = [{
-    title: 'User Accounts',
-    link: 'users/list',
-    roles: [ADMIN_ROLE]
-  }]
-
-  const foodItems = [{
-    title: 'Food Schedule',
-    link: 'schedule',
-    roles: [ADMIN_ROLE]
-  }, {
-    title: 'Packing List',
-    link: 'packing',
-    roles: [ADMIN_ROLE]
-  }, {
-    title: 'Inventory',
-    link: 'inventory',
-    roles: [ADMIN_ROLE]
-  }]
-
-  const deliveryItems = [{
-    title: 'Delivery',
-    link: 'drivers',
-    type: 'treeview',
-    roles: [ADMIN_ROLE],
-    items: [{
-      title: 'Drivers',
-      link: 'drivers/list',
-    }, {
-      title: 'Route Assignment',
-      link: 'drivers/routes',
-    }]
-  }]
-
-  const settingsItems = [{
-    title: 'Settings',
-    link: 'settings',
-    type: 'treeview',
-    roles: [ADMIN_ROLE],
-    items: [{
-      title: 'General',
-      link: 'settings'
-    }, {
-      title: 'Pages',
-      link: 'settings/pages'
-    }, {
-      title: 'Emails',
-      link: 'settings/emails'
-    }, {
-      title: 'Applications',
-      link: 'settings/questionnaires'
-    }]
-  }]
-
-  const items = [
-    ...clientItems,
-    ...adminClientItems,
-    ...foodItems,
-    ...deliveryItems,
-    ...settingsItems,
-    ...adminUserAccountItems
-  ]
-
 
   return items.map(item => {
     if (item.type === 'treeview') return {
