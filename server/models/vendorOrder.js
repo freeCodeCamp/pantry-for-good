@@ -33,3 +33,4 @@ const VendorOrderSchema = new Schema({
     default: null 
   }
 })
+export default mongoose.model(modelTypes.VENDORORDER, VendorOrderSchema)

@@ -41,6 +41,8 @@ export const modelTypes = {
   SETTINGS: 'Settings',
   USER: 'User',
   VOLUNTEER: 'Volunteer'
+  ITEM: 'Item'
+  VENDORORDER: 'VendorOrder'
 }
 
 export const pageIdentifiers = {
