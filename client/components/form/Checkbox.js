@@ -4,7 +4,7 @@ import {compose, setPropTypes, withHandlers} from 'recompose'
 import {Checkbox as RBCheckbox} from 'react-bootstrap'
 
 const withPropTypes = setPropTypes({
-  name: P.any.isRequired,
+  name: P.any,
   label: P.string,
   readOnly: P.bool,
   onClick: P.func,
