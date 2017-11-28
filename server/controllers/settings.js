@@ -1,4 +1,4 @@
-import {intersection} from 'lodash'
+import {includes, intersection} from 'lodash'
 
 import {ForbiddenError, ValidationError} from '../lib/errors'
 import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
@@ -17,9 +17,7 @@ export default {
     let settings = await Settings.findOne().select(projection).lean()
 
     // Add property to indicate if google authentication is available
-    Object.assign(settings, {
-      googleAuthentication: !!(config.oauth.googleClientID && config.oauth.googleClientSecret)
-    })
+    settings.googleAuthentication = !!(config.oauth.googleClientID && config.oauth.googleClientSecret)
 
     // Remove unnecessary info before sending off the object to the client
     delete settings.__v
@@ -27,16 +25,18 @@ export default {
     res.json(settings)
   },
 
-  async save (req, res, next) {
+  async save (req, res) {
     const {user} = req
 
-    if (!user || !user.roles.find(role => role === ADMIN_ROLE)) {
+    if (!includes(user.roles, ADMIN_ROLE)) {
       throw new ForbiddenError
     }
 
     const location = await locateAddress(req.body.address)
 
-    if (!location) return next(new ValidationError({address: 'Address not found'}))
+    if (!location) {
+      throw new ValidationError({address: 'Address not found'})
+    }
 
     const settings = {
       ...req.body,
