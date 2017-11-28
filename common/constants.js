@@ -40,7 +40,10 @@ export const modelTypes = {
   QUESTIONNAIRE: 'Questionnaire',
   SETTINGS: 'Settings',
   USER: 'User',
-  VOLUNTEER: 'Volunteer'
+  VOLUNTEER: 'Volunteer',
+  ITEM: 'Item',
+  VENDORORDER: 'VendorOrder',
+  EMPLOYEE: 'Employee'
 }
 
 export const pageIdentifiers = {
