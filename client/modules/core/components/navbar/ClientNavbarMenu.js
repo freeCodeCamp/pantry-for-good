@@ -18,9 +18,7 @@ const ClientNavbarMenu = ({user}) =>
         <MenuItem title="Edit Details" path={`/customers/${user._id}/edit`} />
       </MenuGroup> 
       :
-      <MenuGroup title="Customers">
-        <MenuItem title="Apply" path="/customers/create" />
-      </MenuGroup>
+      <MenuItem title="Apply as a Customer" path="/customers/create" />
     }
     
     {hasRoles(user, [clientRoles.DONOR])
@@ -32,9 +30,7 @@ const ClientNavbarMenu = ({user}) =>
         <MenuItem title="My Donations" path={`/donations/${user._id}`} />
       </MenuGroup>
       :
-      <MenuGroup title="Donors">
-        <MenuItem title="Apply" path="/donors/create" />
-      </MenuGroup>
+      <MenuItem title="Apply as a Donor" path="/donors/create" />
     }
 
     {hasRoles(user, [clientRoles.VOLUNTEER])
@@ -52,14 +48,12 @@ const ClientNavbarMenu = ({user}) =>
           <MenuItem title="Inventory" path="/inventory" />}
       </MenuGroup>
       :
-      <MenuGroup title="Volunteers">
-        <MenuItem title="Apply" path="/volunteers/create" />
-      </MenuGroup>
+      <MenuItem title="Apply as a Volunteer" path="/volunteers/create" />
     }
   </ul>
 
 ClientNavbarMenu.propTypes = {
-  user: PropTypes.obj
+  user: PropTypes.object
 }
 
 export default ClientNavbarMenu
