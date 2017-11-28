@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
+import {modelTypes} from '../../common/constants'
 
 const {Schema} = mongoose
 
@@ -22,7 +22,7 @@ var vendorSchema = new Schema({
     trim: true
   },
   phone: {
-    type: String
+    type: String,
     trim: true
   },
   street: {

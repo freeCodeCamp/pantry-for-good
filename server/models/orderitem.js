@@ -4,7 +4,7 @@ import {modelTypes} from '../../common/constants'
 
 const {Schema} = mongoose
 
-var OrderItemSchema = new Schema({
+var orderItemSchema = new Schema({
   vendorOrderID: {
     type: Number,
     ref: modelTypes.VENDORORDER
@@ -18,3 +18,5 @@ var OrderItemSchema = new Schema({
     default: 0
   }
 })
+
+export default mongoose.model(modelTypes.ORDERITEM, orderItemSchema)

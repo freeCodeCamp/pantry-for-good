@@ -1,6 +1,6 @@
-mport mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
-import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
+import {modelTypes} from '../../common/constants'
 
 const {Schema} = mongoose
 
@@ -39,9 +39,6 @@ var employeeSchema = new Schema({
 }, {
   id: false
 })
-
-DonorSchema.path('fields')
-  .validate(getValidator(questionnaireIdentifiers.DONOR), 'Invalid field')
 
 /**
  * Virtual getters & setters

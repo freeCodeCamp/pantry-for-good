@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 
-import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
+import {modelTypes} from '../../common/constants'
 
 const {Schema} = mongoose
 
-var InventorySchema = new Schema({
+var inventorySchema = new Schema({
   _id: {
     type: Number
   },
@@ -16,4 +16,6 @@ var InventorySchema = new Schema({
     type: Number,
     default: 0
   }
-}
+})
+
+export default mongoose.model(modelTypes.INVENTORY, inventorySchema)

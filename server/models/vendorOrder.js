@@ -27,7 +27,7 @@ const VendorOrderSchema = new Schema({
   delivered: {
     type: Boolean,
     default: false
-  }
+  },
   deliveryDate: {
     type: Date,
     default: null 

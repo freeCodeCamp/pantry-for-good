@@ -40,9 +40,9 @@ export const modelTypes = {
   QUESTIONNAIRE: 'Questionnaire',
   SETTINGS: 'Settings',
   USER: 'User',
-  VOLUNTEER: 'Volunteer'
-  ITEM: 'Item'
-  VENDORORDER: 'VendorOrder'
+  VOLUNTEER: 'Volunteer',
+  ITEM: 'Item',
+  VENDORORDER: 'VendorOrder',
   EMPLOYEE: 'Employee'
 }
 
