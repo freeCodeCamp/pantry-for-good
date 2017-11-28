@@ -43,6 +43,7 @@ export const modelTypes = {
   VOLUNTEER: 'Volunteer'
   ITEM: 'Item'
   VENDORORDER: 'VendorOrder'
+  EMPLOYEE: 'Employee'
 }
 
 export const pageIdentifiers = {
