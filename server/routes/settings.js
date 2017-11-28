@@ -9,8 +9,7 @@ export default () => {
   const settingsRouter = Router({mergeParams: true})
 
   settingsRouter.route('/settings')
-    .all(requiresLogin)
-    .post(settingsController.save)
+    .post(requiresLogin, settingsController.save)
     .get(settingsController.read)
 
   return settingsRouter
