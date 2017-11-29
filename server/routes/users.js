@@ -2,6 +2,7 @@ import Router from 'express-promise-router'
 import passport from 'passport'
 import users from '../controllers/users'
 
+const {requiresLogin} = users
 const userRouter = Router({mergeParams: true})
 
 export default () => {
@@ -11,7 +12,7 @@ export default () => {
   userRouter.route('/users/me').get(users.me)
 
   userRouter.route('/users/:userId').get(users.getById)
-  userRouter.route('/users').put(users.update)
+  userRouter.route('/users').put(requiresLogin, users.update)
 
   // Setting up the users password api
   userRouter.route('/users/password').post(users.changePassword)

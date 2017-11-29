@@ -1,6 +1,6 @@
 import {extend} from 'lodash'
 
-import {BadRequestError, UnauthorizedError} from '../../lib/errors'
+import {BadRequestError} from '../../lib/errors'
 import User from '../../models/user'
 
 /**
@@ -36,13 +36,13 @@ export const update = async function(req, res) {
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles
 
-  if (!user) throw new UnauthorizedError
   // Merge existing user
   user = extend(user, req.body)
+
+  if (!user.firstName || !user.lastName) throw new BadRequestError('First Name and Last Name are required')
+
   user.updated = Date.now()
   user.displayName = user.firstName + ' ' + user.lastName
-
-  if (!user.firstName || !user.lastName) throw new BadRequestError("Fist Name and Last Name are required")
 
   const sameEmail = await User.findOne({email: req.user.email}).lean()
   if (sameEmail && sameEmail._id !== req.user._id)
