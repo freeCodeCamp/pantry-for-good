@@ -1,7 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
+import { includes } from 'lodash'
 
+import { ADMIN_ROLE } from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import { editUser, getUserById } from '../userReducer'
 
@@ -10,13 +12,17 @@ import Box from '../../../components/box/Box'
 import BoxHeader from '../../../components/box/BoxHeader'
 import BoxBody from '../../../components/box/BoxBody'
 
+const isAdmin = user => includes(user.roles, ADMIN_ROLE)
+
 class EditUser extends React.Component {
   constructor(props) {
     super(props)
+    const { user } = props
     this.state = {
-      firstName: this.props.user ? this.props.user.firstName : "",
-      lastName: this.props.user ? this.props.user.lastName : "",
-      email: this.props.user ? this.props.user.email : "",
+      firstName: user ? props.user.firstName : "",
+      lastName: user ? user.lastName : "",
+      email: user ? user.email : "",
+      isAdmin: user ? isAdmin(user) : false,
       showSaveSuccessMessage: false
     }
   }
@@ -30,7 +36,12 @@ class EditUser extends React.Component {
   componentWillReceiveProps = nextProps => {
     if (!this.props.user && nextProps.user) {
       // The user info has just been received from the api call
-      this.setState({ firstName: nextProps.user.firstName, lastName: nextProps.user.lastName, email: nextProps.user.email })
+      this.setState({
+        firstName: nextProps.user.firstName,
+        lastName: nextProps.user.lastName,
+        email: nextProps.user.email,
+        isAdmin: isAdmin(nextProps.user)
+      })
     }
 
     if (this.props.saving && !nextProps.saving && !nextProps.saveError) {
@@ -45,6 +56,11 @@ class EditUser extends React.Component {
     this.setState({ [name]: value, showSaveSuccessMessage: false })
   }
 
+  onCheckboxChange = e => {
+    const { name, checked } = e.target
+    this.setState({ [name]: checked, showSaveSuccessMessage: false })
+  }
+
   onSubmit = e => {
     e.preventDefault()
     this.setState({ showSaveSuccessMessage: false })
@@ -53,6 +69,7 @@ class EditUser extends React.Component {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
+      isAdmin: this.state.isAdmin
     })
   }
 
@@ -84,6 +101,13 @@ class EditUser extends React.Component {
         {(this.props.user && (this.props.user.provider === "google")) &&
           "Changing email addresses for users who signed up with google is not yet implemented"
         }
+        <FieldGroup
+          name="isAdmin"
+          options="Admin"
+          onChange={this.onCheckboxChange}
+          checked={this.state.isAdmin}
+          type="checkbox"
+        />
         <div className="text-center form-group">
           <button
             onClick={this.onSubmit}
