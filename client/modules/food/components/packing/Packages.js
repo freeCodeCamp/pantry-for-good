@@ -79,7 +79,7 @@ class Packages extends Component {
               Packed By
             </TableHeaderColumn>
             <TableHeaderColumn dataField="status" >
-              status
+              Status
             </TableHeaderColumn>
             <TableHeaderColumn
               dataFormat={this.getActionButtons}
