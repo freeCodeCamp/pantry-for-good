@@ -2,20 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Link, Route} from 'react-router-dom'
 
-const SidebarMenuItem = ({path, title}) =>
+export const Divider = () => <li className="divider"></li>
+
+const ClientNavbarMenuItem = ({path, title}) =>
   <Route path={path} exact>
     {({match}) =>
       <li className={match && 'active'}>
-        <Link to={path} className="submenu-item">
-          <span>{title}</span>
-        </Link>
+        <Link to={path}>{title}</Link>
       </li>
     }
   </Route>
 
-SidebarMenuItem.propTypes = {
+ClientNavbarMenuItem.propTypes = {
   path: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired
 }
 
-export default SidebarMenuItem
+export default ClientNavbarMenuItem

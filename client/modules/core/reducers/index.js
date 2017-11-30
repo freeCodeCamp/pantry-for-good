@@ -1,11 +1,9 @@
 import {combineReducers} from 'redux'
 
 import dialog, {createSelectors as createDialogSelectors} from './dialog'
-import menu from './menu'
 
 export default combineReducers({
-  dialog,
-  menu
+  dialog
 })
 
 export const createSelectors = path => ({
