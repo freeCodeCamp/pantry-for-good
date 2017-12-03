@@ -60,95 +60,108 @@ class SignUp extends React.Component {
 
   getError = field => get(this.props, `fetchUserError.paths.${field}`)
 
-  render = () =>
-    <section className="content">
-      <LoginBox
-        showLogo
-        heading="Register a new membership"
-        formName="registerForm"
-        loading={this.props.fetchingUser}
-        error={this.props.fetchUserError}
-      >
-        <FieldGroup
-          name="firstName"
-          onChange={this.onFieldChange}
-          value={this.state.firstName.value}
-          touched={this.state.firstName.touched}
-          className="signup-firstname"
-          valid={this.isValid('firstName')}
-          errorMessage={this.getError('firstName')}
-          placeholder="First Name"
-        />
-        <FieldGroup
-          name="lastName"
-          onChange={this.onFieldChange}
-          value={this.state.lastName.value}
-          touched={this.state.lastName.touched}
-          valid={this.isValid('lastName')}
-          errorMessage={this.getError('lastName')}
-          placeholder="Last Name"
-          required
-        />
-        <FieldGroup
-          name="email"
-          type="email"
-          onChange={this.onFieldChange}
-          value={this.state.email.value}
-          touched={this.state.email.touched}
-          valid={this.isValid('email')}
-          errorMessage={this.getError('email')}
-          placeholder="Email"
-          required
-        />
-        <FieldGroup
-          name="password"
-          type="password"
-          onChange={this.onFieldChange}
-          value={this.state.password.value}
-          touched={this.state.password.touched}
-          valid={this.isValid('password')}
-          errorMessage={this.getError('password')}
-          placeholder="Password"
-          icon="lock"
-          required
-        />
-        <FieldGroup
-          name="passwordConfirm"
-          type="password"
-          onChange={this.onFieldChange}
-          value={this.state.passwordConfirm.value}
-          touched={this.state.passwordConfirm.touched}
-          valid={this.isValid('passwordConfirm')}
-          errorMessage={this.getError('passwordConfirm')}
-          placeholder="Confirm Password"
-          icon="lock"
-          required
-        />
-        {this.state.password.value !== this.state.passwordConfirm.value &&
-          <div className="alert alert-danger">Passwords do not match</div>
-        }
-        <div className="text-center form-group">
-          <button type="submit" className="btn btn-flat btn-primary"
-            onClick={this.onSubmit}
-            disabled={this.state.password.value !== this.state.passwordConfirm.value}>
-            Sign up
-          </button>
-          <br />
-          {this.props.googleAuthentication &&
-            <div>
-              or
-              <br />
-              <button type="button" onClick={this.googleSignup} className="btn btn-default">
-                <i className="fa fa-google" />{' '}
-                Sign up with Google
-              </button>
-            </div>
+  render() {
+    const {fetchingUser, fetchUserError} = this.props
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm
+    } = this.state
+
+    return(
+      <section className="content">
+        <LoginBox
+          showLogo
+          heading="Register a new membership"
+          formName="registerForm"
+          loading={fetchingUser}
+          error={fetchUserError}
+        >
+          <FieldGroup
+            name="firstName"
+            onChange={this.onFieldChange}
+            value={firstName.value}
+            touched={firstName.touched}
+            className="signup-firstname"
+            valid={this.isValid('firstName')}
+            errorMessage={this.getError('firstName')}
+            placeholder="First Name"
+            required
+          />
+          <FieldGroup
+            name="lastName"
+            onChange={this.onFieldChange}
+            value={lastName.value}
+            touched={lastName.touched}
+            valid={this.isValid('lastName')}
+            errorMessage={this.getError('lastName')}
+            placeholder="Last Name"
+            required
+          />
+          <FieldGroup
+            name="email"
+            type="email"
+            onChange={this.onFieldChange}
+            value={email.value}
+            touched={email.touched}
+            valid={this.isValid('email')}
+            errorMessage={this.getError('email')}
+            placeholder="Email"
+            required
+          />
+          <FieldGroup
+            name="password"
+            type="password"
+            onChange={this.onFieldChange}
+            value={password.value}
+            touched={password.touched}
+            valid={this.isValid('password')}
+            errorMessage={this.getError('password')}
+            placeholder="Password"
+            icon="lock"
+            required
+          />
+          <FieldGroup
+            name="passwordConfirm"
+            type="password"
+            onChange={this.onFieldChange}
+            value={passwordConfirm.value}
+            touched={passwordConfirm.touched}
+            valid={this.isValid('passwordConfirm')}
+            errorMessage={this.getError('passwordConfirm')}
+            placeholder="Confirm Password"
+            icon="lock"
+            required
+          />
+          {password.touched && passwordConfirm.touched && password.value !== passwordConfirm.value &&
+            <div className="alert alert-danger">Passwords do not match</div>
           }
-          <br/><br/>Already have an account?&nbsp;&nbsp;
-          <Link to="/users/signin">Sign in</Link>
-        </div>
-      </LoginBox>
-    </section>
+          <div className="text-center form-group">
+            <button type="submit" className="btn btn-flat btn-primary"
+              onClick={this.onSubmit}
+              disabled={password.value !== passwordConfirm.value}>
+              Sign up
+            </button>
+            <br />
+            {this.props.googleAuthentication &&
+              <div>
+                or
+                <br />
+                <button type="button" onClick={this.googleSignup} className="btn btn-default">
+                  <i className="fa fa-google" />{' '}
+                  Sign up with Google
+                </button>
+              </div>
+            }
+            <br/><br/>Already have an account?&nbsp;&nbsp;
+            <Link to="/users/signin">Sign in</Link>
+          </div>
+        </LoginBox>
+      </section>
+    )
+  }
 }
 
 const mapStateToProps = state => ({
