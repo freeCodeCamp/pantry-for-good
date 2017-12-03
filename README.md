@@ -2,7 +2,7 @@
 [![Join the chat at https://gitter.im/FreeCodeCamp/pantry-for-good](https://badges.gitter.im/FreeCodeCamp/pantry-for-good.svg)](https://gitter.im/FreeCodeCamp/pantry-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
 
-This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute, the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works. 
+This repository is for the Pantry-for-Good application designed by Open Source for Good Contributors at [freeCodeCamp](http://www.freecodecamp.com). If you'd like to contribute, the [contributing guide](CONTRIBUTING.md) explains the git workflow and the [developers guide](https://github.com/freeCodeCamp/pantry-for-good/wiki/developer's-guide) gives an overview of how the app works.
 
 The [open issues](https://github.com/freeCodeCamp/pantry-for-good/issues) are a good place to start, or you can try the app and add your own issues. If you get stuck or need help with something, feel free to leave a comment.
 
@@ -46,7 +46,7 @@ Type `npm run dev` to start the application in development mode. If all goes wel
 ------------
 ### Installing API keys
 
-To use all the features of this application you will need to obtain API keys and install them in the application. Make a copy of the `server/config/env/secrets-template.js` file in the same directory and rename it `secrets.js`.  After following the instructions below to obtain API Keys, put your keys in this file.
+To use all the features of this application you will need to obtain API keys and install them in the application. After following the instructions below to obtain API Keys, put your keys in the file `server/config/env/secrets.js`.
 
 #### 1. [gmapsApiKey](https://developers.google.com/maps/documentation/javascript/get-api-key)
 Google Maps API key for the deliveries feature
