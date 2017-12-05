@@ -1,3 +1,4 @@
+import {pick} from 'lodash'
 import {ADMIN_ROLE} from '../../common/constants'
 import Donation from '../models/donation'
 import Donor from '../models/donor'
@@ -7,9 +8,8 @@ import mailer from '../lib/mail/mail-helpers'
 
 export default {
   async create(req, res) {
-
     let newDonation = {
-      ...req.body,
+      ...(pick(req.body, ['donor', 'description', 'items'])),
       total: req.body.items.reduce((acc, item) => {
         if (isNaN(Number(item.value))) {
           throw new BadRequestError
