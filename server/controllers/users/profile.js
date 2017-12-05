@@ -1,4 +1,4 @@
-import {extend} from 'lodash'
+import {extend, pick} from 'lodash'
 
 import {BadRequestError} from '../../lib/errors'
 import User from '../../models/user'
@@ -35,11 +35,8 @@ export const update = async function(req, res) {
   if (user._id !== req.body._id)
     user = await User.findById(req.body._id).lean()
 
-  // For security measurement we remove the roles from the req.body object
-  delete req.body.roles
-
   // Merge existing user
-  user = extend(user, req.body)
+  extend(user, pick(req.body, ['firstName', 'lastName', 'email']))
 
   if (!user.firstName || !user.lastName) throw new BadRequestError('First Name and Last Name are required')
 
