@@ -54,7 +54,8 @@ export const pageIdentifiers = {
   CUSTOMER_UPDATED: 'customer-update',
   DONATION_RECEIVED: 'donation-received',
   DONATION_RECEIPT: 'donation-receipt',
-  PASSWORD_RESET: 'password-reset'
+  PASSWORD_RESET: 'password-reset',
+  PASSWORD_RESET_GOOGLE: 'password-reset-google'
 }
 
 export const pageTypes = {

@@ -49,5 +49,6 @@ export default async function sendEmail(
     path: '/v3/mail/send',
     body: mail.toJSON()
   })
+  
   return sg.API(request)
 }

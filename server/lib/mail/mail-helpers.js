@@ -76,6 +76,17 @@ export default {
     )
   },
 
+  async sendPasswordGoogle(user) {
+    const {firstName, lastName, email} = user
+    const fullName = `${firstName} ${lastName}`
+    await this.send(
+      email,
+      fullName,
+      pageIdentifiers.PASSWORD_RESET_GOOGLE,
+      {firstName, lastName, fullName}
+    )
+  },
+
   async sendThanks(donation) {
     const {donor} = donation
     const {firstName, lastName, email} = donor

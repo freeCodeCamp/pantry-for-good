@@ -185,6 +185,17 @@ export const pages = [{
 <p>Thanks for your donations to:</p>
 <p><span class="ql-placeholder-content" data-id="receipt" data-label="Donation Receipt" data-required="true"></span></p>
 `
+}, {
+  identifier: pageIdentifiers.PASSWORD_RESET_GOOGLE,
+  title: 'Password Reset Google',
+  type: pageTypes.EMAIL,
+  subject: '<p><span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> Password Reset</p>',
+  body: `<p>Dear <span class="ql-placeholder-content" data-id="fullName" data-label="User Full Name"></span>,</p>
+<p>You have requested to have your password reset for your account at <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span></p>
+<p>you appear to have signed up with google, try logging in with google. If you have any problems give us a call to the <span class="ql-placeholder-content" data-id="supportNumber" data-label="Support Number"></span></p>
+<strong>If you didn't make this request, you can ignore this email.</strong>
+<p>The <span class="ql-placeholder-content" data-id="organization" data-label="Foodbank Name"></span> support team</p>
+`
 }]
 
 const commonFields = [
