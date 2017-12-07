@@ -1,4 +1,4 @@
-import {difference, extend} from 'lodash'
+import {difference, extend, omit} from 'lodash'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles} from '../../common/constants'
@@ -11,7 +11,7 @@ export default {
    * Create a volunteer
    */
   async create(req, res) {
-    let volunteer = new Volunteer(req.body)
+    let volunteer = new Volunteer(omit(req.body, ['status', 'customers']))
     volunteer._id = req.user.id
     volunteer.user = req.user.id
 
