@@ -3,6 +3,8 @@ import Volunteer from '../../models/volunteer'
 import Donor from '../../models/donor'
 import app from '../../config/express'
 import User from '../../models/user'
+import { ADMIN_ROLE } from '../../../common/constants'
+import { createUserSession, createTestUser } from '../helpers'
 
 describe('User Api', function() {
   before(async function() {
@@ -338,4 +340,77 @@ describe('User Api', function() {
 
   })
 
+  describe('updating a user', function() {
+    it('updates the database', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const adminUser = createTestUser('admin', ADMIN_ROLE)
+      const adminSession = await createUserSession(adminUser)
+      const adminReq = supertest.agent(adminSession.app)
+
+      const requestBody = {
+        _id: user._id,
+        created: user.created,
+        displayName: user.displayName,
+        email: 'new.email@example.com',
+        firstName: 'newFirstName',
+        lastName: 'newLastName',
+        provider: user.provider,
+        roles: user.roles,
+        updated: user.updated
+      }
+
+      await adminReq.put('/api/users').send(requestBody).expect(200)
+
+      const updatedUser = await User.findById(requestBody._id).lean()
+      expect(updatedUser).to.have.property('_id', requestBody._id)
+      expect(updatedUser).to.have.property('email', requestBody.email)
+      expect(updatedUser).to.have.property('firstName', requestBody.firstName)
+      expect(updatedUser).to.have.property('lastName', requestBody.lastName)
+    })
+
+    it('returns the updated user object', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const adminUser = createTestUser('admin', ADMIN_ROLE)
+      const adminSession = await createUserSession(adminUser)
+      const adminReq = supertest.agent(adminSession.app)
+
+      const requestBody = {
+        _id: user._id,
+        created: user.created,
+        displayName: user.displayName,
+        email: 'new.email@example.com',
+        firstName: 'newFirstName',
+        lastName: 'newLastName',
+        provider: user.provider,
+        roles: user.roles,
+        updated: user.updated
+      }
+
+      return adminReq.put('/api/users').send(requestBody)
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('_id', requestBody._id)
+          expect(res.body).to.have.property('email', requestBody.email)
+          expect(res.body).to.have.property('firstName', requestBody.firstName)
+          expect(res.body).to.have.property('lastName', requestBody.lastName)
+        })
+    })
+  })
 })

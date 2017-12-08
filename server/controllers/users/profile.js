@@ -33,7 +33,7 @@ export const getById = async function(req, res) {
 export const update = async function(req, res) {
   let user = req.user
   if (user._id !== req.body._id)
-    user = await User.findById(req.body._id).lean()
+    user = await User.findById(req.body._id)
 
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles
