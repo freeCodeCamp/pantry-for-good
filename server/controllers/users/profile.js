@@ -1,5 +1,6 @@
-import {extend} from 'lodash'
+import {extend, includes} from 'lodash'
 
+import {ADMIN_ROLE} from '../../../common/constants'
 import {BadRequestError} from '../../lib/errors'
 import User from '../../models/user'
 
@@ -49,6 +50,19 @@ export const update = async function(req, res) {
   const sameEmail = await User.findOne({email: req.user.email}).lean()
   if (sameEmail && sameEmail._id !== req.user._id)
     throw new BadRequestError('Email address is taken')
+
+  // Update admin status
+  if (includes(req.user, ADMIN_ROLE)) {
+    const alreadyAdmin = includes(user.roles, ADMIN_ROLE)
+    if (user.isAdmin && !alreadyAdmin) {
+      user.roles.push(ADMIN_ROLE)
+    } else if (!user.isAdmin && alreadyAdmin) {
+      if (parseInt(req.params.userId, 10) === req.user._id)
+        throw new BadRequestError('You are not allowed to demote yourself')
+      user.roles.splice(user.roles.indexOf(ADMIN_ROLE), 1)
+    }
+    delete user.isAdmin
+  }
 
   await user.save()
   res.json(user)
