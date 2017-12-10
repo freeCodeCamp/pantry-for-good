@@ -1,4 +1,4 @@
-import {extend, intersection, includes} from 'lodash'
+import {extend, intersection, includes, omit} from 'lodash'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles, volunteerRoles, customerStatus} from '../../common/constants'
@@ -15,7 +15,7 @@ export default {
    * Create a customer
    */
   async create(req, res) {
-    let customer = new Customer(req.body)
+    let customer = new Customer(omit(req.body, ['status']))
     customer._id = req.user.id
 
     await User.findOneAndUpdate(

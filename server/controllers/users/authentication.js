@@ -1,4 +1,4 @@
-import {map} from 'lodash'
+import {map, pick} from 'lodash'
 import passport from 'passport'
 
 import {UnauthorizedError, ValidationError} from '../../lib/errors'
@@ -10,7 +10,7 @@ import User from '../../models/user'
 export const signup = async function(req, res) {
   // Init Variables
   let user = new User({
-    ...req.body,
+    ...(pick(req.body, ['firstName', 'lastName', 'email', 'password'])),
     roles: [],
     provider: 'local',
     displayName: `${req.body.firstName} ${req.body.lastName}`

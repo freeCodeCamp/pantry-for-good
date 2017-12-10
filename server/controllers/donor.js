@@ -1,4 +1,5 @@
 import extend from 'lodash/extend'
+import {omit} from 'lodash'
 
 import {ForbiddenError, NotFoundError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles} from '../../common/constants'
@@ -12,7 +13,7 @@ export default {
    */
   async create(req, res) {
     const donor = new Donor({
-      ...req.body,
+      ...(omit(req.body, ['status', 'donations'])),
       _id: req.user.id
     })
 
