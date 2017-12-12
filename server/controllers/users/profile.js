@@ -49,16 +49,20 @@ export const update = async function(req, res) {
     throw new BadRequestError('Email address is taken')
 
   // Update admin status
-  if (includes(req.user, ADMIN_ROLE)) {
-    const alreadyAdmin = includes(user.roles, ADMIN_ROLE)
-    if (user.isAdmin && !alreadyAdmin) {
+  const authenticatedUserIsAdmin = includes(req.user.roles, ADMIN_ROLE)
+
+  if (authenticatedUserIsAdmin) {
+    const previouslyAdmin = includes(user.roles, ADMIN_ROLE)
+    const currentlyAdmin = req.body.isAdmin
+
+    if (currentlyAdmin && !previouslyAdmin) {
       user.roles.push(ADMIN_ROLE)
-    } else if (!user.isAdmin && alreadyAdmin) {
-      if (parseInt(req.params.userId, 10) === req.user._id)
+    } else if (!currentlyAdmin && previouslyAdmin) {
+      if (user._id === req.user._id)
         throw new BadRequestError('You are not allowed to demote yourself')
+
       user.roles.splice(user.roles.indexOf(ADMIN_ROLE), 1)
     }
-    delete user.isAdmin
   }
 
   await user.save()
