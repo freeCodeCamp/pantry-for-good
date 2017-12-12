@@ -3,6 +3,7 @@ import { includes } from 'lodash'
 import { ADMIN_ROLE } from '../../../common/constants'
 import * as controller from '../../controllers/users/profile'
 import User from '../../models/user'
+import { BadRequestError } from '../../lib/errors'
 
 import { createTestUser } from '../helpers'
 
@@ -43,5 +44,20 @@ describe('Profile controller', function() {
       editedUser = await User.findById(editedUser._id)
       expect(includes(editedUser.roles, ADMIN_ROLE)).to.be.true
     })
+  })
+
+  it('cannot demote self', async function() {
+    let user = await User.create(createTestUser('admin', ADMIN_ROLE))
+    const req = { 
+      user,
+      body: { _id: user.id, isAdmin: false }
+    }
+    const res = {}
+
+    try {
+      await controller.update(req, res)
+    } catch (err) {
+      expect(err).to.be.an.instanceof(BadRequestError)
+    }
   })
 })
