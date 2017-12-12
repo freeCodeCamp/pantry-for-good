@@ -18,7 +18,8 @@ const mapStateToProps = state => ({
   selectedCustomerIds: selectors.delivery.assignment.getSelectedCustomerIds(state),
   route: selectors.delivery.route.getRoute(state),
   waypoints: selectors.delivery.route.getAllWaypoints(state),
-  customerWaypoints: selectors.delivery.route.getWaypoints(state)
+  customerWaypoints: selectors.delivery.route.getWaypoints(state),
+  routeLoading: selectors.delivery.route.isFetching(state)
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -51,7 +52,8 @@ const DriverListDetail = ({
   requestRoute,
   saveRoute,
   route,
-  waypoints
+  waypoints,
+  routeLoading
 }) =>
   <ListGroupItem>
     <div style={{display: 'flex'}}>
@@ -97,7 +99,7 @@ const DriverListDetail = ({
         <Button
           bsStyle="primary"
           onClick={requestRoute}
-          disabled={waypoints.length <= 2}
+          disabled={waypoints.length <= 2 || routeLoading}
           style={{ margin: '10px 10px 0 0' }}
         >
           Suggest Route
