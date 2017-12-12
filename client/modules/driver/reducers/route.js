@@ -83,7 +83,11 @@ export const moveWaypoint = (waypoint, idx, getWaypoints) => (dispatch, getState
   // )
 }
 
-export const requestGoogleRoute = (waypoints, optimize) => dispatch => {
+export const requestGoogleRoute = (waypoints, optimize) => (dispatch, getState) => {
+  // TODO: this should be using selectors, but the needed ones are defined here
+  if (getState().delivery.route.fetching)
+    return Promise.reject(new Error('Already requesting a route'))
+
   dispatch(routeRequest())
   return getGoogleRoute(waypoints, optimize)
     .then(res => {

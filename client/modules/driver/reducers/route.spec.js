@@ -46,10 +46,11 @@ describe('route reducer', function() {
       }]
 
       const dispatchMock = sinon.spy()
+      const getStateFake = () => ({delivery: {route: {fetching: false }}})
       const getGoogleRouteMock = sinon.stub().resolves({routes})
 
       reducer.default.__Rewire__('getGoogleRoute', getGoogleRouteMock)
-      const result = reducer.requestGoogleRoute(allWaypoints, true)(dispatchMock)
+      const result = reducer.requestGoogleRoute(allWaypoints, true)(dispatchMock, getStateFake)
       reducer.default.__ResetDependency__('getGoogleRoute')
 
       expect(dispatchMock.firstCall).to.have.been.calledWith({

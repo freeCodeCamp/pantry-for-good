@@ -32,7 +32,8 @@ const mapStateToProps = (state, ownProps) => ({
     selectors.questionnaire.loading(state) || selectors.settings.fetching(state),
   loadError: selectors.volunteer.loadError(state) || selectors.customer.loadError(state) ||
     selectors.questionnaire.loadError(state) || selectors.settings.error(state),
-  routeError: selectors.delivery.route.hasError(state)
+  routeError: selectors.delivery.route.hasError(state),
+  routeLoading: selectors.delivery.route.isFetching(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -77,7 +78,7 @@ class DriverRoute extends Component {
   }
 
   render() {
-    const {driver, settings, waypoints, loading, loadError, routeError} = this.props
+    const {driver, settings, waypoints, loading, loadError, routeError, routeLoading} = this.props
 
     return (
       <Page>
@@ -87,11 +88,19 @@ class DriverRoute extends Component {
               <Box>
                 <BoxHeader heading="Edit Route">
                   <div className="box-tools">
-                    <Button bsStyle="primary" onClick={this.requestRoute}>
+                    <Button
+                      bsStyle="primary"
+                      disabled={waypoints.length <= 2 || routeLoading}
+                      onClick={this.requestRoute}
+                    >
                       Route
                     </Button>
                     {' '}
-                    <Button bsStyle="success" onClick={this.requestOptimized}>
+                    <Button
+                      bsStyle="success"
+                      disabled={waypoints.length <= 2 || routeLoading}
+                      onClick={this.requestOptimized}
+                    >
                       Optimize
                     </Button>
                     {' '}
