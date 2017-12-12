@@ -87,11 +87,19 @@ class DriverRoute extends Component {
               <Box>
                 <BoxHeader heading="Edit Route">
                   <div className="box-tools">
-                    <Button bsStyle="primary" onClick={this.requestRoute}>
+                    <Button
+                      bsStyle="primary"
+                      disabled={waypoints.length <= 2}
+                      onClick={this.requestRoute}
+                    >
                       Route
                     </Button>
                     {' '}
-                    <Button bsStyle="success" onClick={this.requestOptimized}>
+                    <Button
+                      bsStyle="success"
+                      disabled={waypoints.length <= 2}
+                      onClick={this.requestOptimized}
+                    >
                       Optimize
                     </Button>
                     {' '}
