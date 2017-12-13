@@ -6,7 +6,7 @@ import {
 } from '../../../common/constants'
 import Customer from '../../models/customer'
 import Volunteer from '../../models/volunteer'
-import {createUserSession, createTestUser} from '../helpers'
+import {createGuestSession, createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
 import Questionnaire from '../../models/questionnaire'
 import Food, {FoodItem} from '../../models/food'
@@ -42,7 +42,14 @@ describe('Customer Api', function() {
     await resetDb()
   })
 
-  describe('User routes', function() {
+  describe('POST /api/customer', function() {
+    it('requires login', async function() {
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+
+      return request.post('/api/customer').expect(401)
+    })
+
     it('creates customers', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
@@ -74,7 +81,9 @@ describe('Customer Api', function() {
         })
         .expect(400)
     })
+  })
 
+  describe('User routes', function() {
     it('shows a customer', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)

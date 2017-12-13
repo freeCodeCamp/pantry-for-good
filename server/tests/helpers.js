@@ -28,6 +28,19 @@ export const createUserSession = async function(userModel) {
 }
 
 /**
+ * create an express app without an authenticated user
+ * 
+ * @return {object}
+ */
+export const createGuestSession = function() {
+  setupPassport()
+  const mockApp = express()
+  mockApp.use(app())
+
+  return mockApp
+}
+
+/**
  * create a user model
  *
  * @param {string} username
