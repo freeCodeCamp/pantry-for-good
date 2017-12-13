@@ -162,7 +162,18 @@ describe('Customer Api', function() {
     })
   })
 
-  describe('User routes', function() {
+  describe('PUT /api/customer/:customerId', function() {
+    it('requires login', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+      
+      return request.put(`/api/customer/${customerSession.user._id}`).expect(401)
+    })
+
     it('updates customers', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
@@ -178,6 +189,36 @@ describe('Customer Api', function() {
 
       return request.put(`/api/customer/${user._id}`)
         .send(updatedCustomer)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('firstName', 'updated')
+        })
+        .expect(200)
+    })
+
+    it('cannot update other customers', async function() {
+      const {user: customer, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      await supertest.agent(customerApp).post('/api/customer').send(customer)
+
+      const {app} = await createUserSession(
+        createTestUser('user', clientRoles.CUSTOMER)
+      )
+      return supertest.agent(app).put(`/api/customer/${customer._id}`).expect(403)
+    })
+
+    it('updates other customers if admin', async function() {
+      const {user, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
+
+      const {app} = await createUserSession(
+        createTestUser('admin', ADMIN_ROLE)
+      )
+      return supertest.agent(app).put(`/api/customer/${customer._id}`)
+        .send({...customer, firstName: 'updated'})
         .expect(res => {
           expect(res.body).to.be.an('object')
           expect(res.body).to.have.property('firstName', 'updated')
