@@ -249,20 +249,6 @@ describe('Customer Api', function() {
         .expect(200)
     })
 
-    it('rejects non-admins', async function() {
-      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
-      const customer = await createUserSession(newCustomer)
-
-      const customerReq = supertest.agent(customer.app)
-
-      return customerReq.get(`/api/admin/customer`)
-        .expect(res => {
-          expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('message', 'User is not authorized')
-        })
-        .expect(403)
-    })
-
     it('deletes customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
