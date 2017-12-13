@@ -24,7 +24,6 @@ export default () => {
     .put(requiresLogin, hasAuthorization, canChangeStatus, customerController.update)
 
   customerRouter.route('/admin/customers/:customerId')
-    .get(customerController.read)
     .put(websocketMiddleware(saveSchema), customerController.update)
     .delete(websocketMiddleware(deleteSchema), customerController.delete)
 
