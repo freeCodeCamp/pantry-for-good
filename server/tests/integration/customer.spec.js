@@ -83,7 +83,18 @@ describe('Customer Api', function() {
     })
   })
 
-  describe('User routes', function() {
+  describe('GET /api/customer/:customerId', function() {
+    it('requires login', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+      
+      return request.get(`/api/customer/${customerSession.user._id}`).expect(401)
+    })
+
     it('shows a customer', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
@@ -134,6 +145,24 @@ describe('Customer Api', function() {
         .expect(403)
     })
 
+    it('shows any customer to admins', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const admin = createTestUser('admin', ADMIN_ROLE)
+
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const adminSession = await createUserSession(admin)
+      return supertest.agent(adminSession.app).get(`/api/customer/${customerSession.user._id}`)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('firstName', 'customer')
+        })
+        .expect(200)
+    })
+  })
+
+  describe('User routes', function() {
     it('updates customers', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
