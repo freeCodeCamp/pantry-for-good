@@ -10,7 +10,7 @@ describe('auth reducer', function() {
       expect(action).to.have.property(CALL_API)
       const {endpoint, method, body, types} = action[CALL_API]
 
-      expect(endpoint).to.equal('users')
+      expect(endpoint).to.equal('users/me')
       expect(method).to.equal('PUT')
       expect(body).to.equal(user)
       expect(types.length).to.equal(3)

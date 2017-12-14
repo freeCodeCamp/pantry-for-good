@@ -464,7 +464,7 @@ describe('User Api', function() {
         updated: user.updated
       }
 
-      await userReq.put('/api/users').send(requestBody).expect(200)
+      await userReq.put('/api/users/me').send(requestBody).expect(200)
 
       const updatedUser = await User.findById(user._id).lean()
       expect(updatedUser).to.have.property('email', requestBody.email)

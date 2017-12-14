@@ -29,6 +29,26 @@ export const getById = async function(req, res) {
 }
 
 /**
+ * Updating own profile
+ */
+export const updateProfile = async function(req, res) {
+  const user = req.user
+  extend(user, pick(req.body, ['firstName', 'lastName', 'email']))
+
+  if (!user.firstName || !user.lastName) throw new BadRequestError('First Name and Last Name are required')
+  
+  user.updated = Date.now()
+  user.displayName = user.firstName + ' ' + user.lastName
+
+  const sameEmail = await User.findOne({email: user.email}).lean()
+  if (sameEmail && sameEmail._id !== user._id)
+    throw new BadRequestError('Email address is taken')
+
+  await user.save()
+  res.json(user)
+}
+
+/**
  * Update user details
  */
 export const update = async function(req, res) {

@@ -32,7 +32,7 @@ export const clearFlags = () => ({type: CLEAR_FLAGS})
 
 export const setProfile = user => ({
   [CALL_API]: {
-    endpoint: 'users',
+    endpoint: 'users/me',
     method: 'PUT',
     body: user,
     types: [SET_PROFILE_REQUEST, SET_PROFILE_SUCCESS, SET_PROFILE_FAILURE]
