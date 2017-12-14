@@ -227,7 +227,7 @@ describe('Customer Api', function() {
     })
   })
 
-  describe('Admin routes', function() {
+  describe('GET /api/admin/customer', function() {
     it('lists customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
@@ -248,7 +248,9 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+  })
 
+  describe('DELETE /api/admin/customers/:customerId', function() {
     it('deletes customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
@@ -299,6 +301,38 @@ describe('Customer Api', function() {
         })
     })
 
+    it('When deleting a customer, it deletes its occurance in Volunteers.customers', async function() {
+      const customer1 = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      const customer2 = await Customer.create({
+        _id: 2,
+        firstName: 'Ben',
+        lastName: 'Franklin',
+        email: 'bf@example.com',
+      })
+
+      const volunteer = await Volunteer.create({
+        _id: 3,
+        customers: [customer1._id, customer2._id]
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      await request.delete(`/api/admin/customers/${customer1._id}`).expect(200)
+
+      const updatedVolunteer = await Volunteer.findById(volunteer._id).lean()
+      expect(updatedVolunteer.customers).to.eql([customer2._id])
+    })
+  })
+
+  describe('PUT /api/admin/customers/:customerId', function() {
     it('assigns customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
@@ -331,37 +365,5 @@ describe('Customer Api', function() {
           expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
     })
-
-    it('When deleting a customer, it deletes its occurance in Volunteers.customers', async function() {
-      const customer1 = await Customer.create({
-        _id: 1,
-        firstName: 'George',
-        lastName: 'Washington',
-        email: 'gw@example.com',
-      })
-
-      const customer2 = await Customer.create({
-        _id: 2,
-        firstName: 'Ben',
-        lastName: 'Franklin',
-        email: 'bf@example.com',
-      })
-
-      const volunteer = await Volunteer.create({
-        _id: 3,
-        customers: [customer1._id, customer2._id]
-      })
-
-      const testAdmin = createTestUser('admin', ADMIN_ROLE)
-      const session = await createUserSession(testAdmin)
-      const request = supertest.agent(session.app)
-
-      await request.delete(`/api/admin/customers/${customer1._id}`).expect(200)
-
-      const updatedVolunteer = await Volunteer.findById(volunteer._id).lean()
-      expect(updatedVolunteer.customers).to.eql([customer2._id])
-
-    })
-
   })
 })
