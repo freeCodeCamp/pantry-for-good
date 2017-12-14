@@ -44,8 +44,8 @@ export const update = async function(req, res) {
   user.updated = Date.now()
   user.displayName = user.firstName + ' ' + user.lastName
 
-  const sameEmail = await User.findOne({email: req.user.email}).lean()
-  if (sameEmail && sameEmail._id !== req.user._id)
+  const sameEmail = await User.findOne({email: user.email}).lean()
+  if (sameEmail && sameEmail._id !== user._id)
     throw new BadRequestError('Email address is taken')
 
   // Update admin status
