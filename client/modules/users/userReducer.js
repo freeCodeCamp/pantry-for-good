@@ -26,7 +26,7 @@ export const getUserById = userId => ({
 
 export const editUser = user => ({
   [CALL_API]: {
-    endpoint: 'users',
+    endpoint: `admin/users/${user._id}`,
     method: 'PUT',
     body: user,
     schema: userSchema,

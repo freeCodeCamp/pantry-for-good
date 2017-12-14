@@ -367,7 +367,7 @@ describe('User Api', function() {
         updated: user.updated
       }
 
-      await adminReq.put('/api/users').send(requestBody).expect(200)
+      await adminReq.put(`/api/admin/users/${user._id}`).send(requestBody).expect(200)
 
       const updatedUser = await User.findById(requestBody._id).lean()
       expect(updatedUser).to.have.property('_id', requestBody._id)
@@ -402,7 +402,7 @@ describe('User Api', function() {
         updated: user.updated
       }
 
-      return adminReq.put('/api/users').send(requestBody)
+      await adminReq.put(`/api/admin/users/${user._id}`).send(requestBody)
         .expect(200)
         .expect(res => {
           expect(res.body).to.be.an('object')
@@ -427,18 +427,17 @@ describe('User Api', function() {
       const adminSession = await createUserSession(adminUser)
       const adminReq = supertest.agent(adminSession.app)
 
-      await adminReq.put('/api/users')
-        .send({
-          _id: user._id,
-          isAdmin: true
-        })
+      await adminReq.put(`/api/admin/users/${user._id}`)
+        .send({ isAdmin: true })
         .expect(200)
 
       const updatedUser = await User.findById(user._id).lean()
       expect(updatedUser).to.have.property('roles')
       expect(updatedUser.roles).to.include(ADMIN_ROLE)
     })
+  })
 
+  describe('updating profile', function() {
     it('regular users can update their own profile', async function(){
       const user = await User.create({
         firstName: 'first',
@@ -472,73 +471,6 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('lastName', requestBody.lastName)
     })
 
-    xit('regular users cannot update another user profile', async function(){
-      const user1 = await User.create({
-        firstName: 'first',
-        lastName: 'last',
-        email: '123@example.com',
-        roles: [],
-        provider: 'local',
-        password: '12345678'
-      })
-
-      const user2 = await User.create({
-        firstName: 'first2',
-        lastName: 'last2',
-        email: '345@example.com',
-        roles: [],
-        provider: 'local',
-        password: '12345678'
-      })
-      const user2Session = await createUserSession(user2)
-      const user2Req = supertest.agent(user2Session.app)
-
-      const requestBody = {
-        _id: user1._id,
-        created: user1.created,
-        displayName: user1.displayName,
-        email: 'new.email@example.com',
-        firstName: 'newFirstName',
-        lastName: 'newLastName',
-        provider: user1.provider,
-        roles: user1.roles,
-        updated: user1.updated
-      }
-
-      await user2Req.put('/api/users').send(requestBody).expect(403)
-
-      const updatedUser = await User.findById(user1._id).lean()
-      expect(updatedUser).to.have.property('_id', user1._id)
-      expect(updatedUser).to.have.property('email', user1.email)
-      expect(updatedUser).to.have.property('firstName', user1.firstName)
-      expect(updatedUser).to.have.property('lastName', user1.lastName)
-    })
-
-    it('regular users cannot make themselves admins', async function(){
-      const user = await User.create({
-        firstName: 'first',
-        lastName: 'last',
-        email: '123@example.com',
-        roles: [],
-        provider: 'local',
-        password: '12345678'
-      })
-
-      const userSession = await createUserSession(user)
-      const userReq = supertest.agent(userSession.app)
-
-      await userReq.put('/api/users')
-        .send({
-          _id: user._id,
-          isAdmin: true
-        })
-        .expect(200)
-
-      const updatedUser = await User.findById(user._id).lean()
-      expect(updatedUser).to.have.property('roles')
-      expect(updatedUser.roles).to.not.include(ADMIN_ROLE)
-    })
-
     it('update ignores req.body properties: displayName, provider, salt, resetPasswordToken and roles', async function(){
       const user = await User.create({
         firstName: 'first',
@@ -567,7 +499,7 @@ describe('User Api', function() {
         roles: 'xxxxxx',
       }
 
-      await userReq.put('/api/users').send(requestBody).expect(200)
+      await userReq.put('/api/users/me').send(requestBody).expect(200)
 
       const userAfterUpdate = await User.findById(user._id)
 
@@ -579,6 +511,5 @@ describe('User Api', function() {
       expect(userAfterUpdate).to.have.property('resetPasswordToken', userBeforeUpdate.resetPasswordToken)
       expect(userAfterUpdate).to.have.property('resetPasswordExpires', userBeforeUpdate.resetPasswordExpires)
     })
-
   })
 })
