@@ -5,8 +5,8 @@ import config from '../../config'
 import {
   BadRequestError,
   NotFoundError,
-  UnauthorizedError,
-  ValidationError
+  UnauthorizedError
+  // ValidationError
 } from '../../lib/errors'
 import mailer from '../../lib/mail/mail-helpers'
 import User from '../../models/user'
@@ -26,23 +26,19 @@ export const forgot = async function(req, res) {
   // Lookup user by email
   if (!req.body.email) throw new BadRequestError('Email is required')
   const user = await User.findOne({email: req.body.email}).select('-salt -password')
-  if (!user) {
-    throw new ValidationError({email: 'No account with that email has been found'})
-  } else if (user.provider !== 'local') {
-    return res.status(400).send({
-      message: 'It seems like you signed up using your ' + user.provider + ' account'
-    })
-  } else {
+  if (user && user.provider !== 'local') {
+    if (user.provider === 'google') await mailer.sendPasswordGoogle(user)
+  } else if (user && user.provider === 'local') {
     user.resetPasswordToken = token
     user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
 
+    const port = process.env.NODE_ENV === 'production' ? '' : `:${config.port}`
+    const url = `${config.protocol}://${config.host}${port}/users/reset-password/${token}`
+
+    await mailer.sendPasswordReset(user, url)
     await user.save()
   }
 
-  const port = process.env.NODE_ENV === 'production' ? '' : `:${config.port}`
-  const url = `${config.protocol}://${config.host}${port}/users/reset-password/${token}`
-
-  await mailer.sendPasswordReset(user, url)
   res.send({message: 'Password reset email sent'})
 }
 
