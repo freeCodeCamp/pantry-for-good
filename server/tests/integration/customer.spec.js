@@ -6,7 +6,7 @@ import {
 } from '../../../common/constants'
 import Customer from '../../models/customer'
 import Volunteer from '../../models/volunteer'
-import {createUserSession, createTestUser} from '../helpers'
+import {createGuestSession, createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'
 import Questionnaire from '../../models/questionnaire'
 import Food, {FoodItem} from '../../models/food'
@@ -42,7 +42,14 @@ describe('Customer Api', function() {
     await resetDb()
   })
 
-  describe('User routes', function() {
+  describe('POST /api/customer', function() {
+    it('requires login', async function() {
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+
+      return request.post('/api/customer').expect(401)
+    })
+
     it('creates customers', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
@@ -73,6 +80,19 @@ describe('Customer Api', function() {
           expect(res.body).to.have.property('message', 'Unique field already exists')
         })
         .expect(400)
+    })
+  })
+
+  describe('GET /api/customer/:customerId', function() {
+    it('requires login', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+      
+      return request.get(`/api/customer/${customerSession.user._id}`).expect(401)
     })
 
     it('shows a customer', async function() {
@@ -125,6 +145,35 @@ describe('Customer Api', function() {
         .expect(403)
     })
 
+    it('shows any customer to admins', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const admin = createTestUser('admin', ADMIN_ROLE)
+
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const adminSession = await createUserSession(admin)
+      return supertest.agent(adminSession.app).get(`/api/customer/${customerSession.user._id}`)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('firstName', 'customer')
+        })
+        .expect(200)
+    })
+  })
+
+  describe('PUT /api/customer/:customerId', function() {
+    it('requires login', async function() {
+      const customer = createTestUser('customer', clientRoles.CUSTOMER)
+      const customerSession = await createUserSession(customer)
+      await supertest.agent(customerSession.app).post('/api/customer').send(customerSession.user)
+
+      const app = createGuestSession()
+      const request = supertest.agent(app)
+      
+      return request.put(`/api/customer/${customerSession.user._id}`).expect(401)
+    })
+
     it('updates customers', async function() {
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
       const {user, app} = await createUserSession(newCustomer)
@@ -146,9 +195,39 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+
+    it('cannot update other customers', async function() {
+      const {user: customer, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      await supertest.agent(customerApp).post('/api/customer').send(customer)
+
+      const {app} = await createUserSession(
+        createTestUser('user', clientRoles.CUSTOMER)
+      )
+      return supertest.agent(app).put(`/api/customer/${customer._id}`).expect(403)
+    })
+
+    it('updates other customers if admin', async function() {
+      const {user, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
+
+      const {app} = await createUserSession(
+        createTestUser('admin', ADMIN_ROLE)
+      )
+      return supertest.agent(app).put(`/api/customer/${customer._id}`)
+        .send({...customer, firstName: 'updated'})
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('firstName', 'updated')
+        })
+        .expect(200)
+    })
   })
 
-  describe('Admin routes', function() {
+  describe('GET /api/admin/customer', function() {
     it('lists customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
@@ -161,7 +240,7 @@ describe('Customer Api', function() {
       await customerReq.post('/api/customer')
         .send(customer.user)
 
-      return adminReq.get(`/api/customer`)
+      return adminReq.get(`/api/admin/customer`)
         .expect(res => {
           expect(res.body).to.be.an('array')
           expect(res.body).to.have.lengthOf(1)
@@ -169,21 +248,9 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+  })
 
-    it('rejects non-admins', async function() {
-      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
-      const customer = await createUserSession(newCustomer)
-
-      const customerReq = supertest.agent(customer.app)
-
-      return customerReq.get(`/api/customer`)
-        .expect(res => {
-          expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('message', 'User is not authorized')
-        })
-        .expect(403)
-    })
-
+  describe('DELETE /api/admin/customers/:customerId', function() {
     it('deletes customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
@@ -234,6 +301,38 @@ describe('Customer Api', function() {
         })
     })
 
+    it('When deleting a customer, it deletes its occurance in Volunteers.customers', async function() {
+      const customer1 = await Customer.create({
+        _id: 1,
+        firstName: 'George',
+        lastName: 'Washington',
+        email: 'gw@example.com',
+      })
+
+      const customer2 = await Customer.create({
+        _id: 2,
+        firstName: 'Ben',
+        lastName: 'Franklin',
+        email: 'bf@example.com',
+      })
+
+      const volunteer = await Volunteer.create({
+        _id: 3,
+        customers: [customer1._id, customer2._id]
+      })
+
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(testAdmin)
+      const request = supertest.agent(session.app)
+
+      await request.delete(`/api/admin/customers/${customer1._id}`).expect(200)
+
+      const updatedVolunteer = await Volunteer.findById(volunteer._id).lean()
+      expect(updatedVolunteer.customers).to.eql([customer2._id])
+    })
+  })
+
+  describe('PUT /api/admin/customers/:customerId', function() {
     it('assigns customers', async function() {
       const newAdmin = createTestUser('admin', ADMIN_ROLE)
       const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
@@ -266,37 +365,5 @@ describe('Customer Api', function() {
           expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
     })
-
-    it('When deleting a customer, it deletes its occurance in Volunteers.customers', async function() {
-      const customer1 = await Customer.create({
-        _id: 1,
-        firstName: 'George',
-        lastName: 'Washington',
-        email: 'gw@example.com',
-      })
-
-      const customer2 = await Customer.create({
-        _id: 2,
-        firstName: 'Ben',
-        lastName: 'Franklin',
-        email: 'bf@example.com',
-      })
-
-      const volunteer = await Volunteer.create({
-        _id: 3,
-        customers: [customer1._id, customer2._id]
-      })
-
-      const testAdmin = createTestUser('admin', ADMIN_ROLE)
-      const session = await createUserSession(testAdmin)
-      const request = supertest.agent(session.app)
-
-      await request.delete(`/api/admin/customers/${customer1._id}`).expect(200)
-
-      const updatedVolunteer = await Volunteer.findById(volunteer._id).lean()
-      expect(updatedVolunteer.customers).to.eql([customer2._id])
-
-    })
-
   })
 })

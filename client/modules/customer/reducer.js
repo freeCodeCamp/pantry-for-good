@@ -11,7 +11,7 @@ export const actions = crudActions('customer')
 
 export const loadCustomers = () => ({
   [CALL_API]: {
-    endpoint: 'customer',
+    endpoint: 'admin/customer',
     schema: arrayOfCustomers,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }

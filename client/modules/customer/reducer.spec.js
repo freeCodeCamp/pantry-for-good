@@ -12,7 +12,7 @@ describe('customer reducer', function() {
       expect(action).to.have.property(CALL_API)
       const {endpoint, schema, types} = action[CALL_API]
 
-      expect(endpoint).to.equal('customer')
+      expect(endpoint).to.equal('admin/customer')
       expect(schema).to.equal(arrayOfCustomers)
       expect(types.length).to.equal(3)
     })

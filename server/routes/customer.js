@@ -16,15 +16,15 @@ export default () => {
   const customerRouter = Router({mergeParams: true})
 
   customerRouter.route('/customer')
-    .get(requiresLogin, hasAuthorization, customerController.list)
     .post(requiresLogin, customerController.create)
 
   customerRouter.route('/customer/:customerId')
     .get(requiresLogin, hasAuthorization, customerController.read)
     .put(requiresLogin, hasAuthorization, canChangeStatus, customerController.update)
 
+  customerRouter.get('/admin/customer', customerController.list)
+
   customerRouter.route('/admin/customers/:customerId')
-    .get(customerController.read)
     .put(websocketMiddleware(saveSchema), customerController.update)
     .delete(websocketMiddleware(deleteSchema), customerController.delete)
 
