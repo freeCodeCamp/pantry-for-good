@@ -13,8 +13,9 @@ export default () => {
     .get(users.me)
     .put(requiresLogin, users.updateProfile)
 
-  userRouter.route('/users/:userId').get(users.getById)
-  userRouter.route('/admin/users/:userId').put(users.update)
+  userRouter.route('/admin/users/:userId')
+    .get(users.getById)
+    .put(users.update)
 
   // Setting up the users password api
   userRouter.route('/users/password').post(users.changePassword)

@@ -284,6 +284,13 @@ describe('User Api', function() {
   })
 
   describe('getting a user by userId', function () {
+    let request
+    beforeEach(async function() {
+      const user = createTestUser('admin', ADMIN_ROLE)
+      const session = await createUserSession(user)
+      request = supertest.agent(session.app)
+    })
+
     it('Gets the user', async function () {
       const user = await User.create({
         firstName: 'Frank',
@@ -300,8 +307,7 @@ describe('User Api', function() {
         provider: 'local'
       })
 
-      const request = supertest.agent(app())
-      return await request.get(`/api/users/${user._id}`)
+      await request.get(`/api/admin/users/${user._id}`)
         .expect(200)
         .expect(res => {
           expect(res.body).to.be.an('object')
@@ -329,8 +335,7 @@ describe('User Api', function() {
 
       await User.remove({_id: user._id})
 
-      const request = supertest.agent(app())
-      return await request.get(`/api/users/${user._id}`)
+      await request.get(`/api/admin/users/${user._id}`)
         .expect(400)
         .expect(res => {
           expect(res.body).to.be.an('object')
