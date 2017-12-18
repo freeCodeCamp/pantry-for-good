@@ -18,7 +18,7 @@ export const loadUsers = () => ({
 
 export const getUserById = userId => ({
   [CALL_API]: {
-    endpoint: `users/${userId}`,
+    endpoint: `admin/users/${userId}`,
     schema: userSchema,
     types: [actions.LOAD_ONE_REQUEST, actions.LOAD_ONE_SUCCESS, actions.LOAD_ONE_FAILURE]
   }
@@ -26,7 +26,7 @@ export const getUserById = userId => ({
 
 export const editUser = user => ({
   [CALL_API]: {
-    endpoint: 'users',
+    endpoint: `admin/users/${user._id}`,
     method: 'PUT',
     body: user,
     schema: userSchema,

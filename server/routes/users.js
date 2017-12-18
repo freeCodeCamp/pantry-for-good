@@ -8,11 +8,14 @@ const userRouter = Router({mergeParams: true})
 export default () => {
   userRouter.route('/users').get(users.list)
 
-  // Get the current logged on user
-  userRouter.route('/users/me').get(users.me)
+  // Current logged in user
+  userRouter.route('/users/me')
+    .get(users.me)
+    .put(requiresLogin, users.updateProfile)
 
-  userRouter.route('/users/:userId').get(users.getById)
-  userRouter.route('/users').put(requiresLogin, users.update)
+  userRouter.route('/admin/users/:userId')
+    .get(users.getById)
+    .put(users.update)
 
   // Setting up the users password api
   userRouter.route('/users/password').post(users.changePassword)
