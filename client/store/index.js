@@ -3,6 +3,7 @@ import {routerMiddleware as createRouterMiddleware} from 'react-router-redux'
 import thunk from 'redux-thunk'
 
 import apiMiddleware from './middleware/api'
+import notifyMiddleware from './middleware/notify'
 import reducer from './reducer'
 
 /**
@@ -11,7 +12,7 @@ import reducer from './reducer'
  */
 export default (history, socket) => {
   const routerMiddleware = createRouterMiddleware(history)
-  const middleware = [thunk, routerMiddleware, apiMiddleware(socket)]
+  const middleware = [thunk, routerMiddleware, apiMiddleware(socket), notifyMiddleware]
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 

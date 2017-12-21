@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
+import Notify from 'react-s-alert'
 
 import {ADMIN_ROLE} from '../common/constants'
 import selectors from './store/selectors'
@@ -53,6 +54,14 @@ class Application extends Component {
         <div className={`skin-blue fixed ${!isAdmin && 'layout-top-nav'}`}>
           <div className='wrapper'>
             <Router history={this.props.history} />
+            <Notify
+              position={'top'}
+              offset={0}
+              timeout={5000}
+              effect={'flip'}
+              stack={{limit: 3}}
+              html={true}
+            />
           </div>
         </div>
       )
@@ -91,4 +100,3 @@ function Loading() {
     </div>
   )
 }
-

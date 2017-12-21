@@ -14,6 +14,8 @@ import 'admin-lte/dist/css/skins/skin-blue.min.css'
 import 'jquery'
 import 'admin-lte/plugins/slimScroll/jquery.slimscroll'
 import 'admin-lte/plugins/fastclick/fastclick'
+import 'react-s-alert/dist/s-alert-default.css'
+import 'react-s-alert/dist/s-alert-css-effects/flip.css'
 
 import './application.css'
 import './modules/core/css/core.css'
