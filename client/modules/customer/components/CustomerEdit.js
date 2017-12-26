@@ -53,8 +53,9 @@ class CustomerEdit extends Component {
     this.props.loadFoods()
   }
 
-  saveCustomer = form =>
-    this.props.saveCustomer(fromForm(form), this.isAdmin)
+  saveCustomer = form => {
+    return this.props.saveCustomer(fromForm(form), this.isAdmin)
+  }
 
   saveCustomerStatus = status => () => {
     const customer = this.props.getCustomer(this.props.customerId)

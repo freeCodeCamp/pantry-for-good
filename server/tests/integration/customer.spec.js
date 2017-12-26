@@ -91,7 +91,7 @@ describe('Customer Api', function() {
 
       const app = createGuestSession()
       const request = supertest.agent(app)
-      
+
       return request.get(`/api/customer/${customerSession.user._id}`).expect(401)
     })
 
@@ -170,7 +170,7 @@ describe('Customer Api', function() {
 
       const app = createGuestSession()
       const request = supertest.agent(app)
-      
+
       return request.put(`/api/customer/${customerSession.user._id}`).expect(401)
     })
 
@@ -225,6 +225,23 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   })
 
   describe('GET /api/admin/customer', function() {
@@ -366,4 +383,44 @@ describe('Customer Api', function() {
         })
     })
   })
+
+  describe('customers notifications', function(){
+
+    /*it('admin notifications for a customer creation', async function() {
+      const {app} = await createUserSession(
+        createTestUser('admin', ADMIN_ROLE)
+      )
+      const {user, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      //const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
+
+      const admin = (await supertest.agent(app).post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
+
+      //return expect(admin.notifications[0].message).to.equal(`Customer ${customer.firstName} ${customer.lastName} was created!`)
+      return expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
+    })*/
+
+
+
+    it('admin notifications for a customer creation and update', async function() {
+      const {app} = await createUserSession(
+        createTestUser('admin', ADMIN_ROLE)
+      )
+      const {user, app: customerApp} = await createUserSession(
+        createTestUser('customer', clientRoles.CUSTOMER)
+      )
+      const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
+      await supertest.agent(app).put(`/api/customer/${customer._id}`).send({...customer, firstName: 'updated'})
+
+      const admin = (await supertest.agent(app).post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
+      //console.log(admin)
+      return expect(admin.notifications[1].message).to.equal(`Customer updated test was updated!`) && expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
+    })
+
+
+
+  })
+
+
 })

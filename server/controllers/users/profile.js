@@ -36,9 +36,26 @@ export const updateProfile = async function(req, res) {
   extend(user, pick(req.body, ['firstName', 'lastName', 'email']))
 
   if (!user.firstName || !user.lastName) throw new BadRequestError('First Name and Last Name are required')
-  
+
   user.updated = Date.now()
   user.displayName = user.firstName + ' ' + user.lastName
+
+  const sameEmail = await User.findOne({email: user.email}).lean()
+  if (sameEmail && sameEmail._id !== user._id)
+    throw new BadRequestError('Email address is taken')
+
+  await user.save()
+  res.json(user)
+}
+
+/**
+ * Updating own notifications profile
+ */
+export const updateNotifications = async function(req, res) {
+  const user = req.user
+  extend(user, pick(req.body, ['notifications']))
+
+  user.updated = Date.now()
 
   const sameEmail = await User.findOne({email: user.email}).lean()
   if (sameEmail && sameEmail._id !== user._id)
@@ -91,4 +108,27 @@ export const me = async function(req, res) {
 
   const user = await User.findById(req.session.passport.user)
   return res.json(user)
+}
+
+/**
+ * List own notifications profile
+ */
+export const listNotifications = async function(req, res) {
+  const user = req.user
+  res.json(user.notifications)
+}
+
+/**
+ * Remove own notification profile
+ */
+export const removeNotification = async function(req, res) {
+  //console.log('removeNotification')
+  const id = req.originalUrl.split('?id=')[1]
+  const user = req.user
+  if (id !== null && id !== undefined && id !== "") user.notifications.splice(id,1)
+  else if (id === null || id === undefined || id === "") user.notifications = []
+  User.findOneAndUpdate({ '_id': user._id },
+    { 'notifications': user.notifications })
+    .exec()
+  res.json(user.notifications)
 }

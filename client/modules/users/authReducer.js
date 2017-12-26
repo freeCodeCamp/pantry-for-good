@@ -2,6 +2,12 @@ import {get} from 'lodash'
 
 import {CALL_API} from '../../store/middleware/api'
 
+import {denormalize} from 'normalizr'
+import {createSelector} from 'reselect'
+import { arrayOfNotifications, notification as notificationSchema } from '../../../common/schemas'
+import { crudActions} from '../../store/utils'
+export const actions = crudActions('auth')
+
 export const CLEAR_USER = 'auth/CLEAR_USER'
 export const CLEAR_FLAGS = 'auth/CLEAR_FLAGS'
 export const SET_PROFILE_REQUEST = 'auth/SET_PROFILE_REQUEST'
@@ -25,10 +31,39 @@ export const SIGNIN_FAILURE = 'auth/SIGNIN_FAILURE'
 export const LOAD_REQUEST = 'auth/LOAD_REQUEST'
 export const LOAD_SUCCESS = 'auth/LOAD_SUCCESS'
 export const LOAD_FAILURE = 'auth/LOAD_FAILURE'
+export const LOAD_NOTIFICATION_REQUEST = 'auth/LOAD_NOTIFICATION_REQUEST'
+export const LOAD_NOTIFICATION_SUCCESS = 'auth/LOAD_NOTIFICATION_SUCCESS'
+export const LOAD_NOTIFICATION_FAILURE = 'auth/LOAD_NOTIFICATION_FAILURE'
 
 export const clearUser = () => ({type: CLEAR_USER})
 
 export const clearFlags = () => ({type: CLEAR_FLAGS})
+
+export const loadNotifications = () => ({
+  [CALL_API]: {
+    endpoint: '/users/me/notifications',
+    schema: arrayOfNotifications,
+    types: [LOAD_NOTIFICATION_REQUEST, LOAD_NOTIFICATION_SUCCESS, LOAD_NOTIFICATION_FAILURE]
+  }
+})
+
+export const deleteNotification = id => ({
+  [CALL_API]: {
+    endpoint: `/users/me/notifications?id=${id}`,
+    method: 'DELETE',
+    schema: notificationSchema,
+    types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
+  }
+})
+
+export const deleteAllNotifications = () => ({
+  [CALL_API]: {
+    endpoint: `/users/me/notifications?id=`,
+    method: 'DELETE',
+    schema: notificationSchema,
+    types: [actions.DELETE_REQUEST, actions.DELETE_SUCCESS, actions.DELETE_FAILURE]
+  }
+})
 
 export const setProfile = user => ({
   [CALL_API]: {
@@ -91,6 +126,31 @@ export const loadUser = () => ({
   }
 })
 
+const removeNotification = (state, actionIndex) => {
+  const notifications = [
+    ...state.user.notifications.slice(0, actionIndex),
+    ...state.user.notifications.slice(actionIndex + 1),
+  ]
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      notifications
+    }
+  }
+}
+
+const removeAllNotification = state => {
+  const notifications = []
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      notifications
+    }
+  }
+}
+
 export default (state = {user: null}, action) => {
   switch (action.type) {
     case CLEAR_USER:
@@ -150,13 +210,30 @@ export default (state = {user: null}, action) => {
         success: null,
         error: action.error
       }
+    case `DEL_NOTIFICATION`:
+      return removeNotification(state, action.index)
+    case `DEL_ALL_NOTIFICATIONS`:
+      return removeAllNotification(state)
     default: return state
   }
 }
 
-export const createSelectors = path => ({
-  getUser: state => get(state, path).user,
-  fetching: state => get(state, path).fetching,
-  error: state => get(state, path).error,
-  success: state => get(state, path).success
-})
+export const createSelectors = path => {
+  const getEntities = state => state.entities
+  return {
+    getAllNotifications: createSelector(
+      state => get(state, path).user.notifications,
+      getEntities,
+      (notifications, entities) =>
+        denormalize({notifications}, {notifications: arrayOfNotifications}, entities).notifications
+    ),
+    getUser: state => get(state, path).user,
+    fetching: state => get(state, path).fetching,
+    loading: state => get(state, path).fetching,
+    loadError: state => get(state, path).fetchError,
+    error: state => get(state, path).error,
+    success: state => get(state, path).success,
+    saving: state => get(state, path).saving,
+    saveError: state => get(state, path).saveError
+  }
+}

@@ -13,6 +13,10 @@ export default () => {
     .get(users.me)
     .put(requiresLogin, users.updateProfile)
 
+  userRouter.route('/users/me/notifications')
+    .get(requiresLogin, users.listNotifications)
+    .delete(requiresLogin, users.removeNotification)
+
   userRouter.route('/admin/users/:userId')
     .get(users.getById)
     .put(users.update)

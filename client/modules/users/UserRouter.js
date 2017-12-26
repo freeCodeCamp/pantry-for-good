@@ -16,12 +16,19 @@ import requireRole from '../../components/router/requireRole'
 import SwitchWithNotFound from '../../components/router/SwitchWithNotFound'
 import userOrRedirect from '../../components/router/userOrRedirect'
 
+import Notifications from './components/Notifications'
+
 import './css/users.css'
 
 const IsAdmin = requireRole([ADMIN_ROLE])
 
 const UserRouter = ({match}) =>
   <SwitchWithNotFound>
+    <Route
+      path={`${match.url}/notifications`}
+      exact
+      component={Notifications}
+    />
     <Route
       path={`${match.url}/list`}
       exact
