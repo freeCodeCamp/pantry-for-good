@@ -66,8 +66,11 @@ class Packages extends Component {
             pagination
           >
             <TableHeaderColumn dataField="_id" dataSort>_id</TableHeaderColumn>
-            <TableHeaderColumn  dataField="customer" dataFormat={customer => customer._id} >
-              Customer
+            <TableHeaderColumn  dataField="customer" width="70px" dataFormat={customer => customer._id} >
+              #
+            </TableHeaderColumn>
+            <TableHeaderColumn  dataField="customer" width="125px" dataFormat={customer => customer.fullName} >
+              Customer Name
             </TableHeaderColumn>
             <TableHeaderColumn dataField="datePacked" dataFormat={datePacked => moment(datePacked).format("MM/DD/YYYY")} >
               Date Packed
