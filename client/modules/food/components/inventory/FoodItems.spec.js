@@ -21,61 +21,17 @@ describe('FoodItems', () => {
 
   it('sets state when constructed', () => {
     const wrapper = shallow(<FoodItems {...props} />)
-    expect(wrapper.state().showModal).to.equal(false)
+    expect(wrapper.state().modalType).to.equal(undefined)
     expect(wrapper.state().editModalFood).to.equal(undefined)
-    expect(wrapper.state().modalInputFields).to.deep.equal({ name: "", categoryId: "", quantity: "" })
-    expect(wrapper.state().validInput).to.equal(false)
-    expect(wrapper.state().initialModalInputFields).to.deep.equal({ name: "", categoryId: "", quantity: "" })
+    expect(wrapper.state().searchText).to.equal("")
   })
 
-  it('componentWillReceiveProps closes modal if a save is complete', () => {
-    const wrapper = shallow(<FoodItems {...props} />)
-    wrapper.setProps({ saving: true })
-    const instance = wrapper.instance()
-    sinon.spy(instance, "closeModal")
-    instance.setState({ showModal: true })
-    const nextProps = {
-      saving: false,
-      saveError: undefined
-    }
-    instance.componentWillReceiveProps(nextProps)
-    expect(instance.closeModal.called).to.be.true
-  })
-
-  it('componentWillReceiveProps will not close a modal if in process of saving', () => {
-    const wrapper = shallow(<FoodItems {...props} />)
-    wrapper.setProps({ saving: false })
-    const instance = wrapper.instance()
-    sinon.spy(instance, "closeModal")
-    instance.setState({ showModal: true })
-    const nextProps = {
-      saving: true,
-    }
-    instance.componentWillReceiveProps(nextProps)
-    expect(instance.closeModal.called).to.be.false
-  })
-
-  it('componentWillReceiveProps will not close a modal if there is a save error', () => {
-    const wrapper = shallow(<FoodItems {...props} />)
-    wrapper.setProps({ saving: true })
-    const instance = wrapper.instance()
-    sinon.spy(instance, "closeModal")
-    instance.setState({ showModal: true })
-    const nextProps = {
-      saving: false,
-      saveError: { message: 'error' }
-    }
-    instance.componentWillReceiveProps(nextProps)
-    expect(instance.closeModal.called).to.be.false
-  })
-
-  it('openModal sets the showModal, editModalFood and modalInput fields to add mode', () => {
+  it('openModal sets the showModal and editModalFood to add mode', () => {
     const wrapper = shallow(<FoodItems {...props} />)
     const instance = wrapper.instance()
     instance.openModal()()
-    expect(instance.state.showModal).to.eql('Add')
+    expect(instance.state.modalType).to.eql('Add')
     expect(instance.state.editModalFood).to.equal(undefined)
-    expect(instance.state.modalInputFields).to.deep.equal({ name: "", categoryId: "", quantity: "" })
   })
 
   it('openModal sets the showModal, editModalFood and modalInput fields to edit mode', () => {
@@ -88,9 +44,8 @@ describe('FoodItems', () => {
     })
     const instance = wrapper.instance()
     instance.openModal('456')()
-    expect(instance.state.showModal).to.eql('Edit')
+    expect(instance.state.modalType).to.eql('Edit')
     expect(instance.state.editModalFood).to.deep.equal({ _id: '456', name: 'banana', quantity: 13, categoryId: '66' })
-    expect(instance.state.modalInputFields).to.deep.equal({ name: "banana", categoryId: "66", quantity: "13" })
   })
 
   it('openModal calls props.clearFlags', () => {
@@ -100,7 +55,7 @@ describe('FoodItems', () => {
     expect(instance.props.clearFlags.called).to.be.true
   })
 
-  it('closeModal sets the showModal, editModalFood, modalInput and validInput fields', () => {
+  it('closeModal sets the modalType and editModalFood to undefined', () => {
     const wrapper = shallow(<FoodItems {...props} />)
     wrapper.setProps({
       foodItems: [
@@ -110,10 +65,8 @@ describe('FoodItems', () => {
     const instance = wrapper.instance()
     instance.openModal('456')()
     instance.closeModal()
-    expect(instance.state.showModal).to.be.false
+    expect(instance.state.modalType).to.equal(undefined)
     expect(instance.state.editModalFood).to.equal(undefined)
-    expect(instance.state.modalInputFields).to.deep.equal({ name: "", categoryId: "", quantity: "" })
-    expect(instance.state.validInput).to.be.false
   })
 
   it('closeModal calls props.clearFlags', () => {
@@ -259,363 +212,18 @@ describe('FoodItems', () => {
     })
   })
 
-  describe('getValidationState', () => {
-    it('foodName() returns null for a valid name', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc' } })
-      expect(instance.getValidationState.foodName()).to.be.null
-    })
-
-    it('foodName() returns error for an empty string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: '' }, touched: { foodName: true } })
-      expect(instance.getValidationState.foodName()).to.equal('error')
-    })
-
-    it('foodName() returns error for a whitespace string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: ' ' }, touched: { foodName: true } })
-      expect(instance.getValidationState.foodName()).to.equal('error')
-    })
-
-    it('foodQuantity() returns null for 0', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: '0' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.be.null
-    })
-
-    it('foodQuantity() returns null for 1', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: '1' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.be.null
-    })
-
-    it('foodQuantity() returns null for 623', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: '623' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.be.null
-    })
-
-    it('foodQuantity() returns error for -1', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: '-1' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.equal('error')
-    })
-
-    it('foodQuantity() returns error for an empty string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: '' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.equal('error')
-    })
-
-    it('foodQuantity() returns error for a non-numeric string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', quantity: 'a1' }, touched: { foodQuantity: true } })
-      expect(instance.getValidationState.foodQuantity()).to.equal('error')
-    })
-
-    it('foodCategory() returns null for a non-empty string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', categoryId: '11' }, touched: { foodCategory: true } })
-      expect(instance.getValidationState.foodCategory()).to.be.null
-    })
-
-    it('foodCategory() returns error for an empty string', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      instance.setState({ modalInputFields: { name: 'abc', categoryId: '' }, touched: { foodCategory: true } })
-      expect(instance.getValidationState.foodCategory()).to.equal('error')
-    })
-
-    it('getAll() returns true when name, category and quantity are all valid', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      const state = {
-        modalInputFields: { name: 'abc', categoryId: '12', quantity: '5' },
-        touched: { foodName: true, foodCategory: true, foodQuantity: true }
-      }
-      instance.setState(state)
-      expect(instance.getValidationState.all()).to.be.true
-    })
-
-    it('getAll() returns false when name is not valid', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      const state = {
-        modalInputFields: { name: '', categoryId: '12', quantity: '5' },
-        touched: { foodName: true, foodCategory: true, foodQuantity: true }
-      }
-      instance.setState(state)
-      expect(instance.getValidationState.all()).to.be.false
-    })
-
-    it('getAll() returns false when category is not valid', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      const state = {
-        modalInputFields: { name: 'abc', categoryId: '', quantity: '5' },
-        touched: { foodName: true, foodCategory: true, foodQuantity: true }
-      }
-      instance.setState(state)
-      expect(instance.getValidationState.all()).to.be.false
-    })
-
-    it('getAll() returns false when quantity is not valid', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      const state = {
-        modalInputFields: { name: 'abc', categoryId: '12', quantity: '-5' },
-        touched: { foodName: true, foodCategory: true, foodQuantity: true }
-      }
-      instance.setState(state)
-      expect(instance.getValidationState.all()).to.be.false
-    })
-
-  })
-
-  describe('validate()', () => {
-    it('sets state.validInput true when getValidationState.all() and checkChanged()', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      sinon.stub(instance.getValidationState, "all").callsFake(() => true)
-      sinon.stub(instance, "checkChanged").callsFake(() => true)
-      instance.validate()
-      expect(instance.state.validInput).to.equal(true)
-    })
-
-    it('sets state.validInput false when !getValidationState.all() and checkChanged()', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      sinon.stub(instance.getValidationState, "all").callsFake(() => false)
-      sinon.stub(instance, "checkChanged").callsFake(() => true)
-      instance.validate()
-      expect(instance.state.validInput).to.equal(false)
-    })
-
-    it('sets state.validInput false when getValidationState.all() and !checkChanged()', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      sinon.stub(instance.getValidationState, "all").callsFake(() => true)
-      sinon.stub(instance, "checkChanged").callsFake(() => false)
-      instance.validate()
-      expect(instance.state.validInput).to.equal(false)
-    })
-
-    it('sets state.validInput false when !getValidationState.all() and !checkChanged()', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      sinon.stub(instance.getValidationState, "all").callsFake(() => false)
-      sinon.stub(instance, "checkChanged").callsFake(() => false)
-      instance.validate()
-      expect(instance.state.validInput).to.equal(false)
-    })
-  })
-
-  describe('touch()', () => {
-    it('touch.foodName() sets state touched.foodName to true', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.setState({ touched: { foodName: false } })
-      instance.touch.foodName()
-      expect(instance.state.touched.foodName).to.be.true
-    })
-
-    it('touch.foodCategory() sets state touched.foodCategory to true', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.setState({ touched: { foodCategory: false } })
-      instance.touch.foodCategory()
-      expect(instance.state.touched.foodCategory).to.be.true
-    })
-
-    it('touch.foodQuantity() sets state touched.foodQuantity to true', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.setState({ touched: { foodQuantity: false } })
-      instance.touch.foodQuantity()
-      expect(instance.state.touched.foodQuantity).to.be.true
-    })
-  })
-
-  describe('checkChanged()', () => {
-    it('is false when modalInputFields are the same as initialModalInputFields', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      const state = {
-        initialModalInputFields: { name: 'abc', quantity: '5' },
-        modalInputFields: { name: 'abc', quantity: '5' }
-      }
-      instance.setState(state)
-      expect(instance.checkChanged()).to.be.false
-    })
-
-    it('is true when modalInputFields differ from initialModalInputFields', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      const state = {
-        initialModalInputFields: { name: 'abc', quantity: '5' },
-        modalInputFields: { name: 'abc', quantity: '15' }
-      }
-      instance.setState(state)
-      expect(instance.checkChanged()).to.be.true
-    })
-  })
-
-  describe('handleChange', () => {
-    it('foodName() when called with a string sets state.modalInputFields.name', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.handleChange.foodName('abcde')
-      expect(instance.state.modalInputFields.name).to.equal('abcde')
-    })
-
-    it('foodName() when called with a string calls validate()', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      sinon.spy(instance, "validate")
-      instance.handleChange.foodName('abcde')
-      expect(instance.validate.called).to.be.true
-    })
-
-    it('foodName() when called with an object calls this.quantity.focus()', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.quantity = { focus: sinon.spy() }
-      instance.handleChange.foodName({ name: 'xyz', categoryId: '5832' })
-      expect(instance.quantity.focus.called).to.be.true
-
-    })
-
-    it('foodName() when called with an object sets name and categoryId', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.quantity = { focus: () => { } }
-      instance.handleChange.foodName({ name: 'xyz', categoryId: '5832' })
-      expect(instance.state.modalInputFields.name).to.equal('xyz')
-      expect(instance.state.modalInputFields.categoryId).to.equal('5832')
-    })
-
-    it('foodName() when called with null sets state.modalInputFields.name to ""', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.setState({ modalInputFields: { name: 'abc' } })
-      instance.handleChange.foodName(null)
-      expect(instance.state.modalInputFields.name).to.equal("")
-    })
-
-    it('foodName() when called with null calls validate()', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      sinon.spy(instance, "validate")
-      instance.handleChange.foodName(null)
-      expect(instance.validate.called).to.be.true
-    })
-
-    it('foodQuantity() sets state.modalInputFields.quantity', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.handleChange.foodQuantity({ target: { value: '20' } })
-      expect(instance.state.modalInputFields.quantity).to.equal('20')
-    })
-
-    it('foodQuantity() calls validate()', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      sinon.spy(instance, "validate")
-      instance.handleChange.foodQuantity({ target: { value: '20' } })
-      expect(instance.validate.called).to.be.true
-    })
-
-    it('foodCategory() sets state.modalInputFields.categoryId', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      instance.handleChange.foodCategory({ target: { value: '3732' } })
-      expect(instance.state.modalInputFields.categoryId).to.equal('3732')
-    })
-
-    it('foodCategory() calls validate()', () => {
-      const instance = shallow(<FoodItems {...props} />).instance()
-      sinon.spy(instance, "validate")
-      instance.handleChange.foodCategory({ target: { value: '42623' } })
-      expect(instance.validate.called).to.be.true
-    })
-
-
-  })
-
-  describe('saveFood()', () => {
-    it('Calls props.saveFoodItem() when an edit modal is open', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      wrapper.setProps({ saveFoodItem: sinon.spy() })
-      const instance = wrapper.instance()
-      instance.setState({
-        showModal: 'Edit',
-        editModalFood: { id: '123', categoryId: '456' },
-        modalInputFields: { name: 'abc', categoryId: '789', quantity: '42' }
-      })
-      instance.saveFood()
-      expect(instance.props.saveFoodItem.called).to.be.true
-      expect(instance.props.saveFoodItem.args[0][0]).to.equal('456')
-      expect(instance.props.saveFoodItem.args[0][1]).to.deep.equal({ id: '123', name: 'abc', categoryId: '789', quantity: '42' })
-    })
-
-    it('Calls props.saveFoodItem() when an add modal is open', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      wrapper.setProps({ saveFoodItem: sinon.spy() })
-      const instance = wrapper.instance()
-      instance.setState({
-        showModal: 'Add',
-        modalInputFields: { name: 'abc', categoryId: '123', quantity: '42' }
-      })
-      instance.saveFood()
-      expect(instance.props.saveFoodItem.called).to.be.true
-      expect(instance.props.saveFoodItem.args[0][0]).to.equal('123')
-      expect(instance.props.saveFoodItem.args[0][1]).to.deep.equal({ name: 'abc', categoryId: '123', quantity: '42' })
-    })
-  })
-
-  describe('handleSubmit()', () => {
-    it('calls saveFood when validInput and not saving', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      wrapper.setProps({ saving: false })
-      const instance = wrapper.instance()
-      sinon.spy(instance, "saveFood")
-      instance.setState({ validInput: true })
-      const e = { preventDefault: () => { } }
-      instance.handelModalSubmit(e)
-      expect(instance.saveFood.called).to.be.true
-    })
-
-    it('does not call saveFood when not validInput', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      const instance = wrapper.instance()
-      sinon.spy(instance, "saveFood")
-      instance.setState({ validInput: false })
-      const e = { preventDefault: () => { } }
-      instance.handelModalSubmit(e)
-      expect(instance.saveFood.called).to.be.false
-    })
-    it('does not call saveFood when saving', () => {
-      const wrapper = shallow(<FoodItems {...props} />)
-      wrapper.setProps({ saving: true })
-      const instance = wrapper.instance()
-      sinon.spy(instance, "saveFood")
-      instance.setState({ validInput: true })
-      const e = { preventDefault: () => { } }
-      instance.handelModalSubmit(e)
-      expect(instance.saveFood.called).to.be.false
-    })
-
-  })
-
   describe('render()', () => {
-    it('hides modal when state.showModal is false, shows when "Add" or "Edit"', () => {
+    it('hides modal when state.modalType is undefined, shows when "Add" or "Edit"', () => {
       let wrapper = mount(<FoodItems {...props} />)
 
       let modal = wrapper.find(Modal)
       expect(modal.length).to.equal(1)
       expect(modal.props().show).to.be.false
-      wrapper.setState({ showModal: 'Add' })
+      wrapper.setState({ modalType: 'Add' })
       expect(modal.props().show).to.be.true
-      wrapper.setState({ showModal: false })
+      wrapper.setState({ modalType: undefined })
       expect(modal.props().show).to.be.false
-      wrapper.setState({ showModal: 'Edit' })
+      wrapper.setState({ modalType: 'Edit' })
       expect(modal.props().show).to.be.true
     })
 
