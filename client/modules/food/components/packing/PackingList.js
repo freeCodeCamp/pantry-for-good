@@ -5,7 +5,7 @@ const  MIN_DAYS_SINCE_LAST_PACKED_TO_SHOW = 7
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {compose, withProps} from 'recompose'
-import {Button} from 'react-bootstrap'
+import {Button, Tooltip, OverlayTrigger} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
@@ -75,7 +75,18 @@ class PackingList extends Component {
     this.props.packSelected(packages)
   }
 
-  getItemList = items => items.map(i => i.name).join(', ')
+  tooltip = content => (
+    <Tooltip id="tooltip">{content}</Tooltip>
+  )
+
+  getItemList = items => {
+    const content = items.map(i => i.name).join(', ')
+    return (
+      <OverlayTrigger placement="top" overlay={this.tooltip(content)}>
+        <div>{content}</div>
+      </OverlayTrigger>
+    )
+  }
 
   select(props) {
     const {type, checked, disabled, onChange, rowIndex} = props
