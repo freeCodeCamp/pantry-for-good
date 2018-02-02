@@ -1,4 +1,4 @@
-import {extend, intersection} from 'lodash'
+import {extend, intersection, some} from 'lodash'
 
 import {
   BadRequestError,
@@ -6,11 +6,10 @@ import {
   NotFoundError,
   ValidationError
 } from '../lib/errors'
-import {ADMIN_ROLE, clientRoles, volunteerRoles} from '../../common/constants'
+import {ADMIN_ROLE, volunteerRoles} from '../../common/constants'
 import Customer from '../models/customer'
 import Food from '../models/food'
 
-const {CUSTOMER} = clientRoles
 const {INVENTORY, SCHEDULE} = volunteerRoles
 
 export default {
@@ -70,7 +69,7 @@ export default {
    * List of Food categories
    */
   async list(req, res) {
-    authorizeByRole(req.user.roles, [CUSTOMER, INVENTORY, SCHEDULE])
+    authorizeByRole(req.user.roles)
 
     const foods = await Food.find()
       .sort('category')
@@ -160,10 +159,14 @@ export default {
   }
 }
 
+function isAdmin(role) {
+  return role === ADMIN_ROLE
+}
+
 function authorizeByRole(userRoles, roles = []) {
-  if (!intersection(userRoles, [...roles, ADMIN_ROLE]).length) {
-    throw new ForbiddenError
-  }
+  if (!some(userRoles, isAdmin))
+    if (intersection(userRoles, roles).length !== roles.length)
+      throw new ForbiddenError
 }
 
 /**
