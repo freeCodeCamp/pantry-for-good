@@ -44,3 +44,25 @@ input[type="checkbox"]:not(:disabled) + span:hover::before {
 .checkbox-inline {
   padding: 0;
 }
+
+/* s-alert */
+.s-alert-box {
+  padding: 16px;
+  z-index: 1030;
+}
+.s-alert-info {
+    background: #3c8dbc;
+    color: #fff;
+}
+.s-alert-success {
+    background: #00a65a;
+    color: #fff;
+}
+.s-alert-warning {
+    background: #f39c12;
+    color: #fff;
+}
+.s-alert-error {
+    background: #dd4b39;
+    color: #fff;
+}
