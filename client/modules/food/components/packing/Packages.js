@@ -8,7 +8,7 @@ import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-boot
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
-import {listPackages, unpackPackage} from '../../reducers/packing'
+import {listPackages, unpackPackage, receivedPackage} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 import moment from 'moment'
@@ -16,18 +16,32 @@ import moment from 'moment'
 const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
   error: selectors.food.packing.loadError(state),
-  packages: selectors.food.packing.packages(state)
+  packages: selectors.food.packing.packages(state),
+  
 })
 
 const mapDispatchToProps = dispatch => ({
   load: () => dispatch(listPackages()),
-  unpack: packageId => dispatch(unpackPackage(packageId))
+  unpack: packageId => dispatch(unpackPackage(packageId)),
+  received: singlePackage => dispatch(receivedPackage(singlePackage)),
 })
 
 class Packages extends Component {
+  constructor() {
+    super()
+    this.state={
+      activePackage: {}
+    }
+  }
 
   componentWillMount() {
     this.props.load()
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.activePackage !== prevState.activePackage) {
+      this.props.load()
+    }
   }
 
   /**
@@ -39,14 +53,37 @@ class Packages extends Component {
 
   renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
-  getActionButtons = (_, foodPackage) =>
-    <div>
+  getActionButtons = (_, foodPackage) => {
+    return (
       <Button bsStyle="danger"
         onClick={() => this.props.unpack(foodPackage._id)}
+        disabled={foodPackage.status === 'Received'}
       ><i className="fa fa-undo" /> Unpack</Button>
-    </div>
-
+    )
+  }
+    
+  getPackageButton = (_, foodPackage) => {
+    return (
+      <div>
+        <Button bsStyle="success"
+          onClick={this.onReceivedClick}
+          value={foodPackage._id}
+          disabled={foodPackage.status === 'Received'}
+        > Received</Button>
+      </div>)
+  }
+  
+  onReceivedClick = e => {
+    this.setState({activePackage: e.target.value})
+    this.updatePackageStatus(e.target.value)
+  }
+  
+  updatePackageStatus = id => {
+    this.props.received(id)
+  }
+  
   render() {
+    
     const {loading, error, packages} = this.props
     return (
       <Box>
@@ -84,9 +121,8 @@ class Packages extends Component {
             <TableHeaderColumn dataField="status" >
               Status
             </TableHeaderColumn>
-            <TableHeaderColumn
-              dataFormat={this.getActionButtons}
-            />
+            <TableHeaderColumn dataFormat={this.getActionButtons} />
+            <TableHeaderColumn dataFormat={this.getPackageButton} />
           </BootstrapTable>
         </BoxBody>
       </Box>

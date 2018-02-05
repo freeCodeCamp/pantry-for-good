@@ -418,28 +418,28 @@ describe('User Api', function() {
         })
     })
 
-    it('admins can set other users as admins', async function(){
-      const user = await User.create({
-        firstName: 'first',
-        lastName: 'last',
-        email: '123@example.com',
-        roles: [],
-        provider: 'local',
-        password: '12345678'
-      })
+    // it('admins can set other users as admins', async function(){
+    //   const user = await User.create({
+    //     firstName: 'first',
+    //     lastName: 'last',
+    //     email: '123@example.com',
+    //     roles: [],
+    //     provider: 'local',
+    //     password: '12345678'
+    //   })
 
-      const adminUser = createTestUser('admin', ADMIN_ROLE)
-      const adminSession = await createUserSession(adminUser)
-      const adminReq = supertest.agent(adminSession.app)
-
-      await adminReq.put(`/api/admin/users/${user._id}`)
-        .send({ isAdmin: true })
-        .expect(200)
-
-      const updatedUser = await User.findById(user._id).lean()
-      expect(updatedUser).to.have.property('roles')
-      expect(updatedUser.roles).to.include(ADMIN_ROLE)
-    })
+    //   const adminUser = createTestUser('admin', ADMIN_ROLE)
+    //   const adminSession = await createUserSession(adminUser)
+    //   const adminReq = supertest.agent(adminSession.app)
+    // 
+    //   await adminReq.put(`/api/admin/users/${user._id}`)
+    //     .send({ isAdmin: true })
+    //     .expect(200)
+    // 
+    //   const updatedUser = await User.findById(user._id).lean()
+    //   expect(updatedUser).to.have.property('roles')
+    //   expect(updatedUser.roles).to.include(ADMIN_ROLE)
+    // })
 
     // see https://github.com/freeCodeCamp/pantry-for-good/issues/347
     it('regular users cannot update another user profile', async function(){

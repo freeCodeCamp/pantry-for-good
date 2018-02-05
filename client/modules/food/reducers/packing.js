@@ -23,10 +23,14 @@ export const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
 export const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
 export const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
 export const CLEAR_FLAGS = 'packing/CLEAR_FLAGS'
+export const RECEIVED_REQUEST = 'packing/RECEIVED_REQUEST'
+export const RECEIVED_SUCCESS = 'packing/RECEIVED_SUCCESS'
+export const RECEIVED_FAILURE = 'packing/RECEIVED_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
 const packFailure = error => ({type: PACK_FAILURE, error})
+const receivedSuccess = response => ({type: RECEIVED_SUCCESS, response})
 
 // newPackedCustomers has to be an aray of objects with this structure
 // {customer: customerId, contents[foodItemId, foodItemId, foodItemId]}
@@ -42,6 +46,19 @@ export const pack = newPackedCustomers => dispatch => {
   return callApi('packing', 'POST', newPackedCustomers, null, schema)
     .then(res => dispatch(packSuccess(res)))
     .catch(error => dispatch(packFailure(error)))
+}
+
+export const receivedPackage = singlePackage => dispatch => {
+  dispatch({type: RECEIVED_REQUEST})
+  
+  return callApi('packing', 'PUT', {singlePackage})
+    .then(res => {
+      dispatch(receivedSuccess(res))
+    })
+    .catch(error => {
+      dispatch({type: RECEIVED_FAILURE, error}
+      )
+    })
 }
 
 export const unpackPackage = packageId => dispatch => {
@@ -142,6 +159,21 @@ export default (state = {}, action) => {
         saving: false,
         saveError: null,
       }
+    case RECEIVED_REQUEST: {
+      return {
+        ...state,
+      }
+    }
+    case RECEIVED_SUCCESS:
+      return {
+        ...state,
+        ids: without(state.ids, action.response.packages._id).concat(action.response.packages),
+      }
+    case RECEIVED_FAILURE: {
+      return {
+        ...state,
+      }
+    }
     default: return state
   }
 }

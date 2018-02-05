@@ -22,5 +22,6 @@ packingRouter.route('/packing')
   .get(packingController.hasAuthorization, packingController.list)
   .post(packingController.hasAuthorization, websocketMiddleware(sync), packingController.pack)
   .delete(packingController.hasAuthorization, packingController.unpack)
+  .put(packingController.hasAuthorization, packingController.complete)
 
 export default packingRouter
