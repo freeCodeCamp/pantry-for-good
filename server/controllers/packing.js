@@ -15,8 +15,8 @@ export default {
     Package.find().then(data => res.json(data))
   },
   complete: async function(req, res) {
-    const singlePackageId = req.body.singlePackage
-    const deliveredPackage = await Package.findByIdAndUpdate(singlePackageId, {status: 'Received'}, {new: true})
+    const packageId = req.body.singlePackage
+    const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Received'}, {new: true})
     if (!deliveredPackage) {
       throw new BadRequestError(`package with _id ${req.body.singlePackage} not found`)
     }

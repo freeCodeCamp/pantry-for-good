@@ -28,6 +28,7 @@ const API_ROOT = process.env.NODE_ENV === 'production' ?
  */
 export function callApi(endpoint, method = 'GET', body, schema, responseSchema) {
   const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint
+
   return fetch(fullUrl, {
     method,
     headers: generateRequestHeaders(method),

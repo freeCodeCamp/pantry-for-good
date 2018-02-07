@@ -48,7 +48,7 @@ export const pack = newPackedCustomers => dispatch => {
     .catch(error => dispatch(packFailure(error)))
 }
 
-export const receivedPackage = singlePackage => dispatch => {
+export const deliveredPackage = singlePackage => dispatch => {
   dispatch({type: RECEIVED_REQUEST})
   
   return callApi('packing', 'PUT', {singlePackage})
@@ -123,6 +123,7 @@ export default (state = {}, action) => {
         loadError: action.error
       }
     case PACK_REQUEST:
+    case RECEIVED_REQUEST:
     case UNPACK_REQUEST:
       return {
         ...state,
@@ -145,6 +146,7 @@ export default (state = {}, action) => {
         saveError: null
       }
     case PACK_FAILURE:
+    case RECEIVED_FAILURE:
     case UNPACK_FAILURE:
       return {
         ...state,
@@ -159,21 +161,12 @@ export default (state = {}, action) => {
         saving: false,
         saveError: null,
       }
-    case RECEIVED_REQUEST: {
-      return {
-        ...state,
-      }
-    }
     case RECEIVED_SUCCESS:
       return {
         ...state,
-        ids: without(state.ids, action.response.packages._id).concat(action.response.packages),
+        saving: false,
+        saveError: null,
       }
-    case RECEIVED_FAILURE: {
-      return {
-        ...state,
-      }
-    }
     default: return state
   }
 }

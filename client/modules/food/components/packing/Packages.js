@@ -8,7 +8,7 @@ import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-boot
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
-import {listPackages, unpackPackage, receivedPackage} from '../../reducers/packing'
+import {listPackages, unpackPackage, deliveredPackage} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 import moment from 'moment'
@@ -17,29 +17,23 @@ const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
   error: selectors.food.packing.loadError(state),
   packages: selectors.food.packing.packages(state),
-  
+  packSaving: selectors.food.packing.saving(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   load: () => dispatch(listPackages()),
   unpack: packageId => dispatch(unpackPackage(packageId)),
-  received: singlePackage => dispatch(receivedPackage(singlePackage)),
+  delivered: singlePackage => dispatch(deliveredPackage(singlePackage)),
 })
 
 class Packages extends Component {
-  constructor() {
-    super()
-    this.state={
-      activePackage: {}
-    }
-  }
 
   componentWillMount() {
     this.props.load()
   }
   
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.activePackage !== prevState.activePackage) {
+  componentWillReceiveProps(nextProps) {
+    if (this.props.packSaving !== nextProps.packSaving) {
       this.props.load()
     }
   }
@@ -55,35 +49,25 @@ class Packages extends Component {
 
   getActionButtons = (_, foodPackage) => {
     return (
-      <Button bsStyle="danger"
-        onClick={() => this.props.unpack(foodPackage._id)}
-        disabled={foodPackage.status === 'Received'}
-      ><i className="fa fa-undo" /> Unpack</Button>
-    )
-  }
-    
-  getPackageButton = (_, foodPackage) => {
-    return (
       <div>
+        <Button bsStyle="danger"
+          onClick={() => this.props.unpack(foodPackage._id)}
+          disabled={foodPackage.status === 'Received'}
+        ><i className="fa fa-undo" /> Unpack</Button>
         <Button bsStyle="success"
           onClick={this.onReceivedClick}
           value={foodPackage._id}
           disabled={foodPackage.status === 'Received'}
-        > Received</Button>
-      </div>)
+        >Received</Button>
+      </div>
+    )
   }
   
   onReceivedClick = e => {
-    this.setState({activePackage: e.target.value})
-    this.updatePackageStatus(e.target.value)
+    this.props.delivered(e.target.value)
   }
-  
-  updatePackageStatus = id => {
-    this.props.received(id)
-  }
-  
+
   render() {
-    
     const {loading, error, packages} = this.props
     return (
       <Box>
@@ -122,7 +106,6 @@ class Packages extends Component {
               Status
             </TableHeaderColumn>
             <TableHeaderColumn dataFormat={this.getActionButtons} />
-            <TableHeaderColumn dataFormat={this.getPackageButton} />
           </BootstrapTable>
         </BoxBody>
       </Box>
