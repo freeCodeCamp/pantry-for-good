@@ -16,7 +16,7 @@ export default {
   },
   complete: async function(req, res) {
     const packageId = req.body.singlePackage
-    const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Received'}, {new: true})
+    const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Delivered'}, {new: true})
     if (!deliveredPackage) {
       throw new BadRequestError(`package with _id ${req.body.singlePackage} not found`)
     }

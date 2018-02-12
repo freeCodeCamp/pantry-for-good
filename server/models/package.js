@@ -13,7 +13,7 @@ const PackageSchema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['Packed', 'Received'],
+    enum: ['Packed', 'Delivered'],
   },
   packedBy: {
     type: Number,

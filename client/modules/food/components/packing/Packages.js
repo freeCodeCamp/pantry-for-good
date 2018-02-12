@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'react-bootstrap'
+import {Button, ButtonToolbar} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
@@ -31,7 +31,7 @@ class Packages extends Component {
   componentWillMount() {
     this.props.load()
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (this.props.packSaving !== nextProps.packSaving) {
       this.props.load()
@@ -49,21 +49,25 @@ class Packages extends Component {
 
   getActionButtons = (_, foodPackage) => {
     return (
-      <div>
+      <ButtonToolbar>
         <Button bsStyle="danger"
           onClick={() => this.props.unpack(foodPackage._id)}
-          disabled={foodPackage.status === 'Received'}
+          bsSize="small"
+          style={{width: '80px'}}
+          disabled={foodPackage.status === 'Delivered'}
         ><i className="fa fa-undo" /> Unpack</Button>
         <Button bsStyle="success"
-          onClick={this.onReceivedClick}
+          onClick={this.onDeliveredClick}
           value={foodPackage._id}
-          disabled={foodPackage.status === 'Received'}
-        >Received</Button>
-      </div>
+          bsSize="small"
+          style={{width: '80px'}}
+          disabled={foodPackage.status === 'Delivered'}
+        ><i className="fa fa-check" /> Delivered</Button>
+      </ButtonToolbar>
     )
   }
-  
-  onReceivedClick = e => {
+
+  onDeliveredClick = e => {
     this.props.delivered(e.target.value)
   }
 
