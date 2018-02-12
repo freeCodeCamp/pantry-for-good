@@ -23,14 +23,14 @@ export const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
 export const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
 export const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
 export const CLEAR_FLAGS = 'packing/CLEAR_FLAGS'
-export const RECEIVED_REQUEST = 'packing/RECEIVED_REQUEST'
-export const RECEIVED_SUCCESS = 'packing/RECEIVED_SUCCESS'
-export const RECEIVED_FAILURE = 'packing/RECEIVED_FAILURE'
+export const DELIVERED_REQUEST = 'packing/DELIVERED_REQUEST'
+export const DELIVERED_SUCCESS = 'packing/DELIVERED_SUCCESS'
+export const DELIVERED_FAILURE = 'packing/DELIVERED_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
 const packFailure = error => ({type: PACK_FAILURE, error})
-const receivedSuccess = response => ({type: RECEIVED_SUCCESS, response})
+const deliveredSuccess = response => ({type: DELIVERED_SUCCESS, response})
 
 // newPackedCustomers has to be an aray of objects with this structure
 // {customer: customerId, contents[foodItemId, foodItemId, foodItemId]}
@@ -49,14 +49,14 @@ export const pack = newPackedCustomers => dispatch => {
 }
 
 export const deliveredPackage = singlePackage => dispatch => {
-  dispatch({type: RECEIVED_REQUEST})
-  
+  dispatch({type: DELIVERED_REQUEST})
+
   return callApi('packing', 'PUT', {singlePackage})
     .then(res => {
-      dispatch(receivedSuccess(res))
+      dispatch(deliveredSuccess(res))
     })
     .catch(error => {
-      dispatch({type: RECEIVED_FAILURE, error}
+      dispatch({type: DELIVERED_FAILURE, error}
       )
     })
 }
@@ -123,7 +123,7 @@ export default (state = {}, action) => {
         loadError: action.error
       }
     case PACK_REQUEST:
-    case RECEIVED_REQUEST:
+    case DELIVERED_REQUEST:
     case UNPACK_REQUEST:
       return {
         ...state,
@@ -146,7 +146,7 @@ export default (state = {}, action) => {
         saveError: null
       }
     case PACK_FAILURE:
-    case RECEIVED_FAILURE:
+    case DELIVERED_FAILURE:
     case UNPACK_FAILURE:
       return {
         ...state,
@@ -161,7 +161,7 @@ export default (state = {}, action) => {
         saving: false,
         saveError: null,
       }
-    case RECEIVED_SUCCESS:
+    case DELIVERED_SUCCESS:
       return {
         ...state,
         saving: false,
