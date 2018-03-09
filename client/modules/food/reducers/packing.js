@@ -30,7 +30,6 @@ export const DELIVERED_FAILURE = 'packing/DELIVERED_FAILURE'
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
 const packFailure = error => ({type: PACK_FAILURE, error})
-const deliveredSuccess = response => ({type: DELIVERED_SUCCESS, response})
 
 // newPackedCustomers has to be an aray of objects with this structure
 // {customer: customerId, contents[foodItemId, foodItemId, foodItemId]}
@@ -48,18 +47,15 @@ export const pack = newPackedCustomers => dispatch => {
     .catch(error => dispatch(packFailure(error)))
 }
 
-export const deliveredPackage = singlePackage => dispatch => {
-  dispatch({type: DELIVERED_REQUEST})
-
-  return callApi('packing', 'PUT', {singlePackage})
-    .then(res => {
-      dispatch(deliveredSuccess(res))
-    })
-    .catch(error => {
-      dispatch({type: DELIVERED_FAILURE, error}
-      )
-    })
-}
+export const deliveredPackage = packageId => ({
+  [CALL_API]: {
+    endpoint: 'packing',
+    method: 'PUT',
+    body: {packageId},
+    responseSchema: packageSchema,
+    types: [DELIVERED_REQUEST, DELIVERED_SUCCESS, DELIVERED_FAILURE]
+  }
+})
 
 export const unpackPackage = packageId => dispatch => {
   dispatch({ type: UNPACK_REQUEST })

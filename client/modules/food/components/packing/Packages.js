@@ -17,7 +17,6 @@ const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
   error: selectors.food.packing.loadError(state),
   packages: selectors.food.packing.packages(state),
-  packSaving: selectors.food.packing.saving(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -32,12 +31,6 @@ class Packages extends Component {
     this.props.load()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.packSaving !== nextProps.packSaving) {
-      this.props.load()
-    }
-  }
-
   /**
    * Convert an array of foodItems to a string listing the item names
    */
@@ -46,6 +39,10 @@ class Packages extends Component {
   }
 
   renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
+
+  onDeliveredClick = e => {
+    this.props.delivered(e.target.value)
+  }
 
   getActionButtons = (_, foodPackage) => {
     return (
@@ -65,10 +62,6 @@ class Packages extends Component {
         ><i className="fa fa-check" /> Delivered</Button>
       </ButtonToolbar>
     )
-  }
-
-  onDeliveredClick = e => {
-    this.props.delivered(e.target.value)
   }
 
   render() {
@@ -109,7 +102,7 @@ class Packages extends Component {
             <TableHeaderColumn dataField="status" >
               Status
             </TableHeaderColumn>
-            <TableHeaderColumn dataFormat={this.getActionButtons} />
+            <TableHeaderColumn dataFormat={this.getActionButtons} width="200px" />
           </BootstrapTable>
         </BoxBody>
       </Box>

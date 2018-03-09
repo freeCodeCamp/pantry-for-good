@@ -15,12 +15,12 @@ export default {
     Package.find().then(data => res.json(data))
   },
   complete: async function(req, res) {
-    const packageId = req.body.singlePackage
+    const {packageId} = req.body
     const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Delivered'}, {new: true})
     if (!deliveredPackage) {
       throw new BadRequestError(`package with _id ${req.body.singlePackage} not found`)
     }
-    res.json({packages: deliveredPackage})
+    res.json(deliveredPackage)
   },
   /**
    * Creates new food packages
