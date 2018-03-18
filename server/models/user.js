@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import {values} from 'lodash'
 import mongoose from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
+import autoIncrement from 'mongoose-plugin-autoinc'
 
 import {ADMIN_ROLE, clientRoles, volunteerRoles, modelTypes} from '../../common/constants'
 
@@ -110,8 +110,7 @@ UserSchema.methods.authenticate = function(password) {
 /**
  * Schema plugins
  */
-autoIncrement.initialize(mongoose.connection)
-UserSchema.plugin(autoIncrement.plugin, {
+UserSchema.plugin(autoIncrement, {
   model: modelTypes.USER,
   startAt: 10000
 })

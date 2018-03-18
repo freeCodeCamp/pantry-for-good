@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
 import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
@@ -19,7 +18,6 @@ mongoose.Promise = global.Promise
 global.initDb = async function() {
   if (!mongoose.connection.readyState) {
     await mongoose.connect(config.db)
-    autoIncrement.initialize(mongoose.connection)
   }
 }
 

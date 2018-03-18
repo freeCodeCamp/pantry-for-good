@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
 import http from 'http'
 import socketIO from 'socket.io'
 import socketIOSession from 'express-socket.io-session'
@@ -20,7 +19,6 @@ db.on('error', function(err) {
 
 db.once('open', function() {
   console.info('Connected to', config.db)
-  autoIncrement.initialize(db)
 
   const io = socketIO()
   const app = setupExpress(io)
