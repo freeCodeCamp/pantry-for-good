@@ -10,7 +10,7 @@ import setupExpress from './config/express'
 process.on('unhandledRejection', err => console.error(err))
 
 mongoose.Promise = global.Promise
-mongoose.connect(config.db, {useMongoClient: true})
+mongoose.connect(config.db)
 const db = mongoose.connection
 
 db.on('error', function(err) {

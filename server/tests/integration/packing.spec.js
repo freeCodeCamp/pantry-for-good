@@ -376,7 +376,7 @@ describe('Packing Api', function() {
       )
         .expect(400)
         .expect(function (res) {
-          expect(res.body.message).to.equal('Package validation failed: contents: Path `contents` is required.')
+          expect(res.body.message).to.equal('Package validation failed: contents: Path `contents` is required to have at least one element.')
         })
     })
 
