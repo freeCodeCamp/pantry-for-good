@@ -29,8 +29,13 @@ const PackageSchema = new Schema({
   },
   contents: {
     type: [{type: Schema.Types.ObjectId, ref: modelTypes.FOOD_ITEM}],
-    required: true
+    required: true,
+    validate: [arrayMinElements, 'Path `{PATH}` is required to have at least one element.']
   }
 })
+
+function arrayMinElements(val) {
+  return val.length > 0;
+}
 
 export default mongoose.model(modelTypes.PACKAGE, PackageSchema)

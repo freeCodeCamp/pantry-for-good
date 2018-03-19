@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import autoIncrement from 'mongoose-auto-increment'
+import autoIncrement from 'mongoose-plugin-autoinc'
 
 import {modelTypes} from '../../common/constants'
 
@@ -40,7 +40,7 @@ const DonationSchema = new Schema({
   items: [DonatedItemSchema]
 })
 
-DonationSchema.plugin(autoIncrement.plugin, {
+DonationSchema.plugin(autoIncrement, {
   model: modelTypes.DONATION,
   startAt: 1
 })
