@@ -183,10 +183,10 @@ async function populateDonorFields(client) {
  */
 async function populateCustomerFields(client, dateOfBirth, address) {
   // get a random sample of foods for foodPreferences
-  const foodPreferences = (await Food.aggregate(
+  const foodPreferences = (await Food.aggregate([
     {$unwind: '$items'},
     {$sample: {size: random(4, 10)}}
-  )).map(res => res.items._id)
+  ])).map(res => res.items._id)
 
   const household = [{
     name: `${client.firstName} ${client.lastName}`,
