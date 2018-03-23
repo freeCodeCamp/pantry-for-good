@@ -28,9 +28,14 @@ class SignUp extends React.Component {
     this.props.clearFlags()
   }
 
-  onFieldChange = e => {
+  onFieldBlur = e => {
     const {name, value} = e.target
     this.setState({[name]: {value, touched: true}})
+  }
+
+  onFieldChange = e => {
+    const {name, value} = e.target
+    this.setState({[name]: {value, touched: this.state[name].touched ? true : false}})
   }
 
   onSubmit = e => {
@@ -59,6 +64,19 @@ class SignUp extends React.Component {
   ) ? 'error' : null
 
   getError = field => get(this.props, `fetchUserError.paths.${field}`)
+
+  matchPasswords = () => this.state.password.value === this.state.passwordConfirm.value
+
+  passwordLength = () => this.state.password.value.length > 6
+
+  showPasswordErrors = () => {
+    let error
+    if (this.state.password.touched && !this.passwordLength())
+      error = 'Password must be at least 7 characters long'
+    else if (this.state.passwordConfirm.touched && !this.matchPasswords())
+      error = 'Passwords do not match'
+    return error ? <div className="alert alert-danger">{error}</div> : null
+  }
 
   render() {
     const {fetchingUser, fetchUserError} = this.props
@@ -115,6 +133,7 @@ class SignUp extends React.Component {
             name="password"
             type="password"
             onChange={this.onFieldChange}
+            onBlur={this.onFieldBlur}
             value={password.value}
             touched={password.touched}
             valid={this.isValid('password')}
@@ -127,6 +146,7 @@ class SignUp extends React.Component {
             name="passwordConfirm"
             type="password"
             onChange={this.onFieldChange}
+            onBlur={this.onFieldBlur}
             value={passwordConfirm.value}
             touched={passwordConfirm.touched}
             valid={this.isValid('passwordConfirm')}
@@ -135,13 +155,11 @@ class SignUp extends React.Component {
             icon="lock"
             required
           />
-          {password.touched && passwordConfirm.touched && password.value !== passwordConfirm.value &&
-            <div className="alert alert-danger">Passwords do not match</div>
-          }
+          {this.showPasswordErrors()}
           <div className="text-center form-group">
             <button type="submit" className="btn btn-flat btn-primary"
               onClick={this.onSubmit}
-              disabled={password.value !== passwordConfirm.value}>
+              disabled={!this.matchPasswords() || !this.passwordLength()}>
               Sign up
             </button>
             <br />

@@ -92,7 +92,7 @@ describe('User Api', function() {
         })
     })
 
-    it('requires a password to be at least 6 characters', async function() {
+    it('requires a password to be at least 7 characters long', async function() {
       const request = supertest.agent(app())
       const newUser = {
         firstName: 'Margaret',
