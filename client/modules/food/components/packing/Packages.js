@@ -3,12 +3,12 @@
  */
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'react-bootstrap'
+import {Button, ButtonToolbar} from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import selectors from '../../../../store/selectors'
-import {listPackages, unpackPackage} from '../../reducers/packing'
+import {listPackages, unpackPackage, deliveredPackage} from '../../reducers/packing'
 
 import {Box, BoxBody, BoxHeader} from '../../../../components/box'
 import moment from 'moment'
@@ -16,12 +16,13 @@ import moment from 'moment'
 const mapStateToProps = state => ({
   loading: selectors.food.packing.loading(state),
   error: selectors.food.packing.loadError(state),
-  packages: selectors.food.packing.packages(state)
+  packages: selectors.food.packing.packages(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   load: () => dispatch(listPackages()),
-  unpack: packageId => dispatch(unpackPackage(packageId))
+  unpack: packageId => dispatch(unpackPackage(packageId)),
+  delivered: singlePackage => dispatch(deliveredPackage(singlePackage)),
 })
 
 class Packages extends Component {
@@ -39,12 +40,29 @@ class Packages extends Component {
 
   renderSizePerPageDropDown = () => <SizePerPageDropDown variation='dropup'/>
 
-  getActionButtons = (_, foodPackage) =>
-    <div>
-      <Button bsStyle="danger"
-        onClick={() => this.props.unpack(foodPackage._id)}
-      ><i className="fa fa-undo" /> Unpack</Button>
-    </div>
+  onDeliveredClick = e => {
+    this.props.delivered(e.target.value)
+  }
+
+  getActionButtons = (_, foodPackage) => {
+    return (
+      <ButtonToolbar>
+        <Button bsStyle="danger"
+          onClick={() => this.props.unpack(foodPackage._id)}
+          bsSize="small"
+          style={{width: '80px'}}
+          disabled={foodPackage.status === 'Delivered'}
+        ><i className="fa fa-undo" /> Unpack</Button>
+        <Button bsStyle="success"
+          onClick={this.onDeliveredClick}
+          value={foodPackage._id}
+          bsSize="small"
+          style={{width: '80px'}}
+          disabled={foodPackage.status === 'Delivered'}
+        ><i className="fa fa-check" /> Delivered</Button>
+      </ButtonToolbar>
+    )
+  }
 
   render() {
     const {loading, error, packages} = this.props
@@ -84,9 +102,7 @@ class Packages extends Component {
             <TableHeaderColumn dataField="status" >
               Status
             </TableHeaderColumn>
-            <TableHeaderColumn
-              dataFormat={this.getActionButtons}
-            />
+            <TableHeaderColumn dataFormat={this.getActionButtons} width="200px" />
           </BootstrapTable>
         </BoxBody>
       </Box>

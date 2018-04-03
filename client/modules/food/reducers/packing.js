@@ -23,6 +23,9 @@ export const UNPACK_REQUEST = 'packing/UNPACK_REQUEST'
 export const UNPACK_SUCCESS = 'packing/UNPACK_SUCCESS'
 export const UNPACK_FAILURE = 'packing/UNPACK_FAILURE'
 export const CLEAR_FLAGS = 'packing/CLEAR_FLAGS'
+export const DELIVERED_REQUEST = 'packing/DELIVERED_REQUEST'
+export const DELIVERED_SUCCESS = 'packing/DELIVERED_SUCCESS'
+export const DELIVERED_FAILURE = 'packing/DELIVERED_FAILURE'
 
 const packRequest = () => ({type: PACK_REQUEST})
 const packSuccess = response => ({type: PACK_SUCCESS, response})
@@ -43,6 +46,16 @@ export const pack = newPackedCustomers => dispatch => {
     .then(res => dispatch(packSuccess(res)))
     .catch(error => dispatch(packFailure(error)))
 }
+
+export const deliveredPackage = packageId => ({
+  [CALL_API]: {
+    endpoint: 'packing',
+    method: 'PUT',
+    body: {packageId},
+    responseSchema: packageSchema,
+    types: [DELIVERED_REQUEST, DELIVERED_SUCCESS, DELIVERED_FAILURE]
+  }
+})
 
 export const unpackPackage = packageId => dispatch => {
   dispatch({ type: UNPACK_REQUEST })
@@ -106,6 +119,7 @@ export default (state = {}, action) => {
         loadError: action.error
       }
     case PACK_REQUEST:
+    case DELIVERED_REQUEST:
     case UNPACK_REQUEST:
       return {
         ...state,
@@ -128,6 +142,7 @@ export default (state = {}, action) => {
         saveError: null
       }
     case PACK_FAILURE:
+    case DELIVERED_FAILURE:
     case UNPACK_FAILURE:
       return {
         ...state,
@@ -139,6 +154,12 @@ export default (state = {}, action) => {
         ...state,
         loading: false,
         loadError: null,
+        saving: false,
+        saveError: null,
+      }
+    case DELIVERED_SUCCESS:
+      return {
+        ...state,
         saving: false,
         saveError: null,
       }

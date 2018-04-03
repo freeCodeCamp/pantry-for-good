@@ -14,7 +14,14 @@ export default {
   list: function(req, res) {
     Package.find().then(data => res.json(data))
   },
-
+  complete: async function(req, res) {
+    const {packageId} = req.body
+    const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Delivered'}, {new: true})
+    if (!deliveredPackage) {
+      throw new BadRequestError(`package with _id ${req.body.singlePackage} not found`)
+    }
+    res.json(deliveredPackage)
+  },
   /**
    * Creates new food packages
    * The req.body post data should be an array of food package objects with the following shape
