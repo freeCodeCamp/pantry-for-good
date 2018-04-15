@@ -19,6 +19,7 @@ import userOrRedirect from '../../components/router/userOrRedirect'
 import './css/users.css'
 
 const IsAdmin = requireRole([ADMIN_ROLE])
+const guestOrRedirectSignIn = guestOrRedirect(SignIn)
 
 const UserRouter = ({match}) =>
   <SwitchWithNotFound>
@@ -52,7 +53,7 @@ const UserRouter = ({match}) =>
       exact
       component={ResetPassword}
     />
-    <Route path={`${match.url}/signin`} exact component={guestOrRedirect(SignIn)} />
+    <Route path={`${match.url}/signin`} exact component={guestOrRedirectSignIn} />
     <Route path={`${match.url}/signup`} exact component={guestOrRedirect(SignUp)} />
     <Route
       path={`${match.url}/confirm-new-google-account`}
