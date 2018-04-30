@@ -1,11 +1,11 @@
 /* partially checkable checkboxes */
-input[type='checkbox'] {
+input[type="checkbox"] {
   position: absolute;
   opacity: 0;
   z-index: -1;
 }
 
-input[type='checkbox'] + span::before {
+input[type="checkbox"] + span::before {
   font-size: 14px;
   font-weight: 800;
   line-height: 7px;
@@ -22,10 +22,10 @@ input[type='checkbox'] + span::before {
   border-radius: 3px;
   cursor: default;
 }
-input[type='checkbox']:checked + span::before {
+input[type="checkbox"]:checked + span::before {
   content: '\2713';
 }
-input[type='checkbox']:focus + span::before {
+input[type="checkbox"]:focus + span::before {
   outline: 5px auto -webkit-focus-ring-color;
 }
 
@@ -34,13 +34,13 @@ input[type='checkbox']:disabled + span::before {
   cursor: not-allowed;
 }
 
-input[type='checkbox']:not(:disabled) + span:hover::before {
+input[type="checkbox"]:not(:disabled) + span:hover::before {
   text-shadow: 0 1px 2px #ccf;
   background-color: #ddd;
   box-shadow: 0 1px 1px -1px #aaa;
 }
 
-.partial label input[type='checkbox']:checked + span::before {
+.partial label input[type="checkbox"]:checked + span::before {
   color: #aaa;
 }
 
@@ -54,18 +54,18 @@ input[type='checkbox']:not(:disabled) + span:hover::before {
   z-index: 1030;
 }
 .s-alert-info {
-  background: #3c8dbc;
-  color: #fff;
+    background: #3c8dbc;
+    color: #fff;
 }
 .s-alert-success {
-  background: #00a65a;
-  color: #fff;
+    background: #00a65a;
+    color: #fff;
 }
 .s-alert-warning {
-  background: #f39c12;
-  color: #fff;
+    background: #f39c12;
+    color: #fff;
 }
 .s-alert-error {
-  background: #dd4b39;
-  color: #fff;
+    background: #dd4b39;
+    color: #fff;
 }
