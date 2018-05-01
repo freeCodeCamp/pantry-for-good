@@ -28,9 +28,12 @@ input[type="checkbox"]:checked + span::before {
 input[type="checkbox"]:focus + span::before {
   outline: 5px auto -webkit-focus-ring-color;
 }
-input[type="checkbox"]:disabled + span {
-  background-color: #999;
+
+input[type='checkbox']:disabled + span::before {
+  background-image: unset;
+  cursor: not-allowed;
 }
+
 input[type="checkbox"]:not(:disabled) + span:hover::before {
   text-shadow: 0 1px 2px #ccf;
   background-color: #ddd;
