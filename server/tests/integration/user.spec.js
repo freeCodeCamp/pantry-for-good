@@ -605,13 +605,7 @@ describe('User Api', function() {
     })
   })
 
-
-
-
-
   describe('users notifications', function() {
-
-
     it('function for creating an admin notifications', async function(){
       await User.create({
         firstName: 'first',
@@ -638,125 +632,5 @@ describe('User Api', function() {
           expect(res.body.notifications[0].message).to.equal('Customer customer test was created!')
         })
     })
-
-
-
-
-
-
-    /*it('customer creation admin notification', async function() {
-      const {app} = await createUserSession(
-        createTestUser('admin', ADMIN_ROLE)
-      )
-      const {user, app: customerApp} = await createUserSession(
-        createTestUser('customer', clientRoles.CUSTOMER)
-      )
-
-      //const customer = (await supertest.agent(customerApp).post('/api/auth/signin').send({email: 'customer@test.com', password: 'password'})).body
-      //await supertest.agent(customerApp).post('/api/customer').send({firstName:'customer', lastName:'test', passwor:'pasword',provider:'local',email:'customer@test.com',roles:['roles/customer']})
-      //console.log(user)
-      //ERRORRRRRRRRRRRRRRRR
-      const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
-      //await supertest.agent(customerApp).post('/api/customer').send(user)
-      //const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
-      //supertest.agent(customerApp).put(`/api/customer/${customer._id}`).send({...user, firstName: 'updated'})
-
-      const admin = (await supertest.agent(app).post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
-      console.log(admin)
-
-      return expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
-      //return expect(admin.notifications[0].message).to.equal(`Customer ${customer.firstName} ${customer.lastName} was created!`)
-
-    })*/
-
-
-
-
-
-    //it('remove one admin notifications', async function(){
-    /*await User.create({
-        firstName: 'first',
-        lastName: 'last',
-        email: '123@example.com',
-        roles: [ADMIN_ROLE],
-        provider: 'local',
-        password: '12345678'
-      })*/
-
-    // Sent Notifications
-    //await searchUserAndSetNotification('roles/admin', {message:`Customer Lola Perez was created!`, url: `/customers/2018`}, 2018)
-    //await searchUserAndSetNotification('roles/admin', {message:`Customer Pepe Arteaga was created!`, url: `/customers/2019`}, 2019)
-    //await searchUserAndSetNotification('roles/admin', {message:`Customer El Jhonny was created!`, url: `/customers/2017`}, 23)
-
-    /*const newAdmin = createTestUser('admin', ADMIN_ROLE)
-      const admin = await createUserSession(newAdmin)
-      const adminReq = supertest.agent(admin.app)*/
-
-    /*const request = supertest.agent(app())
-      await request.post('/api/auth/signin').send({email: '123@example.com', password: '12345678'})
-      //await adminReq.delete('/users/me/notifications?id=1')//.expect(200)
-      await request.delete('/users/me/notifications?id=1')//.expect(200)
-      await request.get('/auth/signout')
-
-      const userMongo = await User.findOne({email: '123@example.com'}).lean()
-      expect(userMongo).to.be.an('object')
-      expect(userMongo).to.have.property('notifications')
-      await console.log(userMongo)*/
-
-
-    /*await request.get(`/api/admin/users/${userMongo._id}`)
-        .expect(200)
-        .expect(res => {
-          expect(res.body).to.be.an('object')
-          expect(res.body.firstName).to.equal('first')
-          expect(res.body.notifications).to.be.an('array')
-          expect(res.body.notifications[1].message).to.equal('Customer El Jhonny was created!')
-        })*/
-
-    /*return await request.post('/api/auth/signin')
-        .send({email: '123@example.com', password: '12345678'})
-        .expect(200)
-        .expect(res => {
-          console.log(res.body)
-          expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('notifications')
-          expect(res.body.notifications[1]).to.have.property('message')
-          expect(res.body.notifications[1]).to.have.property('url')
-          expect(res.body.notifications[1]).to.have.property('date')
-        })*/
-    //})
-
-
-
-
-
-
-    /*it('deletes one admin notification', async function() {
-      const newAdmin = createTestUser('admin', ADMIN_ROLE)
-      const newCustomer = createTestUser('user', clientRoles.CUSTOMER)
-      const admin = await createUserSession(newAdmin)
-      const customer = await createUserSession(newCustomer)
-
-      const adminReq = supertest.agent(admin.app)
-      const customerReq = supertest.agent(customer.app)
-
-      await customerReq.post('/api/customer')
-        .send(newCustomer)
-
-      return adminReq.delete(`/api/admin/customers/${customer.user._id}`)
-        .expect(res => {
-          expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('firstName', 'user')
-        })
-        .expect(200)
-    })*/
-
-
-
   })
-
-
-
-
-
 })

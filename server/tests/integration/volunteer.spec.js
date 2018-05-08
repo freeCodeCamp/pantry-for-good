@@ -90,48 +90,6 @@ describe('Volunteer Api', function() {
 
 
 
-    it('generation of volunteer notifications', async function(){
-      await User.create({
-        firstName: 'first',
-        lastName: 'last',
-        email: '123@example.com',
-        roles: [ADMIN_ROLE],
-        provider: 'local',
-        password: '12345678'
-      })
-      const userMongo = await User.findOne({email:'123@example.com'})
-      await Volunteer.create({
-        _id: userMongo._id,
-        firstName: userMongo.firstName,
-        lastName: userMongo.lastName,
-        email: userMongo.email,
-        customers:[10077,10088],
-        user: userMongo._id,
-        status:'Active'
-      })
-
-      //Sent Notifications
-      await searchVolunteerAndSetNotification({message:`Customer Pepe Gonzales was updated!`, url: `/customers/10077`}, 10077)
-      await searchVolunteerAndSetNotification({message:`Customer Jhonny Men was updated!`, url: `/customers/10088`}, 10088)
-      await searchVolunteerAndSetNotification({message:`Customer Pepe Alfany was updated!`, url: `/customers/10077`}, 10077)
-
-      const request = supertest.agent(app())
-
-      return await request.post('/api/auth/signin')
-        .send({email: '123@example.com', password: '12345678'})
-        .expect(200)
-        .expect(res => {
-          expect(res.body).to.be.an('object')
-          expect(res.body).to.have.property('notifications')
-          expect(res.body.notifications[2]).to.have.property('message')
-          expect(res.body.notifications[2]).to.have.property('url')
-          expect(res.body.notifications[2]).to.have.property('date')
-        })
-    })
-
-
-
-
 
 
   })
@@ -178,6 +136,47 @@ describe('Volunteer Api', function() {
           expect(res.body).to.have.property('firstName', 'user')
         })
         .expect(200)
+    })
+  })
+
+  describe('volunteers notifications', function() {
+    it('function for creating volunteer notifications', async function(){
+      await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [ADMIN_ROLE],
+        provider: 'local',
+        password: '12345678'
+      })
+      const userMongo = await User.findOne({email:'123@example.com'})
+      await Volunteer.create({
+        _id: userMongo._id,
+        firstName: userMongo.firstName,
+        lastName: userMongo.lastName,
+        email: userMongo.email,
+        customers:[10077,10088],
+        user: userMongo._id,
+        status:'Active'
+      })
+
+      //Sent Notifications
+      await searchVolunteerAndSetNotification({message:`Customer Pepe Gonzales was updated!`, url: `/customers/10077`}, 10077)
+      await searchVolunteerAndSetNotification({message:`Customer Jhonny Men was updated!`, url: `/customers/10088`}, 10088)
+
+      const request = supertest.agent(app())
+
+      return await request.post('/api/auth/signin')
+        .send({email: '123@example.com', password: '12345678'})
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('notifications')
+          expect(res.body.notifications[1]).to.have.property('message')
+          expect(res.body.notifications[1]).to.have.property('url')
+          expect(res.body.notifications[1]).to.have.property('date')
+          expect(res.body.notifications[0].message).to.equal('Customer Pepe Gonzales was updated!')
+        })
     })
   })
 })

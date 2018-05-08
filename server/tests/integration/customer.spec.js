@@ -384,43 +384,47 @@ describe('Customer Api', function() {
     })
   })
 
-  describe('customers notifications', function(){
+  describe('notifications', function(){
+    it('admin and volunteer notifications for a customer creation and update', async function() {
+      const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
+      const {app} = await createUserSession(newCustomer)
+      const request = supertest.agent(app)
 
-    /*it('admin notifications for a customer creation', async function() {
-      const {app} = await createUserSession(
-        createTestUser('admin', ADMIN_ROLE)
-      )
-      const {user, app: customerApp} = await createUserSession(
-        createTestUser('customer', clientRoles.CUSTOMER)
-      )
-      //const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
+      await User.create({
+        firstName: 'admin',
+        lastName: 'test',
+        email: 'admin@test.com',
+        roles: [ADMIN_ROLE],
+        provider: 'local',
+        password: 'password'
+      })
 
-      const admin = (await supertest.agent(app).post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
+      const customer = (await request.post('/api/customer').send(newCustomer)).body
 
-      //return expect(admin.notifications[0].message).to.equal(`Customer ${customer.firstName} ${customer.lastName} was created!`)
-      return expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
-    })*/
+      await User.create({
+        firstName: 'volunteer',
+        lastName: 'test',
+        email: 'volunteer@test.com',
+        password: 'password',
+        provider: 'local',
+        status:'Active'
+      })
+      const user = await User.findOne({email:'volunteer@test.com'})
+      await Volunteer.create({
+        _id: user._id,
+        firstName: user.firstname,
+        lastName: user.lastName,
+        email: user.email,
+        customers:[customer._id],
+        user: user._id,
+        status:'Active'
+      })
 
+      await request.put(`/api/customer/${customer._id}`).send({...customer, firstName: 'updated'})
 
-
-    it('admin notifications for a customer creation and update', async function() {
-      const {app} = await createUserSession(
-        createTestUser('admin', ADMIN_ROLE)
-      )
-      const {user, app: customerApp} = await createUserSession(
-        createTestUser('customer', clientRoles.CUSTOMER)
-      )
-      const customer = (await supertest.agent(customerApp).post('/api/customer').send(user)).body
-      await supertest.agent(app).put(`/api/customer/${customer._id}`).send({...customer, firstName: 'updated'})
-
-      const admin = (await supertest.agent(app).post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
-      //console.log(admin)
-      return expect(admin.notifications[1].message).to.equal(`Customer updated test was updated!`) && expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
+      const volunteer = (await request.post('/api/auth/signin').send({email: 'volunteer@test.com', password: 'password'})).body
+      const admin = (await request.post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
+      return expect(volunteer.notifications[0].message).to.equal(`Customer updated test was updated!`) && expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
     })
-
-
-
   })
-
-
 })
