@@ -29,8 +29,26 @@ export class FoodCategories extends Component {
   }
 
   getTableRows = () => {
-    if (this.props.foods.length > 0) {
-      return this.props.foods.map(category =>
+
+    var sorting = this.props.foods.sort((a, b) => {
+
+      var catA = a.category.toLowerCase();
+      var catB = b.category.toLowerCase();
+
+      if (catA < catB) {
+        return -1;
+      }
+      if (catA > catB) {
+        return 1;
+      }
+      // category must be equal
+      return 0;
+    });
+
+
+    if (sorting.length > 0) {
+
+      return sorting.map(category =>
         <Category key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
       )
     } else {
