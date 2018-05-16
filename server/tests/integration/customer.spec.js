@@ -91,7 +91,7 @@ describe('Customer Api', function() {
 
       const app = createGuestSession()
       const request = supertest.agent(app)
-      
+
       return request.get(`/api/customer/${customerSession.user._id}`).expect(401)
     })
 
@@ -170,7 +170,7 @@ describe('Customer Api', function() {
 
       const app = createGuestSession()
       const request = supertest.agent(app)
-      
+
       return request.put(`/api/customer/${customerSession.user._id}`).expect(401)
     })
 
@@ -225,6 +225,23 @@ describe('Customer Api', function() {
         })
         .expect(200)
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   })
 
   describe('GET /api/admin/customer', function() {
@@ -364,6 +381,50 @@ describe('Customer Api', function() {
           expect(res.body.customers).to.have.length(1)
           expect(res.body.customers[0]).to.have.property('assignedTo', savedVolunteer._id)
         })
+    })
+  })
+
+  describe('notifications', function(){
+    it('admin and volunteer notifications for a customer creation and update', async function() {
+      const newCustomer = createTestUser('customer', clientRoles.CUSTOMER)
+      const {app} = await createUserSession(newCustomer)
+      const request = supertest.agent(app)
+
+      await User.create({
+        firstName: 'admin',
+        lastName: 'test',
+        email: 'admin@test.com',
+        roles: [ADMIN_ROLE],
+        provider: 'local',
+        password: 'password'
+      })
+
+      const customer = (await request.post('/api/customer').send(newCustomer)).body
+
+      await User.create({
+        firstName: 'volunteer',
+        lastName: 'test',
+        email: 'volunteer@test.com',
+        password: 'password',
+        provider: 'local',
+        status:'Active'
+      })
+      const user = await User.findOne({email:'volunteer@test.com'})
+      await Volunteer.create({
+        _id: user._id,
+        firstName: user.firstname,
+        lastName: user.lastName,
+        email: user.email,
+        customers:[customer._id],
+        user: user._id,
+        status:'Active'
+      })
+
+      await request.put(`/api/customer/${customer._id}`).send({...customer, firstName: 'updated'})
+
+      const volunteer = (await request.post('/api/auth/signin').send({email: 'volunteer@test.com', password: 'password'})).body
+      const admin = (await request.post('/api/auth/signin').send({email: 'admin@test.com', password: 'password'})).body
+      return expect(volunteer.notifications[0].message).to.equal(`Customer updated test was updated!`) && expect(admin.notifications[0].message).to.equal(`Customer customer test was created!`)
     })
   })
 })

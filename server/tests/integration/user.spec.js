@@ -6,6 +6,8 @@ import User from '../../models/user'
 import { ADMIN_ROLE } from '../../../common/constants'
 import { createUserSession, createTestUser } from '../helpers'
 
+import {searchUserAndSetNotification} from '../../lib/notification-sender'
+
 describe('User Api', function() {
   before(async function() {
     await initDb()
@@ -346,6 +348,22 @@ describe('User Api', function() {
   })
 
   describe('updating a user', function() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     it('updates the database', async function(){
       const user = await User.create({
         firstName: 'first',
@@ -380,6 +398,10 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('firstName', requestBody.firstName)
       expect(updatedUser).to.have.property('lastName', requestBody.lastName)
     })
+
+
+
+
 
     it('returns the updated user object', async function(){
       const user = await User.create({
@@ -560,26 +582,55 @@ describe('User Api', function() {
       expect(userAfterUpdate).to.have.property('resetPasswordExpires', userBeforeUpdate.resetPasswordExpires)
     })
 
-    it('regular users cannot make themselves admins', async function(){		
-      const user = await User.create({		
-        firstName: 'first',		
-        lastName: 'last',		
-        email: '123@example.com',		
-        roles: [],		
-        provider: 'local',		
-        password: '12345678'		
-      })		
-		
-      const userSession = await createUserSession(user)		
-      const userReq = supertest.agent(userSession.app)		
-		
-      await userReq.put('/api/users/me')		
-        .send({ isAdmin: true })		
-        .expect(200)		
-		
-      const updatedUser = await User.findById(user._id).lean()		
-      expect(updatedUser).to.have.property('roles')		
-      expect(updatedUser.roles).to.not.include(ADMIN_ROLE)		
+    it('regular users cannot make themselves admins', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const userSession = await createUserSession(user)
+      const userReq = supertest.agent(userSession.app)
+
+      await userReq.put('/api/users/me')
+        .send({ isAdmin: true })
+        .expect(200)
+
+      const updatedUser = await User.findById(user._id).lean()
+      expect(updatedUser).to.have.property('roles')
+      expect(updatedUser.roles).to.not.include(ADMIN_ROLE)
+    })
+  })
+
+  describe('users notifications', function() {
+    it('function for creating an admin notifications', async function(){
+      await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [ADMIN_ROLE],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      // Sent Notifications
+      await searchUserAndSetNotification('roles/admin', {message:`Customer customer test was created!`, url: `/customers/2018`}, 2018)
+
+      const request = supertest.agent(app())
+      return await request.post('/api/auth/signin')
+        .send({email: '123@example.com', password: '12345678'})
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('notifications')
+          expect(res.body.notifications[0]).to.have.property('message')
+          expect(res.body.notifications[0]).to.have.property('url')
+          expect(res.body.notifications[0]).to.have.property('date')
+          expect(res.body.notifications[0].message).to.equal('Customer customer test was created!')
+        })
     })
   })
 })

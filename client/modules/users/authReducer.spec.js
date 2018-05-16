@@ -1,8 +1,35 @@
 import * as reducer from './authReducer'
 import {CALL_API} from '../../store/middleware/api'
 
+import { notification as notificationSchema } from '../../../common/schemas'
+
 describe('auth reducer', function() {
   describe('action creators', function() {
+
+    it('removes a notification', function() {
+      const action = reducer.deleteNotification(0)
+
+      expect(action).to.have.property(CALL_API)
+      const {endpoint, method, schema, types} = action[CALL_API]
+
+      expect(endpoint).to.equal('/users/me/notifications?id=0')
+      expect(method).to.equal('DELETE')
+      expect(schema).to.eql(notificationSchema)
+      expect(types.length).to.equal(3)
+    })
+
+    it('removes all notifications', function() {
+      const action = reducer.deleteAllNotifications()
+
+      expect(action).to.have.property(CALL_API)
+      const {endpoint, method, schema, types} = action[CALL_API]
+
+      expect(endpoint).to.equal('/users/me/notifications?id=')
+      expect(method).to.equal('DELETE')
+      expect(schema).to.eql(notificationSchema)
+      expect(types.length).to.equal(3)
+    })
+
     it('saves users profile', function() {
       const user = {_id: 1, name: 'foo'}
       const action = reducer.setProfile(user)
