@@ -12,8 +12,6 @@ import 'font-awesome/css/font-awesome.css'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/skin-blue.min.css'
 import 'jquery'
-import 'admin-lte/plugins/slimScroll/jquery.slimscroll'
-import 'admin-lte/plugins/fastclick/fastclick'
 import 'react-s-alert/dist/s-alert-default.css'
 import 'react-s-alert/dist/s-alert-css-effects/flip.css'
 
