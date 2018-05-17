@@ -26,7 +26,8 @@
     "test:server": "npm run test:server:once -- --watch",
     "test:client:once": "cross-env NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js \"client/**/*.spec.js\"",
     "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js \"server/**/*.spec.js\"",
-    "flow": "flow"
+    "flow": "flow",
+    "cypress:open": "cypress open"
   },
   "config": {
     "ghooks": {
@@ -138,6 +139,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-enzyme": "^0.8.0",
     "cross-env": "^5.0.5",
+    "cypress": "^1.1.2",
     "enzyme": "^2.8.2",
     "eslint": "^4.1.1",
     "eslint-plugin-react": "^7.1.0",
