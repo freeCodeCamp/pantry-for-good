@@ -50,9 +50,11 @@ export default {
     const oldCustomer = await Customer.findById(customer._id)
     const newCustomer = await customer.save()
 
-    if (newCustomer.status !== oldCustomer.status) {
+    // Check if status is updated by admin
+    if (oldCustomer.status === 'Pending' && (newCustomer.status === 'Accepted' || newCustomer.status === 'Rejected')) {
       mailer.sendStatus(newCustomer)
-    } else {
+    // Check if status was updated by someone else than the user
+    } else if(!(newCustomer.status === 'Away' || newCustomer.status === 'Available' )){
       mailer.sendUpdate(newCustomer)
     }
 
