@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
 
 import {ADMIN_ROLE} from '../../../../../common/constants'
 import selectors from '../../../../store/selectors'
@@ -30,4 +29,4 @@ Sidebar.propTypes = {
   })
 }
 
-export default withRouter(connect(mapStateToProps)(Sidebar))
+export default connect(mapStateToProps)(Sidebar)
