@@ -49,7 +49,7 @@ Type `npm run dev` to start the application in development mode. If all goes wel
 To use all the features of this application you will need to obtain API keys and install them in the application. After following the instructions below to obtain API Keys, put your keys in the file `server/config/env/secrets.js`.
 
 #### 1. [gmapsApiKey](https://developers.google.com/maps/documentation/javascript/get-api-key)
-Google Maps API key for the deliveries feature
+Google Maps API key for the deliveries feature. Currently, this key needs to be entered in the general settings page of your local instance of the applicaiton.
 #### 2. [oauth](https://developers.google.com/identity/sign-in/web/devconsole-project)
 Google+ API for allowing users to register/login with google.
 #### 3. [sendgrid](https://sendgrid.com)
