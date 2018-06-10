@@ -1,3 +1,6 @@
+# This branch is outdated
+Please switch to the staging branch for the latest version
+---
 [![Build Status](https://travis-ci.org/freeCodeCamp/pantry-for-good.svg?branch=staging)](https://travis-ci.org/freeCodeCamp/pantry-for-good)
 [![Join the chat at https://gitter.im/FreeCodeCamp/pantry-for-good](https://badges.gitter.im/FreeCodeCamp/pantry-for-good.svg)](https://gitter.im/FreeCodeCamp/pantry-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/Pantry-for-Good/tree/staging)
