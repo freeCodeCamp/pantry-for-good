@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
   getVolunteer: selectors.volunteer.getOne(state)
 })
 
-class Title extends Component {
+export class Title extends Component {
   componentDidUpdate() {
     let title = [get(this.props.settings, 'organization', '')]
     const route = this.props.route.pathname.split('/')
