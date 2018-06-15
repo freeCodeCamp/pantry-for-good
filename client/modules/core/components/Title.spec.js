@@ -14,23 +14,35 @@ describe("Title", function()
     sinon.stub(selectors.settings, "getSettings").callsFake(function(state)
     {
       //return undefined
+      console.log("getting settings: " + state)
       return {organization: "FakeOrg", state: state}
     })
 
     sinon.stub(selectors.customer, "getOne").callsFake(function(state)
     {
       //return new Object()
-      return function(id) {return {fullName: "Fake Customer", id: id, state: state}}
+      return function(id) {
+        console.log("getting customer: " + state + id);
+        return {fullName: "Fake Customer", id: id, state: state}
+      }
     })
         
     sinon.stub(selectors.donor, "getOne").callsFake(function(state)
     {
-      return function(id) {return {fullName: "Fake Donor", id: id, state: state}}
+      //return new Object()
+      return function(id) {
+        console.log("getting donor: " + state + id);
+        return {fullName: "Fake Donor", id: id, state: state}
+      }
     })
         
     sinon.stub(selectors.volunteer, "getOne").callsFake(function(state)
     {
-      return function(id) {return {fullName: "Fake Volunteer", id: id, state: state}}
+      //return new Object()
+      return function(id) {
+        console.log("getting volunteer: " + state + id);
+        return {fullName: "Fake Volunteer", id: id, state: state}
+      }
     })
   })
     
@@ -67,8 +79,8 @@ describe("Title", function()
   {
     let t = mount(<Title />, {context: {store: store}})
     expect(t != null && t != undefined).to.eql(true)
-    //t.update()
-    //expect(document.title).to.equal("Beep Boop")
+    t.update()
+    expect(document.title).to.equal("Beep Boop")
   })
 })
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 
 import {Footer} from './Footer'
 
@@ -15,11 +15,13 @@ describe("Footer", function() {
 
     store.getState = function() 
     {
-      let ret = new Object()
-      ret.settings = new Object()
-      ret.settings.data = new Object()
-      ret.settings.data.organization = "FakeOrg"
-      return ret
+      return {
+        settings: {
+          data: {
+            organization: "FakeOrg"
+          }
+        }
+      }
     }
     store.state = store.getState()
   })
@@ -33,9 +35,9 @@ describe("Footer", function() {
 
   it("Should have an organization", function()
   {
-    let f = shallow(<Footer />, {context: {store: store}})
+    let f = mount(<Footer />, {context: {store: store}})
     expect(f).to.not.eql(null)
-    //expect(f.find("Link").text()).to.have.string(store.getState().settings.data.organization)
+    expect(f.find("Link").text()).to.have.string(store.getState().settings.data.organization)
   })
 })
 
