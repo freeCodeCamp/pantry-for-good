@@ -1,7 +1,10 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import FoodItemSelector from './FoodItemSelector'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('FoodItemSelector', function() {
   const items = [{_id: 1, name: 'foo'}, {_id: 2, name: 'bar'}]

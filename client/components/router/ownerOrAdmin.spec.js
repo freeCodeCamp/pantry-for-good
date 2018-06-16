@@ -1,9 +1,12 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import {ADMIN_ROLE} from '../../../common/constants'
 import ownerOrAdmin from './ownerOrAdmin'
 import Unauthorized from '../../modules/core/components/errors/Unauthorized'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('ownerOrAdmin', function() {
   it('renders if admin', function() {

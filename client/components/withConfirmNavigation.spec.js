@@ -1,7 +1,10 @@
 import React from 'react'
-import {mount, shallow} from 'enzyme'
+import Enzyme, {mount, shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import withConfirmNavigation from './withConfirmNavigation'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('withConfirmNavigation', function() {
   before(function() {
@@ -17,7 +20,7 @@ describe('withConfirmNavigation', function() {
     const WrappedComponent = sinon.spy(() => null)
     const Component = withConfirmNavigation(WrappedComponent)
 
-    shallow(<Component prop="foo" />).dive()
+    shallow(<Component prop="foo" history={{block: () => {}}} />).dive()
     expect(WrappedComponent).to.have.been.calledWithMatch({prop: 'foo'})
   })
 
@@ -25,7 +28,7 @@ describe('withConfirmNavigation', function() {
     const WrappedComponent = () => null
     const Component = withConfirmNavigation(WrappedComponent)
 
-    const wrapper = shallow(<Component dirty={false} />)
+    const wrapper = shallow(<Component dirty={false} history={{block: () => {}}} />)
     const addListenerSpy = sinon.spy(window, 'addEventListener')
     const removeListenerSpy = sinon.spy(window, 'removeEventListener')
 

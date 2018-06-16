@@ -1,9 +1,12 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import {getFieldArrayMock} from '../../../lib/test-helpers'
 import Household from './Household'
 import HouseholdRow from './household/HouseholdRow'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('Household', function() {
   it('renders', function() {

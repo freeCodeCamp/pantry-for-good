@@ -1,5 +1,6 @@
 import React from 'react'
-import { mount, shallow } from 'enzyme'
+import Enzyme, { mount, shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 import {normalize} from 'normalizr'
 
 import {arrayOfFoodCategories} from '../../../../../common/schemas'
@@ -7,6 +8,8 @@ import { CALL_API } from '../../../../store/middleware/api'
 import ConnectedFoodCategories, { FoodCategories } from './FoodCategories'
 import Category from './Category'
 import { loadFoods, saveFood, deleteFood } from '../../reducers/category'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('FoodCategories', () => {
   let props
