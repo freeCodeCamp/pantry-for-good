@@ -11,8 +11,8 @@ module.exports = {
       'react-hot-loader', 'react-bootstrap', 'react-bootstrap-autosuggest',
       'react-bootstrap-table', 'jquery', 'redux-form', 'reselect', 'recompose',
       'react-dnd', 'react-dnd-html5-backend', 'react-quill', 'react-google-maps',
-      'quill-image-drop-module', 'quill-image-resize-module', '@mapbox/polyline',
-      'mapbox-gl', 'react-mapbox-gl']
+      'quill-image-drop-module', 'quill-image-resize-module', '@mapbox/polyline'
+    ]
   },
   module: {
     rules: [
