@@ -1,5 +1,19 @@
+sudo: required
 language: node_js
 node_js:
   - "6"
 services:
   - mongodb
+  - docker
+after_success:
+  - if [ -z "$TRAVIS_TAG" ]; then exit 0; fi
+  - export REPO=quay.io/painejs/pantry-for-good
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
+  - docker build -t $REPO .
+  - docker tag $REPO $REPO:latest
+  - docker tag $REPO $REPO:$TRAVIS_TAG
+  - docker push $REPO
+env:
+  global:
+    - secure: "aPT+4y77QUj02JeuPwu9hY4SRk9b7pwM+qAqAMcEusUZvCHvf++WrAn5dPohfQZWZI3gmLc0QM8ubFGCyFg0QfeKBRsZ+GKdryw7RUNNE1dEojHW//oqskZTnQj0ER0jhnghAUiSBmQsAgeO6mS+h9pEF0QqdFfDjApBkzA62rRyRIU7gR2gn0QIdBahR9n1/lWPAIBnWfTOls9H3PLTgEDdOx+awVaXQE7mI/DCqwMXdRRkrbL0OGV8dRzXDZCMpBB2YFfQrWLV8GbQyQUauzrVU6IJQhE52anz3NhCRZrCrx7k9X2Y+K+E/sapuAa5f5A1rHosfbyMj6H6fopL9pIUH+e2bvvcJYFPVwafy+o9cbEaIYfDW/fuDigryJa0zj2iMZvKOVjgAg8kEmsSfUJHN4eay3KerQd4CoL3uKQK0TTnKlk4FYuawx98rmiaEPnJQRWZutqICkk+liV/+4anv2DfvFEtromWTKGF//PpTQVfR4LAxiI5RXawRP1Kp516uFdjOBxH1qrv+TxIldqqu8cNiXfH9YdGF70tguZsYMlDgqXbkErHF+k51a8++YxZ30N/KEFJ2xa+k51hGUTuu0pCcLhDGMTfGDYRuFxSo7ki3xlCG5gtA0pCm2VUhygymXZPGB37Gd5HhMOgw0KsQSkqCoNf6QkMCJY+Ax0="
+    - secure: "P7xIH4KRzw/1K8EiD8mS61n7Xy5PKrKcmZgLPnjpuVExIy34NfKbUPIsssaM/m0PNW/XDSkQUWLVsghqfo6QeWjl34Esu2j/IrkieazG8MpfeEBJSgyq0AfE3fvikl6fTnuQSFJYjLjOVC8dDZtbfUUwF/emi9pQvaHndYiYim5l6BW8II7KMI5lUyc3zkrVf1/U3mJ8IwzFji8FEFSURui2S0ZpbDhZzvZxJvmiXGZ+kOKiKffhHrWjJrzn5rCMtLqNlLOV0WGbg1z63kOwL9lbxgyLzH+/uvJtZ7ORIFo+mFb87Qiy0zoW3pCODW2LYV4bG5+Lj524Qr1Q/QAFXhlq2jpN6QPmxDpAG4ug8oi1d5fxdPgaTQ20fiRvVXYaYU89p3nXD3cgFE0Ll6QN7329j/NXyjvayByoqu5nuSsevD6rPhZSbcU4a1c+WRXvUfnY0Y+Amq69weIy35G5K96xXhx4tzjNZqJaXlc/K+BC0lYZLcKg6b6xvXJ0saVDrIIstn1YRdZX8VCskXIYui2MCOiSvlcmuh3VjFLeI1FW5dfu3dRhJ1Ke5zjc19K4Gl7xTqmOuYE/UbubkeZuD45X26hysbUlohp4cajB40IyLMSQDDYb4Hl39OmKgcAcW/W9/+bn95OetGUsXRkj2RhViY3Xido5if6jsi3hq50="
