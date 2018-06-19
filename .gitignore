@@ -15,3 +15,6 @@ server/config/env/secrets.js
 dist
 .nyc_output/
 coverage/
+resources/**/.terraform
+*.tfstate
+*.tfstate.backup
