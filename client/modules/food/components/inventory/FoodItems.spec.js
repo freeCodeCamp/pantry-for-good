@@ -1,5 +1,6 @@
 import React from 'react'
-import { mount, shallow } from 'enzyme'
+import Enzyme, { mount, shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 import { Button, Modal } from 'react-bootstrap'
 import { normalize } from 'normalizr'
 
@@ -7,6 +8,8 @@ import { arrayOfFoodItems, arrayOfFoodCategories } from '../../../../../common/s
 import ConnectedFoodItems, { FoodItems } from './FoodItems'
 import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
 import { showConfirmDialog, hideDialog } from '../../../core/reducers/dialog'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('FoodItems', () => {
   let props
@@ -213,17 +216,29 @@ describe('FoodItems', () => {
   })
 
   describe('render()', () => {
-    it('hides modal when state.modalType is undefined, shows when "Add" or "Edit"', () => {
+    it('hides modal when state.modalType is undefined', () => {
       let wrapper = mount(<FoodItems {...props} />)
 
       let modal = wrapper.find(Modal)
       expect(modal.length).to.equal(1)
       expect(modal.props().show).to.be.false
+    })
+
+    it('shows modal when state.modalType is "Add"', () => {
+      let wrapper = mount(<FoodItems {...props} />)
       wrapper.setState({ modalType: 'Add' })
+      wrapper.update()
+
+      let modal = wrapper.find(Modal)
       expect(modal.props().show).to.be.true
-      wrapper.setState({ modalType: undefined })
-      expect(modal.props().show).to.be.false
+    })
+
+    it('shows modal when state.modalType is "Edit"', () => {
+      let wrapper = mount(<FoodItems {...props} />)
       wrapper.setState({ modalType: 'Edit' })
+      wrapper.update()
+
+      let modal = wrapper.find(Modal)
       expect(modal.props().show).to.be.true
     })
 

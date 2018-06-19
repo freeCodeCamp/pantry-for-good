@@ -1,7 +1,10 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import FoodCategory from './FoodCategory'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('FoodCategory', function() {
   const categories = [

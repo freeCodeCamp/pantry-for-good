@@ -1,5 +1,6 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 import {
   ControlLabel,
   FormControl,
@@ -11,6 +12,8 @@ import {
 
 import FieldGroup from './FieldGroup'
 import Checkbox from './Checkbox'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('FieldGroup', function() {
   it('renders an input', function() {

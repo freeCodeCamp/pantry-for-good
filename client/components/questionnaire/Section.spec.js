@@ -1,8 +1,11 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import {fieldTypes, widgetTypes} from '../../../common/constants'
 import Section from './Section'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('Section', function() {
   it('renders', function() {
