@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    build: .
+    image: quay.io/painejs/pantry-for-good:latest
     depends_on:
       - mongo
     ports:
