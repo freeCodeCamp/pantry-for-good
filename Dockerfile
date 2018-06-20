@@ -4,6 +4,8 @@ WORKDIR /opt
 COPY . /opt
 ENV NODE_ENV=production
 
+RUN cp server/config/env/secrets-template.js server/config/env/secrets.js
+
 RUN npm install
 RUN npm run build
 
