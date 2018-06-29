@@ -1,86 +1,121 @@
 import React from 'react'
-import { mount } from 'enzyme'
+import Enzyme, { shallow, mount } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import {Title} from './Title'
 
-import selectors from '../../../store/selectors'
+Enzyme.configure({adapter: new Adapter()})
 
 describe("Title", function()
 {
-//*
+  const names = ["", "Fake Volunteer", "Fake Customer", "Fake Donor"]
 
-  before(function()
+  it("should display the org as the Title when there is one path element", function()
   {
-    sinon.stub(selectors.settings, "getSettings").callsFake(function(state)
-    {
-      //return undefined
-      console.log("getting settings: " + state)
-      return {organization: "FakeOrg", state: state}
-    })
-
-    sinon.stub(selectors.customer, "getOne").callsFake(function(state)
-    {
-      //return new Object()
-      return function(id) {
-        console.log("getting customer: " + state + id);
-        return {fullName: "Fake Customer", id: id, state: state}
-      }
-    })
-        
-    sinon.stub(selectors.donor, "getOne").callsFake(function(state)
-    {
-      //return new Object()
-      return function(id) {
-        console.log("getting donor: " + state + id);
-        return {fullName: "Fake Donor", id: id, state: state}
-      }
-    })
-        
-    sinon.stub(selectors.volunteer, "getOne").callsFake(function(state)
-    {
-      //return new Object()
-      return function(id) {
-        console.log("getting volunteer: " + state + id);
-        return {fullName: "Fake Volunteer", id: id, state: state}
-      }
-    })
-  })
-    
-  after(function()
-  {
-    selectors.settings.getSettings.restore()
-    selectors.customer.getOne.restore()
-    selectors.donor.getOne.restore()
-    selectors.volunteer.getOne.restore()
-  })
-  //*/
-    
-  let store = null
-    
-  before(function()
-  {
-    store = new Object()
-
-    store.subscribe = function() { }
-    store.dispatch = function() { }
-
-    store.getState = function() 
-    {
-      let ret = new Object()
-      ret.router = new Object()
-      ret.router.location = new Object()
-      ret.router.location.pathname = "beep/boop"
-      return ret
-    }
-    store.state = store.getState()
-  })
-
-  it("should display a title", function()
-  {
-    let t = mount(<Title />, {context: {store: store}})
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.update()
-    expect(document.title).to.equal("Beep Boop")
+    expect(document.title).to.equal("FakeOrg")
+  })
+  
+  it("should use path elements and org when there is more than one path element", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "two/fake/elements"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Elements - Fake - FakeOrg")
+  })
+  
+  it("should use no more than two path elements", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "more/than/two/fake/elements"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Two - Than - FakeOrg")
+  })
+  
+  it("should use volunteer and org when it is the volunteer list", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/volunteers/list"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Volunteers - FakeOrg")
+  })
+  
+  it("should use volunteer name when it is a specific volunteer", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/volunteers/1"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Fake Volunteer - Volunteers - FakeOrg")
+  })
+  
+  it("should use customer and org when it is the customer list", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/customers/list"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Customers - FakeOrg")
+  })
+  
+  it("should use customer name when it is a specific customer", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/customers/2"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Fake Customer - Customers - FakeOrg")
+  })
+  
+  it("should use donor and org when it is the donor list", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/donors/list"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Donors - FakeOrg")
+  })
+  
+  it("should use donor name when it is a specific donor", function()
+  {
+    let t = mount(<Title settings={{organization: "FakeOrg"}}
+      route={{pathname: "fake/donors/3"}}
+      getCustomer={(id) => {return {fullName: names[id]}}}
+      getVolunteer={(id) => {return {fullName: names[id]}}}
+      getDonor={(id) => {return {fullName: names[id]}}} />)
+    expect(t != null && t != undefined).to.eql(true)
+    t.update()
+    expect(document.title).to.equal("Fake Donor - Donors - FakeOrg")
   })
 })
 
