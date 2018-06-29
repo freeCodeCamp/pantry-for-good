@@ -23,6 +23,9 @@ export const section = new schema.Entity('sections', {}, {idAttribute: '_id'})
 export const user = new schema.Entity('users', {}, {idAttribute: '_id'})
 export const volunteer = new schema.Entity('volunteers', {}, {idAttribute: '_id'})
 
+export const notification = new schema.Entity('notification', {}, {idAttribute: '_id'})
+export const arrayOfNotifications = new schema.Array(notification)
+
 export const arrayOfDonations = new schema.Array(donation)
 export const arrayOfDonors = new schema.Array(donor)
 export const arrayOfCustomers = new schema.Array(customer)

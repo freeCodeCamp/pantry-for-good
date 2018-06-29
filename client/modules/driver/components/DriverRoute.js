@@ -8,7 +8,6 @@ import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {loadSettings} from '../../settings/reducers/settings'
 import {loadVolunteer, saveVolunteer} from '../../volunteer/reducer'
 import {
-  // requestMapquestRoute,
   requestGoogleRoute,
   setAllWaypoints,
   clearRoute
@@ -17,7 +16,6 @@ import {
 import {Page, PageBody} from '../../../components/page'
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import RouteOrder from './route/RouteOrder'
-// import RouteMap from './route/mapbox/RouteMap'
 import RouteMap from './route/googlemap/RouteMap'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -45,8 +43,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(clearRoute())
   },
   saveDriver: driver => dispatch(saveVolunteer(driver)),
-  // requestRoute: waypoints => dispatch(requestMapquestRoute(waypoints)),
-  // requestOptimized: waypoints => dispatch(requestMapquestRoute(waypoints, true)),
   requestRoute: waypoints => dispatch(requestGoogleRoute(waypoints)),
   requestOptimized: waypoints => dispatch(requestGoogleRoute(waypoints, true)),
   setAllWaypoints: waypoints => dispatch(setAllWaypoints(waypoints)),
@@ -108,6 +104,7 @@ class DriverRoute extends Component {
                       className="btn btn-default"
                       href={this.getGoogleUrl()}
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       Show on Google
                     </a>

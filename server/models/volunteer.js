@@ -73,7 +73,7 @@ var VolunteerSchema = new Schema({
     type: Date,
     default: Date.now
   },
-
+  
 }, {
   id: false
 })

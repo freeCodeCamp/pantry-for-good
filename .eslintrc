@@ -37,6 +37,7 @@
         "indent": [2, 2, {"SwitchCase": 1}],
         "react/prop-types": "off",
         "semi": ["warn", "never"],
-        "no-console": ["error", { "allow": ["info", "warn", "error"] }]
+        "no-console": ["error", { "allow": ["info", "warn", "error"] }],
+        "react/no-deprecated": "off"
     }
 }

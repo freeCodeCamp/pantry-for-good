@@ -1,7 +1,10 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import Enzyme, { shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import Category from './Category'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('Category Class', () => {
   let props
@@ -26,7 +29,7 @@ describe('Category Class', () => {
     it('shows the category', () => {
       const category = shallow(<Category {...props} />)
       const categoryFields = category.find('span')
-      expect(categoryFields.nodes[0].props.children).to.equal(props.category)
+      expect(categoryFields.getElements()[0].props.children).to.equal(props.category)
     })
 
     it('shows an Edit button', () => {

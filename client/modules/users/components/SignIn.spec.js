@@ -1,9 +1,12 @@
 
 import React from 'react'
-import { shallow } from 'enzyme'
+import Enzyme, { shallow } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import ConnectedSignIn, { SignIn } from './SignIn'
 import { signIn as authReducerSignIn, clearFlags as authReducerClearFlags } from '../authReducer'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('SignIn Class', function () {
 

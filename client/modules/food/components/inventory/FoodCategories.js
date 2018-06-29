@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import _ from 'lodash'
+import {find, sortBy} from 'lodash'
 
 import Category from './Category'
 import NewCategory from './NewCategory'
@@ -15,7 +15,7 @@ export class FoodCategories extends Component {
   }
 
   onItemEdit = (_id, value) => {
-    let foodCategoryToUpdate = _.find(this.props.foods, {_id})
+    let foodCategoryToUpdate = find(this.props.foods, {_id})
 
     //Don't do anything if it is the same value
     if (foodCategoryToUpdate.category === value.trim()) return
@@ -29,13 +29,21 @@ export class FoodCategories extends Component {
   }
 
   getTableRows = () => {
-    if (this.props.foods.length > 0) {
-      return this.props.foods.map(category =>
-        <Category key={category._id} id={category._id} category={category.category} onItemEdit={this.onItemEdit} onItemRemove={this.onItemRemove} />
-      )
-    } else {
+    var sorted = sortBy(this.props.foods, food => food.category.toLowerCase())
+
+    if (!sorted.length) {
       return (<tr><td className="text-center">No food categories yet.</td></tr>)
     }
+
+    return sorted.map(category =>
+      <Category 
+        key={category._id} 
+        id={category._id} 
+        category={category.category} 
+        onItemEdit={this.onItemEdit} 
+        onItemRemove={this.onItemRemove} 
+      />
+    )
   }
 
   createCategory = category => {
@@ -43,7 +51,8 @@ export class FoodCategories extends Component {
   }
 
   doesCategoryExist = name => {
-    return this.props.foods.some(category => category.category.toLowerCase() === name.toLowerCase())
+    return this.props.foods.some(category => 
+      category.category.toLowerCase() === name.toLowerCase())
   }
 
   render() {
@@ -63,7 +72,10 @@ export class FoodCategories extends Component {
             </tbody>
           </table>
           <div>
-            <NewCategory createCategory={this.createCategory} doesCategoryExist={this.doesCategoryExist}/>
+            <NewCategory 
+              createCategory={this.createCategory} 
+              doesCategoryExist={this.doesCategoryExist}
+            />
           </div>
         </BoxBody>
       </Box>

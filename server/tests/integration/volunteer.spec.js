@@ -8,6 +8,8 @@ import User from '../../models/user'
 import Questionnaire from '../../models/questionnaire'
 import Volunteer from '../../models/volunteer'
 
+import {searchVolunteerAndSetNotification} from '../../lib/notification-sender'
+
 describe('Volunteer Api', function() {
   before(async function() {
     await initDb()
@@ -126,6 +128,42 @@ describe('Volunteer Api', function() {
           expect(res.body).to.have.property('firstName', 'user')
         })
         .expect(200)
+    })
+  })
+
+  describe('Volunteer notifications', function() {
+    it('creates volunteer notifications', async function(){
+      const testVolunteer = createTestUser('user', clientRoles.VOLUNTEER)
+      const testAdmin = createTestUser('admin', ADMIN_ROLE)
+
+      const volunteer = await createUserSession(testVolunteer)
+      const admin = await createUserSession(testAdmin)
+
+      const volunteerRequest = supertest.agent(volunteer.app)
+      const adminRequest = supertest.agent(admin.app)
+
+      const newVolunteer = (await volunteerRequest.post('/api/volunteer')
+        .send(volunteer.user)).body
+
+      await (adminRequest.put(`/api/admin/volunteers/${newVolunteer._id}`).send({
+        status: 'Active',
+        customers: [10077]
+      }))
+
+      await searchVolunteerAndSetNotification({message: 'Customer Pepe Gonzales was updated!', url: '/customers/10077'}, 10077)
+
+      return volunteerRequest.get('/api/users/me')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('notifications')
+          expect(res.body.notifications).to.have.length(1)
+
+          const notification = res.body.notifications[0]
+          expect(notification).to.have.property('url', '/customers/10077')
+          expect(notification).to.have.property('message', 'Customer Pepe Gonzales was updated!')
+          expect(notification).to.have.property('date')
+        })
     })
   })
 })

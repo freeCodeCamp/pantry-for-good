@@ -7,8 +7,9 @@ import Volunteer from '../models/volunteer'
 import Package from '../models/package'
 import mailer from '../lib/mail/mail-helpers'
 import User from '../models/user'
-import {updateFields} from '../lib/update-linked-fields'
 
+import {updateFields} from '../lib/update-linked-fields'
+import {searchUserAndSetNotification, searchVolunteerAndSetNotification} from '../lib/notification-sender'
 
 export default {
   /**
@@ -22,6 +23,9 @@ export default {
       {_id: customer._id},
       {$push: {roles: clientRoles.CUSTOMER}}
     )
+
+    // Sent Notification
+    searchUserAndSetNotification('roles/admin', {message:`Customer ${customer.fullName} was created!`, url: `/customers/${customer._id}`}, req.user._id)
 
     const savedCustomer = await customer.save()
     updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
@@ -46,11 +50,18 @@ export default {
     const oldCustomer = await Customer.findById(customer._id)
     const newCustomer = await customer.save()
 
-    if (newCustomer.status !== oldCustomer.status) {
+    // Check if status is updated by admin
+    if (oldCustomer.status === 'Pending' && (newCustomer.status === 'Accepted' || newCustomer.status === 'Rejected')) {
       mailer.sendStatus(newCustomer)
-    } else {
+    // Check if status was updated by someone else than the user
+    } else if(!(newCustomer.status === 'Away' || newCustomer.status === 'Available' )){
       mailer.sendUpdate(newCustomer)
     }
+
+    // Sent Notification
+    searchUserAndSetNotification('roles/admin', {message:`Customer ${customer.fullName} was updated!`, url: `/customers/${customer._id}`}, req.user._id)
+    searchVolunteerAndSetNotification({message:`Customer ${customer.fullName} was updated!`, url: `/customers/${customer._id}`}, customer._id)
+
     updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
     res.json(newCustomer)
   },

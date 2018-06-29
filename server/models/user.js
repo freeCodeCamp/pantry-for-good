@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import autoIncrement from 'mongoose-plugin-autoinc'
 
 import {ADMIN_ROLE, clientRoles, volunteerRoles, modelTypes} from '../../common/constants'
+import {notificationSchema} from './notification'
 
 const Schema = mongoose.Schema
 
@@ -74,7 +75,9 @@ const UserSchema = new Schema({
   },
   /* For reset password */
   resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordExpires: Date,
+  /* For notifications */
+  notifications: [notificationSchema]
 })
 
 /**

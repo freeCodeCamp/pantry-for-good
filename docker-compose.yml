@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    image: quay.io/painejs/pantry-for-good:latest
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    volumes:
+      - static:/opt
+    environment:
+      MONGODB_URI: "mongodb://mongo:27017/fb-dev"
+      NODE_ENV: production
+      SECRET: foo
+
+  mongo:
+    image: mongo:3.6
+    ports:
+      - "31000:27017"
+
+  nginx:
+    image: nginx:1.13-alpine
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./resources/nginx/conf.d:/etc/nginx/conf.d
+      - ./resources/nginx/ssl:/etc/nginx/ssl
+      - static:/opt
+
+volumes:
+  static:

@@ -1,9 +1,7 @@
 import {differenceBy, first, get, last, unionBy} from 'lodash'
-import polyline from '@mapbox/polyline'
 
 import {getGoogleRoute, getCrudeRoute} from './helpers'
 import getAddress from '../../../lib/get-address'
-import {callApi} from '../../../store/middleware/api'
 
 export const CLEAR_ROUTE = 'delivery/route/CLEAR_ROUTE'
 export const ROUTE_REQUEST = 'delivery/route/ROUTE_REQUEST'
@@ -114,24 +112,6 @@ export const requestGoogleRoute = (waypoints, optimize) => (dispatch, getState) 
 export const requestCrudeRoute = waypoints => dispatch => {
   dispatch(routeRequest())
   dispatch(routeSuccess({geometry: getCrudeRoute(waypoints)}))
-}
-
-export const requestMapquestRoute = (waypoints, optimize) => dispatch => {
-  const codedWaypoints = polyline.encode(waypoints.map(point => [point.lat, point.lng]))
-
-  callApi(`delivery/directions?waypoints=${codedWaypoints}&optimize=${optimize || 'false'}`)
-    .then(route => {
-      dispatch(routeSuccess(route))
-      if (!optimize) return
-
-      let optimizedWaypoints = []
-      route.waypoints.slice(1, -1).forEach((index, i) => {
-        optimizedWaypoints[i] = waypoints[index]
-      })
-
-      dispatch(setWaypoints(optimizedWaypoints))
-    })
-    .catch(error => dispatch(routeFailure(error)))
 }
 
 export default (state = {

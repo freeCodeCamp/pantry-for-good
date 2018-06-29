@@ -1,10 +1,13 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import Enzyme, {shallow} from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
 
 import LoginBox from './LoginBox'
 import FoodbankLogo from '../FoodbankLogo'
 import {ErrorWrapper} from '../error'
 import LoadingWrapper from '../LoadingWrapper'
+
+Enzyme.configure({adapter: new Adapter()})
 
 describe('LoginBox', function() {
   it('renders', function() {
