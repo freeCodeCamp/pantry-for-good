@@ -1,5 +1,5 @@
 import React from 'react'
-import Enzyme, { shallow, mount } from 'enzyme'
+import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
 
 import {Title} from './Title'
@@ -14,9 +14,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -27,9 +27,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "two/fake/elements"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -40,9 +40,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "more/than/two/fake/elements"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -53,9 +53,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/volunteers/list"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -66,9 +66,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/volunteers/1"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -79,9 +79,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/customers/list"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -92,9 +92,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/customers/2"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -105,9 +105,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/donors/list"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
@@ -118,9 +118,9 @@ describe("Title", function()
   {
     let t = mount(<Title settings={{organization: "Fake"}}
       route={{pathname: "fake/donors/3"}}
-      getCustomer={(id) => {return {fullName: names[id]}}}
-      getVolunteer={(id) => {return {fullName: names[id]}}}
-      getDonor={(id) => {return {fullName: names[id]}}} />)
+      getCustomer={id => {return {fullName: names[id]}}}
+      getVolunteer={id => {return {fullName: names[id]}}}
+      getDonor={id => {return {fullName: names[id]}}} />)
     expect(t != null && t != undefined).to.eql(true)
     t.setProps({settings: {organization: "FakeOrg"}})
     t.update()
