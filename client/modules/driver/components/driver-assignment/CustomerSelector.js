@@ -6,7 +6,7 @@ import {Checkbox} from '../../../../components/form'
 import selectors from '../../../../store/selectors'
 import getAddress from '../../../../lib/get-address'
 import {setFilter, selectCustomers, toggleCustomer} from '../../reducers/assignment'
-import {addWaypoints, removeWaypoints} from '../../reducers/route'
+import {addWaypoints, removeWaypoints, setWaypoints} from '../../reducers/route'
 import FilterCustomers from './FilterCustomers'
 
 const mapStateToProps = state => ({
@@ -24,7 +24,8 @@ const mapDispatchToProps = dispatch => ({
   selectCustomers: customers => dispatch(selectCustomers(customers)),
   handleFilterChange: ev => dispatch(setFilter(ev.target.value)),
   addWaypoints: waypoints => dispatch(addWaypoints(waypoints)),
-  removeWaypoints: waypoints => dispatch(removeWaypoints(waypoints))
+  removeWaypoints: waypoints => dispatch(removeWaypoints(waypoints)),
+  setWaypoints: waypoints => dispatch(setWaypoints(waypoints))
 })
 
 const mergeProps = (stateProps, dispatchProps) => ({
@@ -37,7 +38,7 @@ const mergeProps = (stateProps, dispatchProps) => ({
   },
   handleDeselectAll: () => {
     dispatchProps.selectCustomers([]) // TODO: deselect only visible selected customers
-    dispatchProps.setWaypoints([]) //removeWaypoints(stateProps.customers)
+    dispatchProps.setWaypoints([])
   },
   handleSelect: id => () => {
     const customer = stateProps.getCustomer(id)
