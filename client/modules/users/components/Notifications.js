@@ -118,7 +118,6 @@ class NotificationsList extends Component {
                 <TableHeaderColumn dataField="index" width="70px" dataSort>#</TableHeaderColumn>
                 <TableHeaderColumn dataField="date" dataSort>Date</TableHeaderColumn>
                 <TableHeaderColumn dataField="message" dataSort>Message</TableHeaderColumn>
-                <TableHeaderColumn dataField="url" dataSort>Url</TableHeaderColumn>
                 <TableHeaderColumn
                   dataFormat={this.getActionButtons2}
                   dataAlign="center"
