@@ -3,7 +3,7 @@ import chai from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 
-const {window} = new JSDOM('')
+const {window} = new JSDOM('', {url: 'http://localhost'})
 global.window = window
 global.document = window.document
 

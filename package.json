@@ -143,7 +143,7 @@
     "flow-bin": "^0.74.0",
     "ghooks": "^2.0.4",
     "ignore-styles": "^5.0.1",
-    "jsdom": "^11.11.0",
+    "jsdom": "^13.0.0",
     "mocha": "^5.2.0",
     "nyc": "^12.0.2",
     "react-test-renderer": "^15.5.4",
