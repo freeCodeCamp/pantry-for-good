@@ -67,25 +67,3 @@ function mockSessionMiddleware({_id, roles}) {
     next()
   }
 }
-
-/**
- * Get application root from server-side test code.
- * Note: Only works for server code.  Does not work for
- * client code yet.
- *
- * @param {boolean} is_server
- * @param {string} pathname
- * @return {string}
- */
-export const getAppRoot = (pathname, is_server=true) => {
-  if(!pathname) {
-    return ''
-  }
-
-  if(is_server) {
-    return pathname.substring(0, pathname.indexOf('server'))
-  } else { 
-    // ToDo
-    return ''
-  }
-}

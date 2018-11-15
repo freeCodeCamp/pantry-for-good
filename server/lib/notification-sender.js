@@ -18,9 +18,6 @@ async function setNotification(id, notification, model){
  */
 export async function searchUserAndSetNotification(roleU, notification) {
   const users = await User.find({})
-    .catch(err => {
-      throw err
-    })
 
   users.forEach(function(user) {
     user.roles.map(role => {
@@ -36,9 +33,6 @@ export async function searchUserAndSetNotification(roleU, notification) {
  */
 export async function searchVolunteerAndSetNotification(notification, customerId) {
   const volunteers = await Volunteer.find({})
-    .catch(err => {
-      throw err
-    })
 
   volunteers.forEach(function(volunteer) {
     if(volunteer.customers.length > 0){

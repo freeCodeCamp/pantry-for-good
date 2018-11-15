@@ -1,55 +1,53 @@
-import { 
-  default as media_helpers
+import {
+  default as mediaHelpers
 } from './media-helpers.js'
-import { getAppRoot } from '../tests/helpers'
+
 
 describe('Media helpers', function() {
   context('node env = production', function() {
-    const media_root = 'dist/client/media'
+    const mediaRoot = 'dist/client/media'
 
     beforeEach(function() {
-      media_helpers.__Rewire__('mediaRoot', media_root)
+      mediaHelpers.__Rewire__('mediaRoot', mediaRoot)
     })
 
     afterEach(function() {
-      media_helpers.__ResetDependency__('mediaRoot')
+      mediaHelpers.__ResetDependency__('mediaRoot')
     })
 
     describe('getPath', function() {
-      const getPath = media_helpers.__GetDependency__('getPath')
+      const getPath = mediaHelpers.__GetDependency__('getPath')
 
       it('should return pathname of production environment of type string given a valid filename', function() {
         const filename = 'testfile'
-        const expected = getAppRoot(__dirname) + media_root + '/' + filename
+        const expected = mediaRoot + '/' + filename
         const actual = getPath(filename)
 
-        expect(actual).to.be.a('string')
-        expect(actual).to.equal(expected)
+        expect(actual).to.contain(expected)
       })
     })		
   })
 
-  context('node dev = debug', function() {
-    const media_root = 'assets/media'
+  context('node env = dev', function() {
+    const mediaRoot = 'assets/media'
 
     beforeEach(function() {
-      media_helpers.__Rewire__('mediaRoot', media_root)
+      mediaHelpers.__Rewire__('mediaRoot', mediaRoot)
     })
 
     afterEach(function() {
-      media_helpers.__ResetDependency__('mediaRoot')
+      mediaHelpers.__ResetDependency__('mediaRoot')
     })		
 
     describe('getPath', function() {
-      const getPath = media_helpers.__GetDependency__('getPath')
+      const getPath = mediaHelpers.__GetDependency__('getPath')
 			
-      it('should return pathname of debug environment', function() {
+      it('should return pathname of dev environment', function() {
         const filename = 'testfile'
-        const expected = getAppRoot(__dirname) + media_root + '/' + filename
+        const expected =  mediaRoot + '/' + filename
         const actual = getPath(filename)
 
-        expect(actual).to.be.a('string')
-        expect(actual).to.equal(expected)
+        expect(actual).to.contain(expected)
       })
     })
   })
