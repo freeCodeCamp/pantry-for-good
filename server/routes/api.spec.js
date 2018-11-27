@@ -1,6 +1,6 @@
-import apiRouterFactory from '../../routes/api'
+import apiRouterFactory from './api'
 
-import {ADMIN_ROLE} from '../../../common/constants'
+import {ADMIN_ROLE} from '../../common/constants'
 
 describe('Api router', function() {
   let userControllerMock
