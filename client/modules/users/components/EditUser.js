@@ -14,12 +14,12 @@ import BoxBody from '../../../components/box/BoxBody'
 
 const isAdmin = user => includes(user.roles, ADMIN_ROLE)
 
-class EditUser extends React.Component {
+export class EditUser extends React.Component {
   constructor(props) {
     super(props)
     const { user } = props
     this.state = {
-      firstName: user ? props.user.firstName : "",
+      firstName: user ? user.firstName : "",
       lastName: user ? user.lastName : "",
       email: user ? user.email : "",
       isAdmin: user ? isAdmin(user) : false,
