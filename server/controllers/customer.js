@@ -24,14 +24,12 @@ export default {
       {$push: {roles: clientRoles.CUSTOMER}}
     )
 
-    // Sent Notification
+    // Sent Notification  
     searchUserAndSetNotification('roles/admin', {message:`Customer ${customer.fullName} was created!`, url: `/customers/${customer._id}`}, req.user._id)
 
     const savedCustomer = await customer.save()
     updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
     res.json(savedCustomer)
-
-    // mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**
@@ -74,6 +72,7 @@ export default {
       .sort('-dateReceived')
       .populate('user', 'displayName')
       .populate('assignedTo', 'firstName lastName')
+      .exec()
     res.json(customers)
   },
 
