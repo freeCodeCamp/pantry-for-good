@@ -1,10 +1,9 @@
 import Customer from '../../models/customer'
 import Volunteer from '../../models/volunteer'
 import Donor from '../../models/donor'
-import app from '../../config/express'
 import User from '../../models/user'
 import { ADMIN_ROLE } from '../../../common/constants'
-import { createUserSession, createTestUser } from '../helpers'
+import { createGuestSession, createUserSession, createTestUser } from '../helpers'
 
 import {searchUserAndSetNotification} from '../../lib/notification-sender'
 
@@ -30,7 +29,8 @@ describe('User Api', function() {
 
   describe('signup', function() {
     it('signs up users', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
@@ -50,7 +50,8 @@ describe('User Api', function() {
     })
 
     it('it requires a first name', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         lastName: 'Willis',
         email: 'mwillis@example.com',
@@ -65,7 +66,8 @@ describe('User Api', function() {
     })
 
     it('it requires a last name', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Willis',
         email: 'mwillis@example.com',
@@ -80,7 +82,8 @@ describe('User Api', function() {
     })
 
     it('requires a password', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Margaret',
         lastName: 'Willis',
@@ -95,7 +98,8 @@ describe('User Api', function() {
     })
 
     it('requires a password to be at least 7 characters long', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Margaret',
         lastName: 'Willis',
@@ -111,7 +115,8 @@ describe('User Api', function() {
     })
 
     it('does not allow signup if email address already has an account', async function() {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
@@ -128,7 +133,7 @@ describe('User Api', function() {
         email: 'fharper@example.com',
         password: '12345678'
       }
-      return await request.post('/api/auth/signup')
+      return request.post('/api/auth/signup')
         .send(newUser2)
         .expect(400)
         .expect(res => {
@@ -139,13 +144,15 @@ describe('User Api', function() {
 
   describe('logging in', function() {
     it('signs in', async function() {
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
         password: '12345678'
       }
-      const request = supertest.agent(app())
+
       await request.post('/api/auth/signup')
         .send(newUser)
 
@@ -159,13 +166,15 @@ describe('User Api', function() {
     })
 
     it('fails without an email', async function() {
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
         password: '12345678'
       }
-      const request = supertest.agent(app())
+
       await request.post('/api/auth/signup')
         .send(newUser)
 
@@ -179,13 +188,15 @@ describe('User Api', function() {
     })
 
     it('fails without a password', async function() {
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
         password: '12345678'
       }
-      const request = supertest.agent(app())
+
       await request.post('/api/auth/signup')
         .send(newUser)
 
@@ -199,13 +210,15 @@ describe('User Api', function() {
     })
 
     it('fails with the wrong password', async function() {
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       const newUser = {
         firstName: 'Frank',
         lastName: 'Harper',
         email: 'fharper@example.com',
         password: '12345678'
       }
-      const request = supertest.agent(app())
+
       await request.post('/api/auth/signup')
         .send(newUser)
 
@@ -221,7 +234,8 @@ describe('User Api', function() {
 
   describe('listing user accounts', function () {
     it('returns an empty array when there are no accounts', async function () {
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       return await request.get('/api/users')
         .expect(200)
         .expect(res => {
@@ -239,7 +253,8 @@ describe('User Api', function() {
         provider: 'local'
       })
 
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       return await request.get('/api/users')
         .expect(200)
         .expect(res => {
@@ -267,7 +282,8 @@ describe('User Api', function() {
         provider: 'local'
       })
 
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       return await request.get('/api/users')
         .expect(200)
         .expect(res => {
@@ -348,22 +364,6 @@ describe('User Api', function() {
   })
 
   describe('updating a user', function() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     it('updates the database', async function(){
       const user = await User.create({
         firstName: 'first',
@@ -398,10 +398,6 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('firstName', requestBody.firstName)
       expect(updatedUser).to.have.property('lastName', requestBody.lastName)
     })
-
-
-
-
 
     it('returns the updated user object', async function(){
       const user = await User.create({
@@ -619,7 +615,8 @@ describe('User Api', function() {
       // Sent Notifications
       await searchUserAndSetNotification('roles/admin', {message:`Customer customer test was created!`, url: `/customers/2018`}, 2018)
 
-      const request = supertest.agent(app())
+      const session = createGuestSession()
+      const request = supertest.agent(session)
       return await request.post('/api/auth/signin')
         .send({email: '123@example.com', password: '12345678'})
         .expect(200)
