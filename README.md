@@ -24,6 +24,7 @@ There's a demo app hosted at https://pantry-for-good.herokuapp.com, though it mi
 8. Open <http://localhost:8080> in your web browser
 9. Login with username `admin@example.com` password `password`
 
+
 ------------
 ### Detailed local development installation steps
 
