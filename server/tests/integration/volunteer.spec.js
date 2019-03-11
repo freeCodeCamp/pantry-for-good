@@ -1,7 +1,8 @@
 import {
   ADMIN_ROLE,
   clientRoles,
-  questionnaireIdentifiers
+  questionnaireIdentifiers,
+  customerStatus
 } from '../../../common/constants'
 import {createUserSession, createTestUser} from '../helpers'
 import User from '../../models/user'

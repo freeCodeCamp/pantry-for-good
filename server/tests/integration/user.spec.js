@@ -613,7 +613,7 @@ describe('User Api', function() {
       })
 
       // Sent Notifications
-      await searchUserAndSetNotification('roles/admin', {message:`Customer customer test was created!`, url: `/customers/2018`}, 2018)
+      await searchUserAndSetNotification(ADMIN_ROLE, {message:`Customer customer test was created!`, url: `/customers/2018`}, 2018)
 
       const session = createGuestSession()
       const request = supertest.agent(session)

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import moment from 'moment'
 
-import {modelTypes, questionnaireIdentifiers} from '../../common/constants'
+import {modelTypes, questionnaireIdentifiers, customerStatus} from '../../common/constants'
 import locationSchema from './location-schema'
 import {getValidator} from '../lib/questionnaire-helpers'
 import {locateQuestionnaire} from '../lib/geolocate'
@@ -28,8 +28,8 @@ const CustomerSchema = new Schema({
   location: locationSchema,
   status: {
     type: String,
-    enum: ['Accepted', 'Rejected', 'Pending', 'Inactive'],
-    default: 'Pending'
+    enum: [customerStatus.ACCEPTED, customerStatus.REJECTED, customerStatus.PENDING, customerStatus.INACTIVE],
+    default: customerStatus.PENDING
   },
   household: [{
     name: {
