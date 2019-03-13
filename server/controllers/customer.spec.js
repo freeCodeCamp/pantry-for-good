@@ -88,12 +88,13 @@ describe('Customer controller', function() {
       res = {}
     })
 
-    it('should return customer object', function() {
-      //sinon.assert.match(req.customer.email, 'watashi@heehaa.com')
-      //sinon.assert.match(res.test, 99199)
-      
+    it('should return customer object', function() {     
       customerCtrl.read(req, res)
-      sinon.assert.calledWith(res.json, sinon.match({ _id: req.customer._id }))
+
+      sinon.assert.match(req.customer.email, 'watashi@heehaa.com')
+      sinon.assert.match(res.test, 99199)
+
+      //sinon.assert.calledWith(res.json, sinon.match({ _id: req.customer._id }))
       //sinon.assert.calledWith(res.json, sinon.match({ email: req.customer.email }))
     })
   })
