@@ -1,4 +1,4 @@
-import {pageIdentifiers} from '../../../common/constants'
+import {pageIdentifiers, customerStatus} from '../../../common/constants'
 import mailGenerator from './mail-generator'
 import sendEmail from '../../config/mailer'
 import Settings from '../../models/settings'
@@ -33,14 +33,14 @@ export default {
     const {firstName, lastName, fullName, email} = customer
     const date = customer.dateReceived.toDateString()
 
-    if (customer.status === 'Accepted') {
+    if (customer.status === customerStatus.ACCEPTED) {
       await this.send(
         email,
         fullName,
         pageIdentifiers.CUSTOMER_ACCEPTED,
         {fullName, date}
       )
-    } else if (customer.status === 'Rejected'){
+    } else if (customer.status === customerStatus.REJECTED){
       await this.send(
         email,
         fullName,

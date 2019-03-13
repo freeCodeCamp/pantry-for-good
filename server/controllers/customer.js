@@ -25,13 +25,11 @@ export default {
     )
 
     // Sent Notification
-    searchUserAndSetNotification('roles/admin', {message:`Customer ${customer.fullName} was created!`, url: `/customers/${customer._id}`}, req.user._id)
+    searchUserAndSetNotification(ADMIN_ROLE, {message:`Customer ${customer.fullName} was created!`, url: `/customers/${customer._id}`}, req.user._id)
 
     const savedCustomer = await customer.save()
     updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)
     res.json(savedCustomer)
-
-    // mailer.send(config.mailer.to, 'A new client has applied.', 'create-customer-email')
   },
 
   /**
@@ -51,7 +49,7 @@ export default {
     const newCustomer = await customer.save()
 
     // Check if status is updated by admin
-    if (oldCustomer.status === 'Pending' && (newCustomer.status === 'Accepted' || newCustomer.status === 'Rejected')) {
+    if (oldCustomer.status === customerStatus.PENDING && (newCustomer.status === customerStatus.ACCEPTED || newCustomer.status === customerStatus.REJECTED)) {
       mailer.sendStatus(newCustomer)
     // Check if status was updated by someone else than the user
     } else if(!(newCustomer.status === 'Away' || newCustomer.status === 'Available' )){
@@ -59,7 +57,7 @@ export default {
     }
 
     // Sent Notification
-    searchUserAndSetNotification('roles/admin', {message:`Customer ${customer.fullName} was updated!`, url: `/customers/${customer._id}`}, req.user._id)
+    searchUserAndSetNotification(ADMIN_ROLE, {message:`Customer ${customer.fullName} was updated!`, url: `/customers/${customer._id}`}, req.user._id)
     searchVolunteerAndSetNotification({message:`Customer ${customer.fullName} was updated!`, url: `/customers/${customer._id}`}, customer._id)
 
     updateFields(clientRoles.CUSTOMER, req.body.fields, customer._id)

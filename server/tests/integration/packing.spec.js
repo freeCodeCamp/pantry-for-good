@@ -1,7 +1,7 @@
 import {find} from 'lodash'
 
 import {createUserSession, createTestUser} from '../helpers'
-import {ADMIN_ROLE, questionnaireIdentifiers} from '../../../common/constants'
+import {ADMIN_ROLE, questionnaireIdentifiers, customerStatus} from '../../../common/constants'
 import Customer from '../../models/customer'
 import Food, {FoodItem} from '../../models/food'
 import Package from '../../models/package'
@@ -256,7 +256,7 @@ describe('Packing Api', function() {
         firstName: 'George',
         lastName: 'Washington',
         email: 'gw@example.com',
-        status: 'Accepted',
+        status: customerStatus.ACCEPTED,
         lastPacked: '2017-01-01',
         foodPreferences: foodItemIds,
       }).then(customer => customer.toObject())
@@ -364,7 +364,7 @@ describe('Packing Api', function() {
         firstName: 'George',
         lastName: 'Washington',
         email: 'gw@example.com',
-        status: 'Accepted',
+        status: customerStatus.ACCEPTED,
       })
 
       const testAdmin = createTestUser('admin', ADMIN_ROLE)
