@@ -77,7 +77,7 @@ describe('Customer controller', function() {
       }
 
       res = {
-        test: 99999,
+        test: 99199,
         json: sandbox.spy(),
         status: sandbox.stub().returns({ end: sandbox.spy() })
       }
