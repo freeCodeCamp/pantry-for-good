@@ -86,6 +86,7 @@ describe('Customer controller', function() {
     afterEach(function() {
       req = {}
       res = {}
+      sandbox.restore()
     })
 
     it('should return customer object', function() {     
