@@ -74,6 +74,7 @@ export default {
       .sort('-dateReceived')
       .populate('user', 'displayName')
       .populate('assignedTo', 'firstName lastName')
+      .exec()
     res.json(customers)
   },
 
