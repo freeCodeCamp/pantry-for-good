@@ -71,13 +71,13 @@ describe('Customer controller', function() {
     beforeEach(function() {
       req = {
         customer: {
-          _id: 1,
-          email: 'gw@example'
+          _id: 99199,
+          email: 'watashi@heehaa.com'
         }
       }
 
       res = {
-        test: 1,
+        test: 99999,
         json: sandbox.spy(),
         status: sandbox.stub().returns({ end: sandbox.spy() })
       }
@@ -89,8 +89,8 @@ describe('Customer controller', function() {
     })
 
     it('should return customer object', function() {
-      sinon.assert.match(req.customer.email, 'gw@example')
-      sinon.assert.match(res.test, 1)
+      sinon.assert.match(req.customer.email, 'watashi@heehaa.com')
+      sinon.assert.match(res.test, 99199)
       
       customerCtrl.read(req, res)
       //sinon.assert.calledWith(res.json, sinon.match({ _id: req.customer._id }))
