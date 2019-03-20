@@ -7,7 +7,7 @@ import {BadRequestError} from '../lib/errors'
 import mailer from '../lib/mail/mail-helpers'
 
 export default {
-  async create(req, res) {
+  async create(req, res) {     
     let newDonation = {
       ...(pick(req.body, ['donor', 'description', 'items'])),
       total: req.body.items.reduce((acc, item) => {
@@ -24,7 +24,7 @@ export default {
       throw new UnauthorizedError
     }
 
-    const donation = await Donation.create(newDonation)
+    const donation = await Donation.create(newDonation)    
     const donor = await Donor.findByIdAndUpdate(donation.donor,
       {$push: {donations: donation}},
       {new: true}
@@ -38,7 +38,7 @@ export default {
     })
   },
 
-  async approve(req, res) {
+  async approve(req, res) {      
     const donation = await Donation.findByIdAndUpdate(
       req.params.donationId,
       {$set: {approved: true, dateIssued: Date.now()}},
@@ -50,11 +50,12 @@ export default {
     res.json(donation)
   },
 
-  async sendEmail(req, res) {
+  async sendEmail(req, res) {  
     const donation = await Donation.findById(req.params.donationId)
       .populate('donor')
 
     mailer.sendReceipt(donation)
+
     res.json(donation)
   },
 
