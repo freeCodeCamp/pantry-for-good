@@ -87,7 +87,7 @@ export default {
     )
   },
 
-  async sendThanks(donation) {
+  async sendThanks(donation) {  
     const {donor} = donation
     const {firstName, lastName, email} = donor
     const fullName = `${firstName} ${lastName}`
@@ -99,7 +99,7 @@ export default {
     )
   },
 
-  async sendReceipt(donation) {
+  async sendReceipt(donation) {  
     const {donor, items} = donation
     const {firstName, lastName, email} = donor
     const fullName = `${firstName} ${lastName}`
