@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
+//import {Link} from 'react-router-dom'
 import {Button} from 'react-bootstrap'
 import {SizePerPageDropDown, BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
@@ -52,13 +52,17 @@ class NotificationsList extends Component {
     `Notification ${id} will be permanently deleted`
   )
 
+  viewAndDeleteNotification = notification => () => {
+    this.props.deleteNotification(notification.index)
+    this.props.deleteNotificationState(notification.index)
+  }
+
   getActionButtons2 = (_, notification) =>
     <div>
-      <Link
-        to={`${notification.url}`}
-        className="btn btn-info btn-sm"
-      ><i className="fa fa-eye" /></Link>
       {' '}
+      <a className="btn btn-info btn-sm" href={`${notification.url}`} onClick={this.viewAndDeleteNotification(notification)}>
+        <i className="fa fa-eye" />
+      </a>
       <Button bsStyle="danger" bsSize="sm" onClick={this.deleteNotification(notification.index)}>
         <i className="fa fa-trash" />
       </Button>
@@ -67,7 +71,8 @@ class NotificationsList extends Component {
     formatData2 = () => this.props.notifications ?
       this.props.notifications.map((d, index) => ({
         ...d,
-        index
+        index,
+        nicerDate:new Date(d.date)
       })) :
       []
 
@@ -112,9 +117,8 @@ class NotificationsList extends Component {
                 search
               >
                 <TableHeaderColumn dataField="index" width="70px" dataSort>#</TableHeaderColumn>
-                <TableHeaderColumn dataField="date" dataSort>Date</TableHeaderColumn>
+                <TableHeaderColumn dataField="nicerDate" dataSort>Date</TableHeaderColumn>
                 <TableHeaderColumn dataField="message" dataSort>Message</TableHeaderColumn>
-                <TableHeaderColumn dataField="url" dataSort>Url</TableHeaderColumn>
                 <TableHeaderColumn
                   dataFormat={this.getActionButtons2}
                   dataAlign="center"
