@@ -501,6 +501,30 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('firstName', user1.firstName)
       expect(updatedUser).to.have.property('lastName', user1.lastName)
     })
+
+    it('admin cannot demote themselves to regular user', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [ADMIN_ROLE],
+        provider: 'local',
+        password: '12345678'
+      })
+    
+      const userSession = await createUserSession(user)
+      const userReq = supertest.agent(userSession.app)
+    
+      await userReq.put(`/api/admin/users/${user._id}`)
+        .send({ isAdmin: false })
+        .expect(400)
+    
+      const updatedUser = await User.findById(user._id).lean()
+      expect(updatedUser).to.have.property('roles')
+      expect(updatedUser.roles).to.include(ADMIN_ROLE)
+    })
+
+
   })
 
   describe('updating profile', function() {
@@ -536,6 +560,76 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('firstName', requestBody.firstName)
       expect(updatedUser).to.have.property('lastName', requestBody.lastName)
     })
+
+    it('users cannot change email to an email that is taken', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const user2 = await User.create({
+        firstName: 'firstname',
+        lastName: 'lastname',
+        email: '1234@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const userSession = await createUserSession(user)
+      const userReq = supertest.agent(userSession.app)
+
+      const requestBody = {
+        _id: user._id,
+        created: user.created,
+        displayName: user.displayName,
+        email: '1234@example.com',
+      }
+      await userReq.put('/api/users/me').send(requestBody).expect(400)
+
+      const updatedUser = await User.findById(user._id).lean()
+      expect(updatedUser).to.not.have.property('email', user2.email)
+
+    })
+
+    it('requires first and last name', async function(){
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const userSession = await createUserSession(user)
+      const userReq = supertest.agent(userSession.app)
+
+      const requestBody = {
+        _id: user._id,
+        created: user.created,
+        displayName: user.displayName,
+        email: 'new.email@example.com',
+        //not putting in a first and last name
+        firstName: '',
+        lastName: '' ,
+        provider: user.provider,
+        roles: user.roles,
+        updated: user.updated
+      }
+
+      await userReq.put('/api/users/me').send(requestBody).expect(400)
+
+      const updatedUser = await User.findById(user._id).lean()
+      expect(updatedUser).to.not.have.property('email', requestBody.email)
+      expect(updatedUser).to.not.have.property('firstName', requestBody.firstName)
+      expect(updatedUser).to.not.have.property('lastName', requestBody.lastName)
+    })
+
 
     it('update ignores req.body properties: displayName, provider, salt, resetPasswordToken and roles', async function(){
       const user = await User.create({
@@ -599,6 +693,7 @@ describe('User Api', function() {
       expect(updatedUser).to.have.property('roles')
       expect(updatedUser.roles).to.not.include(ADMIN_ROLE)
     })
+
   })
 
   describe('users notifications', function() {
@@ -630,4 +725,88 @@ describe('User Api', function() {
         })
     })
   })
+
+  describe('Forgot password', function() {
+    let emailMock
+    let password = require('../../controllers/users/password')
+
+    beforeEach(function (){
+      var config = { sendgrid: { API_KEY:'TEST'}}
+      password.__Rewire__('config', config)
+
+      emailMock = {
+        sendPasswordReset: sinon.spy()
+      }
+      password.__Rewire__('mailer', emailMock)
+    })
+
+    afterEach(function (){
+      password.__ResetDependency__('config')
+      password.__ResetDependency__('mailer')
+    })
+
+    it('sends no email with a non-registered email', async function() {
+      const session = createGuestSession()
+      const request = supertest.agent(session)
+
+      await request.post('/api/auth/forgot')
+        .send({email: "nonexistant@example.com"})
+        .expect(200)
+        .expect( res => {
+          expect(res.body.message).to.equal('Password reset email sent')
+        })
+      expect(emailMock.sendPasswordReset.notCalled)
+    })
+
+    it('sends email on registered email', async function() {
+      await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const session = createGuestSession()
+      const request = supertest.agent(session)
+
+      await request.post('/api/auth/forgot')
+        .send({email: "123@example.com"})
+        .expect(200)
+        .expect( res => {
+          expect(res.body.message).to.equal('Password reset email sent')
+        })
+      expect(emailMock.sendPasswordReset.called)
+    })
+
+    it('sends correct reset token', async function() {
+      const user = await User.create({
+        firstName: 'first',
+        lastName: 'last',
+        email: '123@example.com',
+        roles: [],
+        provider: 'local',
+        password: '12345678'
+      })
+
+      const session = createGuestSession()
+      const request = supertest.agent(session)
+
+      await request.post('/api/auth/forgot')
+        .send({email: "123@example.com"})
+        .expect(200)
+        .expect( res => {
+          expect(res.body.message).to.equal('Password reset email sent')
+        })
+
+      const updatedUser = await User.findById(user._id)
+
+      expect(updatedUser.resetPasswordToken).to.be.a('string')
+      expect(emailMock.sendPasswordReset.calledWith(updatedUser.resetPasswordToken))
+    })
+
+  })
+
+
 })
