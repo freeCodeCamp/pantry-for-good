@@ -20,6 +20,7 @@ import Packing from './modules/food/components/Packing'
 import Settings from './modules/settings/SettingsRouter'
 import Users from './modules/users/UserRouter'
 import Volunteers from './modules/volunteer/VolunteerRouter'
+import VolunteerScheduling from './modules/volunteerScheduling/volunteerSchedulingRouter'
 
 import requireRole from './components/router/requireRole'
 import SwitchWithNotFound from './components/router/SwitchWithNotFound'
@@ -42,6 +43,7 @@ const Router = ({history}) =>
           <Route path="/customers" component={Customers} />
           <Route path="/donors" component={Donors} />
           <Route path="/drivers" component={Drivers} />
+          <Route path="/volunteerScheduling" component={VolunteerScheduling} />
           <Route path="/inventory" exact component={canInventory(Inventory)} />
           <Route path="/packing" exact component={canPack(Packing)} />
           <Route path="/schedule" exact component={canSchedule(Schedule)} />

@@ -49,9 +49,7 @@ class VolunteerList extends Component {
     </div>
 
   formatData = () => this.props.volunteers ?
-    this.props.volunteers.map(v => ({
-      ...v,
-      address: fieldsByType(v, fieldTypes.ADDRESS).map(f => f.value).join(', ')
+    this.props.volunteers.map(v => ({...v, address: fieldsByType(v, fieldTypes.ADDRESS).map(f => f.value).join(', ')
     })) :
     []
 

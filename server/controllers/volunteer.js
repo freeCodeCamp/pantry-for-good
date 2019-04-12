@@ -1,10 +1,14 @@
 import {difference, extend, omit} from 'lodash'
 
-import {ForbiddenError, NotFoundError} from '../lib/errors'
+import {ForbiddenError, NotFoundError, BadRequestError} from '../lib/errors'
 import {ADMIN_ROLE, clientRoles} from '../../common/constants'
 import User from '../models/user'
 import Volunteer from '../models/volunteer'
 import {updateFields} from '../lib/update-linked-fields'
+
+import config from '../config'
+
+import mailer from '../lib/mail/mail-helpers'
 
 export default {
   /**
@@ -23,6 +27,105 @@ export default {
     const savedVolunteer = await volunteer.save()
     updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
     res.json(savedVolunteer)
+  },
+
+  /*
+   * Adds a Volunteer shift
+   */
+  async addShift(req, res) {
+
+    //const volunteer = extend(req.volunteer, req.body)
+    const new_volunteer = req.body
+    const shift = new_volunteer.shift
+
+    const old_volunteer = await Volunteer.findById(new_volunteer._id)
+    const shifts = old_volunteer.shift
+    shifts.push(shift)
+
+    const updatedVolunteer = await Volunteer.findOneAndUpdate(
+      { _id: new_volunteer._id},
+      { $set: { shift: shifts}})
+
+    res.json(updatedVolunteer)
+  },  
+
+  /*
+   * Deletes a volunteer shift
+   */
+  async deleteShift(req, res) {
+    const new_volunteer = req.body
+    const del_shift = new_volunteer.del_shift
+
+    const old_volunteer = await Volunteer.findById(new_volunteer._id)
+    const shifts = old_volunteer.shift
+
+    var del_time = new Date(del_shift.start)
+    var new_shifts = []
+
+    for(var i = 0; i < shifts.length; i++) {
+      var new_time = new Date(shifts[i].date)
+      if(del_time.getTime() === new_time.getTime()) {
+        continue
+      }
+      else {
+        new_shifts.push(shifts[i])
+      }
+    }
+
+    const updatedVolunteer = await Volunteer.findOneAndUpdate(
+      { _id: new_volunteer._id},
+      { $set: {shift: new_shifts}})
+
+    res.json(updatedVolunteer)
+  },
+
+  async emailShiftReminder(req, res) {
+    if (!config.sendgrid.API_KEY) {
+      return res.status(500).json({message: "This site does not have email capability at this time. Please contact the site owner for assistance."})
+    }
+
+    // const token = (await randomBytes(20)).toString('hex')
+
+    // // Lookup user by email
+    if (!req.body.email) throw new BadRequestError('Email is required')
+
+    const volunteer = await Volunteer.findOne({email: req.body.email})
+
+    await mailer.sendShiftReminder(volunteer, req.body.shift)
+    res.send({message: 'Shift reminder email sent'})    
+  },
+
+  /*
+   * Updates a Volunteer shift
+   */
+  async updateShift(req, res) {
+    const new_volunteer = req.body
+    const times = new_volunteer.times
+
+    const old_volunteer = await Volunteer.findById(new_volunteer._id)
+    const shifts = old_volunteer.shift
+
+    var old_date = new Date(times.oldTime)
+
+    for(var i = 0; i < shifts.length; i++) {
+      var new_time = new Date(shifts[i].date)
+      if(old_date.getTime() === new_time.getTime()) {
+        shifts[i].date = times.newTime
+      }
+    }
+
+    const updatedVolunteer = await Volunteer.findOneAndUpdate(
+      { _id: new_volunteer._id},
+      { $set: {shift: shifts}})
+    
+    res.json(updatedVolunteer)
+  },  
+
+  async getAllVolunteers(req, res) {
+    const volunteers = await Volunteer.find({})
+      .sort('firstName')
+
+    res.json(volunteers)
   },
 
   /**
@@ -48,6 +151,7 @@ export default {
 
     const user = await User.findById(volunteer._id).lean()
     const newVolunteer = await volunteer.save()
+    //Volunteer.findByIdAndUpdate({ _id: 10017}, { $set : { lastName: "hi"}})
 
     if (!volunteer.roles || !req.user.roles.find(r => r === ADMIN_ROLE)) {
       updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
@@ -113,4 +217,5 @@ export default {
     }
     next()
   }
+
 }

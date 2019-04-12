@@ -12,6 +12,9 @@ export default {
    * @param {string} identifier
    * @param {object} bindings
    */
+
+  // Identifier - Determines which "Page" modal is going to be used
+  // Bindings - 
   async send(toEmail, toName, identifier, bindings = null) {
     const settings = await Settings.findOne().lean()
     const mail = await mailGenerator(identifier, {...settings, ...bindings})
@@ -23,6 +26,33 @@ export default {
       handleError(err)
     }
   },
+
+
+
+  /**
+    * Sends an email to volunteer after shift created
+   */
+  async sendShiftReminder(volunteer, shift) {
+    const {firstName, lastName, email} = volunteer
+    const {date} = shift
+    var fullName = firstName + ' ' + lastName
+    await this.send(
+      email,
+      fullName,
+      'volunteer-shift',
+      {firstName, lastName, fullName, date}
+    )
+  },
+
+
+
+
+
+
+
+
+
+
 
   /**
    * Send an email for account status update

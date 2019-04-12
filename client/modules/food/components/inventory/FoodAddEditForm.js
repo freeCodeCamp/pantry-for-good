@@ -18,7 +18,7 @@ export default class FoodAddEditForm extends React.Component {
       touched: { foodName: false, foodCategory: false, foodQuantity: false },
     }
   }
-
+  
   componentWillReceiveProps = nextProps => {
     // If the modal is open and a save is complete, close the modal
     if (this.props.saving && !nextProps.saving && !nextProps.saveError) {

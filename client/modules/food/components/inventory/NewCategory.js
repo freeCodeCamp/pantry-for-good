@@ -1,18 +1,32 @@
 import React from 'react'
 
 class NewCategory extends React.Component {
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     inputFieldValue: "",
+  //     categoryExists: false,
+  //     validInput: false
+  //   }
+  // }
+
   constructor(props) {
     super(props)
     this.state = {
       inputFieldValue: "",
+      // inputFieldValue2: "",
       categoryExists: false,
       validInput: false
     }
-  }
+  }  
 
   onChange = e => {
     this.setState({inputFieldValue: e.target.value}, this.validate)
   }
+
+  // onChange2 = e => {
+  //   this.setState({inputFieldValue2: e.target.value}, this.validate)
+  // }  
 
   onClick = () => {
     this.props.createCategory(this.state.inputFieldValue)

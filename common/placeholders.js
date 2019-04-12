@@ -5,6 +5,7 @@ const placeholderTypes = {
 }
 
 const placeholders = [
+  {id: 'date', label: 'Shift Date'},
   {id: 'organization', label: 'Foodbank Name'},
   {id: 'address', label: 'Foodbank Address'},
   {id: 'url', label: 'Foodbank Website'},

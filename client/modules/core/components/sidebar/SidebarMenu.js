@@ -8,6 +8,7 @@ const SidebarMenu = () =>
     <MenuItem title="Customers" path="/customers/list" />
     <MenuItem title="Volunteers" path="/volunteers/list" />
     <MenuItem title="Donors" path="/donors/list" />
+    <MenuItem title="Volunteer Scheduling" path="/volunteerScheduling/list" />
 
     <MenuItem title="User Accounts" path="/users/list" />
 
