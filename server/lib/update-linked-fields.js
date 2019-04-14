@@ -23,7 +23,7 @@ async function updatedModel(Model, reqBodyFields, userId) {
 /**
 * Update All fields of address
 */
-export function updateFields(clientRole, reqBodyFields, userId) {
+export function updateFields(clientRole, reqBodyFields, userId) { 
   //Updating address of the client type role if exists
   if (clientRole == clientRoles.CUSTOMER) {
     updatedModel(Volunteer, reqBodyFields, userId)

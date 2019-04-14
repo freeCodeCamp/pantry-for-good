@@ -17,7 +17,7 @@ try {
   if (err.code !== 'EEXIST') throw err
 }
 
-const sanitizeHtmlConfig = {
+const sanitizeHtmlConfig = { 
   allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'span', 'h1', 'h2', 's', 'u']),
   allowedAttributes: {
     img: ['src', 'width', 'style'],
@@ -34,7 +34,7 @@ export default {
     res.json(pages)
   },
 
-  async update(req, res) {
+  async update(req, res) {  
     const {body, identifier} = req.body
     let keepImages = []
 
@@ -45,7 +45,7 @@ export default {
       }
     })
 
-    const page = extend(req.page, {body: sanitizedBody})
+    const page = new Page(extend(req.page, {body: sanitizedBody}))   
     const updatedPage = await page.save()
 
     // delete stale images

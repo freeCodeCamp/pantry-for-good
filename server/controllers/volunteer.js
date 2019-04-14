@@ -21,7 +21,7 @@ export default {
     )
 
     const savedVolunteer = await volunteer.save()
-    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
+    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)   
     res.json(savedVolunteer)
   },
 
@@ -35,7 +35,8 @@ export default {
     const {roles} = await User.findById(req.volunteer._id).lean()
 
     res.json({
-      ...req.volunteer.toObject(),
+      //...req.volunteer.toObject(),
+      ...req.volunteer,
       roles
     })
   },
@@ -43,24 +44,24 @@ export default {
   /**
    * Update a volunteer
    */
-  async update(req, res) {
-    const volunteer = extend(req.volunteer, req.body)
-
+  async update(req, res) {    
+    const volunteer = new Volunteer(extend(req.volunteer, req.body)) 
     const user = await User.findById(volunteer._id).lean()
     const newVolunteer = await volunteer.save()
 
     if (!volunteer.roles || !req.user.roles.find(r => r === ADMIN_ROLE)) {
-      updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
+      updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)    
       return res.json(newVolunteer)
     }
+
     const oldRoles = difference(user.roles, volunteer.roles)
-    const newRoles = difference(volunteer.roles, user.roles)
+    const newRoles = difference(volunteer.roles, user.roles)   
     const roles = difference(user.roles.concat(newRoles), oldRoles)
 
     if (newRoles.length || oldRoles.length){
       await User.findByIdAndUpdate(volunteer._id, {$set: {roles}})
     }
-    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)
+    updateFields(clientRoles.VOLUNTEER,req.body.fields,volunteer._id)  
     res.json({
       ...newVolunteer.toObject(),
       roles

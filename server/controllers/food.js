@@ -27,17 +27,18 @@ export default {
       throw new ValidationError(['category'], 'That category already exists' )
     }
 
-    const savedFood = await food.save()
+    const savedFood = await food.save()  
     res.json(savedFood)
   },
 
   /**
    * Update a Food category
    */
-  async update(req, res) {
+  async update(req, res) { 
     authorizeByRole(req.user.roles, [INVENTORY])
 
-    const food = extend(req.food, req.body)
+    //const food = extend(req.food, req.body)
+    const food = new Food(extend(req.food, req.body))
 
     const savedFood = await food.save()
     res.json(savedFood)
@@ -59,9 +60,9 @@ export default {
     // If the category has items then mark it as deleted instead of deleting from the database
     if (food.items.length) {
       await Food.findByIdAndUpdate(food._id, {deleted: true})
-    } else {
+    } else {      
       await food.remove()
-    }
+    }  
     res.json(food)
   },
 
@@ -78,7 +79,7 @@ export default {
   /**
    * Create a food item
    */
-  async createItem(req, res) {
+  async createItem(req, res) {  
     authorizeByRole(req.user.roles, [INVENTORY])
 
     const item = req.body
@@ -89,28 +90,27 @@ export default {
       { items: {$elemMatch:{name: {$regex: `^${item.name}$`, $options: "i"}, deleted: false }} },
       { 'items.$': 1 }
     ).lean()
-
-    if (categoryWithExistingItem) {
+    if (categoryWithExistingItem) {    
       const existingFoodItem = categoryWithExistingItem.items[0]
       existingFoodItem.categoryId = item.categoryId
       existingFoodItem.quantity += Number(item.quantity)
 
-      const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
-      res.json(updatedCategory)
+      const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)        
+      res.json(updatedCategory)      
     } else {
-      const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })
+      const savedFood = await Food.findByIdAndUpdate(req.food._id, { $addToSet: { items: item } }, { new: true })   
       res.json(savedFood)
 
       // Add item to every customer's food preferences
       // TODO: do we want this?
-      await Customer.update({}, { $addToSet: { foodPreferences: item._id } }, { multi: true })
+      //await Customer.update({}, { $addToSet: { foodPreferences: item._id } }, { multi: true })
     }
   },
 
   /**
    * Update a food item
    */
-  async updateItem(req, res) {
+  async updateItem(req, res) {  
     authorizeByRole(req.user.roles, [INVENTORY, SCHEDULE])
 
     const originalCategoryId = req.params.foodId
@@ -167,7 +167,7 @@ function authorizeByRole(userRoles, roles = []) {
  * Common functionality used by createItem and UpdateItem to update a food item
  */
 function updateItemHelper(originalCategoryId, updatedItem) {
-  if (!updatedItem.categoryId || updatedItem.categoryId === originalCategoryId) {
+  if (!updatedItem.categoryId || (updatedItem.categoryId === originalCategoryId)) {  
     return updateFoodItemWithoutCategoryChange(originalCategoryId, updatedItem)
   } else {
     return updateFoodItemWithCategoryChange(originalCategoryId, updatedItem)

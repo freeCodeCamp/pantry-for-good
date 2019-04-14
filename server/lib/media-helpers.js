@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 export const upload = multer({storage})
 
-export const deleteFile = filename => {
+export const deleteFile = filename => {  
   return fs.unlink(getPath(filename))
 }
 
