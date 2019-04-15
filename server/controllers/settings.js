@@ -28,7 +28,7 @@ export default {
   async save (req, res) {
     const {user} = req
 
-    if (!includes(user.roles, ADMIN_ROLE)) {
+    if (!includes(user.roles, ADMIN_ROLE)) {    
       throw new ForbiddenError
     }
 

@@ -13,8 +13,8 @@ export default {
   },
 
   // Update a questionnaire
-  async update(req, res) {
-    const questionnaire = extend(req.questionnaire, req.body)
+  async update(req, res) {   
+    const questionnaire = new Questionnaire(extend(req.questionnaire, req.body))
 
     const savedQuestionnaire = await questionnaire.save()
 

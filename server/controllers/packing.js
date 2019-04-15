@@ -11,13 +11,15 @@ import Package from '../models/package'
 const beginWeek = moment.utc().startOf('isoWeek')
 
 export default {
-  list: function(req, res) {
-    Package.find().then(data => res.json(data))
+  list: async function(req, res) {   
+    const data = await Package.find()
+    res.json(data)
   },
-  complete: async function(req, res) {
+  complete: async function(req, res) {   
     const {packageId} = req.body
     const deliveredPackage = await Package.findByIdAndUpdate(packageId, {status: 'Delivered'}, {new: true})
-    if (!deliveredPackage) {
+
+    if (!deliveredPackage) {    
       throw new BadRequestError(`package with _id ${req.body.singlePackage} not found`)
     }
     res.json(deliveredPackage)
@@ -27,7 +29,7 @@ export default {
    * The req.body post data should be an array of food package objects with the following shape
    * {customer: "10000", contents: ["594d6a4f9431ac26453cef08", "594d6a4f9431ac26453cef0b"]}
    */
-  pack: async function(req, res) {
+  pack: async function(req, res) {   
     const packages = req.body
     if (!Array.isArray(packages)) {
       throw new BadRequestError('Request body must be an array')
@@ -60,7 +62,7 @@ export default {
     } catch (err) {
       if (err instanceof mongoose.Error.ValidationError) {
         throw new BadRequestError(err.message)
-      } else {
+      } else {        
         throw err
       }
     }
@@ -80,7 +82,6 @@ export default {
     //update customers lastPacked field in database
     await Customer.update({ _id: { $in: customerIdsToUpdate } }, { "$set": { lastPacked: now } }, { "multi": true })
 
-
     // Update the food item inventory quantities
     const foodItemUpdates = []
     await Promise.all(
@@ -90,7 +91,7 @@ export default {
           { $inc: { 'items.$.quantity': -packedItemCounts[itemId] } },
           { new: true }
         ).then(food => {
-          const quantity = food.items.find(item => item._id.equals(itemId)).quantity
+          const quantity = food.items.find(item => item._id.equals(itemId)).quantity   
           foodItemUpdates.push({ _id: itemId, quantity })
         })
       )
@@ -112,7 +113,7 @@ export default {
    * back to the foodItem counts and updating the customer.lastPacked field.
    * req.body.id must be set to the _id of the package to delete
    */
-  unpack: async function (req, res) {
+  unpack: async function (req, res) {   
     if (!req.body._id) {
       throw new BadRequestError('package _id must be included in the request')
     }
@@ -137,19 +138,21 @@ export default {
 
     // Add the items from the unpacked package back to the inventory counts
     await Promise.all(
-      deletedPackage.contents.map(itemId => Food.findOneAndUpdate(
-        {'items._id': itemId},
-        {$inc:  {'items.$.quantity': 1 }},
-        {new: true}
-      ).then(foodCategory => {
+      deletedPackage.contents.map(async itemId => {
+        const foodCategory = await Food.findOneAndUpdate(
+          {'items._id': itemId},
+          {$inc:  {'items.$.quantity': 1 }},
+          {new: true}
+        )
+        
         // store the updated quantity for this foodItem in updatedItemCounts
         const foodItem = foodCategory.items.find(item => item._id.equals(itemId))
         updatedItemCounts.push({
           _id: foodItem._id,
           quantity: foodItem.quantity
-        })
-      }))
-    )
+        })        
+      })
+    )   
 
     res.json({
       packages: deletedPackage,
@@ -161,13 +164,13 @@ export default {
     })
 
   },
-  deliver: async function(req, res) {
+  deliver: async function(req, res) {   
     const {customerIds} = req.body
     const customers = await Promise.all(
       customerIds.map(async id =>
         Customer.findByIdAndUpdate(id,
           {lastDelivered: beginWeek}, {new: true}))
-    )
+    ) 
     res.json({customers})
   },
   hasAuthorization(req, res, next) {
@@ -187,22 +190,23 @@ export default {
 async function verifyCustomerIds(customerIds) {
   const count = await Customer.count({ _id: { $in: customerIds } })
 
-  if (count !== uniq(customerIds).length) {
+  if (count !== uniq(customerIds).length) {  
     throw new BadRequestError('One or more customerIds are not valid')
   }
 
 }
 
 // Verify a list of foodItem Ids exist in the database
-async function verifyFoodItemIds(foodItemIds) {
+async function verifyFoodItemIds(foodItemIds) { 
   await Promise.all(
-    foodItemIds.map(_id => {
+    foodItemIds.map(async _id => {     
       if (!mongoose.Types.ObjectId.isValid(_id)) {
         throw new BadRequestError(`${_id} is not a valid foodItem _id`)
       }
-      return Food.count({ 'items._id': _id }).then(count => {
-        if (!count) throw new BadRequestError(`foodItem ${_id} was not found in the database`)
-      })
+
+      const count = await Food.count ({ 'items._id': _id })
+      if (!count) throw new BadRequestError(`foodItem ${_id} was not found in the database`)
+      return count
     })
   )
 }
