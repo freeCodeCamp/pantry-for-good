@@ -4,8 +4,6 @@ import Autosuggest from 'react-bootstrap-autosuggest'
 
 import { Box, BoxHeader, BoxBody } from '../../../components/box'
 
-// import SendGrid = require('@sendgrid/mail');
-
 export default class AddShiftModal extends React.Component {
 
   constructor(props) {
@@ -59,7 +57,6 @@ export default class AddShiftModal extends React.Component {
       }
     },
     dateTime: e => {
-      // document.getElementById("test").innerHTML = e.target.value
       this.setState({formInputFields: {...this.state.formInputFields, dateTime: e.target.value}, touched: {...this.state.touched, dateTime: true}}, this.validate)
     },
     notes: e => {
@@ -80,7 +77,7 @@ export default class AddShiftModal extends React.Component {
       this.state.nowDate.getTime() < new Date(this.state.formInputFields.dateTime).getTime()
   }
 
-  saveFood = () => {
+  saveShift = () => {
     const volunteer = this.props.getVolunteer(this.state.formInputFields.id)
     var dateStr = this.state.formInputFields.dateTime
 
@@ -109,14 +106,19 @@ export default class AddShiftModal extends React.Component {
     }
 
     // Used to send email
-    var credentials = {
-      email: volunteer.email,
-      shift: temp_event
+    if(volunteer.email == "" || volunteer.email == null) {
+      alert("Volunteer has no email in database. Shift has been saved, but no email reminders will be sent.")
+      this.props.updateCalendar(volunteer, event)
+      this.props.closeAddModal()
     }
-
-    this.props.emailShift(credentials)
-
-    this.props.updateCalendar(volunteer, event)
+    else {
+      var credentials = {
+        email: volunteer.email,
+        shift: temp_event
+      }
+      this.props.emailShift(credentials)
+      this.props.updateCalendar(volunteer, event)
+    }
   }       
 
   render = () => {
@@ -139,6 +141,7 @@ export default class AddShiftModal extends React.Component {
                 value={this.state.formInputFields.volunteerName}
                 datalist={this.formatData()}
                 placeholder="Volunteer Name"
+                maxLength='45'
                 itemValuePropName='fullName'
                 itemReactKeyPropName='fullName'
                 itemSortKeyPropName='fullName'
@@ -157,6 +160,7 @@ export default class AddShiftModal extends React.Component {
               <ControlLabel>Notes (Optional)</ControlLabel>
               <FormControl
                 type="text"
+                maxLength='250'
                 value={this.state.formInputFields.notes}
                 onChange={this.handleChange.notes}
               />
@@ -165,7 +169,7 @@ export default class AddShiftModal extends React.Component {
           <div className="pull-right btn-toolbar">
             <Button onClick={this.props.closeAddModal}>Cancel</Button>
             <Button className={this.state.validInput && 'btn-success'}
-              onClick={this.saveFood}
+              onClick={this.saveShift}
               disabled={!this.state.validInput || this.props.saving}>
               Add Event
             </Button>

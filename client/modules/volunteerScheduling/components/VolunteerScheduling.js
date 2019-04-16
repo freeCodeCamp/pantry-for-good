@@ -47,14 +47,12 @@ const mapDispatchToProps = dispatch => ({
 export class VolunteerScheduling extends React.Component {
   constructor(props) {
     super(props)
-    // console.log("In Constructor")
     this.props.loadVolunteers()
     this.state = {
       c: "",
       showAddModal: false,
       showEditModal: false,
       shiftToDelete: "",
-      id: "",
       events: [],
       added: false,
       removed: false,
@@ -105,12 +103,7 @@ export class VolunteerScheduling extends React.Component {
     this.setState({c: calendar})
   }  
 
-  // dragEvent = (event) => {
-
-  // }
-
   updateCalendar = (volunteer, event) => {
-    //console.log("In Update Calendar")
     const calendar = this.state.c
 
     var new_id = calendar.getEvents().length != 0 ? (calendar.getEvents()[calendar.getEvents().length-1].id + 1) : 0
@@ -127,8 +120,6 @@ export class VolunteerScheduling extends React.Component {
   }
 
   deleteCalendarEvent = () => {
-    //console.log("In Delete Calendar Event")
-
     var calendar = this.state.c
 
     /* Checking for case in which user adds an event and deletes it in same state */
