@@ -35,26 +35,24 @@ export default class MassImportsModal extends React.Component {
           var firstName = data[i][0]
           var lastName = data[i][1]
           var email = data[i][2]
-          var address = ""
-          // var birthday = ""
-          var relationship = ""
+          var birthday = new Date(data[i][3])
+          var street = data[i][4]
+          var city = data[i][5]
+          var state = data[i][6]
+          var zip = data[i][7]
 
-          for(var j = 3; j < data[i].length; j++) {
-            if(j == 3) {
-              address = data[i][j]
-            } 
-            // else if(j == 4) {
-            //   birthday = new Date(data[i][j])
-            // } 
-            else if(j == 5) {
-              relationship = data[i][j]
-            }
-          }
-          // var household = []
-          // household.push({name: "", relationship: relationship, dateOfBirth: birthday})
-          var household = {name: "", relationship: relationship, dateOfBirth: new Date()}
+          /* 
+          ** The meta field was taken from the Questionnaire model. I'm not sure what it is, 
+          ** but it's a required field.
+          */
+          var fields = []
+          fields.push({meta: "c523b236-cf40-47fc-94d4-1f5ae9ccd3c1", value: street})
+          fields.push({meta: "d2cd8ff9-d70a-4316-a970-5c9a11dc0076", value: city})
+          fields.push({meta: "d4b7113c-9943-4858-893c-1b2512533f46", value: state})
+          fields.push({meta: "ce470f63-9c6f-401f-8c85-c9fef022be90", value: zip})
+          fields.push({meta: "8a537855-657a-476f-98cc-3f8c6313532d", value: birthday})          
 
-          info.push({firstName: firstName, lastName: lastName, email: email, address: address, household: household})
+          info.push({firstName: firstName, lastName: lastName, email: email, fields: fields})
         }
       }
       this.setState({validInput: true, documents: info})
@@ -73,13 +71,12 @@ export default class MassImportsModal extends React.Component {
   }
 
   /* Validates header length and values */
-  /* EXPECTING: [First Name, Last Name, Email, Address, Birthday, Relationship] (Only first 3 required) */
   validateHeaders = headers => {
-    if(headers.length > 6 || headers.length < 3) {
+    if(headers.length != 8) {
       return false
     }
     else {
-      var expected = ["First Name", "Last Name", "Email", "Address", "Birthday", "Relationship"]
+      var expected = ["First Name", "Last Name", "Email", "Birthday", "Street", "City/Town", "State/Province", "ZIP"]
       for(var i = 0; i < headers.length; i++) {
         if(headers[i] != expected[i]) {
           return false
@@ -91,11 +88,15 @@ export default class MassImportsModal extends React.Component {
 
   /* Validates that a row has the correct informaiton and no blanks for required fields */
   validateRow = row => {
-    if(row.length < 3) {
+    if(row.length != 8) {
       return false
     }
-    else if(row[0] == "" || row[1] == "" || row[2] == "") {
-      return false
+    else {
+      for(var i = 0; i < row.length; i++) {
+        if(row[i] == "") {
+          return false
+        }
+      }
     }
     return true
   }
