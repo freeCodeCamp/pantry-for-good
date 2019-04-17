@@ -28,7 +28,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadCustomers: () => dispatch(loadCustomers()),
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
-  massUpload: (docs) => dispatch(massUpload(docs))
+  massUpload: docs => dispatch(massUpload(docs))
 })
 
 class CustomerList extends Component {
