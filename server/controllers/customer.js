@@ -41,6 +41,33 @@ export default {
     res.json(req.customer)
   },
 
+
+
+  async massUpload(req, res) {
+    const docs = req.body
+    const fields = []
+    fields.push({meta: "c523b236-cf40-47fc-94d4-1f5ae9ccd3c1", value: "test"})
+    fields.push({meta: "d2cd8ff9-d70a-4316-a970-5c9a11dc0076", value: "test"})
+    fields.push({meta: "d4b7113c-9943-4858-893c-1b2512533f46", value: "test"})
+    fields.push({meta: "ce470f63-9c6f-401f-8c85-c9fef022be90", value: "test"})
+    fields.push({meta: "8a537855-657a-476f-98cc-3f8c6313532d", value: docs[0].household.dateOfBirth})
+
+    await Customer.insertMany( [
+      {firstName: "Sam", lastName: "Freiberg", email: "hi", fields: fields}
+    ])
+
+    res.status(200).json({message: "Successful mass import!"})
+
+    // await Customer.insertMany(docs, function(err, docs) {
+    //   if(err) {
+    //     res.status(400).json({message: "Unable to mass import in Database"})
+    //   }
+    //   else {
+    //     res.status(200).json({message: "Successful mass import!"})
+    //   }
+    // })
+  },
+
   /**
    * Update a customer
    */

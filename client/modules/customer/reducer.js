@@ -25,6 +25,15 @@ export const loadCustomer = id => ({
   }
 })
 
+export const massUpload = docs => ({
+  [CALL_API]: {
+    endpoint: 'customer/massUpload',
+    method: 'POST',
+    body: docs,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
 export const saveCustomer = customer => {
   const endpoint = customer._id ? `customer/${customer._id}` : `customer`
   return {
