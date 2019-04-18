@@ -55,6 +55,10 @@ const CustomerSchema = new Schema({
     type: Date,
     default: null
   },
+  // duplicate: {
+  //   type: Boolean,
+  //   default: false
+  // },
   packingList: [{
     type: Schema.Types.ObjectId,
     ref: 'FoodItem'

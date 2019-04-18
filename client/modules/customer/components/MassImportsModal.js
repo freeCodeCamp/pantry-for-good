@@ -41,6 +41,8 @@ export default class MassImportsModal extends React.Component {
           var state = data[i][6]
           var zip = data[i][7]
 
+          //this.isDuplicate(firstName, lastName, email, customers)
+
           /* 
           ** The meta field was taken from the Questionnaire model. I'm not sure what it is, 
           ** but it's a required field.
@@ -53,9 +55,26 @@ export default class MassImportsModal extends React.Component {
           fields.push({meta: "8a537855-657a-476f-98cc-3f8c6313532d", value: birthday})          
 
           info.push({firstName: firstName, lastName: lastName, email: email, fields: fields})
+          //id++
         }
       }
       this.setState({validInput: true, documents: info})
+    }
+  }
+
+  // Determines if customer is a duplicate
+  // I use email as well in the edge case that there are 2 people
+  // with the same name
+  isDuplicate = (firstName, lastName, email, customers) => {
+    for(var i = 0; i < customers.length; i++) {
+      if(customers[i].firstName.toLowerCase() == firstName.toLowerCase() && 
+          customers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
+          customers[i].email.toLowerCase() == email.toLowerCase()) {
+
+        this.props.duplicate(customers[i])
+        // API call to change duplicate value
+
+      }
     }
   }
 
@@ -104,9 +123,15 @@ export default class MassImportsModal extends React.Component {
 
   importData = () => {
     var docs = this.state.documents
-    // console.log(docs)
-    //console.log(docs[0].household.dateOfBirth)
-    this.props.massUpload(docs)
+    const customer = {
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@test.com'
+    }
+    this.props.massUpload({
+      ...customer, 
+      docs: docs
+    })
     this.props.closeModal()
   }
 

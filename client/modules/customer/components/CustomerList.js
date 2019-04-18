@@ -49,6 +49,7 @@ class CustomerList extends Component {
   }
 
   closeModal = () => {
+    location.reload()
     this.setState({showImportsModal: false})
   }
 
@@ -94,8 +95,10 @@ class CustomerList extends Component {
 
               <Modal show={this.state.showImportsModal} onHide={this.closeModal}>
                 <MassImportsModal
+                  customers={this.props.customers}
                   closeModal={this.closeModal}
                   massUpload={this.props.massUpload}
+                  duplicate={this.props.duplicate}
                 />
               </Modal>
            
