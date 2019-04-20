@@ -31,25 +31,29 @@ export default class MassImportsModal extends React.Component {
 
       for(var i = 1; i < data.length-1; i++) {
         if(!this.validateRow(data[i])) {
-          this.printErrorMessage("Format")
+          this.printErrorMessage("Row")
         }
         else {
           var firstName = data[i][0]
           var lastName = data[i][1]
           var email = data[i][2]
           var birthday = new Date(data[i][3])
+
+          if(isNaN(birthday.getTime())) {
+            continue
+          }
+
+
           var street = data[i][4]
           var city = data[i][5]
           var state = data[i][6]
           var zip = data[i][7]
 
           // Don't add this entry if it's a duplicate
-          if(this.isDuplicate(firstName, lastName, email, customers) == true) {
-          	console.log("Duplicate!")
-          	continue
+          if(this.isDuplicate(firstName, lastName, email, customers) == true || this.isDuplicate(firstName, lastName, email, info) == true) {
+            continue
           }
 
-          console.log("Not duplicate!")
 
           /* 
           ** The meta field was taken from the Questionnaire model. I'm not sure what it is, 
@@ -65,7 +69,12 @@ export default class MassImportsModal extends React.Component {
           info.push({firstName: firstName, lastName: lastName, email: email, fields: fields})
         }
       }
-      this.setState({validInput: true, documents: info})
+      if(info.length > 262) {
+        this.printErrorMessage("Size")
+      }
+      else {
+        this.setState({validInput: true, documents: info})
+      }
     }
   }
 
@@ -78,7 +87,7 @@ export default class MassImportsModal extends React.Component {
           customers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
           customers[i].email.toLowerCase() == email.toLowerCase()) {
 
-      	return true
+        return true
       }
     }
     return false
@@ -91,6 +100,12 @@ export default class MassImportsModal extends React.Component {
     }
     else if(error == "Format") {
       document.getElementById("error").innerHTML = "Error: Invalid Input File Format. Please Use CSV Template."  
+    }
+    else if(error == "Size") {
+      document.getElementById("error").innerHTML = "Error: Too Many Entries. 262 is Maximum Number of Entries for One Upload."  
+    }
+    else if(error == "Row") {
+      document.getElementById("error").innerHTML = "Warning: File Contains Some Invalid Rows. Rows will be Ignored."  
     }
     this.setState({validInput: false})
   }
@@ -139,6 +154,7 @@ export default class MassImportsModal extends React.Component {
       docs: docs
     })
     this.props.closeModal()
+    location.reload()
   }
 
 

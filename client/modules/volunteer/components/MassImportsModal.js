@@ -45,11 +45,10 @@ export default class MassImportsModal extends React.Component {
 
           // Don't add this entry if it's a duplicate
           if(this.isDuplicate(firstName, lastName, email, volunteers) == true) {
-          	console.log("Duplicate!")
-          	continue
+            continue
           }
 
-          console.log("Not duplicate!")
+          //console.log("Not duplicate!")
 
           /* 
           ** The meta field was taken from the Questionnaire model. I'm not sure what it is, 
@@ -78,7 +77,7 @@ export default class MassImportsModal extends React.Component {
           volunteers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
           volunteers[i].email.toLowerCase() == email.toLowerCase()) {
 
-      	return true
+        return true
       }
     }
     return false

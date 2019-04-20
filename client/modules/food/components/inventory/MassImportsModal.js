@@ -17,12 +17,10 @@ export default class MassImportsModal extends React.Component {
   handleInput = data => {
     /* Error Checking for Empty File */
     if(data.length == 0 || data.length == 1 || data.length == 2 || data[0][0] == "") {
-      //console.log("1")
       this.printErrorMessage("Empty")
     }
     /* Error Checking for Header Format */
     else if (!this.validateHeaders(data[0])) {
-      //console.log(data[0])
       this.printErrorMessage("Format")
     }
     else {
@@ -31,8 +29,7 @@ export default class MassImportsModal extends React.Component {
 
       for(var i = 1; i < data.length-1; i++) {
         if(!this.validateRow(data[i])) {
-          //console.log("3")
-          this.printErrorMessage("Format")
+          this.printErrorMessage("Row")
         }
         else {
           var category = data[i][0]
@@ -54,6 +51,9 @@ export default class MassImportsModal extends React.Component {
     else if(error == "Format") {
       document.getElementById("error").innerHTML = "Error: Invalid Input File Format. Please Use CSV Template."  
     }
+    else if(error == "Row") {
+      document.getElementById("error").innerHTML = "Warning: File Contains Some Invalid Rows. Rows will be Ignored."  
+    }    
     this.setState({validInput: false})
   }
 
@@ -86,6 +86,9 @@ export default class MassImportsModal extends React.Component {
           }
         }
     }
+    if(row[4] < 0) {
+      return false
+    }
     return true
   }
 
@@ -100,6 +103,7 @@ export default class MassImportsModal extends React.Component {
       docs: docs
     })
     this.props.closeMassImportModal()
+    location.reload()
   }
 
   handleError = () => {

@@ -49,7 +49,6 @@ class CustomerList extends Component {
   }
 
   closeModal = () => {
-    location.reload()
     this.setState({showImportsModal: false})
   }
 

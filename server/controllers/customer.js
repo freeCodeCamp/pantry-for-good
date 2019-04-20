@@ -49,7 +49,12 @@ export default {
     var max = 0
 
     await Customer.find({}, function(err, customers) {
-      max = customers.sort( (a, b) => a._id > b._id ? 1 : -1)[customers.length-1]._id + 1
+      if(customers.length == 0) {
+        max = 1
+      }
+      else {
+        max = customers.sort( (a, b) => a._id > b._id ? 1 : -1)[customers.length-1]._id + 1
+      }
     })
 
 
