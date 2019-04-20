@@ -59,17 +59,6 @@ export default {
       max = max + 1
     }
 
-
-    // let newCustomer = new Customer(docs[0])
-    // newCustomer._id = req.user.id
-    // // res.status(200).json({message: "Successful mass import!"})
-    // //let newDocs = docs.map(cust => new Customer(cust))
-    // // var newDocs2 = newDocs.map(cust => ({ ...cust, _id: req.user.id}))
-
-    // // for(var i = 0; i < newDocs.length; i++) {
-    // //   newDocs[i]._id = req.user.id
-    // // }
-
     await Customer.insertMany(newDocs, function(err) {
       if(err) {
         res.status(400).json({message: "Unable to mass import in Database"})

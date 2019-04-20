@@ -60,6 +60,16 @@ export const updateShift = shift => ({
   }
 })
 
+export const massUpload = docs => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/massUpload',
+    method: 'POST',
+    body: docs,
+    schema: volunteerSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
 export const getAllVolunteers = () => ({
   [CALL_API]: {
     endpoint: 'volunteers/getAllVolunteers',

@@ -20,6 +20,9 @@ export default () => {
   volunteerRouter.route('/volunteers/updateShift')
     .put(volunteerController.updateShift)
 
+  volunteerRouter.route('/volunteers/massUpload')
+    .post(requiresLogin, volunteerController.massUpload)    
+
   // Volunteer routes for admin for volunteer scheduling
   volunteerRouter.route('/volunteers/addShift')
     .put(volunteerController.addShift)   

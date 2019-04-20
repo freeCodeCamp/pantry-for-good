@@ -27,7 +27,7 @@ export default class MassImportsModal extends React.Component {
       document.getElementById("error").innerHTML = ""
       var info = []
 
-      const customers = this.props.customers
+      const volunteers = this.props.volunteers
 
       for(var i = 1; i < data.length-1; i++) {
         if(!this.validateRow(data[i])) {
@@ -44,7 +44,7 @@ export default class MassImportsModal extends React.Component {
           var zip = data[i][7]
 
           // Don't add this entry if it's a duplicate
-          if(this.isDuplicate(firstName, lastName, email, customers) == true) {
+          if(this.isDuplicate(firstName, lastName, email, volunteers) == true) {
           	console.log("Duplicate!")
           	continue
           }
@@ -72,11 +72,11 @@ export default class MassImportsModal extends React.Component {
   // Determines if customer is a duplicate
   // I use email as well in the edge case that there are 2 people
   // with the same name
-  isDuplicate = (firstName, lastName, email, customers) => {
-    for(var i = 0; i < customers.length; i++) {
-      if(customers[i].firstName.toLowerCase() == firstName.toLowerCase() && 
-          customers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
-          customers[i].email.toLowerCase() == email.toLowerCase()) {
+  isDuplicate = (firstName, lastName, email, volunteers) => {
+    for(var i = 0; i < volunteers.length; i++) {
+      if(volunteers[i].firstName.toLowerCase() == firstName.toLowerCase() && 
+          volunteers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
+          volunteers[i].email.toLowerCase() == email.toLowerCase()) {
 
       	return true
       }
@@ -129,13 +129,13 @@ export default class MassImportsModal extends React.Component {
 
   importData = () => {
     var docs = this.state.documents
-    const customer = {
+    const volunteer = {
       firstName: 'test',
       lastName: 'test',
       email: 'test@test.com'
     }
     this.props.massUpload({
-      ...customer, 
+      ...volunteer, 
       docs: docs
     })
     this.props.closeModal()

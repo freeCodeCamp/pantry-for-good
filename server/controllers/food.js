@@ -31,6 +31,65 @@ export default {
     res.json(savedFood)
   },
 
+  async massUpload(req, res) {
+    const food = req.body
+    var docs = food.docs
+
+    for(var i = 0; i < docs.length; i++) {
+      var doc = docs[i]
+      var category = doc.category
+      var foodName = doc.foodName
+      var quantity = doc.quantity
+
+      /* Checks if category already exists */
+      const existingFoodCategory = await Food.find({'category': category, 'deleted': false}).lean()
+
+      /* Checks if item already exists, if so, add current quantity with new quantity */
+      if (existingFoodCategory.length) {
+        //console.log("Category Exists")
+
+        //Check to see if an item with the same name already exists in a category
+        let categoryWithExistingItem = await Food.findOne(
+          { items: {$elemMatch:{name: {$regex: `^${foodName}$`, $options: "i"}, deleted: false }} },
+          { 'items.$': 1 }).lean()        
+
+        if(categoryWithExistingItem) {
+          //console.log("Food exists in category...")
+          const existingFoodItem = categoryWithExistingItem.items[0]
+          var newQuantity = existingFoodItem.quantity + Number(quantity)
+          existingFoodItem.quantity = newQuantity
+
+          //const updatedCategory = await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
+          await updateItemHelper(categoryWithExistingItem._id, existingFoodItem)
+        }
+        else {
+          //console.log("Food does not exists in category...")
+          var info = {
+            name: foodName.trim(),
+            categoryId: category,
+            quantity: quantity
+          }
+          //const savedFood = await Food.findByIdAndUpdate(existingFoodCategory[0]._id, { $addToSet: { items: info } }, { new: true })
+          await Food.findByIdAndUpdate(existingFoodCategory[0]._id, { $addToSet: { items: info } }, { new: true })
+        }
+      }
+      else {
+        //console.log("Category does not exist.")
+        const newCategory = new Food({category: category})
+        const savedCategory = await newCategory.save()
+        var info1 = {
+          name: foodName.trim(),
+          categoryId: category,
+          quantity: quantity
+        }
+        //const savedFood = await Food.findByIdAndUpdate(savedCategory._id, { $addToSet: { items: info1 } }, { new: true })
+        await Food.findByIdAndUpdate(savedCategory._id, { $addToSet: { items: info1 } }, { new: true })
+      }
+    }
+    res.json(food)
+  },
+
+
   /**
    * Update a Food category
    */

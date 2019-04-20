@@ -18,20 +18,8 @@ export default () => {
   customerRouter.route('/customer')
     .post(requiresLogin, customerController.create)
 
-
-
-
   customerRouter.route('/customer/massUpload')
     .post(requiresLogin, customerController.massUpload)
-
-  // customerRouter.route('/customer/duplicate')
-  //   .put(requiresLogin, customerController.duplicate)
-
-
-
-
-
-
 
   customerRouter.route('/customer/:customerId')
     .get(requiresLogin, hasAuthorization, customerController.read)

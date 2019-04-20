@@ -24,6 +24,13 @@ export default () => {
   foodRouter.route('/foods')
     .get(foodController.list)
     .post(websocketMiddleware(saveCatSchema), foodController.create)
+
+
+  foodRouter.route('/foods/massUpload')
+    .post(requiresLogin, foodController.massUpload)
+
+
+
   foodRouter.route('/foods/:foodId')
     .put(websocketMiddleware(saveCatSchema), foodController.update)
     .delete(websocketMiddleware(deleteCatSchema), foodController.delete)

@@ -27,8 +27,6 @@ export default class MassImportsModal extends React.Component {
       document.getElementById("error").innerHTML = ""
       var info = []
 
-      const customers = this.props.customers
-
       for(var i = 1; i < data.length-1; i++) {
         if(!this.validateRow(data[i])) {
           this.printErrorMessage("Format")
@@ -42,14 +40,6 @@ export default class MassImportsModal extends React.Component {
           var city = data[i][5]
           var state = data[i][6]
           var zip = data[i][7]
-
-          // Don't add this entry if it's a duplicate
-          if(this.isDuplicate(firstName, lastName, email, customers) == true) {
-          	console.log("Duplicate!")
-          	continue
-          }
-
-          console.log("Not duplicate!")
 
           /* 
           ** The meta field was taken from the Questionnaire model. I'm not sure what it is, 
@@ -78,10 +68,11 @@ export default class MassImportsModal extends React.Component {
           customers[i].lastName.toLowerCase() == lastName.toLowerCase() &&
           customers[i].email.toLowerCase() == email.toLowerCase()) {
 
-      	return true
+        this.props.duplicate(customers[i])
+        // API call to change duplicate value
+
       }
     }
-    return false
   }
 
   printErrorMessage = error => {
@@ -129,13 +120,13 @@ export default class MassImportsModal extends React.Component {
 
   importData = () => {
     var docs = this.state.documents
-    const customer = {
+    const donor = {
       firstName: 'test',
       lastName: 'test',
       email: 'test@test.com'
     }
     this.props.massUpload({
-      ...customer, 
+      ...donor, 
       docs: docs
     })
     this.props.closeModal()
@@ -150,7 +141,7 @@ export default class MassImportsModal extends React.Component {
     return (
       <Box>
         <BoxHeader>
-          Customer Mass Imports
+          Donor Mass Imports
         </BoxHeader>
         <BoxBody>
           <div id="error"></div>

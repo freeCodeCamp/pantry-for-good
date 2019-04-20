@@ -8,12 +8,13 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 import {fieldTypes} from '../../../../common/constants'
 import {fieldsByType} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
-import {loadDonors, deleteDonor} from '../reducers/donor'
+import {loadDonors, deleteDonor, massUpload} from '../reducers/donor'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 import {showConfirmDialog, hideDialog} from '../../core/reducers/dialog'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import {Page, PageBody} from '../../../components/page'
+
 
 const mapStateToProps = state => ({
   donors: selectors.donor.getAll(state),
@@ -31,14 +32,31 @@ const mapDispatchToProps = dispatch => ({
   loadQuestionnaires: () => dispatch(loadQuestionnaires()),
   showDialog: (cancel, confirm, message) =>
     dispatch(showConfirmDialog(cancel, confirm, message, 'Delete')),
-  hideDialog: () => dispatch(hideDialog())
+  hideDialog: () => dispatch(hideDialog()),
+  massUpload: docs => dispatch(massUpload(docs))
 })
 
 class DonorList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showImportsModal: false
+    }
+  }  
+
   componentWillMount() {
     this.props.loadDonors()
     this.props.loadQuestionnaires()
   }
+
+  openModal = () => {
+    this.setState({showImportsModal: true})
+  }
+
+  closeModal = () => {
+    location.reload()
+    this.setState({showImportsModal: false})
+  }  
 
   totalDonations = (_, donor) => {
     if (!donor || !donor.donations.length) return 0
@@ -90,7 +108,8 @@ class DonorList extends Component {
             <BoxBody
               loading={loading || savingDonors}
               error={loadError || saveDonorsError}
-            >
+            >             
+
               <BootstrapTable
                 data={this.formatData()}
                 keyField="_id"
@@ -131,3 +150,15 @@ class DonorList extends Component {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DonorList)
+
+
+
+
+// <Button onClick={this.openModal}>Mass Imports</Button>
+
+// <Modal show={this.state.showImportsModal} onHide={this.closeModal}>
+//   <MassImportsModal
+//     closeModal={this.closeModal}
+//     massUpload={this.props.massUpload}
+//   />
+// </Modal> 

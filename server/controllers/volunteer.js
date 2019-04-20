@@ -49,6 +49,32 @@ export default {
     res.json(updatedVolunteer)
   },  
 
+
+  async massUpload(req, res) {
+    const volunteer = req.body
+    var docs = volunteer.docs
+    var max = 0
+
+    await Volunteer.find({}, function(err, volunteers) {
+      max = volunteers.sort( (a, b) => a._id > b._id ? 1 : -1)[volunteers.length-1]._id + 1
+    })
+
+
+    let newDocs = docs.map(vol => new Volunteer(vol))
+    for(var i = 0; i < newDocs.length; i++) {
+      newDocs[i]._id = max
+      max = max + 1
+    }
+
+    await Volunteer.insertMany(newDocs, function(err) {
+      if(err) {
+        res.status(400).json({message: "Unable to mass import in Database"})
+      } else {
+        res.status(200).json({message: "Successful mass import!"})
+      }
+    })    
+  },  
+
   /*
    * Deletes a volunteer shift
    */

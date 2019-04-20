@@ -16,6 +16,14 @@ export default () => {
     .get(requiresLogin, hasAuthorization, donorController.read)
     .put(requiresLogin, hasAuthorization, donorController.update)
 
+
+
+  donorRouter.route('/donor/massUpload')
+    .post(requiresLogin, donorController.massUpload)    
+
+
+
+
   // Donor routes for admin
   donorRouter.route('/admin/donors')
     .get(donorController.list)
