@@ -156,9 +156,6 @@ export class FoodItems extends React.Component {
           <Modal show={this.state.massImportModal} onHide={this.closeMassImportModal}>
             <MassImportsModal
               closeMassImportModal={this.closeMassImportModal}
-              loading={this.props.loading}
-              saving={this.props.saving}
-              saveError={this.props.saveError}
               massUpload={this.props.massUpload}
             />
           </Modal>                

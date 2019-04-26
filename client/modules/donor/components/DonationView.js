@@ -63,6 +63,12 @@ const DonationView = ({
                   >
                     <b>Value</b>
                   </td>
+                  <td
+                    style={{width: '100px'}}
+                    className="text-right"
+                  >
+                    <b>Weight</b>
+                  </td>
                 </tr>
               </thead>
               <tbody>
@@ -70,6 +76,7 @@ const DonationView = ({
                   <tr key={i}>
                     <td>{item.name}</td>
                     <td className="text-right">{item.value}</td>
+                    <td className="text-right">{item.weight}</td>
                   </tr>
                 )}
               </tbody>

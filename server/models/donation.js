@@ -13,6 +13,10 @@ const DonatedItemSchema = new Schema({
   value: {
     type: Number,
     required: true
+  },
+  weight: {
+    type: Number,
+    required: true
   }
 }, {
   _id: false

@@ -97,7 +97,6 @@ class CustomerList extends Component {
                   customers={this.props.customers}
                   closeModal={this.closeModal}
                   massUpload={this.props.massUpload}
-                  duplicate={this.props.duplicate}
                 />
               </Modal>
            
