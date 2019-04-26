@@ -53,6 +53,13 @@ var VolunteerSchema = new Schema({
     type: String,
     trim: true
   },
+  shift: [{
+    role: String,
+    date: Date,
+    duration: Number,
+    notes: String
+  }],
+  test: String,
   disclaimerGuardianEmail: {
     type: String,
     trim: true

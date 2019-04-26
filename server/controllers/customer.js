@@ -39,6 +39,38 @@ export default {
     res.json(req.customer)
   },
 
+
+
+  async massUpload(req, res) {
+    const customer = req.body
+    var docs = customer.docs
+    var max = 0
+
+    await Customer.find({}, function(err, customers) {
+      if(customers.length == 0) {
+        max = 1
+      }
+      else {
+        max = customers.sort( (a, b) => a._id > b._id ? 1 : -1)[customers.length-1]._id + 1
+      }
+    })
+
+
+    let newDocs = docs.map(cust => new Customer(cust))
+    for(var i = 0; i < newDocs.length; i++) {
+      newDocs[i]._id = max
+      max = max + 1
+    }
+
+    await Customer.insertMany(newDocs, function(err) {
+      if(err) {
+        res.status(400).json({message: "Unable to mass import in Database"})
+      } else {
+        res.status(200).json({message: "Successful mass import!"})
+      }
+    })    
+  },
+
   /**
    * Update a customer
    */

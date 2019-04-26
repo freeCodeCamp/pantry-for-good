@@ -24,6 +24,16 @@ export const loadDonor = (id, admin) => ({
   }
 })
 
+export const massUpload = docs => ({
+  [CALL_API]: {
+    endpoint: 'donor/massUpload',
+    method: 'POST',
+    body: docs,
+    schema: donorSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
 export const saveDonor = (donor, admin) => {
   let endpoint
   if (admin) endpoint = donor._id ? `admin/donors/${donor._id}` : `admin/donors`

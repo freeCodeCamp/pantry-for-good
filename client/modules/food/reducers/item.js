@@ -29,6 +29,16 @@ export const saveFoodItem = (categoryId, foodItem) => ({
   }
 })
 
+export const massUpload = docs => ({
+  [CALL_API]: {
+    endpoint: 'foods/massUpload',
+    method: 'POST',
+    body: docs,
+    schema: foodItemSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
 export const deleteFoodItem = (categoryId, foodItemId) => ({
   [CALL_API]: {
     endpoint: `foods/${categoryId}/items/${foodItemId}`,

@@ -9,9 +9,71 @@ import {crudActions, crudReducer} from '../../store/utils'
 
 export const actions = crudActions('volunteer')
 
+export const EMAIL_SHIFT_SUCCESS = 'auth/FORGOT_PASSWORD_SUCCESS'
+export const EMAIL_SHIFT_REQUEST = 'auth/FORGOT_PASSWORD_REQUEST'
+export const EMAIL_SHIFT_FAILURE = 'auth/FORGOT_PASSWORD_FAILURE'
+
 export const loadVolunteers = () => ({
   [CALL_API]: {
     endpoint: 'admin/volunteers',
+    schema: arrayOfVolunteers,
+    types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
+  }
+})
+
+export const makeShift = volunteer => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/addShift',
+    method: 'PUT',
+    body: volunteer,
+    schema: volunteerSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
+export const deleteShift = volunteer => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/deleteShift',
+    method: 'PUT',
+    body: volunteer,
+    schema: volunteerSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
+export const emailShift = credentials => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/emailShiftReminder',
+    method: 'POST',
+    body: credentials,
+    types: [EMAIL_SHIFT_REQUEST, EMAIL_SHIFT_SUCCESS, EMAIL_SHIFT_FAILURE]
+  }
+})
+
+export const updateShift = shift => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/updateShift',
+    method: 'PUT',
+    body: shift,
+    schema: volunteerSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
+export const massUpload = docs => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/massUpload',
+    method: 'POST',
+    body: docs,
+    schema: volunteerSchema,
+    types: [actions.SAVE_REQUEST, actions.SAVE_SUCCESS, actions.SAVE_FAILURE]
+  }
+})
+
+export const getAllVolunteers = () => ({
+  [CALL_API]: {
+    endpoint: 'volunteers/getAllVolunteers',
+    method: 'GET',
     schema: arrayOfVolunteers,
     types: [actions.LOAD_ALL_REQUEST, actions.LOAD_ALL_SUCCESS, actions.LOAD_ALL_FAILURE]
   }

@@ -31,6 +31,40 @@ export default {
     res.json(req.donor)
   },
 
+
+
+  async massUpload(req, res) {
+    const donor = req.body
+    var docs = donor.docs
+    var max = 0
+
+    await Donor.find({}, function(err, donors) {
+      max = donors.sort( (a, b) => a._id > b._id ? 1 : -1)[donors.length-1]._id + 1
+    })
+
+
+    let newDocs = docs.map(don => new Donor(don))
+    for(var i = 0; i < newDocs.length; i++) {
+      newDocs[i]._id = max
+      max = max + 1
+    }
+
+    // res.status(200).json({message: "Successful mass import!"})
+
+    await Donor.insertMany(newDocs, function(err) {
+      if(err) {
+        res.status(400).json({message: "Unable to mass import in Database"})
+      } else {
+        res.status(200).json({message: "Successful mass import!"})
+      }
+    })    
+  },  
+
+
+
+
+
+
   /**
    * Update a donor
    */

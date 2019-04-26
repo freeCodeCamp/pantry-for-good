@@ -1,18 +1,21 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
+import { Button, Modal } from 'react-bootstrap'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import {fieldTypes} from '../../../../common/constants'
 import {fieldsByType} from '../../../lib/questionnaire-helpers'
 import selectors from '../../../store/selectors'
-import {loadVolunteers} from '../reducer'
+import {loadVolunteers, massUpload} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import {Page, PageBody} from '../../../components/page'
+
+import MassImportsModal from './MassImportsModal'
 
 const mapStateToProps = state => ({
   volunteers: selectors.volunteer.getAll(state),
@@ -24,10 +27,28 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadVolunteers: () => dispatch(loadVolunteers()),
-  loadQuestionnaires: () => dispatch(loadQuestionnaires())
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  massUpload: docs => dispatch(massUpload(docs))
 })
 
 class VolunteerList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showImportsModal: false
+    }
+  }  
+
+  openModal = () => {
+    this.setState({showImportsModal: true})
+  }
+
+  closeModal = () => {
+    location.reload()
+    this.setState({showImportsModal: false})
+  }  
+
+
   componentWillMount() {
     this.props.loadVolunteers()
     this.props.loadQuestionnaires()
@@ -49,9 +70,7 @@ class VolunteerList extends Component {
     </div>
 
   formatData = () => this.props.volunteers ?
-    this.props.volunteers.map(v => ({
-      ...v,
-      address: fieldsByType(v, fieldTypes.ADDRESS).map(f => f.value).join(', ')
+    this.props.volunteers.map(v => ({...v, address: fieldsByType(v, fieldTypes.ADDRESS).map(f => f.value).join(', ')
     })) :
     []
 
@@ -69,6 +88,16 @@ class VolunteerList extends Component {
               loading={loading}
               error={loadError}
             >
+              <Button onClick={this.openModal}>Mass Imports</Button>
+
+              <Modal show={this.state.showImportsModal} onHide={this.closeModal}>
+                <MassImportsModal
+                  volunteers={this.props.volunteers}
+                  closeModal={this.closeModal}
+                  massUpload={this.props.massUpload}
+                />
+              </Modal>            
+
               <BootstrapTable
                 data={this.formatData()}
                 keyField="_id"

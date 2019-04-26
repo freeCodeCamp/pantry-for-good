@@ -2,17 +2,20 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {BootstrapTable, TableHeaderColumn, SizePerPageDropDown} from 'react-bootstrap-table'
+import { Button, Modal } from 'react-bootstrap'
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css'
 
 import {fieldTypes} from '../../../../common/constants'
 import selectors from '../../../store/selectors'
 import {fieldsByType} from '../../../lib/questionnaire-helpers'
-import {loadCustomers} from '../reducer'
+import {loadCustomers, massUpload} from '../reducer'
 import {loadQuestionnaires} from '../../questionnaire/reducers/api'
 
 import {Box, BoxBody, BoxHeader} from '../../../components/box'
 import ClientStatusLabel from '../../../components/ClientStatusLabel'
 import {Page, PageBody} from '../../../components/page'
+
+import MassImportsModal from './MassImportsModal'
 
 const mapStateToProps = state => ({
   customers: selectors.customer.getAll(state),
@@ -24,13 +27,29 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadCustomers: () => dispatch(loadCustomers()),
-  loadQuestionnaires: () => dispatch(loadQuestionnaires())
+  loadQuestionnaires: () => dispatch(loadQuestionnaires()),
+  massUpload: docs => dispatch(massUpload(docs))
 })
 
 class CustomerList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      showImportsModal: false
+    }
+  }
+
   componentWillMount() {
     this.props.loadCustomers()
     this.props.loadQuestionnaires()
+  }
+
+  openModal = () => {
+    this.setState({showImportsModal: true})
+  }
+
+  closeModal = () => {
+    this.setState({showImportsModal: false})
   }
 
   getStatusLabel = (_, customer) => <ClientStatusLabel client={customer} />
@@ -70,6 +89,17 @@ class CustomerList extends Component {
               loading={loading}
               error={loadError}
             >
+
+              <Button onClick={this.openModal}>Mass Imports</Button>
+
+              <Modal show={this.state.showImportsModal} onHide={this.closeModal}>
+                <MassImportsModal
+                  customers={this.props.customers}
+                  closeModal={this.closeModal}
+                  massUpload={this.props.massUpload}
+                />
+              </Modal>
+           
               <BootstrapTable
                 data={this.formatData()}
                 keyField="_id"

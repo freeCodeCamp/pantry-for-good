@@ -5,10 +5,12 @@ import { BootstrapTable, TableHeaderColumn, SizePerPageDropDown } from 'react-bo
 import _ from 'lodash'
 
 import selectors from '../../../../store/selectors'
-import { saveFoodItem, deleteFoodItem, clearFlags } from '../../reducers/item'
+import { saveFoodItem, deleteFoodItem, clearFlags, massUpload } from '../../reducers/item'
 import { Box, BoxBody } from '../../../../components/box'
 import { showConfirmDialog, hideDialog } from '../../../core/reducers/dialog'
 import FoodAddEditForm from './FoodAddEditForm'
+
+import MassImportsModal from './MassImportsModal'
 
 export class FoodItems extends React.Component {
   constructor(props) {
@@ -18,7 +20,8 @@ export class FoodItems extends React.Component {
       modalType: undefined,
       // editModalFood is the food being edited when the modalType is edit
       editModalFood: undefined,
-      searchText: ""
+      searchText: "",
+      massImportModal: false
     }
   }
 
@@ -60,6 +63,24 @@ export class FoodItems extends React.Component {
     return categoryObject.category
   }
 
+
+  /**
+   * Opens the mass imports modal
+   */
+  openMassImportModal = () => {
+    this.setState({massImportModal: true})
+    this.props.clearFlags()
+  }
+
+  // Closes the mass imports modal
+   
+  closeMassImportModal = () => {
+    this.setState({massImportModal: false})
+    this.props.clearFlags()
+  }
+
+
+
   /**
    * Used by react-bootstrap-table to get the Edit and Delete buttons for a row
    */
@@ -94,7 +115,7 @@ export class FoodItems extends React.Component {
       </div>
       <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
         <Button onClick={this.openModal()} className='btn-success' disabled={this.props.foodCategories.length === 0} style={{ color: 'white', width: '200px' }}>Add to Inventory</Button>
-      </div>
+      </div>               
       <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
         {props.components.searchPanel}
       </div>
@@ -130,6 +151,14 @@ export class FoodItems extends React.Component {
           loading={this.state.modalType ? undefined : (this.props.loading || this.props.saving)}
           error={this.state.modalType ? undefined : (this.props.loadError || this.props.saveError)}
           errorBottom={true}>
+
+          <Button onClick={this.openMassImportModal} className='btn-success' style={{ color: 'black', width: '200px' }}>Mass Imports</Button>
+          <Modal show={this.state.massImportModal} onHide={this.closeMassImportModal}>
+            <MassImportsModal
+              closeMassImportModal={this.closeMassImportModal}
+              massUpload={this.props.massUpload}
+            />
+          </Modal>                
           <BootstrapTable data={this.props.foodItems} pagination keyField='_id' options={tableOptions} striped search>
             <TableHeaderColumn dataField="name" dataSort>Name</TableHeaderColumn>
             <TableHeaderColumn dataField="categoryId" dataSort dataFormat={this.categoryFormatter}>Category</TableHeaderColumn>
@@ -170,9 +199,27 @@ const mapDispatchToProps = dispatch => ({
   saveFoodItem: (categoryId, foodItem) => dispatch(saveFoodItem(categoryId, foodItem)),
   deleteFoodItem: (categoryId, _id) => dispatch(deleteFoodItem(categoryId, _id)),
   clearFlags: () => dispatch(clearFlags()),
+  massUpload: docs => dispatch(massUpload(docs)),
   hideDialog: () => dispatch(hideDialog()),
   showConfirmDialog: (cancel, confirm, message, label) =>
     dispatch(showConfirmDialog(cancel, confirm, message, label)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodItems)
+
+
+
+
+// <Modal show={this.state.massImportModal} onHide={closeMassImportModal}>
+//   <MassImportsModal
+//     closeModal={this.closeMassImportModal}
+//     loading={this.props.loading}
+//     saving={this.props.saving}
+//     saveError={this.props.saveError}
+//     massUpload={this.props.massUpload}
+//   />
+// </Modal>
+
+// <div style={{ display: 'inline-block', float: 'right', marginRight: '10px' }}>
+//   <Button onClick={this.openMassImportModal()} className='btn-success' style={{ color: 'white', width: '200px' }}>Mass Import</Button>
+// </div>              

@@ -24,17 +24,25 @@
     "test": "npm run test:server:once && npm run test:client:once",
     "test:client": "npm run test:client:once -- --watch",
     "test:server": "npm run test:server:once -- --watch",
+    "test:inventoryUpload": "npm run test:inventoryUpload:once -- --watch",
+    "test:inventoryUpload:once": "cross-env NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js \"client/modules/food/components/inventory/MassImportsModal.spec.js\"",
     "test:client:once": "cross-env NODE_ENV=test mocha --require babel-register --require ignore-styles --require client/entry.test.js \"client/**/*.spec.js\"",
     "test:server:once": "cross-env NODE_ENV=test mocha --timeout 5000 --require babel-register --require server/entry.test.js \"server/**/*.spec.js\"",
     "flow": "flow"
   },
   "config": {
     "ghooks": {
-      "pre-commit": "npm run lint && npm run test"
+      "pre-commit": "npm run lint"
     }
   },
   "dependencies": {
+    "@fullcalendar/bootstrap": "^4.0.1",
+    "@fullcalendar/core": "^4.0.1",
+    "@fullcalendar/daygrid": "^4.0.1",
+    "@fullcalendar/interaction": "^4.0.1",
+    "@fullcalendar/resource-common": "^4.0.1",
     "@mapbox/polyline": "^0.2.0",
+    "@sendgrid/mail": "^6.3.1",
     "admin-lte": "^2.4.3",
     "autoprefixer": "^7.1.1",
     "babel-core": "^6.22.1",
@@ -87,6 +95,7 @@
     "passport": "~0.3.2",
     "passport-google-oauth2": "^0.1.6",
     "passport-local": "~1.0.0",
+    "popper.js": "^1.14.7",
     "postcss-loader": "^2.0.5",
     "prop-types": "^15.5.10",
     "quill-image-drop-module": "^1.0.3",
@@ -95,6 +104,7 @@
     "react-bootstrap": "^0.31.0",
     "react-bootstrap-autosuggest": "^0.5.0",
     "react-bootstrap-table": "^3.1.7",
+    "react-csv-reader": "^1.2.2",
     "react-day-picker": "^6.1.0",
     "react-dnd": "^2.3.0",
     "react-dnd-html5-backend": "^2.3.0",
@@ -119,6 +129,7 @@
     "striptags": "^3.0.1",
     "style-loader": "^0.18.2",
     "thenify": "^3.2.1",
+    "tooltip.js": "^1.3.1",
     "url-loader": "^0.5.7",
     "uuid": "^3.0.1",
     "webpack": "^3.1.0",
@@ -139,7 +150,7 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-15": "^1.0.5",
     "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.9.0",
+    "eslint-plugin-react": "^7.12.4",
     "flow-bin": "^0.74.0",
     "ghooks": "^2.0.4",
     "ignore-styles": "^5.0.1",

@@ -25,7 +25,15 @@ export default async function generate(identifier, bindings) {
   if (!page || page.disabled) return
 
   let attachments = []
+
+  
+  // page.body = The HTML of the email
+  // bindings = To replace placeholders in email
   const body = transformBody(page.body, bindings, attachments)
+
+
+
+
   const subject = transformSubject(page.subject, bindings)
   const text = transformText(body)
   const html = template.replace(/\{content\}/, body)
@@ -51,6 +59,8 @@ function transformText(body) {
 
 function transformBody(body, bindings, attachments) {
   const replaceTags = {
+
+    // If it's a placeholder, then replace the span node with the bindings and attachments
     span: node => isPlaceholder(node) ?
       bindPlaceholder(node, bindings, attachments) :
       node,
@@ -76,6 +86,7 @@ function transformSubject(subject, bindings) {
 function bindPlaceholder(node, bindings, attachments) {
 
   const id = getAttr(node, 'data-id')
+
   const placeholder = placeholders.find(pl => pl.id === id)
 
   //Receipt Placeholder only

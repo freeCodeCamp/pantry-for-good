@@ -26,6 +26,17 @@ const DonationItemRow = ({item, showDelete, handleDelete}) =>
           margin: '10px 0 0 0'
         }}
       />
+      <RFFieldGroup
+        name={`${item}.weight`}
+        type="number"
+        step="any"
+        min="0"
+        placeholder="Weight"
+        style={{
+          flexGrow: 1,
+          margin: '10px 0 0 0'
+        }}
+      />      
       {showDelete &&
         <Button
           style={{
